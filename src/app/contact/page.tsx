@@ -15,8 +15,8 @@ const CHANNELS = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@genz.co.in",
-    href: "mailto:hello@genz.co.in",
+    value: "genz.official.hq@gmail.com",
+    href: "mailto:genz.official.hq@gmail.com",
   },
   {
     icon: Link2,

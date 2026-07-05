@@ -95,7 +95,7 @@ export default async function HomePage() {
                 <span className="relative inline-block">
                   modern manufacturing
                   <span className="absolute left-0 bottom-1.5 h-[3px] w-full bg-butter-highlight -z-10" />
-                </span>.
+                </span>
               </h1>
               <p className="text-charcoal mt-8 max-w-2xl text-lg sm:text-xl text-left font-sans font-normal leading-relaxed tracking-wide">
                 Connecting verified manufacturers directly with buyers, startups, and MSMEs. Source components, request custom quotes, and scale production with absolute confidence.
