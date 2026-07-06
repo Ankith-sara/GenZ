@@ -70,9 +70,9 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
       </div>
 
       {/* 1. Floating Glass Header & 9. Bigger Sizing */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-forest-green/80 border-b border-white/10 shadow-xl transition-all duration-300">
+      <header className="sticky top-0 z-50 bg-forest-green border-b border-white/10 shadow-md transition-all duration-300">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex h-24 items-center justify-between">
+          <div className="flex h-16 items-center justify-between">
             {/* 2. Better Logo Card */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-10 h-10 bg-gold-yellow flex items-center justify-center text-forest-green font-black text-2xl rounded-[4px] shadow-md group-hover:scale-105 transition-transform duration-300">
@@ -376,7 +376,7 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
                     <Link href="/login" onClick={() => setIsOpen(false)}>Login</Link>
                   </Button>
                   <Button asChild className="w-full bg-gradient-to-r from-gold-yellow to-yellow-400 text-forest-green font-bold shadow-lg hover:scale-105 transition-all duration-300 rounded-[4px] h-10 text-xs uppercase tracking-wider border-none">
-                    <Link href="/#waitlist" onClick={() => setIsOpen(false)}>Join the Movement →</Link>
+                    <Link href="/#waitlist" onClick={() => setIsOpen(false)}>Join the Movement</Link>
                   </Button>
                 </>
               )}
