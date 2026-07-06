@@ -31,6 +31,9 @@
 
   --dark-band: #23302a;
   --dark-band-foreground: #ffffff;
+  --forest-green: #0b2216;
+  --gold-yellow: #ebb812;
+  --light-gray-bg: #f8faf9;
 }
 
 @theme inline {
@@ -53,6 +56,9 @@
   --color-ring: var(--ring);
   --color-dark-band: var(--dark-band);
   --color-dark-band-foreground: var(--dark-band-foreground);
+  --color-forest-green: var(--forest-green);
+  --color-gold-yellow: var(--gold-yellow);
+  --color-light-gray-bg: var(--light-gray-bg);
 
   /* Specific Faire style token names */
   --color-cream-paper: #fbf8f6;

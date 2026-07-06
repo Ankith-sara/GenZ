@@ -1,13 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { getUserAndProfile } from "@/lib/auth";
 import { signOut } from "@/app/login/actions";
-
-export const metadata = {
-  title: "About Us & Founder Story — GenZ",
-  description:
-    "Why GenZ exists: the founder story behind India's Trust Commerce & Manufacturing Platform.",
-};
+import { MainHeader } from "@/components/main-header";
 
 export default async function AboutPage() {
   const session = await getUserAndProfile();
@@ -15,194 +11,203 @@ export default async function AboutPage() {
   const role = session?.profile?.role;
 
   return (
-    <div className="bg-cream-paper flex min-h-screen flex-col font-sans">
-      <header className="border-ash bg-cream-paper sticky top-0 z-50 border-b">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-12">
-          <Link href="/" className="text-lg font-light tracking-[0.22em] uppercase text-black font-sans">
-            GenZ
-          </Link>
-          <nav className="flex items-center gap-5">
-            <Link href="/discover" className="text-charcoal hover:text-black text-sm font-normal tracking-wide transition-colors font-sans">
-              Discover
-            </Link>
-            <Link href="/about" className="text-sm font-normal text-black underline decoration-butter-highlight decoration-2 underline-offset-4">
-              About
-            </Link>
-            <Link href="/contact" className="text-charcoal hover:text-black text-sm font-normal tracking-wide transition-colors font-sans">
-              Contact
-            </Link>
-            {isLoggedIn ? (
-              <>
-                <Link
-                  href={role === "buyer" ? "/dashboard/account" : "/dashboard"}
-                  className="text-charcoal hover:text-black text-sm font-normal tracking-wide transition-colors font-sans"
-                >
-                  {role === "buyer" ? "Account" : "Dashboard"}
-                </Link>
-                <form action={signOut} className="inline">
-                  <Button variant="ghost" size="sm" type="submit" className="text-charcoal hover:text-black">
-                    Sign out
-                  </Button>
-                </form>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="text-charcoal hover:text-black text-sm font-sans font-normal tracking-wide transition-colors">
-                  Sign in
-                </Link>
-                <Button asChild variant="default" size="sm" className="bg-black text-white hover:bg-black/90 rounded-[4px] font-sans font-normal text-xs tracking-wider uppercase px-4 h-9">
-                  <Link href="/#waitlist">Join Waitlist</Link>
-                </Button>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
-
-      {/* Category Nav Bar */}
-      <div className="bg-cream-paper border-b border-ash hidden sm:block">
-        <div className="mx-auto max-w-7xl px-6 py-2.5 sm:px-12">
-          <div className="flex items-center justify-center gap-8 overflow-x-auto text-xs uppercase tracking-[0.12em] text-charcoal font-sans">
-            <Link href="/discover?category=Wooden%20Toys" className="hover:text-black transition-colors">Wooden Toys</Link>
-            <Link href="/discover?category=Educational" className="hover:text-black transition-colors">Educational</Link>
-            <Link href="/discover?category=Puzzles" className="hover:text-black transition-colors">Puzzles</Link>
-            <Link href="/discover?category=Soft%20Toys" className="hover:text-black transition-colors">Soft Toys</Link>
-            <Link href="/discover?category=Crafts" className="hover:text-black transition-colors">Crafts & Kits</Link>
-            <Link href="/discover" className="hover:text-black transition-colors underline decoration-butter-highlight decoration-2 underline-offset-4">All Catalog</Link>
-          </div>
-        </div>
-      </div>
+    <div className="bg-white flex min-h-screen flex-col font-sans text-black antialiased">
+      {/* Premium Main Header */}
+      <MainHeader
+        isLoggedIn={isLoggedIn}
+        role={role}
+        userName={session?.profile?.full_name || session?.email}
+        signOutAction={signOut}
+      />
 
       <main className="flex-1">
-        {/* HERO */}
-        <section className="py-20 sm:py-24 bg-cream-paper">
-          <div className="mx-auto max-w-3xl px-6 sm:px-12">
-            <p className="text-smoke mb-3 text-xs uppercase tracking-widest font-sans">Why We Started</p>
-            <div className="bg-butter-highlight mb-4 h-[3px] w-12" />
-            <h1 className="font-serif text-4xl leading-[1.2] sm:text-6xl text-foreground font-normal tracking-normal">
-              Our Founder Story
+        {/* About Hero Section */}
+        <section className="bg-forest-green text-white py-20 px-6 sm:px-12 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none" />
+          <div className="mx-auto max-w-4xl text-center relative z-10">
+            <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">
+              Our Story
+            </span>
+            <h1 className="font-serif text-4xl sm:text-6xl font-normal leading-[1.1] tracking-tight text-white mb-6">
+              Built by someone who refused <br />
+              to <span className="text-gold-yellow font-serif">accept the excuse</span>
             </h1>
-            <p className="text-charcoal mt-6 max-w-xl text-lg sm:text-xl font-sans font-normal leading-relaxed tracking-wide">
-              GenZ began as a personal reckoning with one question: what would it take
-              for India to become a nation the world looks up to — not just for its
-              economy, but for its products, technology, innovation, and manufacturing?
+            <p className="text-white/80 max-w-2xl mx-auto text-base sm:text-lg font-sans font-normal leading-relaxed tracking-wide">
+              Every founder has a moment that will not let them go. This is the one that became GenZ.
             </p>
           </div>
         </section>
 
-        {/* FOUNDER STORY */}
-        <section className="border-ash bg-white border-t py-20 sm:py-24">
-          <div className="mx-auto max-w-3xl px-6 sm:px-12">
-            <div className="space-y-6 text-charcoal font-sans text-base leading-relaxed tracking-wide">
-              <p>
-                Founded by <strong>Appala Sairam</strong> at the age of 23, GenZ was
-                born from a deeply personal experience during his Bachelor of Business
-                Administration studies in the United Kingdom.
-              </p>
-              <p>
-                While working in a restaurant to support himself, Sairam was often the
-                only Indian on the team. What began as casual jokes about India
-                gradually turned into open criticism and disrespect, especially during
-                Operation Sindoor. One conversation changed everything. When he defended
-                India, he was told:
-              </p>
-              <blockquote className="border-ash text-black border-l-2 py-2 pl-6 font-serif text-xl sm:text-2xl italic my-8 leading-relaxed">
-                &ldquo;Don&apos;t compare India with Pakistan. Compare India with China
-                and the United States.&rdquo;
-              </blockquote>
-              <p>Those words became the turning point of his life.</p>
-              <p>
-                Instead of responding with anger, he responded with purpose. Over the
-                next two months, Sairam dedicated himself to researching that one
-                question — and the answer became GenZ.
-              </p>
-              <p>
-                Despite his family&apos;s concerns, he made the difficult decision to
-                leave the UK and return to India to pursue this vision. Without
-                financial support, he began working as a Zomato delivery partner while
-                dedicating every available hour to building his dream.
-              </p>
-              <p>
-                The journey has been far from easy. More than 72 organizations,
-                incubators, and institutions turned him away. Many questioned the idea.
-                Some laughed at it. But every rejection strengthened his determination
-                to keep building.
-              </p>
-              <p>
-                GenZ is more than a startup. It is a mission to unlock India&apos;s
-                untapped talent by connecting innovators, manufacturers, startups,
-                artisans, students, MSMEs, and consumers on one trusted platform. The
-                goal is to help Indian ideas become Indian products, Indian products
-                become global brands, and to create opportunities so that more Indians
-                can build successful futures in their own country.
-              </p>
-              <p>
-                We believe India&apos;s greatest resource is not hidden beneath its land
-                — it lives within the minds of its people. GenZ exists to help those
-                ideas become reality, and to contribute to a future where India is
-                recognized not only as a global workforce, but as a global leader in
-                innovation, manufacturing, and trust.
-              </p>
+        {/* Founder Story & Profile section */}
+        <section className="bg-white py-24 px-6 sm:px-12">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+              {/* Left Column: Founder Photo & Primary Quote */}
+              <div className="lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left sticky top-28">
+                {/* Profile Image container */}
+                <div className="relative h-44 w-44 rounded-md overflow-hidden border-2 border-gold-yellow/20 bg-light-gray-bg shadow-xl mb-6">
+                  <Image
+                    src="/founder.jpeg"
+                    alt="Appala Sairam"
+                    fill
+                    className="object-cover"
+                    sizes="176px"
+                    priority
+                  />
+                </div>
+                <h2 className="font-serif text-2xl font-normal text-black mb-1">
+                  Appala Sairam
+                </h2>
+                <p className="text-xs font-semibold uppercase tracking-wider text-gold-yellow mb-6">
+                  Founder &amp; Delivery Partner, GenZ
+                </p>
+
+                {/* Left side Callout quote */}
+                <div className="border-l-4 border-gold-yellow pl-5 py-2 text-left bg-light-gray-bg rounded-r-md p-4 w-full">
+                  <p className="font-serif text-base italic text-forest-green leading-relaxed">
+                    &ldquo;India does not lack talent. It lacks a trusted system that connects talent with opportunity.&rdquo;
+                  </p>
+                  <span className="text-[10px] text-smoke uppercase tracking-wider block mt-3 font-sans font-bold">
+                    GenZ Founding Charter
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Column: The narrative */}
+              <div className="lg:col-span-8 text-left space-y-8 font-sans text-base leading-relaxed tracking-wide text-charcoal">
+                <div>
+                  <h3 className="font-serif text-2xl font-normal text-black mb-4 border-b border-gray-100 pb-2">
+                    How GenZ Began
+                  </h3>
+                  <p className="mb-4">
+                    My name is Appala Sairam, and I founded GenZ at the age of 23 — while I was still studying for my BBA in the United Kingdom. I worked nights in a restaurant kitchen, the only Indian on a team of mostly Pakistani colleagues. There were jokes about my accent, comments about where I came from. I let most of it go. I was there to work.
+                  </p>
+                  <p>
+                    Then came Operation Sindoor, and the jokes turned into arguments about whether India even mattered on the world stage. One night, defending my country, I found myself comparing India to Pakistan. A colleague stopped me cold: why measure ourselves against a neighbor, when the real comparison was China, was America?
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-serif text-2xl font-normal text-black mb-4 border-b border-gray-100 pb-2">
+                    Discovering the Trust Gap
+                  </h3>
+                  <p className="mb-4">
+                    I could not shake that question. For two months I read everything I could find on how China and the United States had built their manufacturing and innovation engines. What I found wasn&rsquo;t a talent gap — it was a trust gap. India has no shortage of skilled makers, sharp founders, and original ideas. What it lacks is a system that lets the world see them, verify them, and buy from them with confidence.
+                  </p>
+                  <p>
+                    That gap became GenZ. I flew home certain that once people heard the idea, the support would follow. I met politicians, incubators, institutions. Everyone nodded. Almost no one acted. Belief in an idea and building it, I learned, are two very different things.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-serif text-2xl font-normal text-black mb-4 border-b border-gray-100 pb-2">
+                    Delivery Partner by Day, Founder by Night
+                  </h3>
+                  <p className="mb-4">
+                    When my savings ran out, I started delivering food for Zomato — days on a bike, nights on GenZ. To anyone watching, I was a delivery partner. To me, every delivery was one step closer to a platform that refused to leave my mind.
+                  </p>
+                  <p>
+                    GenZ exists because a question I couldn&rsquo;t answer forced me to go looking for one. India&rsquo;s greatest resource was never hidden underground — it lives in the hands and minds of its people. GenZ is how we build the trust that lets the world finally see it: manufacturers made visible, ideas turned into products, and buyers everywhere able to choose India with confidence.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* VISION + MISSION */}
-        <section className="py-20 sm:py-24 bg-cream-paper border-t border-ash">
-          <div className="mx-auto grid max-w-7xl gap-10 px-6 sm:grid-cols-2 sm:px-12">
-            <div className="border-ash bg-white rounded-[4px] border p-8 shadow-none">
-              <p className="text-smoke mb-3 text-xs uppercase tracking-widest font-sans">Our Vision</p>
-              <div className="bg-butter-highlight mb-4 h-[3px] w-12" />
-              <p className="font-serif text-xl sm:text-2xl text-foreground font-normal leading-[1.35] tracking-normal">
-                To build a self-reliant India where innovation is celebrated,
-                manufacturing thrives, and the world proudly chooses products and
-                technologies created in India.
-              </p>
-            </div>
-            <div className="border-ash bg-white rounded-[4px] border p-8 shadow-none">
-              <p className="text-smoke mb-3 text-xs uppercase tracking-widest font-sans">Our Mission</p>
-              <div className="bg-butter-highlight mb-4 h-[3px] w-12" />
-              <p className="font-serif text-xl sm:text-2xl text-foreground font-normal leading-[1.35] tracking-normal">
-                Empower every Indian creator, manufacturer, artisan, startup and MSME
-                with one trusted platform.
-              </p>
+        {/* Timeline block */}
+        <section className="bg-light-gray-bg py-24 px-6 sm:px-12 border-t border-b border-gray-200">
+          <div className="mx-auto max-w-5xl text-center">
+            <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">
+              Our Journey
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-black font-normal tracking-tight mb-16">
+              Milestones of Self-Reliance
+            </h2>
+
+            {/* Alternating list */}
+            <div className="space-y-12 relative before:absolute before:inset-0 before:left-1/2 before:-translate-x-1/2 before:w-0.5 before:bg-forest-green/10 before:hidden md:before:block">
+              {/* Point 1 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left">
+                <div className="md:text-right md:pr-12">
+                  <span className="text-xs font-bold text-gold-yellow uppercase tracking-widest">2024 — London</span>
+                  <h4 className="font-serif text-lg font-semibold text-black mt-1">The Spark</h4>
+                  <p className="text-xs text-smoke font-sans mt-2 leading-relaxed">
+                    A restaurant kitchen debate sparks research into why India has a B2B trust gap compared to major global manufacturing leaders.
+                  </p>
+                </div>
+                <div className="hidden md:block relative pl-12">
+                  <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-forest-green border-4 border-white shadow-md" />
+                </div>
+              </div>
+
+              {/* Point 2 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left">
+                <div className="hidden md:block relative pr-12 text-right">
+                  <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-4 h-4 rounded-full bg-forest-green border-4 border-white shadow-md" />
+                </div>
+                <div className="md:pl-12">
+                  <span className="text-xs font-bold text-gold-yellow uppercase tracking-widest">2024 — Hyderabad</span>
+                  <h4 className="font-serif text-lg font-semibold text-black mt-1">Grounded Reality</h4>
+                  <p className="text-xs text-smoke font-sans mt-2 leading-relaxed">
+                    Returning to India to pitch the solution. Working delivery shifts on a bicycle to fund local development and prototype construction.
+                  </p>
+                </div>
+              </div>
+
+              {/* Point 3 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left">
+                <div className="md:text-right md:pr-12">
+                  <span className="text-xs font-bold text-gold-yellow uppercase tracking-widest">2025 — Launch</span>
+                  <h4 className="font-serif text-lg font-semibold text-black mt-1">The Trust Platform</h4>
+                  <p className="text-xs text-smoke font-sans mt-2 leading-relaxed">
+                    Scaffolding GenZ with verified GST identification, video-based factory reels, and direct wholesale inquiries.
+                  </p>
+                </div>
+                <div className="hidden md:block relative pl-12">
+                  <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-forest-green border-4 border-white shadow-md" />
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* MEET THE FOUNDER */}
-        <section className="border-ash bg-white border-t py-20 sm:py-24">
-          <div className="mx-auto max-w-3xl px-6 text-center sm:px-12">
-            <p className="text-smoke mb-3 text-xs uppercase tracking-widest font-sans">Meet the Founder</p>
-            <div className="bg-butter-highlight mx-auto mb-6 h-[3px] w-12" />
-            <div
-              role="img"
-              aria-label="Founder photograph placeholder"
-              className="bg-[#fbf8f6] border border-ash mx-auto flex h-32 w-32 items-center justify-center rounded-full text-xs text-smoke font-sans"
-            >
-              Photo
-            </div>
-            <h2 className="mt-5 font-serif text-2xl font-normal text-black">Appala Sairam</h2>
-            <p className="text-smoke text-sm mt-1 font-sans">Founder, GenZ</p>
-            <p className="text-charcoal mx-auto mt-4 max-w-xl font-sans tracking-wide">
-              Building India&apos;s Trust Commerce &amp; Manufacturing Platform — one
-              verified factory at a time.
+        {/* Belief statement — inverted section */}
+        <section id="mission" className="bg-forest-green px-6 py-20 sm:px-12 sm:py-24 text-white">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">
+              Our Mission
+            </span>
+            <p className="font-serif text-2xl font-normal leading-snug text-white sm:text-4xl sm:leading-tight">
+              India does not lack talent. It lacks a trusted system that connects talent with opportunity.
+            </p>
+            <p className="mt-6 font-sans text-sm tracking-wide text-white/70">
+              That belief is the only line item in GenZ&rsquo;s founding charter.
             </p>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-20 sm:py-24 bg-cream-paper border-t border-ash">
+        {/* CTA section */}
+        <section className="bg-white py-20 sm:py-24">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-6 text-center sm:px-12">
-            <h2 className="font-serif text-3xl sm:text-5xl text-black leading-tight tracking-normal font-normal mb-6">
+            <h2 className="mb-6 font-serif text-3xl font-normal leading-tight tracking-normal text-black sm:text-5xl">
               Be part of the founding cohort.
             </h2>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button asChild size="lg" className="bg-black text-white hover:bg-black/90 rounded-[4px] font-sans font-normal text-sm tracking-wider uppercase px-6 h-11">
+              <Button
+                asChild
+                size="lg"
+                className="h-12 rounded-[4px] bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 px-6 font-sans text-sm font-bold tracking-wider uppercase border-none"
+              >
                 <Link href="/#waitlist">Join the Waitlist</Link>
               </Button>
-              <Button asChild variant="ghost" size="lg" className="text-charcoal hover:underline underline-offset-4 decoration-butter-highlight decoration-2 font-sans font-normal text-sm tracking-wider uppercase px-6 h-11">
-                <Link href="/contact">Get in touch →</Link>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="text-forest-green border-forest-green hover:bg-forest-green/5 h-12 rounded-[4px] px-6 font-sans text-sm font-medium tracking-wider uppercase bg-transparent"
+              >
+                <Link href="/contact">Get in touch</Link>
               </Button>
             </div>
           </div>
@@ -210,14 +215,87 @@ export default async function AboutPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-ash bg-cream-paper border-t py-14 px-6 text-center sm:px-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 sm:flex-row sm:items-center sm:justify-between sm:px-12">
-          <span className="text-black text-lg font-light tracking-[0.22em] uppercase font-sans">
-            GenZ
-          </span>
-          <p className="text-smoke text-xs font-sans">
-            &copy; {new Date().getFullYear()} GenZ. Made in India, for India — and the world.
-          </p>
+      <footer className="bg-light-gray-bg text-black border-t border-gray-200 py-16 px-6 sm:px-12 text-left">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
+            {/* Column 1: Branding */}
+            <div className="col-span-2 flex flex-col justify-start">
+              <Link href="/" className="flex items-baseline gap-0.5">
+                <span className="text-2xl font-bold tracking-tight text-forest-green">Gen</span>
+                <span className="text-2xl font-black tracking-tight text-gold-yellow">Z</span>
+              </Link>
+              <p className="text-xs text-smoke leading-relaxed font-sans mt-3 mb-6 max-w-xs">
+                A trust commerce and manufacturing platform connecting verified makers directly with buyers.
+              </p>
+              {/* Social icons */}
+              <div className="flex gap-4 text-smoke">
+                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Facebook</span>f</a>
+                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Twitter</span>t</a>
+                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">LinkedIn</span>in</a>
+                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Instagram</span>ig</a>
+              </div>
+            </div>
+
+            {/* Column 2: Company */}
+            <div>
+              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Company</h4>
+              <ul className="space-y-2.5 text-xs text-smoke font-sans">
+                <li><Link href="/about" className="hover:text-black">About Us</Link></li>
+                <li><Link href="/about#mission" className="hover:text-black">Our Mission</Link></li>
+                <li><a href="#" className="hover:text-black">Careers</a></li>
+                <li><a href="#" className="hover:text-black">Blog</a></li>
+                <li><Link href="/contact" className="hover:text-black">Contact Us</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 3: For Consumers */}
+            <div>
+              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">For Consumers</h4>
+              <ul className="space-y-2.5 text-xs text-smoke font-sans">
+                <li><Link href="/discover" className="hover:text-black">Shop Products</Link></li>
+                <li><Link href="/discover?origin=india" className="hover:text-black">Made in India</Link></li>
+                <li><Link href="/discover?innovations=true" className="hover:text-black">Innovations</Link></li>
+                <li><Link href="/discover" className="hover:text-black">Categories</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 4: For Manufacturers */}
+            <div>
+              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Manufacturers</h4>
+              <ul className="space-y-2.5 text-xs text-smoke font-sans">
+                <li><Link href="/dashboard" className="hover:text-black">Join as Manufacturer</Link></li>
+                <li><Link href="/dashboard" className="hover:text-black">Benefits</Link></li>
+                <li><Link href="/dashboard" className="hover:text-black">Resources</Link></li>
+                <li><Link href="/dashboard" className="hover:text-black">Success Stories</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 5: Import Gap */}
+            <div>
+              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Import Gap</h4>
+              <ul className="space-y-2.5 text-xs text-smoke font-sans">
+                <li><Link href="/discover?import_gap=true" className="hover:text-black">Top Import Gaps</Link></li>
+                <li><Link href="/discover?import_gap=true" className="hover:text-black">Opportunity Finder</Link></li>
+                <li><Link href="/discover?import_gap=true" className="hover:text-black">Reports &amp; Insights</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <hr className="border-gray-200 mb-8" />
+
+          {/* Bottom Copyright */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-smoke font-sans">
+            <p>&copy; {new Date().getFullYear()} GenZ Trust Commerce. All rights reserved.</p>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-black">Help Center</a>
+              <a href="#" className="hover:text-black">FAQs</a>
+              <a href="#" className="hover:text-black">Terms &amp; Conditions</a>
+              <a href="#" className="hover:text-black">Privacy Policy</a>
+            </div>
+            <p className="flex items-center gap-1">
+              Designed &amp; Built in India <span className="text-sm">🇮🇳</span>
+            </p>
+          </div>
         </div>
       </footer>
     </div>

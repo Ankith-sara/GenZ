@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -76,10 +77,13 @@ function CountryCodeSelect({
         className="flex h-11 w-[104px] items-center gap-1.5 rounded-md border border-border bg-background px-2.5 text-sm text-foreground transition-colors hover:border-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
       >
         {active && (
-          <img
+          <Image
             src={flagUrl(active.isoCode)}
             alt=""
+            width={20}
+            height={14}
             className="h-3.5 w-5 shrink-0 rounded-[2px] object-cover"
+            unoptimized
           />
         )}
         <span className="flex-1 truncate text-left tabular-nums">
@@ -126,10 +130,13 @@ function CountryCodeSelect({
                     c.isoCode === value ? "bg-muted" : ""
                   }`}
                 >
-                  <img
+                  <Image
                     src={flagUrl(c.isoCode)}
                     alt=""
+                    width={20}
+                    height={14}
                     className="h-3.5 w-5 shrink-0 rounded-[2px] object-cover"
+                    unoptimized
                   />
                   <span className="flex-1 truncate text-foreground">{c.name}</span>
                   <span className="shrink-0 tabular-nums text-muted-foreground">

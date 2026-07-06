@@ -12,8 +12,8 @@ interface PreferenceState {
 }
 
 const applyPreferences = (prefs: PreferenceState) => {
-  if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
-    (window as any).gtag("consent", "update", {
+  if (typeof window !== "undefined" && typeof (window as unknown as Record<string, unknown>).gtag === "function") {
+    ((window as unknown as Record<string, unknown>).gtag as (...args: unknown[]) => void)("consent", "update", {
       analytics_storage: prefs.analytics ? "granted" : "denied",
       ad_storage: prefs.marketing ? "granted" : "denied",
       ad_user_data: prefs.marketing ? "granted" : "denied",
@@ -70,9 +70,19 @@ export function CookieConsent() {
   const [showDetails, setShowDetails] = useState(false);
   const [prefs, setPrefs] = useState<PreferenceState>({ analytics: true, marketing: false });
 
-  useEffect(() => {
-    if (pathname === "/assistant" || pathname?.startsWith("/dashboard")) {
+  // Reset/hide when navigating to a blocked path (e.g. /assistant or /dashboard)
+  const isBlocked = pathname === "/assistant" || pathname?.startsWith("/dashboard");
+  const [prevBlocked, setPrevBlocked] = useState(isBlocked);
+
+  if (isBlocked !== prevBlocked) {
+    setPrevBlocked(isBlocked);
+    if (isBlocked) {
       setVisible(false);
+    }
+  }
+
+  useEffect(() => {
+    if (isBlocked) {
       return;
     }
     try {
@@ -87,7 +97,7 @@ export function CookieConsent() {
     }
     const t = setTimeout(() => setVisible(true), 1400);
     return () => clearTimeout(t);
-  }, [pathname]);
+  }, [pathname, isBlocked]);
 
   const save = (accepted: boolean, customPrefs?: PreferenceState) => {
     const finalPrefs = accepted

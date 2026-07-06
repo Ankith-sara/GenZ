@@ -18,6 +18,9 @@ const ptSerif = PT_Serif({
 export const metadata: Metadata = {
   title: "GenZ",
   description: "B2B platform",
+  icons: {
+    icon: "/favicon.jpeg",
+  },
 };
 
 export default function RootLayout({
