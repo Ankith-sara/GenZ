@@ -4,11 +4,16 @@ import { WaitlistForm } from "@/components/waitlist-form";
 import { Button } from "@/components/ui/button";
 import { getUserAndProfile } from "@/lib/auth";
 import { signOut } from "@/app/login/actions";
+import { cookies } from "next/headers";
 
 export default async function HomePage() {
-  const session = await getUserAndProfile();
+  const [session, cookieStore] = await Promise.all([
+    getUserAndProfile(),
+    cookies(),
+  ]);
   const isLoggedIn = !!session;
   const role = session?.profile?.role;
+  const hasJoinedWaitlist = cookieStore.get("waitlist_joined")?.value === "true";
 
   return (
     <div className="bg-cream-paper flex min-h-screen flex-col font-sans">
@@ -88,7 +93,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-7xl">
             <div className="max-w-4xl text-left">
               <div className="bg-white text-charcoal border-ash border mx-auto mb-8 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] font-normal tracking-[0.11em] uppercase font-sans">
-                <ShieldCheck className="h-3.5 w-3.5" /> Verified B2B Commerce
+                <ShieldCheck className="h-3.5 w-3.5" /> Verified B2C Commerce
               </div>
               <h1 className="font-serif text-5xl leading-[1.18] sm:text-7xl text-foreground text-left max-w-3xl font-normal tracking-normal">
                 The trust network for <br />
@@ -102,7 +107,9 @@ export default async function HomePage() {
               </p>
               <div className="mt-10 flex flex-wrap justify-start gap-4">
                 <Button asChild size="lg" className="bg-black text-white hover:bg-black/90 rounded-[4px] font-sans font-normal text-sm tracking-wider uppercase px-6 h-11">
-                  <a href="#waitlist">Reserve Your Spot</a>
+                  <a href="#waitlist">
+                    {hasJoinedWaitlist ? "Spot Reserved" : "Reserve Your Spot"}
+                  </a>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="border border-ash bg-white text-black hover:bg-cream-paper rounded-[4px] font-sans font-normal text-sm tracking-wider uppercase px-6 h-11 shadow-none transition-none">
                   <Link href="/discover" className="group">
@@ -166,13 +173,29 @@ export default async function HomePage() {
         {/* Waitlist Section - Inverted Dark Section */}
         <section id="waitlist" className="border-t border-black bg-dark-band py-24 px-6 sm:px-12">
           <div className="mx-auto max-w-3xl">
-            <div className="mb-16 text-center">
-              <h2 className="font-serif text-3xl sm:text-5xl text-white leading-tight tracking-normal font-normal">Join the founding cohort</h2>
-              <p className="text-white/80 mt-4 text-sm sm:text-base font-sans tracking-wide max-w-xl mx-auto">
-                We are onboarding select buyers and verified manufacturers for our private launch. Reserve your place today.
-              </p>
-            </div>
-            <WaitlistForm />
+            {hasJoinedWaitlist ? (
+              <div className="text-center py-8 animate-fade-in">
+                <div className="bg-white/10 text-white border-white/20 border mx-auto mb-8 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] font-normal tracking-[0.11em] uppercase font-sans">
+                  <ShieldCheck className="h-3.5 w-3.5 text-butter-highlight" /> Active Member
+                </div>
+                <h2 className="font-serif text-3xl sm:text-5xl text-white leading-tight tracking-normal font-normal">
+                  You're on the list!
+                </h2>
+                <p className="text-white/80 mt-6 text-sm sm:text-base font-sans tracking-wide max-w-xl mx-auto">
+                  We have reserved your spot. We'll reach out as GenZ opens up to the founding cohort.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-16 text-center">
+                  <h2 className="font-serif text-3xl sm:text-5xl text-white leading-tight tracking-normal font-normal">Join the founding cohort</h2>
+                  <p className="text-white/80 mt-4 text-sm sm:text-base font-sans tracking-wide max-w-xl mx-auto">
+                    We are onboarding select buyers and verified manufacturers for our private launch. Reserve your place today.
+                  </p>
+                </div>
+                <WaitlistForm />
+              </>
+            )}
           </div>
         </section>
       </main>

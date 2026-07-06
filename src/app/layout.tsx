@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, PT_Serif } from "next/font/google";
 import "./globals.css";
+import { CookieConsent } from "@/components/cookie-consent";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${ptSerif.variable} antialiased min-h-screen flex flex-col`}>
         {children}
+        <CookieConsent />
       </body>
     </html>
   );

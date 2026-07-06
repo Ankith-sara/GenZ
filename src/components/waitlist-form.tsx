@@ -51,6 +51,7 @@ export function WaitlistForm() {
       setStatus("error");
       return;
     }
+    document.cookie = "waitlist_joined=true; path=/; max-age=31536000; SameSite=Lax";
     setStatus("success");
   }
 
