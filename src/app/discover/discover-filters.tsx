@@ -8,7 +8,7 @@ import { TOY_CATEGORIES, AGE_GROUPS } from "@/lib/products";
 import type { ProductFilters } from "./types";
 
 const selectClass =
-  "h-11 rounded-[4px] border border-input bg-card px-3.5 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground";
+  "h-11 rounded-lg border border-gray-200 bg-white px-3.5 text-sm text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-green transition-all duration-300 w-full";
 
 export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   const router = useRouter();
@@ -40,32 +40,34 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="border-border bg-card rounded-[4px] border p-5"
+      className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-sm flex flex-col gap-6"
     >
-      <div className="flex flex-wrap items-end gap-3">
-        <div className="min-w-[200px] flex-1">
-          <label htmlFor="q" className="text-muted-foreground mb-1.5 block text-xs">
-            Search
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
+        {/* Search Query */}
+        <div className="lg:col-span-4">
+          <label htmlFor="q" className="text-black font-sans text-xs font-semibold uppercase tracking-wider mb-2 block">
+            Search Keyword
           </label>
           <div className="relative">
             <Search
-              className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
+              className="text-neutral-400 absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
               aria-hidden="true"
             />
             <Input
               id="q"
               name="q"
-              placeholder="Wooden puzzle, soft toy…"
+              placeholder="Wooden puzzle, soft toy, DIY craft kit…"
               defaultValue={filters.q}
-              className="pl-10"
+              className="pl-10 h-11 rounded-lg border-gray-200 focus-visible:ring-forest-green"
             />
           </div>
         </div>
 
-        <div>
+        {/* Category select */}
+        <div className="lg:col-span-3">
           <label
             htmlFor="category"
-            className="text-muted-foreground mb-1.5 block text-xs"
+            className="text-black font-sans text-xs font-semibold uppercase tracking-wider mb-2 block"
           >
             Category
           </label>
@@ -75,7 +77,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
             defaultValue={filters.category}
             className={selectClass}
           >
-            <option value="">All categories</option>
+            <option value="">All Categories</option>
             {TOY_CATEGORIES.map((c) => (
               <option key={c} value={c}>
                 {c}
@@ -84,12 +86,13 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
           </select>
         </div>
 
-        <div>
+        {/* Age group select */}
+        <div className="lg:col-span-3">
           <label
             htmlFor="age_group"
-            className="text-muted-foreground mb-1.5 block text-xs"
+            className="text-black font-sans text-xs font-semibold uppercase tracking-wider mb-2 block"
           >
-            Age group
+            Age Group
           </label>
           <select
             id="age_group"
@@ -97,7 +100,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
             defaultValue={filters.age_group}
             className={selectClass}
           >
-            <option value="">Any age</option>
+            <option value="">Any Age Group</option>
             {AGE_GROUPS.map((a) => (
               <option key={a} value={a}>
                 {a}
@@ -106,45 +109,50 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
           </select>
         </div>
 
-        <div className="w-24">
-          <label
-            htmlFor="min_price"
-            className="text-muted-foreground mb-1.5 block text-xs"
-          >
-            Min ₹
-          </label>
-          <Input
-            id="min_price"
-            name="min_price"
-            type="number"
-            min={0}
-            defaultValue={filters.min_price}
-          />
+        {/* Action button */}
+        <div className="lg:col-span-2">
+          <Button type="submit" className="w-full h-11 bg-forest-green hover:bg-forest-green/90 text-white rounded-lg font-semibold shadow-md transition-all hover:scale-[1.02]">
+            Filter
+          </Button>
         </div>
-        <div className="w-24">
-          <label
-            htmlFor="max_price"
-            className="text-muted-foreground mb-1.5 block text-xs"
-          >
-            Max ₹
-          </label>
-          <Input
-            id="max_price"
-            name="max_price"
-            type="number"
-            min={0}
-            defaultValue={filters.max_price}
-          />
+      </div>
+
+      {/* Expandable/Secondary price range row */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-neutral-100">
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-black">Price Range (₹):</span>
+          
+          <div className="flex items-center gap-2">
+            <Input
+              id="min_price"
+              name="min_price"
+              type="number"
+              min={0}
+              placeholder="Min"
+              defaultValue={filters.min_price}
+              className="w-24 h-9 rounded-md border-gray-200 text-xs focus-visible:ring-forest-green"
+            />
+            <span className="text-neutral-400 text-xs">to</span>
+            <Input
+              id="max_price"
+              name="max_price"
+              type="number"
+              min={0}
+              placeholder="Max"
+              defaultValue={filters.max_price}
+              className="w-24 h-9 rounded-md border-gray-200 text-xs focus-visible:ring-forest-green"
+            />
+          </div>
         </div>
 
-        <Button type="submit">Apply</Button>
         {hasActiveFilters && (
           <Button
             type="button"
             variant="ghost"
             onClick={() => router.push("/discover")}
+            className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg h-9 font-semibold"
           >
-            Clear
+            Clear Active Filters
           </Button>
         )}
       </div>

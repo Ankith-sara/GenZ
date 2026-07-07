@@ -1,54 +1,92 @@
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/require-role";
-import { Button } from "@/components/ui/button";
+import { AdminDashboardTabs } from "./admin-tabs";
 
 export default async function AdminDashboard() {
   const session = await requireRole("admin");
   const supabase = await createClient();
 
-  const [{ count: pendingCount }, { count: verifiedCount }, { count: waitlistCount }] =
-    await Promise.all([
-      supabase
-        .from("manufacturer_profiles")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "pending"),
-      supabase
-        .from("manufacturer_profiles")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "verified"),
-      supabase.from("waitlist").select("*", { count: "exact", head: true }),
-    ]);
+  // Parallel data fetching for the whole website management
+  const [
+    { data: pendingManufacturers },
+    { data: verifiedManufacturers },
+    { data: waitlist },
+    { data: products },
+    { data: inquiries },
+    { data: contactMessages }
+  ] = await Promise.all([
+    supabase
+      .from("manufacturer_profiles")
+      .select("*")
+      .eq("status", "pending")
+      .order("submitted_at", { ascending: false }),
+    supabase
+      .from("manufacturer_profiles")
+      .select("*")
+      .neq("status", "pending")
+      .order("updated_at", { ascending: false }),
+    supabase
+      .from("waitlist")
+      .select("*")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("products")
+      .select("*")
+      .order("updated_at", { ascending: false }),
+    supabase
+      .from("inquiries")
+      .select("*")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("contact_messages")
+      .select("*")
+      .order("created_at", { ascending: false })
+  ]);
+
+  const pendingCount = pendingManufacturers?.length ?? 0;
+  const verifiedCount = (verifiedManufacturers ?? []).filter(m => m.status === "verified").length;
+  const waitlistCount = waitlist?.length ?? 0;
+  const productCount = products?.length ?? 0;
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12 sm:px-12">
-      <p className="text-muted-foreground text-sm">Admin Dashboard</p>
-      <h1 className="mt-2 text-3xl leading-[1.27]">
-        Welcome, {session.profile?.full_name ?? "there"}.
-      </h1>
-
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="border-border bg-card rounded-[4px] border p-6">
-          <p className="text-muted-foreground text-xs">Pending review</p>
-          <p className="mt-2 font-serif text-4xl">{pendingCount ?? 0}</p>
-          <Button asChild variant="outline" size="sm" className="mt-4">
-            <Link href="/dashboard/admin/verifications?status=pending">
-              Review queue
-            </Link>
-          </Button>
-        </div>
-        <div className="border-border bg-card rounded-[4px] border p-6">
-          <p className="text-muted-foreground text-xs">Verified manufacturers</p>
-          <p className="mt-2 font-serif text-4xl">{verifiedCount ?? 0}</p>
-          <Button asChild variant="outline" size="sm" className="mt-4">
-            <Link href="/dashboard/admin/verifications?status=verified">View all</Link>
-          </Button>
-        </div>
-        <div className="border-border bg-card rounded-[4px] border p-6">
-          <p className="text-muted-foreground text-xs">Waitlist signups</p>
-          <p className="mt-2 font-serif text-4xl">{waitlistCount ?? 0}</p>
+    <div className="mx-auto max-w-6xl px-6 py-12 sm:px-12">
+      <div className="flex justify-between items-end border-b pb-6">
+        <div>
+          <p className="text-gold-yellow text-xs font-bold tracking-[0.2em] uppercase mb-1">
+            GenZ Control Center
+          </p>
+          <h1 className="text-3xl font-serif text-forest-green">
+            Welcome, {session.profile?.full_name ?? "Administrator"}.
+          </h1>
         </div>
       </div>
+
+      {/* High level Stats Indicators */}
+      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {[
+          { label: "Pending Reviews", count: pendingCount, color: "border-amber-200 bg-amber-50/50" },
+          { label: "Verified Partners", count: verifiedCount, color: "border-green-200 bg-green-50/50" },
+          { label: "Waitlist Signups", count: waitlistCount, color: "border-blue-200 bg-blue-50/50" },
+          { label: "Listed Products", count: productCount, color: "border-gray-200 bg-gray-50/50" }
+        ].map((stat, idx) => (
+          <div key={idx} className={`border rounded-[4px] p-6 ${stat.color}`}>
+            <p className="text-neutral-500 text-xs font-medium uppercase tracking-wider">{stat.label}</p>
+            <p className="mt-2 font-serif text-4xl text-forest-green font-bold">{stat.count}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Tabs list to manage different lists */}
+      <AdminDashboardTabs 
+        initialData={{
+          pendingManufacturers: pendingManufacturers ?? [],
+          verifiedManufacturers: verifiedManufacturers ?? [],
+          waitlist: waitlist ?? [],
+          products: products ?? [],
+          inquiries: inquiries ?? [],
+          contactMessages: contactMessages ?? []
+        }} 
+      />
     </div>
   );
 }

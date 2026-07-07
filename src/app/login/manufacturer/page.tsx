@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { LoginMethodTabs } from "./auth-method-tabs";
+import { LoginMethodTabs } from "../auth-method-tabs";
 import { GoogleSignInButton } from "@/components/google-signin";
 
-export default async function LoginPage({
+export default async function ManufacturerLoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ redirectTo?: string }>;
@@ -20,9 +20,12 @@ export default async function LoginPage({
           </div>
           <span className="text-xl font-bold tracking-tight text-white">GenZ</span>
         </Link>
-        <h2 className="text-3xl font-serif text-white font-normal">Welcome back.</h2>
+        <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-2 block">
+          Manufacturer Portal
+        </span>
+        <h2 className="text-3xl font-serif text-white font-normal">Welcome back, Maker.</h2>
         <p className="mt-2 text-sm text-white/70">
-          Sign in to your buyer or administrator account.
+          Sign in to manage your factory, list products, and respond to inquiries.
         </p>
       </div>
 
@@ -43,18 +46,18 @@ export default async function LoginPage({
           
           <div className="mt-6 border-t border-gray-100 pt-4 text-center">
             <Link
-              href="/login/manufacturer"
+              href="/login"
               className="text-xs font-semibold text-forest-green hover:text-gold-yellow transition-colors"
             >
-              Are you a manufacturer? Access the Manufacturer Portal →
+              Looking for products? Sign in as a Buyer 
             </Link>
           </div>
         </div>
 
         <p className="mt-6 text-center text-sm text-white/70">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="font-semibold text-gold-yellow hover:underline">
-            Sign up as a Buyer
+          <Link href="/signup/manufacturer" className="font-semibold text-gold-yellow hover:underline">
+            Register your business
           </Link>
         </p>
       </div>

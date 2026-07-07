@@ -379,7 +379,7 @@ export default async function HomePage() {
               How It Works
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl text-black font-normal tracking-tight mb-16">
-              Simplifying the B2B Supply Chain
+              Simplifying the B2C Supply Chain
             </h2>
 
             {/* Horizontal flow container */}
@@ -562,7 +562,7 @@ export default async function HomePage() {
                     10,000,000+ Indian Businesses by 2030
                   </h3>
                   <p className="text-xs text-white/70 leading-relaxed font-sans">
-                    To build the world&apos;s most trusted B2B commerce platform for Indian manufacturing, driving local production, self-reliance, and international reach.
+                    To build the world&apos;s most trusted B2C commerce platform for Indian manufacturing, driving local production, self-reliance, and international reach.
                   </p>
                 </div>
               </div>

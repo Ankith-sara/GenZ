@@ -6,7 +6,7 @@ import { DiscoverFeed } from "./discover-feed";
 import type { ProductFilters } from "./types";
 import { getUserAndProfile } from "@/lib/auth";
 import { signOut } from "@/app/login/actions";
-import { Button } from "@/components/ui/button";
+import { MainHeader } from "@/components/main-header";
 
 export default async function DiscoverPage({
   searchParams,
@@ -34,6 +34,7 @@ export default async function DiscoverPage({
   ]);
   const isLoggedIn = !!session;
   const role = session?.profile?.role;
+  const userName = session?.profile?.full_name || session?.email || "";
 
   let query = supabase
     .from("products")
@@ -44,6 +45,7 @@ export default async function DiscoverPage({
     query = query.textSearch("search_vector", filters.q, {
       type: "websearch",
       config: "english",
+      
     });
   }
   if (filters.category) query = query.eq("category", filters.category);
@@ -58,76 +60,39 @@ export default async function DiscoverPage({
   const hasMore = count !== null ? (products?.length ?? 0) < count : false;
 
   return (
-    <div className="bg-cream-paper flex min-h-screen flex-col font-sans">
-      <header className="border-ash bg-cream-paper sticky top-0 z-50 border-b">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-lg font-light tracking-[0.22em] uppercase text-black font-sans">
-            GenZ
-          </Link>
-          <nav className="flex items-center gap-5">
-            <Link href="/discover" className="text-sm font-normal text-black underline decoration-butter-highlight decoration-2 underline-offset-4">
-              Discover
-            </Link>
-            <Link href="/about" className="text-charcoal hover:text-black text-sm font-normal tracking-wide transition-colors font-sans">
-              About
-            </Link>
-            <Link href="/contact" className="text-charcoal hover:text-black text-sm font-normal tracking-wide transition-colors font-sans">
-              Contact
-            </Link>
-            {isLoggedIn ? (
-              <>
-                <Link
-                  href={role === "buyer" ? "/dashboard/account" : "/dashboard"}
-                  className="text-charcoal hover:text-black text-sm font-normal tracking-wide transition-colors font-sans"
-                >
-                  {role === "buyer" ? "Account" : "Dashboard"}
-                </Link>
-                <form action={signOut} className="inline">
-                  <Button variant="ghost" size="sm" type="submit" className="text-charcoal hover:text-black">
-                    Sign out
-                  </Button>
-                </form>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="text-charcoal hover:text-black text-sm font-sans font-normal tracking-wide transition-colors">
-                  Sign in
-                </Link>
-                <Button asChild variant="default" size="sm" className="bg-black text-white hover:bg-black/90 rounded-[4px] font-sans font-normal text-xs tracking-wider uppercase px-4 h-9">
-                  <Link href="/#waitlist">Join Waitlist</Link>
-                </Button>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
+    <div className="bg-neutral-50 flex min-h-screen flex-col font-sans">
+      <MainHeader 
+        isLoggedIn={isLoggedIn} 
+        role={role} 
+        userName={userName} 
+        signOutAction={signOut} 
+      />
 
-      {/* Category Nav Bar */}
-      <div className="bg-cream-paper border-b border-ash hidden sm:block">
-        <div className="mx-auto max-w-6xl px-6 py-2.5 sm:px-12">
-          <div className="flex items-center justify-center gap-8 overflow-x-auto text-xs uppercase tracking-[0.12em] text-charcoal font-sans">
-            <Link href="/discover?category=Wooden%20Toys" className="hover:text-black transition-colors">Wooden Toys</Link>
-            <Link href="/discover?category=Educational" className="hover:text-black transition-colors">Educational</Link>
-            <Link href="/discover?category=Puzzles" className="hover:text-black transition-colors">Puzzles</Link>
-            <Link href="/discover?category=Soft%20Toys" className="hover:text-black transition-colors">Soft Toys</Link>
-            <Link href="/discover?category=Crafts" className="hover:text-black transition-colors">Crafts & Kits</Link>
-            <Link href="/discover" className="hover:text-black transition-colors underline decoration-butter-highlight decoration-2 underline-offset-4">All Catalog</Link>
+      <main className="flex-1 pb-24">
+        {/* Banner Section with Premium Grid/Background */}
+        <div className="bg-forest-green text-white py-16 px-6 sm:px-12 relative overflow-hidden border-b border-white/5 shadow-inner">
+          <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+          <div className="mx-auto max-w-6xl relative z-10 text-left">
+            <span className="text-gold-yellow text-xs font-bold tracking-[0.25em] uppercase mb-3 block">
+              B2C DISCOVERY HUB
+            </span>
+            <h1 className="font-serif text-3xl sm:text-5xl font-normal leading-[1.15] tracking-tight mb-4 max-w-3xl">
+              Discover Verified Indian Manufacturers &amp; Products
+            </h1>
+            <p className="text-white/70 max-w-2xl text-sm sm:text-base leading-relaxed font-sans">
+              Source high-quality toys, educational games, puzzles, and custom crafts directly from verified MSMEs, startups, and local artisans.
+            </p>
           </div>
         </div>
-      </div>
 
-      <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 py-12 sm:px-12">
-          <p className="text-smoke text-xs uppercase tracking-widest font-sans">Discover</p>
-          <h1 className="mt-3 font-serif text-3xl sm:text-5xl text-foreground font-normal tracking-normal leading-[1.2]">
-            Trusted, verified, made-in-India.
-          </h1>
-
-          <div className="mt-10">
+          {/* Filters & Search Block */}
+          <div className="mb-10">
             <DiscoverFilters filters={filters} />
           </div>
 
-          <div className="mt-10">
+          {/* Product Feed */}
+          <div>
             <DiscoverFeed
               key={JSON.stringify(filters)}
               initialProducts={products ?? []}
@@ -138,12 +103,13 @@ export default async function DiscoverPage({
         </div>
       </main>
 
-      <footer className="bg-cream-paper border-t border-ash py-10 text-smoke font-sans">
-        <div className="mx-auto max-w-6xl px-6 text-xs sm:px-12 flex justify-between items-center">
+      <footer className="bg-[#0b1b14] border-t border-white/5 py-12 text-white/50 font-sans">
+        <div className="mx-auto max-w-6xl px-6 text-xs sm:px-12 flex flex-col sm:flex-row justify-between items-center gap-4">
           <span>&copy; {new Date().getFullYear()} GenZ. Made in India, for India — and the world.</span>
-          <div className="flex gap-4">
-            <Link href="/about" className="hover:text-black">About</Link>
-            <Link href="/contact" className="hover:text-black">Contact</Link>
+          <div className="flex gap-6">
+            <Link href="/about" className="hover:text-gold-yellow transition-colors">About Us</Link>
+            <Link href="/contact" className="hover:text-gold-yellow transition-colors">Contact Support</Link>
+            <Link href="/login/manufacturer" className="hover:text-gold-yellow transition-colors">Manufacturer Portal</Link>
           </div>
         </div>
       </footer>
