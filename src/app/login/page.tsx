@@ -46,7 +46,7 @@ export default async function LoginPage({
               href="/login/manufacturer"
               className="text-xs font-semibold text-forest-green hover:text-gold-yellow transition-colors"
             >
-              Are you a manufacturer? Access the Manufacturer Portal →
+              Are you a manufacturer? Access the Manufacturer Portal
             </Link>
           </div>
         </div>

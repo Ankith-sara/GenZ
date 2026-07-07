@@ -98,7 +98,7 @@ export default async function ManufacturerProductDetailPage({
         {product.status === "published" && (
           <Button asChild variant="ghost" size="sm">
             <Link href={`/products/${product.id}`} target="_blank">
-              View public page →
+              View public page
             </Link>
           </Button>
         )}

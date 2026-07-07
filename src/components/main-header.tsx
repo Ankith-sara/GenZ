@@ -241,7 +241,7 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
                   </Button>
                   {/* 5. Better CTA Button */}
                   <Button asChild className="bg-gradient-to-r from-gold-yellow to-yellow-400 text-forest-green font-bold shadow-lg hover:scale-105 transition-all duration-300 rounded-[4px] h-11 px-6 text-sm uppercase tracking-wider border-none">
-                    <Link href="/#waitlist">Join the Movement →</Link>
+                    <Link href="/#waitlist">Join the Movement</Link>
                   </Button>
                 </>
               )}

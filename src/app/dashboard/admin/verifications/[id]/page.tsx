@@ -142,7 +142,7 @@ export default async function AdminVerificationDetailPage({
                             rel="noreferrer" 
                             className="text-xs text-forest-green hover:underline font-semibold"
                           >
-                            Open Maps Location →
+                            Open Maps Location
                           </a>
                         </dd>
                       </div>

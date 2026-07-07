@@ -47,7 +47,7 @@ export default async function SignupPage({
               href="/signup/manufacturer"
               className="text-xs font-semibold text-forest-green hover:text-gold-yellow transition-colors"
             >
-              Are you a manufacturer? Register your business →
+              Are you a manufacturer? Register your business
             </Link>
           </div>
         </div>

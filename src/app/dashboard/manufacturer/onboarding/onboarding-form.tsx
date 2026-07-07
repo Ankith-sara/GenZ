@@ -115,7 +115,7 @@ export function OnboardingForm({ profile }: { profile: ManufacturerProfile | nul
           {isPending ? "Saving…" : "Save details"}
         </Button>
         <Button asChild variant="outline">
-          <Link href="/dashboard/manufacturer/documents">Upload documents →</Link>
+          <Link href="/dashboard/manufacturer/documents">Upload documents</Link>
         </Button>
       </div>
 
