@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/lib/products";
 import { DiscoverFilters } from "./discover-filters";
@@ -7,6 +6,7 @@ import type { ProductFilters } from "./types";
 import { getUserAndProfile } from "@/lib/auth";
 import { signOut } from "@/app/login/actions";
 import { MainHeader } from "@/components/main-header";
+import { Footer } from "@/components/footer";
 
 export default async function DiscoverPage({
   searchParams,
@@ -103,16 +103,7 @@ export default async function DiscoverPage({
         </div>
       </main>
 
-      <footer className="bg-[#0b1b14] border-t border-white/5 py-12 text-white/50 font-sans">
-        <div className="mx-auto max-w-6xl px-6 text-xs sm:px-12 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <span>&copy; {new Date().getFullYear()} GenZ. Made in India, for India — and the world.</span>
-          <div className="flex gap-6">
-            <Link href="/about" className="hover:text-gold-yellow transition-colors">About Us</Link>
-            <Link href="/contact" className="hover:text-gold-yellow transition-colors">Contact Support</Link>
-            <Link href="/login/manufacturer" className="hover:text-gold-yellow transition-colors">Manufacturer Portal</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -114,6 +114,13 @@ export type ContactMessage = {
   created_at: string;
 };
 
+export type NewsletterSubscriber = {
+  id: string;
+  email: string;
+  created_at: string;
+};
+
+
 export type Reel = {
   id: string;
   product_id: string;
@@ -219,6 +226,12 @@ export type Database = {
           message: string;
         };
         Update: Partial<ContactMessage>;
+        Relationships: [];
+      };
+      newsletter_subscribers: {
+        Row: NewsletterSubscriber;
+        Insert: Omit<NewsletterSubscriber, "id" | "created_at">;
+        Update: Partial<NewsletterSubscriber>;
         Relationships: [];
       };
     };

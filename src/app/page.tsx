@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ArrowRight,
   ShieldCheck,
   Video,
   Layers,
@@ -15,21 +14,16 @@ import {
   Share2,
   Star
 } from "lucide-react";
-import { WaitlistForm } from "@/components/waitlist-form";
 import { Button } from "@/components/ui/button";
 import { getUserAndProfile } from "@/lib/auth";
 import { signOut } from "@/app/login/actions";
-import { cookies } from "next/headers";
 import { MainHeader } from "@/components/main-header";
+import { Footer } from "@/components/footer";
 
 export default async function HomePage() {
-  const [session, cookieStore] = await Promise.all([
-    getUserAndProfile(),
-    cookies(),
-  ]);
+  const session = await getUserAndProfile();
   const isLoggedIn = !!session;
   const role = session?.profile?.role;
-  const hasJoinedWaitlist = cookieStore.get("waitlist_joined")?.value === "true";
 
   return (
     <div className="bg-white flex min-h-screen flex-col font-sans text-black antialiased">
@@ -64,7 +58,7 @@ export default async function HomePage() {
 
                 <div className="flex flex-wrap gap-4 mb-12">
                   <Button asChild size="lg" className="bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 rounded-[4px] font-sans font-bold text-sm tracking-wider uppercase px-6 h-12 border-none">
-                    <a href="#waitlist">Explore Made in India</a>
+                    <Link href="/discover">Explore Made in India</Link>
                   </Button>
                   <Button asChild size="lg" variant="outline" className="border border-white/30 text-white hover:bg-white/10 rounded-[4px] font-sans font-medium text-sm tracking-wider uppercase px-6 h-12 bg-transparent">
                     <Link href="/discover">For Manufacturers</Link>
@@ -460,7 +454,7 @@ export default async function HomePage() {
               {/* Card 1: Consumers */}
               <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
-                  <Image src="/female_worker.png" alt="Consumers" fill className="object-cover" sizes="220px" />
+                  <Image src="/consumers.jpeg" alt="Consumers" fill className="object-cover" sizes="220px" />
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between text-left">
                   <h3 className="font-serif text-base font-semibold text-black">Consumers</h3>
@@ -473,7 +467,7 @@ export default async function HomePage() {
               {/* Card 2: Manufacturers */}
               <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
-                  <Image src="/machine_work.png" alt="Manufacturers" fill className="object-cover" sizes="220px" />
+                  <Image src="/manufacturers.jpeg" alt="Manufacturers" fill className="object-cover" sizes="220px" />
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between text-left">
                   <h3 className="font-serif text-base font-semibold text-black">Manufacturers</h3>
@@ -486,7 +480,7 @@ export default async function HomePage() {
               {/* Card 3: Startups & Innovators */}
               <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
-                  <Image src="/founder.jpeg" alt="Startups & Innovators" fill className="object-cover" sizes="220px" />
+                  <Image src="/startups.jpeg" alt="Startups & Innovators" fill className="object-cover" sizes="220px" />
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between text-left">
                   <h3 className="font-serif text-base font-semibold text-black">Startups</h3>
@@ -499,7 +493,7 @@ export default async function HomePage() {
               {/* Card 4: Students & Creators */}
               <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
-                  <Image src="/indian_craftsman.png" alt="Students & Creators" fill className="object-cover" sizes="220px" />
+                  <Image src="/creators.jpeg" alt="Students & Creators" fill className="object-cover" sizes="220px" />
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between text-left">
                   <h3 className="font-serif text-base font-semibold text-black">Creators</h3>
@@ -624,147 +618,9 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Waitlist/Movement Section */}
-        <section id="waitlist" className="bg-forest-green text-white py-24 px-6 sm:px-12">
-          <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              {/* Left Side: Call to action */}
-              <div className="lg:col-span-6 text-left flex flex-col justify-center">
-                <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">
-                  Be Part of the Movement
-                </span>
-                <h2 className="font-serif text-3xl sm:text-5xl font-normal leading-tight tracking-tight text-white mb-6">
-                  Join the Founding Cohort
-                </h2>
-                <p className="text-white/80 text-sm sm:text-base leading-relaxed font-sans mb-8">
-                  Support local. Choose sustainable. Build a better future. We are onboarding select buyers and verified manufacturers for our private launch. Reserve your place today.
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-8 items-start sm:items-center">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-white/50 uppercase tracking-widest mb-1.5 block">For Consumers</span>
-                    <Link href="/discover" className="text-gold-yellow hover:underline text-sm font-bold flex items-center gap-1 uppercase tracking-wider">
-                      Explore Now <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-white/50 uppercase tracking-widest mb-1.5 block">For Manufacturers</span>
-                    <Link href="/dashboard" className="text-gold-yellow hover:underline text-sm font-bold flex items-center gap-1 uppercase tracking-wider">
-                      Join Now <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Side: Waitlist form card */}
-              <div className="lg:col-span-6 w-full max-w-xl mx-auto">
-                {hasJoinedWaitlist ? (
-                  <div className="border border-white/10 bg-[#07170f] rounded-lg p-10 text-center animate-fade-in shadow-xl">
-                    <div className="bg-white/10 text-white border border-white/20 mx-auto mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[10px] font-normal tracking-[0.11em] uppercase font-sans">
-                      <ShieldCheck className="h-3.5 w-3.5 text-gold-yellow" /> Active Waitlist Member
-                    </div>
-                    <h3 className="font-serif text-2xl text-white leading-tight mb-4">
-                      You&apos;re on the list!
-                    </h3>
-                    <p className="text-white/80 text-xs sm:text-sm font-sans tracking-wide leading-relaxed">
-                      We have reserved your spot in the GenZ cohort. We will reach out with your invitation credentials soon.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="bg-white rounded-md shadow-2xl overflow-hidden p-1.5">
-                    <WaitlistForm />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
-      {/* Styled Footer */}
-      <footer className="bg-light-gray-bg text-black border-t border-gray-200 py-16 px-6 sm:px-12 text-left">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
-            {/* Column 1: Branding */}
-            <div className="col-span-2 flex flex-col justify-start">
-              <Link href="/" className="flex items-baseline gap-0.5">
-                <span className="text-2xl font-bold tracking-tight text-forest-green">Gen</span>
-                <span className="text-2xl font-black tracking-tight text-gold-yellow">Z</span>
-              </Link>
-              <p className="text-xs text-smoke leading-relaxed font-sans mt-3 mb-6 max-w-xs">
-                A trust commerce and manufacturing platform connecting verified makers directly with buyers.
-              </p>
-              {/* Social icons */}
-              <div className="flex gap-4 text-smoke">
-                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Facebook</span>f</a>
-                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Twitter</span>t</a>
-                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">LinkedIn</span>in</a>
-                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Instagram</span>ig</a>
-              </div>
-            </div>
-
-            {/* Column 2: Company */}
-            <div>
-              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Company</h4>
-              <ul className="space-y-2.5 text-xs text-smoke font-sans">
-                <li><Link href="/about" className="hover:text-black">About Us</Link></li>
-                <li><Link href="/about#mission" className="hover:text-black">Our Mission</Link></li>
-                <li><a href="#" className="hover:text-black">Careers</a></li>
-                <li><a href="#" className="hover:text-black">Blog</a></li>
-                <li><Link href="/contact" className="hover:text-black">Contact Us</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 3: For Consumers */}
-            <div>
-              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">For Consumers</h4>
-              <ul className="space-y-2.5 text-xs text-smoke font-sans">
-                <li><Link href="/discover" className="hover:text-black">Shop Products</Link></li>
-                <li><Link href="/discover?origin=india" className="hover:text-black">Made in India</Link></li>
-                <li><Link href="/discover?innovations=true" className="hover:text-black">Innovations</Link></li>
-                <li><Link href="/discover" className="hover:text-black">Categories</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 4: For Manufacturers */}
-            <div>
-              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Manufacturers</h4>
-              <ul className="space-y-2.5 text-xs text-smoke font-sans">
-                <li><Link href="/dashboard" className="hover:text-black">Join as Manufacturer</Link></li>
-                <li><Link href="/dashboard" className="hover:text-black">Benefits</Link></li>
-                <li><Link href="/dashboard" className="hover:text-black">Resources</Link></li>
-                <li><Link href="/dashboard" className="hover:text-black">Success Stories</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 5: Import Gap */}
-            <div>
-              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Import Gap</h4>
-              <ul className="space-y-2.5 text-xs text-smoke font-sans">
-                <li><Link href="/discover?import_gap=true" className="hover:text-black">Top Import Gaps</Link></li>
-                <li><Link href="/discover?import_gap=true" className="hover:text-black">Opportunity Finder</Link></li>
-                <li><Link href="/discover?import_gap=true" className="hover:text-black">Reports &amp; Insights</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <hr className="border-gray-200 mb-8" />
-
-          {/* Bottom Copyright */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-smoke font-sans">
-            <p>&copy; {new Date().getFullYear()} GenZ Trust Commerce. All rights reserved.</p>
-            <div className="flex gap-6">
-              <a href="#" className="hover:text-black">Help Center</a>
-              <a href="#" className="hover:text-black">FAQs</a>
-              <a href="#" className="hover:text-black">Terms &amp; Conditions</a>
-              <a href="#" className="hover:text-black">Privacy Policy</a>
-            </div>
-            <p className="flex items-center gap-1">
-              Designed &amp; Built in India <span className="text-sm">🇮🇳</span>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

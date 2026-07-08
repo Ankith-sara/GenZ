@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ContactForm } from "@/components/contact-form";
 import { getUserAndProfile } from "@/lib/auth";
 import { signOut } from "@/app/login/actions";
+import { Footer } from "@/components/footer";
 
 export const metadata = {
   title: "Contact — GenZ",
@@ -161,16 +162,7 @@ export default async function ContactPage() {
         </section>
       </main>
 
-      <footer className="border-ash bg-cream-paper border-t py-14 px-6 text-center sm:px-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 sm:flex-row sm:items-center sm:justify-between sm:px-12">
-          <span className="text-black text-lg font-light tracking-[0.22em] uppercase font-sans">
-            GenZ
-          </span>
-          <p className="text-smoke text-xs font-sans">
-            &copy; {new Date().getFullYear()} GenZ. Made in India, for India — and the world.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

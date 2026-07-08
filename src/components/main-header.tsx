@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Menu,
   X,
@@ -18,7 +18,8 @@ import {
   Compass,
   Lightbulb,
   Info,
-  Home
+  Home,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -33,10 +34,16 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
   const [isOpen, setIsOpen] = useState(false);
   const [showResources, setShowResources] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   const pathname = usePathname();
+  const router = useRouter();
 
   const resourcesRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Close dropdowns on click outside
   useEffect(() => {
@@ -47,10 +54,38 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
       }
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSearch(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Focus the input as soon as the search box expands
+  useEffect(() => {
+    if (showSearch) {
+      searchInputRef.current?.focus();
+    }
+  }, [showSearch]);
+
+  function handleSearchSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (!q) return;
+    router.push(`/discover?q=${encodeURIComponent(q)}`);
+    setShowSearch(false);
+    setSearchQuery("");
+  }
+
+  function handleMobileSearchSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const q = mobileSearchQuery.trim();
+    if (!q) return;
+    router.push(`/discover?q=${encodeURIComponent(q)}`);
+    setIsOpen(false);
+    setMobileSearchQuery("");
+  }
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -177,8 +212,40 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
               </div>
             </nav>
 
-            {/* Desktop Auth CTA */}
-            <div className="hidden md:flex items-center gap-6">
+            {/* Desktop Auth CTA + Search */}
+            <div className="hidden md:flex items-center gap-4">
+              {/* Expandable Search */}
+              <div ref={searchRef} className="flex items-center">
+                <form
+                  onSubmit={handleSearchSubmit}
+                  className={`flex items-center overflow-hidden transition-all duration-300 ease-out rounded-[4px] border ${
+                    showSearch
+                      ? "w-56 border-white/20 bg-white/10 px-2"
+                      : "w-0 border-transparent"
+                  }`}
+                >
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search innovators..."
+                    aria-label="Search"
+                    className={`bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none py-2 transition-opacity duration-200 ${
+                      showSearch ? "w-full opacity-100" : "w-0 opacity-0"
+                    }`}
+                  />
+                </form>
+                <button
+                  type="button"
+                  onClick={() => setShowSearch((prev) => !prev)}
+                  aria-label={showSearch ? "Close search" : "Open search"}
+                  className="flex items-center justify-center h-9 w-9 rounded-full text-white/90 hover:text-gold-yellow hover:bg-white/10 transition-colors focus:outline-none"
+                >
+                  {showSearch ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
+                </button>
+              </div>
+
               {isLoggedIn ? (
                 /* 6. Logged-in User Avatar Dropdown */
                 <div className="relative" ref={userMenuRef}>
@@ -241,14 +308,14 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
                   </Button>
                   {/* 5. Better CTA Button */}
                   <Button asChild className="bg-gradient-to-r from-gold-yellow to-yellow-400 text-forest-green font-bold shadow-lg hover:scale-105 transition-all duration-300 rounded-[4px] h-11 px-6 text-sm uppercase tracking-wider border-none">
-                    <Link href="/#waitlist">Join the Movement</Link>
+                    <Link href="/signup">Join Now</Link>
                   </Button>
                 </>
               )}
             </div>
 
             {/* Mobile Hamburger Drawer Trigger */}
-            <div className="flex md:hidden">
+            <div className="flex md:hidden items-center gap-1">
               <button
                 onClick={() => setIsOpen(true)}
                 className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10 focus:outline-none"
@@ -271,7 +338,7 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
           />
 
           {/* Drawer container */}
-          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs bg-forest-green border-l border-white/10 shadow-2xl p-6 flex flex-col justify-between transition-transform duration-300 ease-out transform translate-x-0">
+          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs bg-forest-green border-l border-white/10 shadow-2xl p-6 flex flex-col justify-between transition-transform duration-300 ease-out transform translate-x-0 overflow-y-auto">
             <div>
               {/* Drawer Header */}
               <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
@@ -289,6 +356,19 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
                   <X className="h-6 w-6" />
                 </button>
               </div>
+
+              {/* Mobile Search */}
+              <form onSubmit={handleMobileSearchSubmit} className="relative mb-6">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+                <input
+                  type="text"
+                  value={mobileSearchQuery}
+                  onChange={(e) => setMobileSearchQuery(e.target.value)}
+                  placeholder="Search innovators..."
+                  aria-label="Search"
+                  className="w-full rounded-[4px] border border-white/20 bg-white/5 py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-gold-yellow/60 transition-colors"
+                />
+              </form>
 
               {/* Mobile Links */}
               <nav className="flex flex-col gap-2">
@@ -336,16 +416,16 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
                 <div className="border-t border-white/5 pt-2 mt-2">
                   <span className="text-[10px] text-white/40 uppercase font-bold tracking-widest px-4 mb-2 block">Resources</span>
                   <Link href="/about" className="block text-sm text-white/80 hover:text-gold-yellow px-4 py-2" onClick={() => setIsOpen(false)}>
-                    📚 Documentation
+                    Documentation
                   </Link>
                   <Link href="/discover" className="block text-sm text-white/80 hover:text-gold-yellow px-4 py-2" onClick={() => setIsOpen(false)}>
-                    💡 Community
+                    Community
                   </Link>
                   <Link href="/about#mission" className="block text-sm text-white/80 hover:text-gold-yellow px-4 py-2" onClick={() => setIsOpen(false)}>
-                    📄 Blog
+                    Blog
                   </Link>
                   <Link href="/contact" className="block text-sm text-white/80 hover:text-gold-yellow px-4 py-2" onClick={() => setIsOpen(false)}>
-                    ☎ Contact
+                    Contact
                   </Link>
                 </div>
               </nav>
@@ -376,7 +456,7 @@ export function MainHeader({ isLoggedIn, role, userName, signOutAction }: MainHe
                     <Link href="/login" onClick={() => setIsOpen(false)}>Login</Link>
                   </Button>
                   <Button asChild className="w-full bg-gradient-to-r from-gold-yellow to-yellow-400 text-forest-green font-bold shadow-lg hover:scale-105 transition-all duration-300 rounded-[4px] h-10 text-xs uppercase tracking-wider border-none">
-                    <Link href="/#waitlist" onClick={() => setIsOpen(false)}>Join the Movement</Link>
+                    <Link href="/signup" onClick={() => setIsOpen(false)}>Join Now</Link>
                   </Button>
                 </>
               )}

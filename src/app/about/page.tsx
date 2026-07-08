@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { getUserAndProfile } from "@/lib/auth";
 import { signOut } from "@/app/login/actions";
 import { MainHeader } from "@/components/main-header";
+import { Footer } from "@/components/footer";
+
 import { 
   CheckCircle2, Package, Handshake, MapPin, Users, ArrowDownLeft, 
   Lightbulb, TrendingUp, Briefcase, Globe, Rocket, LineChart, 
@@ -459,90 +461,7 @@ export default async function AboutPage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-light-gray-bg text-black border-t border-gray-200 py-16 px-6 sm:px-12 text-left">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
-            {/* Column 1: Branding */}
-            <div className="col-span-2 flex flex-col justify-start">
-              <Link href="/" className="flex items-baseline gap-0.5">
-                <span className="text-2xl font-bold tracking-tight text-forest-green">Gen</span>
-                <span className="text-2xl font-black tracking-tight text-gold-yellow">Z</span>
-              </Link>
-              <p className="text-xs text-smoke leading-relaxed font-sans mt-3 mb-6 max-w-xs">
-                A trust commerce and manufacturing platform connecting verified makers directly with buyers.
-              </p>
-              {/* Social icons */}
-              <div className="flex gap-4 text-smoke">
-                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Facebook</span>f</a>
-                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Twitter</span>t</a>
-                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">LinkedIn</span>in</a>
-                <a href="#" className="hover:text-gold-yellow"><span className="sr-only">Instagram</span>ig</a>
-              </div>
-            </div>
-
-            {/* Column 2: Company */}
-            <div>
-              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Company</h4>
-              <ul className="space-y-2.5 text-xs text-smoke font-sans">
-                <li><Link href="/about" className="hover:text-black">About Us</Link></li>
-                <li><Link href="/about#mission" className="hover:text-black">Our Mission</Link></li>
-                <li><a href="#" className="hover:text-black">Careers</a></li>
-                <li><a href="#" className="hover:text-black">Blog</a></li>
-                <li><Link href="/contact" className="hover:text-black">Contact Us</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 3: For Consumers */}
-            <div>
-              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">For Consumers</h4>
-              <ul className="space-y-2.5 text-xs text-smoke font-sans">
-                <li><Link href="/discover" className="hover:text-black">Shop Products</Link></li>
-                <li><Link href="/discover?origin=india" className="hover:text-black">Made in India</Link></li>
-                <li><Link href="/discover?innovations=true" className="hover:text-black">Innovations</Link></li>
-                <li><Link href="/discover" className="hover:text-black">Categories</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 4: For Manufacturers */}
-            <div>
-              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Manufacturers</h4>
-              <ul className="space-y-2.5 text-xs text-smoke font-sans">
-                <li><Link href="/dashboard" className="hover:text-black">Join as Manufacturer</Link></li>
-                <li><Link href="/dashboard" className="hover:text-black">Benefits</Link></li>
-                <li><Link href="/dashboard" className="hover:text-black">Resources</Link></li>
-                <li><Link href="/dashboard" className="hover:text-black">Success Stories</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 5: Import Gap */}
-            <div>
-              <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-4">Import Gap</h4>
-              <ul className="space-y-2.5 text-xs text-smoke font-sans">
-                <li><Link href="/discover?import_gap=true" className="hover:text-black">Top Import Gaps</Link></li>
-                <li><Link href="/discover?import_gap=true" className="hover:text-black">Opportunity Finder</Link></li>
-                <li><Link href="/discover?import_gap=true" className="hover:text-black">Reports &amp; Insights</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <hr className="border-gray-200 mb-8" />
-
-          {/* Bottom Copyright */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-smoke font-sans">
-            <p>&copy; {new Date().getFullYear()} GenZ Trust Commerce. All rights reserved.</p>
-            <div className="flex gap-6">
-              <a href="#" className="hover:text-black">Help Center</a>
-              <a href="#" className="hover:text-black">FAQs</a>
-              <a href="#" className="hover:text-black">Terms &amp; Conditions</a>
-              <a href="#" className="hover:text-black">Privacy Policy</a>
-            </div>
-            <p className="flex items-center gap-1">
-              Designed &amp; Built in India <span className="text-sm">🇮🇳</span>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

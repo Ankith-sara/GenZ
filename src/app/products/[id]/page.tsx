@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { productMediaUrl, formatInr } from "@/lib/products";
 import { VerifiedBadge } from "@/components/verified-badge";
 import { InquiryForm } from "./inquiry-form";
+import { Footer } from "@/components/footer";
 
 export async function generateMetadata({
   params,
@@ -235,11 +236,7 @@ export default async function PublicProductPage({
         </div>
       </main>
 
-      <footer className="bg-dark-band text-dark-band-foreground/70 py-10">
-        <div className="mx-auto max-w-5xl px-6 text-sm sm:px-12">
-          © 2026 GenZ. Made in India, for India — and the world.
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
