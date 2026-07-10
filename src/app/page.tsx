@@ -26,7 +26,7 @@ export default async function HomePage() {
   const role = session?.profile?.role;
 
   return (
-    <div className="bg-white flex min-h-screen flex-col font-sans text-black antialiased">
+    <div className="bg-background flex min-h-screen flex-col font-sans text-foreground antialiased">
       {/* Premium Main Header */}
       <MainHeader
         isLoggedIn={isLoggedIn}
@@ -57,10 +57,10 @@ export default async function HomePage() {
                 </p>
 
                 <div className="flex flex-wrap gap-4 mb-12">
-                  <Button asChild size="lg" className="bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 rounded-[4px] font-sans font-bold text-sm tracking-wider uppercase px-6 h-12 border-none">
+                  <Button asChild size="lg" className="bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 rounded-[4px] font-sans font-medium text-sm tracking-wider uppercase px-6 h-12 border-none">
                     <Link href="/discover">Explore Made in India</Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="border border-white/30 text-white hover:bg-white/10 rounded-[4px] font-sans font-medium text-sm tracking-wider uppercase px-6 h-12 bg-transparent">
+                  <Button asChild size="lg" variant="outline" className="border border-white/30 text-white hover:bg-paper-white/10 rounded-[4px] font-sans font-medium text-sm tracking-wider uppercase px-6 h-12 bg-transparent">
                     <Link href="/discover">For Manufacturers</Link>
                   </Button>
                 </div>
@@ -102,7 +102,7 @@ export default async function HomePage() {
                 </div>
 
                 {/* Tablet/Desktop View Overlay Collage */}
-                <div className="hidden md:block relative w-full h-[520px] bg-forest-green rounded-lg overflow-hidden border border-white/5 shadow-inner">
+                <div className="hidden md:block relative w-full h-[520px] bg-forest-green rounded-[4px] overflow-hidden border border-white/5 ">
                   {/* Glowing map of India in background */}
                   <Image
                     src="/india_glow_map.png"
@@ -115,7 +115,7 @@ export default async function HomePage() {
 
                   {/* Centered Map Text */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 pointer-events-none z-10">
-                    <h2 className="text-xl font-bold tracking-[0.25em] text-gold-yellow font-serif uppercase">
+                    <h2 className="text-xl font-medium tracking-[0.25em] text-gold-yellow font-serif uppercase">
                       MADE IN INDIA
                     </h2>
                     <p className="text-[10px] font-semibold tracking-widest text-white/80 uppercase mt-0.5">
@@ -124,23 +124,23 @@ export default async function HomePage() {
                   </div>
 
                   {/* Image 1: Machinist (Top-Left) */}
-                  <div className="absolute top-6 left-6 w-36 h-36 rounded-[4px] border border-white/10 overflow-hidden shadow-2xl z-20 hover:scale-105 transition-transform duration-300">
+                  <div className="absolute top-6 left-6 w-36 h-36 rounded-[4px] border border-white/10 overflow-hidden  z-20  transition-transform duration-300">
                     <Image src="/machine_work.png" alt="Machinist" fill className="object-cover" sizes="150px" />
                   </div>
 
                   {/* Image 2: Female Engineer (Middle-Right) */}
-                  <div className="absolute top-12 right-6 w-36 h-48 rounded-[4px] border border-white/10 overflow-hidden shadow-2xl z-20 hover:scale-105 transition-transform duration-300">
+                  <div className="absolute top-12 right-6 w-36 h-48 rounded-[4px] border border-white/10 overflow-hidden  z-20  transition-transform duration-300">
                     <Image src="/female_worker.png" alt="Female Engineer" fill className="object-cover" sizes="150px" />
                   </div>
 
                   {/* Image 3: Craftsman Hands (Bottom-Left) */}
-                  <div className="absolute bottom-6 left-12 w-48.5 h-36 rounded-[4px] border border-white/10 overflow-hidden shadow-2xl z-20 hover:scale-105 transition-transform duration-300">
+                  <div className="absolute bottom-6 left-12 w-48.5 h-36 rounded-[4px] border border-white/10 overflow-hidden  z-20  transition-transform duration-300">
                     <Image src="/indian_craftsman.png" alt="Artisan Crafts" fill className="object-cover" sizes="200px" />
                   </div>
                 </div>
 
                 {/* Pill at Bottom Right */}
-                <div className="md:absolute md:bottom-2 md:right-2 mt-4 md:mt-0 bg-[#07170f] border border-gold-yellow/30 px-5 py-2 rounded-full shadow-lg z-30">
+                <div className="md:absolute md:bottom-2 md:right-2 mt-4 md:mt-0 bg-[#07170f] border border-gold-yellow/30 px-5 py-2 rounded-full  z-30">
                   <span className="text-[10px] sm:text-xs font-semibold tracking-widest text-gold-yellow uppercase block text-center">
                     Play Desi. Be Desi. Proudly Desi.
                   </span>
@@ -151,7 +151,7 @@ export default async function HomePage() {
         </section>
 
         {/* Our Core Pillars Section */}
-        <section className="bg-white py-24 px-6 sm:px-12 border-b border-light-gray-bg">
+        <section className="bg-paper-white py-24 px-6 sm:px-12 border-b border-light-gray-bg">
           <div className="mx-auto max-w-7xl text-center">
             <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">
               Our Core Pillars
@@ -163,7 +163,7 @@ export default async function HomePage() {
             {/* Grid of 5 pillars */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
               {/* Trust Layer */}
-              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-lg border border-gray-100 hover:border-gold-yellow/30 hover:shadow-md transition-all">
+              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-[4px] border border-black/10 hover:border-gold-yellow/30 hover: transition-all">
                 <div className="h-12 w-12 bg-forest-green/5 border border-forest-green/10 flex items-center justify-center rounded-full mb-4">
                   <ShieldCheck className="h-6 w-6 text-forest-green" />
                 </div>
@@ -174,7 +174,7 @@ export default async function HomePage() {
               </div>
 
               {/* Reel-Based Discovery */}
-              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-lg border border-gray-100 hover:border-gold-yellow/30 hover:shadow-md transition-all">
+              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-[4px] border border-black/10 hover:border-gold-yellow/30 hover: transition-all">
                 <div className="h-12 w-12 bg-forest-green/5 border border-forest-green/10 flex items-center justify-center rounded-full mb-4">
                   <Play className="h-6 w-6 text-forest-green fill-forest-green/20" />
                 </div>
@@ -185,7 +185,7 @@ export default async function HomePage() {
               </div>
 
               {/* Import Gap Intelligence */}
-              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-lg border border-gray-100 hover:border-gold-yellow/30 hover:shadow-md transition-all">
+              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-[4px] border border-black/10 hover:border-gold-yellow/30 hover: transition-all">
                 <div className="h-12 w-12 bg-forest-green/5 border border-forest-green/10 flex items-center justify-center rounded-full mb-4">
                   <LineChart className="h-6 w-6 text-forest-green" />
                 </div>
@@ -196,7 +196,7 @@ export default async function HomePage() {
               </div>
 
               {/* Innovation & Design */}
-              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-lg border border-gray-100 hover:border-gold-yellow/30 hover:shadow-md transition-all">
+              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-[4px] border border-black/10 hover:border-gold-yellow/30 hover: transition-all">
                 <div className="h-12 w-12 bg-forest-green/5 border border-forest-green/10 flex items-center justify-center rounded-full mb-4">
                   <Lightbulb className="h-6 w-6 text-forest-green" />
                 </div>
@@ -207,7 +207,7 @@ export default async function HomePage() {
               </div>
 
               {/* Direct Market Access */}
-              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-lg border border-gray-100 hover:border-gold-yellow/30 hover:shadow-md transition-all">
+              <div className="flex flex-col items-center p-6 bg-light-gray-bg rounded-[4px] border border-black/10 hover:border-gold-yellow/30 hover: transition-all">
                 <div className="h-12 w-12 bg-forest-green/5 border border-forest-green/10 flex items-center justify-center rounded-full mb-4">
                   <Users className="h-6 w-6 text-forest-green" />
                 </div>
@@ -221,7 +221,7 @@ export default async function HomePage() {
         </section>
 
         {/* What Makes Us Different Section */}
-        <section className="bg-light-gray-bg py-24 px-6 sm:px-12 border-b border-gray-200">
+        <section className="bg-light-gray-bg py-24 px-6 sm:px-12 border-b border-black/10">
           <div className="mx-auto max-w-7xl">
             <div className="text-center mb-16">
               <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">
@@ -235,7 +235,7 @@ export default async function HomePage() {
             {/* Grid of 3 Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Card 1: Video Reels */}
-              <div className="bg-forest-green text-white rounded-lg p-8 flex flex-col justify-between h-[450px] shadow-lg border border-white/5 relative overflow-hidden group">
+              <div className="bg-forest-green text-white rounded-[4px] p-8 flex flex-col justify-between h-[450px]  border border-white/5 relative overflow-hidden group">
                 <div>
                   <h3 className="font-serif text-2xl font-normal mb-3 text-white">
                     We Show <span className="text-gold-yellow">Who Makes</span> What You Buy
@@ -246,8 +246,8 @@ export default async function HomePage() {
                 </div>
 
                 {/* iPhone Reel Mockup */}
-                <div className="relative w-48 h-64 mx-auto -mb-12 border-4 border-white/20 bg-black rounded-2xl overflow-hidden shadow-2xl mt-4">
-                  <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-3 bg-white/25 rounded-full z-30" />
+                <div className="relative w-48 h-64 mx-auto -mb-12 border-4 border-white/20 bg-black rounded-2xl overflow-hidden  mt-4">
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-3 bg-paper-white/25 rounded-full z-30" />
                   {/* Inside Screen */}
                   <div className="relative w-full h-full">
                     {/* Machinist thumbnail inside screen */}
@@ -261,13 +261,13 @@ export default async function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                     {/* Play Icon */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="h-10 w-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <div className="h-10 w-10 bg-paper-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                         <Play className="h-4.5 w-4.5 text-white fill-white" />
                       </div>
                     </div>
                     {/* Overlay Info */}
                     <div className="absolute bottom-4 left-3 text-left">
-                      <span className="text-[8px] bg-gold-yellow text-forest-green font-bold px-1.5 py-0.5 rounded tracking-wide uppercase">
+                      <span className="text-[8px] bg-gold-yellow text-forest-green font-medium px-1.5 py-0.5 rounded tracking-wide uppercase">
                         Precision
                       </span>
                       <p className="text-[10px] font-semibold mt-1 text-white">Precision. Passion.</p>
@@ -284,7 +284,7 @@ export default async function HomePage() {
               </div>
 
               {/* Card 2: Import data */}
-              <div className="bg-forest-green text-white rounded-lg p-8 flex flex-col justify-between h-[450px] shadow-lg border border-white/5 relative overflow-hidden group">
+              <div className="bg-forest-green text-white rounded-[4px] p-8 flex flex-col justify-between h-[450px]  border border-white/5 relative overflow-hidden group">
                 <div>
                   <h3 className="font-serif text-2xl font-normal mb-3 text-white">
                     We Turn Import Data into <span className="text-gold-yellow">Indian Opportunities</span>
@@ -324,13 +324,13 @@ export default async function HomePage() {
                   </span>
                 </div>
 
-                <Button asChild variant="outline" className="border-white/30 text-white hover:bg-white/10 w-full rounded-[4px] h-11 uppercase text-xs font-semibold tracking-wider bg-transparent">
+                <Button asChild variant="outline" className="border-white/30 text-white hover:bg-paper-white/10 w-full rounded-[4px] h-11 uppercase text-xs font-semibold tracking-wider bg-transparent">
                   <Link href="/discover?import_gap=true">Explore Import Gaps</Link>
                 </Button>
               </div>
 
               {/* Card 3: Innovation */}
-              <div className="bg-forest-green text-white rounded-lg p-8 flex flex-col justify-between h-[450px] shadow-lg border border-white/5 relative overflow-hidden group">
+              <div className="bg-forest-green text-white rounded-[4px] p-8 flex flex-col justify-between h-[450px]  border border-white/5 relative overflow-hidden group">
                 <div>
                   <h3 className="font-serif text-2xl font-normal mb-3 text-white">
                     We Promote <span className="text-gold-yellow">Innovation</span>, Not Just Manufacturing
@@ -342,23 +342,23 @@ export default async function HomePage() {
 
                 {/* Speaker rendering illustration */}
                 <div className="relative w-44 h-44 mx-auto flex items-center justify-center my-2">
-                  <div className="w-28 h-36 bg-neutral-900 border border-neutral-800 rounded-xl relative shadow-2xl flex flex-col items-center p-2.5 overflow-hidden">
+                  <div className="w-28 h-36 bg-neutral-900 border border-neutral-800 rounded-2xl relative  flex flex-col items-center p-2.5 overflow-hidden">
                     {/* Metal speaker mesh texture */}
-                    <div className="w-full h-24 bg-neutral-950 rounded-lg flex flex-col items-center justify-center relative overflow-hidden border border-neutral-800">
+                    <div className="w-full h-24 bg-neutral-950 rounded-[4px] flex flex-col items-center justify-center relative overflow-hidden border border-neutral-800">
                       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:8px_8px]" />
                       <div className="h-10 w-10 rounded-full border border-neutral-700 bg-black flex items-center justify-center">
                         <div className="h-5 w-5 rounded-full bg-gold-yellow/80" />
                       </div>
                     </div>
                     {/* Premium wood base base */}
-                    <div className="w-full h-8 bg-[#8b5a2b] border-t border-neutral-800 mt-2 rounded-md flex items-center justify-between px-3 text-[8px] text-white/60 font-sans">
+                    <div className="w-full h-8 bg-[#8b5a2b] border-t border-neutral-800 mt-2 rounded-[4px] flex items-center justify-between px-3 text-[8px] text-white/60 font-sans">
                       <span>WOODEN BASE</span>
                       <div className="h-1.5 w-1.5 bg-green-500 rounded-full animate-pulse" />
                     </div>
                   </div>
                 </div>
 
-                <Button asChild variant="outline" className="border-white/30 text-white hover:bg-white/10 w-full rounded-[4px] h-11 uppercase text-xs font-semibold tracking-wider bg-transparent">
+                <Button asChild variant="outline" className="border-white/30 text-white hover:bg-paper-white/10 w-full rounded-[4px] h-11 uppercase text-xs font-semibold tracking-wider bg-transparent">
                   <Link href="/discover?innovations=true">Discover Innovations</Link>
                 </Button>
               </div>
@@ -367,7 +367,7 @@ export default async function HomePage() {
         </section>
 
         {/* How It Works Section */}
-        <section className="bg-white py-24 px-6 sm:px-12 border-b border-light-gray-bg">
+        <section className="bg-paper-white py-24 px-6 sm:px-12 border-b border-light-gray-bg">
           <div className="mx-auto max-w-7xl text-center">
             <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">
               How It Works
@@ -380,7 +380,7 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
               {/* Step 1 */}
               <div className="flex flex-col items-center relative z-10 group">
-                <div className="h-14 w-14 bg-forest-green text-white rounded-full flex items-center justify-center text-lg font-bold border-4 border-white shadow-md mb-6 relative">
+                <div className="h-14 w-14 bg-forest-green text-white rounded-full flex items-center justify-center text-lg font-medium border-4 border-white  mb-6 relative">
                   1
                   <div className="absolute -bottom-1 right-0 bg-gold-yellow rounded-full p-1 border border-forest-green">
                     <Search className="h-2.5 w-2.5 text-forest-green" />
@@ -394,7 +394,7 @@ export default async function HomePage() {
 
               {/* Step 2 */}
               <div className="flex flex-col items-center relative z-10 group">
-                <div className="h-14 w-14 bg-forest-green text-white rounded-full flex items-center justify-center text-lg font-bold border-4 border-white shadow-md mb-6 relative">
+                <div className="h-14 w-14 bg-forest-green text-white rounded-full flex items-center justify-center text-lg font-medium border-4 border-white  mb-6 relative">
                   2
                   <div className="absolute -bottom-1 right-0 bg-gold-yellow rounded-full p-1 border border-forest-green">
                     <Video className="h-2.5 w-2.5 text-forest-green" />
@@ -408,7 +408,7 @@ export default async function HomePage() {
 
               {/* Step 3 */}
               <div className="flex flex-col items-center relative z-10 group">
-                <div className="h-14 w-14 bg-forest-green text-white rounded-full flex items-center justify-center text-lg font-bold border-4 border-white shadow-md mb-6 relative">
+                <div className="h-14 w-14 bg-forest-green text-white rounded-full flex items-center justify-center text-lg font-medium border-4 border-white  mb-6 relative">
                   3
                   <div className="absolute -bottom-1 right-0 bg-gold-yellow rounded-full p-1 border border-forest-green">
                     <Layers className="h-2.5 w-2.5 text-forest-green" />
@@ -422,7 +422,7 @@ export default async function HomePage() {
 
               {/* Step 4 */}
               <div className="flex flex-col items-center relative z-10 group">
-                <div className="h-14 w-14 bg-forest-green text-white rounded-full flex items-center justify-center text-lg font-bold border-4 border-white shadow-md mb-6 relative">
+                <div className="h-14 w-14 bg-forest-green text-white rounded-full flex items-center justify-center text-lg font-medium border-4 border-white  mb-6 relative">
                   4
                   <div className="absolute -bottom-1 right-0 bg-gold-yellow rounded-full p-1 border border-forest-green">
                     <ShieldCheck className="h-2.5 w-2.5 text-forest-green" />
@@ -438,7 +438,7 @@ export default async function HomePage() {
         </section>
 
         {/* Who It's For Section */}
-        <section className="bg-light-gray-bg py-24 px-6 sm:px-12 border-b border-gray-200">
+        <section className="bg-light-gray-bg py-24 px-6 sm:px-12 border-b border-black/10">
           <div className="mx-auto max-w-7xl">
             <div className="text-center mb-16">
               <span className="text-gold-yellow text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">
@@ -452,7 +452,7 @@ export default async function HomePage() {
             {/* 5-Column Grid */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
               {/* Card 1: Consumers */}
-              <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
+              <div className="bg-paper-white rounded-[4px] border border-black/10 overflow-hidden  hover: transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
                   <Image src="/consumers.jpeg" alt="Consumers" fill className="object-cover" sizes="220px" />
                 </div>
@@ -465,7 +465,7 @@ export default async function HomePage() {
               </div>
 
               {/* Card 2: Manufacturers */}
-              <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
+              <div className="bg-paper-white rounded-[4px] border border-black/10 overflow-hidden  hover: transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
                   <Image src="/manufacturers.jpeg" alt="Manufacturers" fill className="object-cover" sizes="220px" />
                 </div>
@@ -478,7 +478,7 @@ export default async function HomePage() {
               </div>
 
               {/* Card 3: Startups & Innovators */}
-              <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
+              <div className="bg-paper-white rounded-[4px] border border-black/10 overflow-hidden  hover: transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
                   <Image src="/startups.jpeg" alt="Startups & Innovators" fill className="object-cover" sizes="220px" />
                 </div>
@@ -491,7 +491,7 @@ export default async function HomePage() {
               </div>
 
               {/* Card 4: Students & Creators */}
-              <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
+              <div className="bg-paper-white rounded-[4px] border border-black/10 overflow-hidden  hover: transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
                   <Image src="/creators.jpeg" alt="Students & Creators" fill className="object-cover" sizes="220px" />
                 </div>
@@ -504,7 +504,7 @@ export default async function HomePage() {
               </div>
 
               {/* Card 5: Investors & Partners */}
-              <div className="bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-[280px]">
+              <div className="bg-paper-white rounded-[4px] border border-black/10 overflow-hidden  hover: transition-all flex flex-col h-[280px]">
                 <div className="relative h-32 w-full">
                   <Image src="/india_glow_map.png" alt="Investors" fill className="object-cover" sizes="220px" />
                 </div>
@@ -548,7 +548,7 @@ export default async function HomePage() {
 
               {/* Right side Goal callout */}
               <div className="lg:col-span-5 flex flex-col justify-center">
-                <div className="bg-[#0c1a11] border border-gold-yellow/20 rounded-md p-8 text-left">
+                <div className="bg-[#0c1a11] border border-gold-yellow/20 rounded-[4px] p-8 text-left">
                   <span className="text-gold-yellow text-xs font-semibold tracking-wider uppercase mb-3 block">
                     Our Ultimate Goal
                   </span>
@@ -565,7 +565,7 @@ export default async function HomePage() {
         </section>
 
         {/* Trust Indicators Section */}
-        <section className="bg-white py-20 px-6 sm:px-12 border-b border-light-gray-bg">
+        <section className="bg-paper-white py-20 px-6 sm:px-12 border-b border-light-gray-bg">
           <div className="mx-auto max-w-7xl flex flex-col gap-14 text-center">
             {/* Trusted By logos row */}
             <div className="flex flex-col gap-4">
@@ -573,9 +573,9 @@ export default async function HomePage() {
                 TRUSTED BY
               </span>
               <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 opacity-75">
-                <span className="text-xl font-black tracking-tighter text-blue-900 font-sans">sidbi</span>
-                <span className="text-xl font-black tracking-tighter text-red-800 font-sans">NSIC</span>
-                <span className="text-lg font-bold tracking-tight text-neutral-800 font-sans uppercase">DPIIT</span>
+                <span className="text-xl font-normal tracking-tighter text-blue-900 font-sans">sidbi</span>
+                <span className="text-xl font-normal tracking-tighter text-red-800 font-sans">NSIC</span>
+                <span className="text-lg font-medium tracking-tight text-neutral-800 font-sans uppercase">DPIIT</span>
                 <span className="text-sm font-semibold tracking-widest text-neutral-800 font-serif uppercase border-2 border-neutral-800 px-3 py-1">
                   MAKE IN INDIA
                 </span>
@@ -583,7 +583,7 @@ export default async function HomePage() {
             </div>
 
             {/* Testimonial callout */}
-            <div className="bg-light-gray-bg border border-gray-100 rounded-lg p-8 max-w-3xl mx-auto flex flex-col items-center">
+            <div className="bg-light-gray-bg border border-black/10 rounded-[4px] p-8 max-w-3xl mx-auto flex flex-col items-center">
               <div className="flex gap-1 text-gold-yellow mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-4.5 w-4.5 fill-gold-yellow text-gold-yellow" />
@@ -593,11 +593,11 @@ export default async function HomePage() {
                 &ldquo;GenZ is not just a platform, it&apos;s a movement to bring our roots back to life.&rdquo;
               </blockquote>
               <div className="flex items-center gap-3">
-                <div className="relative h-10 w-10 overflow-hidden rounded-full border border-gray-200">
+                <div className="relative h-10 w-10 overflow-hidden rounded-full border border-black/10">
                   <Image src="/founder.jpeg" alt="User portrait" fill className="object-cover" sizes="40px" />
                 </div>
                 <div className="text-left">
-                  <h4 className="text-xs font-bold text-black">Appala Sairam</h4>
+                  <h4 className="text-xs font-medium text-black">Appala Sairam</h4>
                   <p className="text-[10px] text-smoke">Founder &amp; Delivery Partner, GenZ</p>
                 </div>
               </div>
@@ -609,10 +609,10 @@ export default async function HomePage() {
                 AS FEATURED IN
               </span>
               <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-75">
-                <span className="text-base font-bold text-red-600 font-sans">YOURSTORY</span>
-                <span className="text-base font-black text-black font-sans tracking-tight">Inc<span className="text-gold-yellow">42</span></span>
-                <span className="text-sm font-bold text-neutral-800 font-serif italic uppercase">The Economic Times</span>
-                <span className="text-base font-bold text-orange-500 font-sans">StartupIndia</span>
+                <span className="text-base font-medium text-red-600 font-sans">YOURSTORY</span>
+                <span className="text-base font-normal text-black font-sans tracking-tight">Inc<span className="text-gold-yellow">42</span></span>
+                <span className="text-sm font-medium text-neutral-800 font-serif italic uppercase">The Economic Times</span>
+                <span className="text-base font-medium text-orange-500 font-sans">StartupIndia</span>
               </div>
             </div>
           </div>

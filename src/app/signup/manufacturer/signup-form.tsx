@@ -89,11 +89,11 @@ export function ManufacturerSignupForm() {
         <div className="space-y-4">
           <div>
             <Label htmlFor="business_name">Company / Factory Name</Label>
-            <Input id="business_name" name="business_name" required className="border-gray-200" />
+            <Input id="business_name" name="business_name" required className="border-black/10" />
           </div>
           <div>
             <Label htmlFor="owner_name">Owner / Authorized Person Name</Label>
-            <Input id="owner_name" name="owner_name" required className="border-gray-200" />
+            <Input id="owner_name" name="owner_name" required className="border-black/10" />
           </div>
           <div>
             <Label htmlFor="phone">Mobile Number</Label>
@@ -106,7 +106,7 @@ export function ManufacturerSignupForm() {
                 onChange={(e) => setPhone(e.target.value)} 
                 disabled={phoneVerified}
                 placeholder="9876543210"
-                className="border-gray-200"
+                className="border-black/10"
               />
               {!phoneVerified ? (
                 <Button 
@@ -134,7 +134,7 @@ export function ManufacturerSignupForm() {
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value)} 
                     placeholder="123456" 
-                    className="border-gray-200 mt-1"
+                    className="border-black/10 mt-1"
                   />
                 </div>
                 <Button 
@@ -150,11 +150,11 @@ export function ManufacturerSignupForm() {
           </div>
           <div>
             <Label htmlFor="email">Official Email</Label>
-            <Input id="email" name="email" type="email" required className="border-gray-200" />
+            <Input id="email" name="email" type="email" required className="border-black/10" />
           </div>
           <div>
             <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" type="password" required className="border-gray-200" />
+            <Input id="password" name="password" type="password" required className="border-black/10" />
           </div>
         </div>
       )
@@ -165,35 +165,35 @@ export function ManufacturerSignupForm() {
         <div className="space-y-4">
           <div>
             <Label htmlFor="factory_address">Factory Address</Label>
-            <Textarea id="factory_address" name="factory_address" rows={2} required className="border-gray-200" />
+            <Textarea id="factory_address" name="factory_address" rows={2} required className="border-black/10" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="state">State</Label>
-              <Input id="state" name="state" required className="border-gray-200" />
+              <Input id="state" name="state" required className="border-black/10" />
             </div>
             <div>
               <Label htmlFor="district">District</Label>
-              <Input id="district" name="district" required className="border-gray-200" />
+              <Input id="district" name="district" required className="border-black/10" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="pincode">Pincode</Label>
-              <Input id="pincode" name="pincode" required className="border-gray-200" />
+              <Input id="pincode" name="pincode" required className="border-black/10" />
             </div>
             <div>
               <Label htmlFor="established_year">Year Established</Label>
-              <Input id="established_year" name="established_year" type="number" required className="border-gray-200" />
+              <Input id="established_year" name="established_year" type="number" required className="border-black/10" />
             </div>
           </div>
           <div>
             <Label htmlFor="google_maps_location">Google Maps Location Link</Label>
-            <Input id="google_maps_location" name="google_maps_location" placeholder="https://maps.google.com/?q=..." className="border-gray-200" />
+            <Input id="google_maps_location" name="google_maps_location" placeholder="https://maps.google.com/?q=..." className="border-black/10" />
           </div>
           <div>
             <Label htmlFor="employee_count">Number of Employees</Label>
-            <Input id="employee_count" name="employee_count" type="number" required className="border-gray-200" />
+            <Input id="employee_count" name="employee_count" type="number" required className="border-black/10" />
           </div>
         </div>
       )
@@ -204,19 +204,19 @@ export function ManufacturerSignupForm() {
         <div className="space-y-4">
           <div>
             <Label htmlFor="product_categories">Product Categories (comma separated)</Label>
-            <Input id="product_categories" name="product_categories" placeholder="Apparel, Handicrafts, Spares" required className="border-gray-200" />
+            <Input id="product_categories" name="product_categories" placeholder="Apparel, Handicrafts, Spares" required className="border-black/10" />
           </div>
           <div>
             <Label htmlFor="products_manufactured">Products Manufactured</Label>
-            <Textarea id="products_manufactured" name="products_manufactured" placeholder="What specific items do you build?" required className="border-gray-200" />
+            <Textarea id="products_manufactured" name="products_manufactured" placeholder="What specific items do you build?" required className="border-black/10" />
           </div>
           <div>
             <Label htmlFor="manufacturing_capacity">Monthly Manufacturing Capacity</Label>
-            <Input id="manufacturing_capacity" name="manufacturing_capacity" placeholder="e.g. 50,000 units" required className="border-gray-200" />
+            <Input id="manufacturing_capacity" name="manufacturing_capacity" placeholder="e.g. 50,000 units" required className="border-black/10" />
           </div>
           <div>
             <Label htmlFor="moq">Minimum Order Quantity (MOQ)</Label>
-            <Input id="moq" name="moq" placeholder="e.g. 500 units" required className="border-gray-200" />
+            <Input id="moq" name="moq" placeholder="e.g. 500 units" required className="border-black/10" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -294,11 +294,11 @@ export function ManufacturerSignupForm() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="pan_number">PAN Number</Label>
-              <Input id="pan_number" name="pan_number" required className="border-gray-200 uppercase" maxLength={10} />
+              <Input id="pan_number" name="pan_number" required className="border-black/10 uppercase" maxLength={10} />
             </div>
             <div>
               <Label htmlFor="cin_number">CIN (If applicable)</Label>
-              <Input id="cin_number" name="cin_number" className="border-gray-200 uppercase" maxLength={21} />
+              <Input id="cin_number" name="cin_number" className="border-black/10 uppercase" maxLength={21} />
             </div>
           </div>
         </div>
@@ -361,7 +361,7 @@ export function ManufacturerSignupForm() {
           <div className="border border-gold-yellow/30 bg-gold-yellow/5 p-4 rounded text-xs text-forest-green flex gap-2">
             <ShieldAlert className="h-5 w-5 text-gold-yellow shrink-0 mt-0.5" />
             <div>
-              <p className="font-bold">Mandatory Verification Walkthrough</p>
+              <p className="font-medium">Mandatory Verification Walkthrough</p>
               <p className="mt-1 leading-relaxed">
                 Provide a 1 to 5 minute factory walkthrough showing raw materials entering the factory, the manufacturing process, machinery in operation, finished products, packaging, and the factory name board.
               </p>
@@ -410,7 +410,7 @@ export function ManufacturerSignupForm() {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Confirm Video Inclusions</Label>
+            <Label className="text-xs font-medium text-gray-500 uppercase tracking-wider block mb-1">Confirm Video Inclusions</Label>
             {[
               "Raw material entering the factory",
               "Manufacturing process from start to finish",
@@ -436,46 +436,46 @@ export function ManufacturerSignupForm() {
     <div className="space-y-4 text-left">
       <div>
         <Label htmlFor="business_name">Brand Name</Label>
-        <Input id="business_name" name="business_name" required className="border-gray-200" />
+        <Input id="business_name" name="business_name" required className="border-black/10" />
       </div>
       <div>
         <Label htmlFor="founder_name">Founder Name</Label>
-        <Input id="founder_name" name="founder_name" required className="border-gray-200" />
+        <Input id="founder_name" name="founder_name" required className="border-black/10" />
       </div>
       <div>
         <Label htmlFor="phone">Mobile Number</Label>
-        <Input id="phone" name="phone" type="tel" required className="border-gray-200" placeholder="9876543210" />
+        <Input id="phone" name="phone" type="tel" required className="border-black/10" placeholder="9876543210" />
       </div>
       <div>
         <Label htmlFor="email">Email</Label>
-        <Input id="email" name="email" type="email" required className="border-gray-200" />
+        <Input id="email" name="email" type="email" required className="border-black/10" />
       </div>
       <div>
         <Label htmlFor="password">Password</Label>
-        <Input id="password" name="password" type="password" required className="border-gray-200" />
+        <Input id="password" name="password" type="password" required className="border-black/10" />
       </div>
       <div>
         <Label htmlFor="gst_number">GSTIN (Optional initially)</Label>
-        <Input id="gst_number" name="gst_number" className="border-gray-200 uppercase" maxLength={15} />
+        <Input id="gst_number" name="gst_number" className="border-black/10 uppercase" maxLength={15} />
       </div>
       <div>
         <Label htmlFor="website">Website (Optional)</Label>
-        <Input id="website" name="website" placeholder="https://mybrand.com" className="border-gray-200" />
+        <Input id="website" name="website" placeholder="https://mybrand.com" className="border-black/10" />
       </div>
       <div>
         <Label htmlFor="product_categories">Product Categories</Label>
-        <Input id="product_categories" name="product_categories" placeholder="Cosmetics, Clothing, Packaged Food" required className="border-gray-200" />
+        <Input id="product_categories" name="product_categories" placeholder="Cosmetics, Clothing, Packaged Food" required className="border-black/10" />
       </div>
       <div>
         <Label>Do you own a factory?</Label>
-        <select name="owns_factory" className="w-full h-10 px-3 border border-gray-200 rounded bg-white text-sm focus:outline-none focus:border-forest-green mt-1">
+        <select name="owns_factory" className="w-full h-10 px-3 border border-black/10 rounded bg-paper-white text-sm focus:outline-none focus:border-forest-green mt-1">
           <option value="Yes">Yes, we own the production facility</option>
           <option value="No">No, looking for manufacturing partners on GenZ</option>
         </select>
       </div>
       <div>
         <Label htmlFor="description">Brand Description</Label>
-        <Textarea id="description" name="description" rows={3} placeholder="Tell us about your brand vision..." className="border-gray-200" />
+        <Textarea id="description" name="description" rows={3} placeholder="Tell us about your brand vision..." className="border-black/10" />
       </div>
       
       {/* Logo upload */}
@@ -520,41 +520,41 @@ export function ManufacturerSignupForm() {
     <div className="space-y-4 text-left">
       <div>
         <Label htmlFor="owner_name">Artisan / MSME Owner Name</Label>
-        <Input id="owner_name" name="owner_name" required className="border-gray-200" />
+        <Input id="owner_name" name="owner_name" required className="border-black/10" />
       </div>
       <div>
         <Label htmlFor="business_name">Business / Workshop Name</Label>
-        <Input id="business_name" name="business_name" required className="border-gray-200" />
+        <Input id="business_name" name="business_name" required className="border-black/10" />
       </div>
       <div>
         <Label htmlFor="phone">Mobile Number</Label>
-        <Input id="phone" name="phone" type="tel" required className="border-gray-200" placeholder="9876543210" />
+        <Input id="phone" name="phone" type="tel" required className="border-black/10" placeholder="9876543210" />
       </div>
       <div>
         <Label htmlFor="email">Email</Label>
-        <Input id="email" name="email" type="email" required className="border-gray-200" />
+        <Input id="email" name="email" type="email" required className="border-black/10" />
       </div>
       <div>
         <Label htmlFor="password">Password</Label>
-        <Input id="password" name="password" type="password" required className="border-gray-200" />
+        <Input id="password" name="password" type="password" required className="border-black/10" />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="state">State</Label>
-          <Input id="state" name="state" required className="border-gray-200" />
+          <Input id="state" name="state" required className="border-black/10" />
         </div>
         <div>
           <Label htmlFor="district">District</Label>
-          <Input id="district" name="district" required className="border-gray-200" />
+          <Input id="district" name="district" required className="border-black/10" />
         </div>
       </div>
       <div>
         <Label htmlFor="product_categories">Product Categories</Label>
-        <Input id="product_categories" name="product_categories" placeholder="Pottery, Handloom, Wood Carving" required className="border-gray-200" />
+        <Input id="product_categories" name="product_categories" placeholder="Pottery, Handloom, Wood Carving" required className="border-black/10" />
       </div>
       <div>
         <Label>Production Type</Label>
-        <select name="handmade_machine" className="w-full h-10 px-3 border border-gray-200 rounded bg-white text-sm focus:outline-none focus:border-forest-green mt-1">
+        <select name="handmade_machine" className="w-full h-10 px-3 border border-black/10 rounded bg-paper-white text-sm focus:outline-none focus:border-forest-green mt-1">
           <option value="Handmade">100% Handmade / Handcrafted</option>
           <option value="Machine">Machine Made</option>
           <option value="Both">Both (Semi-automated)</option>
@@ -562,7 +562,7 @@ export function ManufacturerSignupForm() {
       </div>
       <div>
         <Label htmlFor="udyam_optional">UDYAM / MSME Number (Optional)</Label>
-        <Input id="udyam_optional" name="udyam_optional" placeholder="UDYAM-XX-00-0000000" className="border-gray-200 uppercase" />
+        <Input id="udyam_optional" name="udyam_optional" placeholder="UDYAM-XX-00-0000000" className="border-black/10 uppercase" />
       </div>
 
       {/* Workshop Photos */}
@@ -695,7 +695,7 @@ export function ManufacturerSignupForm() {
         <p className="text-neutral-500 max-w-sm mx-auto text-sm leading-relaxed">
           We have sent a verification email. Once you confirm, your profile will be submitted to the GenZ administration team for approval.
         </p>
-        <Button asChild className="bg-forest-green text-white hover:bg-forest-green/90 mt-8 rounded-[4px] font-bold tracking-wider">
+        <Button asChild className="bg-forest-green text-white hover:bg-forest-green/90 mt-8 rounded-[4px] font-medium tracking-wider">
           <Link href="/">Return Home</Link>
         </Button>
       </div>
@@ -707,7 +707,7 @@ export function ManufacturerSignupForm() {
     return (
       <div className="text-left animate-fade-in">
         <fieldset className="border-0 p-0 mb-6">
-          <legend className="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-3">
+          <legend className="text-xs font-medium text-neutral-400 uppercase tracking-widest mb-3">
             Select Your Business Profile
           </legend>
           <div className="grid grid-cols-1 gap-3">
@@ -732,13 +732,13 @@ export function ManufacturerSignupForm() {
                 key={type.id}
                 type="button"
                 onClick={() => setBusinessType(type.id)}
-                className={`flex items-start gap-4 p-4 rounded-lg border-2 text-left transition-all ${
+                className={`flex items-start gap-4 p-4 rounded-[4px] border-2 text-left transition-all ${
                   businessType === type.id
                     ? "border-forest-green bg-forest-green/5 ring-1 ring-forest-green"
-                    : "border-gray-200 bg-white hover:border-gray-300"
+                    : "border-black/10 bg-paper-white hover:border-gray-300"
                 }`}
               >
-                <div className={`p-2 rounded-md ${businessType === type.id ? "bg-forest-green text-white" : "bg-gray-100 text-gray-400"}`}>
+                <div className={`p-2 rounded-[4px] ${businessType === type.id ? "bg-forest-green text-white" : "bg-gray-100 text-gray-400"}`}>
                   <Building2 className="h-5 w-5" />
                 </div>
                 <div>
@@ -753,7 +753,7 @@ export function ManufacturerSignupForm() {
         <Button 
           type="button" 
           onClick={() => setStep(1)} 
-          className="w-full bg-forest-green text-white hover:bg-forest-green/90 uppercase tracking-wider font-bold h-12 rounded-[4px] mt-2 flex items-center justify-center gap-1.5"
+          className="w-full bg-forest-green text-white hover:bg-forest-green/90 uppercase tracking-wider font-medium h-12 rounded-[4px] mt-2 flex items-center justify-center gap-1.5"
         >
           Continue <ArrowRight className="h-4 w-4" />
         </Button>
@@ -775,7 +775,7 @@ export function ManufacturerSignupForm() {
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back
           </button>
-          <span className="text-xs uppercase tracking-widest text-neutral-400 font-bold ml-auto">
+          <span className="text-xs uppercase tracking-widest text-neutral-400 font-medium ml-auto">
             {businessType === "startup" ? "Startup / Brand Details" : "Artisan / MSME Details"}
           </span>
         </div>
@@ -791,7 +791,7 @@ export function ManufacturerSignupForm() {
         <Button 
           type="submit" 
           disabled={isPending}
-          className="w-full bg-forest-green text-white hover:bg-forest-green/90 uppercase tracking-wider font-bold h-12 rounded-[4px] mt-6"
+          className="w-full bg-forest-green text-white hover:bg-forest-green/90 uppercase tracking-wider font-medium h-12 rounded-[4px] mt-6"
         >
           {isPending ? "Submitting Application..." : "Submit Registration"}
         </Button>
@@ -817,7 +817,7 @@ export function ManufacturerSignupForm() {
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back
           </button>
-          <span className="text-xs font-bold text-forest-green tracking-widest uppercase">
+          <span className="text-xs font-medium text-forest-green tracking-widest uppercase">
             Step {step} of {MANUFACTURER_STEPS.length}
           </span>
         </div>
@@ -859,7 +859,7 @@ export function ManufacturerSignupForm() {
           <Button 
             type="button" 
             onClick={handleNextStep}
-            className="flex-1 bg-forest-green text-white hover:bg-forest-green/90 font-bold uppercase tracking-wider h-11 rounded-[4px] flex items-center justify-center gap-1"
+            className="flex-1 bg-forest-green text-white hover:bg-forest-green/90 font-medium uppercase tracking-wider h-11 rounded-[4px] flex items-center justify-center gap-1"
           >
             Next Step <ArrowRight className="h-4 w-4" />
           </Button>
@@ -867,7 +867,7 @@ export function ManufacturerSignupForm() {
           <Button 
             type="submit" 
             disabled={isPending}
-            className="flex-1 bg-forest-green text-white hover:bg-forest-green/90 font-bold uppercase tracking-wider h-11 rounded-[4px]"
+            className="flex-1 bg-forest-green text-white hover:bg-forest-green/90 font-medium uppercase tracking-wider h-11 rounded-[4px]"
           >
             {isPending ? "Submitting..." : "Submit Registration"}
           </Button>

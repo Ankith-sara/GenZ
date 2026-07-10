@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, PT_Serif } from "next/font/google";
+import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { CookieConsent } from "@/components/cookie-consent";
 
-const inter = Inter({
+// Graphik substitute — UI/body workhorse sans
+const graphik = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["100", "400", "500"],
+  variable: "--font-graphik",
+  weight: ["400", "500", "600"],
 });
 
-const ptSerif = PT_Serif({
+// Grenette substitute — editorial display serif, tight tracking at 36px+
+const grenette = Fraunces({
   subsets: ["latin"],
-  variable: "--font-pt-serif",
-  weight: ["400", "700"],
+  variable: "--font-grenette",
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -30,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${ptSerif.variable} antialiased min-h-screen flex flex-col`} suppressHydrationWarning>
+      <body className={`${graphik.variable} ${grenette.variable} antialiased min-h-screen flex flex-col`} suppressHydrationWarning>
         {children}
         <CookieConsent />
       </body>

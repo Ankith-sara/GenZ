@@ -31,7 +31,7 @@ interface PrefRowProps {
 }
 
 const PrefRow = ({ label, desc, locked, checked, onChange }: PrefRowProps) => (
-  <div className="flex items-start gap-3 py-3 border-b border-gray-100 last:border-0">
+  <div className="flex items-start gap-3 py-3 border-b border-black/10 last:border-0">
     <div className="flex-1 min-w-0">
       <p className="text-sm font-medium text-black font-sans">{label}</p>
       <p className="text-xs text-gray-500 mt-0.5 leading-snug font-sans">{desc}</p>
@@ -54,7 +54,7 @@ const PrefRow = ({ label, desc, locked, checked, onChange }: PrefRowProps) => (
             ${
               checked
                 ? "bg-black border-black"
-                : "bg-white border-gray-300 group-hover:border-gray-500 group-active:border-gray-700"
+                : "bg-paper-white border-gray-300 group-hover:border-gray-500 group-active:border-gray-700"
             }`}
         >
           {checked && <Check size={12} strokeWidth={3} className="text-white" />}

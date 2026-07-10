@@ -8,7 +8,7 @@ import { TOY_CATEGORIES, AGE_GROUPS } from "@/lib/products";
 import type { ProductFilters } from "./types";
 
 const selectClass =
-  "h-11 rounded-lg border border-gray-200 bg-white px-3.5 text-sm text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-green transition-all duration-300 w-full";
+  "h-11 rounded-[4px] border border-black/10 bg-paper-white px-3.5 text-sm text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-green transition-all duration-300 w-full";
 
 export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   const router = useRouter();
@@ -40,7 +40,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-sm flex flex-col gap-6"
+      className="bg-paper-white rounded-2xl border border-black/10 p-6 sm:p-8  flex flex-col gap-6"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
         {/* Search Query */}
@@ -58,7 +58,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               name="q"
               placeholder="Wooden puzzle, soft toy, DIY craft kit…"
               defaultValue={filters.q}
-              className="pl-10 h-11 rounded-lg border-gray-200 focus-visible:ring-forest-green"
+              className="pl-10 h-11 rounded-[4px] border-black/10 focus-visible:ring-forest-green"
             />
           </div>
         </div>
@@ -111,7 +111,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
 
         {/* Action button */}
         <div className="lg:col-span-2">
-          <Button type="submit" className="w-full h-11 bg-forest-green hover:bg-forest-green/90 text-white rounded-lg font-semibold shadow-md transition-all hover:scale-[1.02]">
+          <Button type="submit" className="w-full h-11 bg-forest-green hover:bg-forest-green/90 text-white rounded-[4px] font-semibold  transition-all hover:scale-[1.02]">
             Filter
           </Button>
         </div>
@@ -130,7 +130,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               min={0}
               placeholder="Min"
               defaultValue={filters.min_price}
-              className="w-24 h-9 rounded-md border-gray-200 text-xs focus-visible:ring-forest-green"
+              className="w-24 h-9 rounded-[4px] border-black/10 text-xs focus-visible:ring-forest-green"
             />
             <span className="text-neutral-400 text-xs">to</span>
             <Input
@@ -140,7 +140,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               min={0}
               placeholder="Max"
               defaultValue={filters.max_price}
-              className="w-24 h-9 rounded-md border-gray-200 text-xs focus-visible:ring-forest-green"
+              className="w-24 h-9 rounded-[4px] border-black/10 text-xs focus-visible:ring-forest-green"
             />
           </div>
         </div>
@@ -150,7 +150,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
             type="button"
             variant="ghost"
             onClick={() => router.push("/discover")}
-            className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg h-9 font-semibold"
+            className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded-[4px] h-9 font-semibold"
           >
             Clear Active Filters
           </Button>

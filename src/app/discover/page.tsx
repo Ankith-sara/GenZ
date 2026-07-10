@@ -60,7 +60,7 @@ export default async function DiscoverPage({
   const hasMore = count !== null ? (products?.length ?? 0) < count : false;
 
   return (
-    <div className="bg-neutral-50 flex min-h-screen flex-col font-sans">
+    <div className="bg-background flex min-h-screen flex-col font-sans">
       <MainHeader 
         isLoggedIn={isLoggedIn} 
         role={role} 
@@ -70,10 +70,10 @@ export default async function DiscoverPage({
 
       <main className="flex-1 pb-24">
         {/* Banner Section with Premium Grid/Background */}
-        <div className="bg-forest-green text-white py-16 px-6 sm:px-12 relative overflow-hidden border-b border-white/5 shadow-inner">
+        <div className="bg-forest-green text-white py-16 px-6 sm:px-12 relative overflow-hidden border-b border-white/5 ">
           <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
           <div className="mx-auto max-w-6xl relative z-10 text-left">
-            <span className="text-gold-yellow text-xs font-bold tracking-[0.25em] uppercase mb-3 block">
+            <span className="text-chartreuse-lime eyebrow mb-3 block">
               B2C DISCOVERY HUB
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl font-normal leading-[1.15] tracking-tight mb-4 max-w-3xl">

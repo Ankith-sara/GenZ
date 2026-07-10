@@ -52,7 +52,7 @@ export default async function AdminDashboard() {
     <div className="mx-auto max-w-6xl px-6 py-12 sm:px-12">
       <div className="flex justify-between items-end border-b pb-6">
         <div>
-          <p className="text-gold-yellow text-xs font-bold tracking-[0.2em] uppercase mb-1">
+          <p className="text-gold-yellow text-xs font-medium tracking-[0.2em] uppercase mb-1">
             GenZ Control Center
           </p>
           <h1 className="text-3xl font-serif text-forest-green">
@@ -67,11 +67,11 @@ export default async function AdminDashboard() {
           { label: "Pending Reviews", count: pendingCount, color: "border-amber-200 bg-amber-50/50" },
           { label: "Verified Partners", count: verifiedCount, color: "border-green-200 bg-green-50/50" },
           { label: "Waitlist Signups", count: waitlistCount, color: "border-blue-200 bg-blue-50/50" },
-          { label: "Listed Products", count: productCount, color: "border-gray-200 bg-gray-50/50" }
+          { label: "Listed Products", count: productCount, color: "border-black/10 bg-gray-50/50" }
         ].map((stat, idx) => (
           <div key={idx} className={`border rounded-[4px] p-6 ${stat.color}`}>
             <p className="text-neutral-500 text-xs font-medium uppercase tracking-wider">{stat.label}</p>
-            <p className="mt-2 font-serif text-4xl text-forest-green font-bold">{stat.count}</p>
+            <p className="mt-2 font-serif text-4xl text-forest-green font-medium">{stat.count}</p>
           </div>
         ))}
       </div>

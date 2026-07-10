@@ -84,14 +84,14 @@ export function NewsletterForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === "submitting"}
-            className="bg-white/5 border border-white/20 text-white placeholder:text-white/40 focus-visible:ring-gold-yellow focus-visible:ring-1 focus-visible:border-gold-yellow rounded-[4px] h-12 w-full px-4 text-sm transition-all focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-paper-white/5 border border-white/20 text-white placeholder:text-white/40 focus-visible:ring-gold-yellow focus-visible:ring-1 focus-visible:border-gold-yellow rounded-[4px] h-12 w-full px-4 text-sm transition-all focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             required
           />
         </div>
         <Button
           type="submit"
           disabled={status === "submitting"}
-          className="bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 font-bold uppercase tracking-wider text-xs px-6 h-12 rounded-[4px] shrink-0 border-none transition-all hover:scale-[1.02] disabled:opacity-50"
+          className="bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 font-medium uppercase tracking-wider text-xs px-6 h-12 rounded-[4px] shrink-0 border-none transition-all hover:scale-[1.02] disabled:opacity-50"
         >
           {status === "submitting" ? "Subscribing..." : "Subscribe"}
         </Button>

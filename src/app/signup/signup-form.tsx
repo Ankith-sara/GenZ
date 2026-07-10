@@ -84,12 +84,12 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
 
       <div className="mb-4">
         <Label htmlFor="fullName">Full name</Label>
-        <Input id="fullName" name="fullName" autoComplete="name" required className="border-gray-200 focus-visible:ring-forest-green" />
+        <Input id="fullName" name="fullName" autoComplete="name" required className="border-black/10 focus-visible:ring-forest-green" />
       </div>
 
       <div className="mb-4">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" name="email" type="email" autoComplete="email" required className="border-gray-200 focus-visible:ring-forest-green" />
+        <Input id="email" name="email" type="email" autoComplete="email" required className="border-black/10 focus-visible:ring-forest-green" />
       </div>
 
       <div className="mb-2">
@@ -101,7 +101,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           autoComplete="new-password"
           minLength={8}
           required
-          className="border-gray-200 focus-visible:ring-forest-green"
+          className="border-black/10 focus-visible:ring-forest-green"
         />
         <p className="text-muted-foreground mt-1.5 text-xs">At least 8 characters.</p>
       </div>
@@ -112,7 +112,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
         </p>
       )}
 
-      <Button type="submit" className="mt-4 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-bold uppercase tracking-wider h-11" disabled={isPending}>
+      <Button type="submit" className="mt-4 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
         {isPending ? "Creating account…" : "Create account"}
       </Button>
     </form>

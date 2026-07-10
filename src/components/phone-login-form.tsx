@@ -74,7 +74,7 @@ function CountryCodeSelect({
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex h-11 w-[104px] items-center gap-1.5 rounded-md border border-border bg-background px-2.5 text-sm text-foreground transition-colors hover:border-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+        className="flex h-11 w-[104px] items-center gap-1.5 rounded-[4px] border border-border bg-background px-2.5 text-sm text-foreground transition-colors hover:border-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
       >
         {active && (
           <Image
@@ -97,7 +97,7 @@ function CountryCodeSelect({
       </button>
 
       {open && (
-        <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-[280px] overflow-hidden rounded-md border border-border bg-background shadow-lg">
+        <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-[280px] overflow-hidden rounded-[4px] border border-border bg-background ">
           <div className="flex items-center gap-2 border-b border-border px-3">
             <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
             <input

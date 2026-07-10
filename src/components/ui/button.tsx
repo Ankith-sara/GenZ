@@ -9,10 +9,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground rounded-[4px] hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground rounded-[4px] hover:bg-forest-mid hover:text-paper-white",
         ghost: "text-foreground hover:underline underline-offset-4",
         outline:
-          "border border-foreground text-foreground rounded-[4px] bg-transparent hover:bg-foreground/5",
+          "border border-ink-black text-ink-black rounded-[4px] bg-transparent hover:bg-ink-black/5",
         pill: "rounded-full border border-border bg-card text-foreground hover:border-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:border-foreground",
         link: "text-foreground underline underline-offset-4 hover:no-underline",
       },

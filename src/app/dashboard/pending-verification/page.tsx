@@ -47,12 +47,12 @@ export default async function PendingVerificationPage() {
   return (
     <main className="min-h-screen bg-neutral-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-2xl">
-        <div className="flex justify-between items-center bg-white border border-gray-200 px-6 py-4 rounded-lg shadow-sm mb-6">
+        <div className="flex justify-between items-center bg-paper-white border border-black/10 px-6 py-4 rounded-[4px]  mb-6">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-forest-green flex items-center justify-center text-white font-bold text-lg rounded-[4px]">
+            <div className="w-8 h-8 bg-forest-green flex items-center justify-center text-white font-medium text-lg rounded-[4px]">
               Z
             </div>
-            <span className="font-bold text-forest-green">GenZ Manufacturer Portal</span>
+            <span className="font-medium text-forest-green">GenZ Manufacturer Portal</span>
           </div>
           
           <form action="/api/auth/signout" method="POST">
@@ -63,7 +63,7 @@ export default async function PendingVerificationPage() {
         </div>
       </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-2xl bg-white shadow-lg border border-gray-200/80 rounded-lg overflow-hidden">
+      <div className="sm:mx-auto sm:w-full sm:max-w-2xl bg-paper-white  border border-black/10/80 rounded-[4px] overflow-hidden">
         {/* Verification Status Banner */}
         {status === "pending" || status === "not_submitted" ? (
           <div className="bg-amber-50 border-b border-amber-200 p-6 flex items-start gap-4">
@@ -71,7 +71,7 @@ export default async function PendingVerificationPage() {
               <Clock className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-amber-950 font-serif">Application Under Review</h2>
+              <h2 className="text-lg font-medium text-amber-950 font-serif">Application Under Review</h2>
               <p className="text-sm text-amber-800 mt-1 leading-relaxed">
                 Thank you for registering with GenZ. Your factory profile and documents are currently being audited by our verification team. This process typically takes 24–48 hours.
               </p>
@@ -83,12 +83,12 @@ export default async function PendingVerificationPage() {
               <XCircle className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-red-950 font-serif">Application Rejected</h2>
+              <h2 className="text-lg font-medium text-red-950 font-serif">Application Rejected</h2>
               <p className="text-sm text-red-800 mt-1 leading-relaxed">
                 Your application could not be approved at this time. Please see the reason below:
               </p>
               {rejectionReason && (
-                <div className="mt-3 p-3 bg-white/80 border border-red-200 rounded font-mono text-xs text-red-900">
+                <div className="mt-3 p-3 bg-paper-white/80 border border-red-200 rounded font-mono text-xs text-red-900">
                   {rejectionReason}
                 </div>
               )}
@@ -105,7 +105,7 @@ export default async function PendingVerificationPage() {
             </Badge>
           </div>
 
-          <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 border border-gray-100 rounded-lg p-6 bg-gray-50/50">
+          <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 border border-black/10 rounded-[4px] p-6 bg-gray-50/50">
             <div>
               <dt className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Company Name</dt>
               <dd className="mt-1 text-sm font-medium text-forest-green">{manufacturer?.business_name}</dd>
@@ -194,11 +194,11 @@ export default async function PendingVerificationPage() {
                 {Object.keys(metadata)
                   .filter(k => k.endsWith("_file") || k.endsWith("_logo") || k.endsWith("_photos") || k.includes("exterior") || k.includes("interior") || k.includes("machinery") || k.includes("walkthrough") || k.includes("crafting") || k.includes("products"))
                   .map((key) => (
-                    <div key={key} className="flex items-center gap-1.5 bg-white p-2 border border-gray-100 rounded">
+                    <div key={key} className="flex items-center gap-1.5 bg-paper-white p-2 border border-black/10 rounded">
                       <FileText className="h-4.5 w-4.5 text-forest-green" />
                       <div className="min-w-0">
                         <p className="text-neutral-500 capitalize text-[10px]">{key.replace(/_/g, " ")}</p>
-                        <p className="text-forest-green font-bold truncate">{String(metadata[key])}</p>
+                        <p className="text-forest-green font-medium truncate">{String(metadata[key])}</p>
                       </div>
                     </div>
                   ))}

@@ -18,7 +18,7 @@ export default async function AboutPage() {
   const role = session?.profile?.role;
 
   return (
-    <div className="bg-white flex min-h-screen flex-col font-sans text-black antialiased">
+    <div className="bg-background flex min-h-screen flex-col font-sans text-foreground antialiased">
       {/* Premium Main Header */}
       <MainHeader
         isLoggedIn={isLoggedIn}
@@ -46,13 +46,13 @@ export default async function AboutPage() {
         </section>
 
         {/* Founder Story & Profile section */}
-        <section className="bg-white py-24 px-6 sm:px-12">
+        <section className="bg-paper-white py-24 px-6 sm:px-12">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
               {/* Left Column: Founder Photo & Primary Quote */}
               <div className="lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left sticky top-28">
                 {/* Profile Image container */}
-                <div className="relative h-44 w-44 rounded-md overflow-hidden border-2 border-gold-yellow/20 bg-light-gray-bg shadow-xl mb-6">
+                <div className="relative h-44 w-44 rounded-[4px] overflow-hidden border-2 border-gold-yellow/20 bg-light-gray-bg shadow-xl mb-6">
                   <Image
                     src="/founder.jpeg"
                     alt="Appala Sairam"
@@ -74,7 +74,7 @@ export default async function AboutPage() {
                   <p className="font-serif text-base italic text-forest-green leading-relaxed">
                     &ldquo;India does not lack talent. It lacks a trusted system that connects talent with opportunity.&rdquo;
                   </p>
-                  <span className="text-[10px] text-smoke uppercase tracking-wider block mt-3 font-sans font-bold">
+                  <span className="text-[10px] text-smoke uppercase tracking-wider block mt-3 font-sans font-medium">
                     GenZ Founding Charter
                   </span>
                 </div>
@@ -82,7 +82,7 @@ export default async function AboutPage() {
 
               {/* Right Column: The narrative */}
               <div className="lg:col-span-8 text-left space-y-6 font-sans text-base leading-relaxed tracking-wide text-charcoal">
-                <h3 className="font-serif text-3xl font-normal text-black mb-6 border-b border-gray-100 pb-2">
+                <h3 className="font-serif text-3xl font-normal text-black mb-6 border-b border-black/10 pb-2">
                   Founder Story
                 </h3>
                 
@@ -162,8 +162,8 @@ export default async function AboutPage() {
                   Today, GenZ is more than a startup. It is the result of a question that changed my life—a question that forced me to look beyond excuses and search for solutions.
                 </p>
 
-                <div className="bg-forest-green text-white p-6 rounded-lg my-8 text-center">
-                  <p className="text-gold-yellow text-xs font-bold tracking-wider uppercase mb-2">Our Founding Belief</p>
+                <div className="bg-forest-green text-white p-6 rounded-[4px] my-8 text-center">
+                  <p className="text-gold-yellow text-xs font-medium tracking-wider uppercase mb-2">Our Founding Belief</p>
                   <p className="font-serif text-xl sm:text-2xl font-normal leading-relaxed">
                     India does not lack talent. It lacks a trusted system that connects talent with opportunity.
                   </p>
@@ -186,7 +186,7 @@ export default async function AboutPage() {
         </section>
 
         {/* India 2030 Vision Section */}
-        <section className="bg-neutral-50 py-0 border-t border-b border-gray-100 w-full overflow-hidden">
+        <section className="bg-background py-0 border-t border-b border-black/10 w-full overflow-hidden">
           
           {/* Header / India 2030 Vision - Full Width */}
           <div className="bg-forest-green text-white py-20 px-6 sm:px-12 relative overflow-hidden w-full flex items-center justify-center text-center">
@@ -213,7 +213,7 @@ export default async function AboutPage() {
             </div>
 
             <div className="mx-auto max-w-4xl relative z-10 py-6">
-              <span className="text-gold-yellow text-xs font-bold tracking-[0.25em] uppercase mb-4 block">
+              <span className="text-gold-yellow text-xs font-medium tracking-[0.25em] uppercase mb-4 block">
                 India 2030 Vision
               </span>
               <h2 className="font-serif text-3xl sm:text-5xl font-normal leading-[1.15] tracking-tight text-white mb-6">
@@ -262,11 +262,11 @@ export default async function AboutPage() {
                     desc: "Building a manufacturing network covering every Indian state and major industrial clusters."
                   }
                 ].map((item, idx) => (
-                  <div key={idx} className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 flex flex-col items-center text-center">
+                  <div key={idx} className="bg-paper-white border border-black/10 rounded-2xl p-6  hover: transition-all hover:-translate-y-1 flex flex-col items-center text-center">
                     <div className="h-12 w-12 rounded-full bg-forest-green/5 text-forest-green flex items-center justify-center mb-4">
                       <item.icon className="h-6 w-6" />
                     </div>
-                    <span className="font-serif text-xl sm:text-2xl font-bold text-forest-green mb-1">
+                    <span className="font-serif text-xl sm:text-2xl font-medium text-forest-green mb-1">
                       {item.value}
                     </span>
                     <span className="font-sans text-xs font-semibold uppercase tracking-wider text-gold-yellow mb-3">
@@ -321,7 +321,7 @@ export default async function AboutPage() {
                     desc: "Help Indian manufacturers become more visible to international buyers in the future."
                   }
                 ].map((item, idx) => (
-                  <div key={idx} className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all flex gap-4 text-left">
+                  <div key={idx} className="bg-paper-white border border-black/10 rounded-2xl p-6  hover: transition-all flex gap-4 text-left">
                     <div className="h-10 w-10 rounded-full bg-forest-green/5 text-forest-green flex items-center justify-center shrink-0">
                       <item.icon className="h-5 w-5" />
                     </div>
@@ -357,12 +357,12 @@ export default async function AboutPage() {
                     { year: "2029", label: "NATIONAL NETWORK", icon: Share2, desc: "Strengthen manufacturing clusters across India and improve nationwide business connectivity." },
                     { year: "2030", label: "TRUSTED ECOSYSTEM", icon: Trophy, desc: "Become one of India's leading digital platforms connecting manufacturers, innovators and businesses." }
                   ].map((step, idx) => (
-                    <div key={idx} className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex flex-col items-center text-center lg:h-full">
-                      <div className="h-10 w-10 rounded-full bg-forest-green text-gold-yellow flex items-center justify-center mb-3 shadow-md">
+                    <div key={idx} className="bg-paper-white border border-black/10 rounded-2xl p-5  flex flex-col items-center text-center lg:h-full">
+                      <div className="h-10 w-10 rounded-full bg-forest-green text-gold-yellow flex items-center justify-center mb-3 ">
                         <step.icon className="h-5 w-5" />
                       </div>
-                      <span className="font-serif text-lg font-bold text-forest-green mb-0.5">{step.year}</span>
-                      <span className="font-sans text-[10px] font-bold uppercase tracking-wider text-gold-yellow mb-2">{step.label}</span>
+                      <span className="font-serif text-lg font-medium text-forest-green mb-0.5">{step.year}</span>
+                      <span className="font-sans text-[10px] font-medium uppercase tracking-wider text-gold-yellow mb-2">{step.label}</span>
                       <p className="text-[11px] text-smoke leading-relaxed">{step.desc}</p>
                     </div>
                   ))}
@@ -371,9 +371,9 @@ export default async function AboutPage() {
             </div>
 
             {/* Our Long-term Mission */}
-            <div className="bg-forest-green text-white rounded-2xl p-8 sm:p-12 shadow-lg grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="bg-forest-green text-white rounded-2xl p-8 sm:p-12  grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               <div className="lg:col-span-6 text-left">
-                <span className="text-gold-yellow text-xs font-bold tracking-[0.22em] uppercase mb-3 block">
+                <span className="text-gold-yellow text-xs font-medium tracking-[0.22em] uppercase mb-3 block">
                   Our Long-Term Mission
                 </span>
                 <p className="font-serif text-lg sm:text-2xl font-light leading-snug mb-0">
@@ -387,9 +387,9 @@ export default async function AboutPage() {
                   { icon: Eye, title: "TRANSPARENCY", desc: "Building trust through verified information and quality validation." },
                   { icon: RefreshCw, title: "SUSTAINABILITY", desc: "Promoting local manufacturing for a self-reliant and sustainable India." }
                 ].map((val, idx) => (
-                  <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col items-center text-center">
+                  <div key={idx} className="bg-paper-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center text-center">
                     <val.icon className="h-5 w-5 text-gold-yellow mb-2" />
-                    <span className="font-sans text-[10px] font-bold uppercase tracking-wider text-white mb-1.5">{val.title}</span>
+                    <span className="font-sans text-[10px] font-medium uppercase tracking-wider text-white mb-1.5">{val.title}</span>
                     <p className="text-[10px] text-white/70 leading-relaxed">{val.desc}</p>
                   </div>
                 ))}
@@ -397,19 +397,19 @@ export default async function AboutPage() {
             </div>
 
             {/* Trusted By / Institutional Partners */}
-            <div className="mt-16 pt-12 border-t border-gray-200/80 text-center">
-              <span className="text-[10px] font-bold tracking-[0.2em] text-neutral-400 uppercase mb-8 block">
+            <div className="mt-16 pt-12 border-t border-black/10/80 text-center">
+              <span className="text-[10px] font-medium tracking-[0.2em] text-neutral-400 uppercase mb-8 block">
                 TRUSTED BY / INSTITUTIONAL COLLABORATION
               </span>
               <div className="flex flex-wrap items-center justify-center gap-10 sm:gap-16 opacity-70">
-                <span className="font-serif text-lg font-bold text-forest-green tracking-tight">X sidbi</span>
-                <span className="font-sans text-sm font-black text-forest-green tracking-wide">NSIC <span className="text-[8px] font-normal block -mt-1 font-mono">ISO 9001:2015</span></span>
-                <span className="font-sans text-sm font-extrabold text-forest-green tracking-tight">DPIIT <span className="text-[9px] text-gold-yellow font-bold block -mt-1">#startupindia</span></span>
-                <div className="flex items-center gap-1.5 font-serif text-xs font-bold text-forest-green">
+                <span className="font-serif text-lg font-medium text-forest-green tracking-tight">X sidbi</span>
+                <span className="font-sans text-sm font-normal text-forest-green tracking-wide">NSIC <span className="text-[8px] font-normal block -mt-1 font-mono">ISO 9001:2015</span></span>
+                <span className="font-sans text-sm font-extrabold text-forest-green tracking-tight">DPIIT <span className="text-[9px] text-gold-yellow font-medium block -mt-1">#startupindia</span></span>
+                <div className="flex items-center gap-1.5 font-serif text-xs font-medium text-forest-green">
                   <span className="text-base">⚙️</span>
                   <span>MAKE IN INDIA</span>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] font-bold text-forest-green tracking-wider uppercase">
+                <div className="flex items-center gap-1 text-[10px] font-medium text-forest-green tracking-wider uppercase">
                   <span>A PROUDLY MADE IN INDIA</span>
                   <span className="text-xs">🇮🇳</span>
                 </div>
@@ -435,7 +435,7 @@ export default async function AboutPage() {
         </section>
 
         {/* CTA section */}
-        <section className="bg-white py-20 sm:py-24">
+        <section className="bg-paper-white py-20 sm:py-24">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-6 text-center sm:px-12">
             <h2 className="mb-6 font-serif text-3xl font-normal leading-tight tracking-normal text-black sm:text-5xl">
               Be part of the founding cohort.
@@ -444,7 +444,7 @@ export default async function AboutPage() {
               <Button
                 asChild
                 size="lg"
-                className="h-12 rounded-[4px] bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 px-6 font-sans text-sm font-bold tracking-wider uppercase border-none"
+                className="h-12 rounded-[4px] bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 px-6 font-sans text-sm font-medium tracking-wider uppercase border-none"
               >
                 <Link href="/#waitlist">Join the Waitlist</Link>
               </Button>

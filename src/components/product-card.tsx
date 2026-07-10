@@ -10,15 +10,15 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/products/${product.id}`}
-      className="group bg-white block overflow-hidden rounded-xl border border-gray-100 p-2.5 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-forest-green/30"
+      className="group bg-paper-white block overflow-hidden rounded-2xl border border-black/10 p-2.5  transition-all duration-300 hover: hover:-translate-y-1 hover:border-forest-green/30"
     >
-      <div className="bg-[#fbf8f6] relative aspect-square w-full overflow-hidden rounded-lg">
+      <div className="bg-[#fbf8f6] relative aspect-square w-full overflow-hidden rounded-[4px]">
         {coverUrl ? (
           <Image
             src={coverUrl}
             alt={product.name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-"
             unoptimized
           />
         ) : (
@@ -26,16 +26,16 @@ export function ProductCard({ product }: { product: Product }) {
             No image
           </div>
         )}
-        <VerifiedBadge className="bg-white/95 absolute top-2.5 left-2.5 shadow-sm" />
+        <VerifiedBadge className="bg-paper-white/95 absolute top-2.5 left-2.5 " />
       </div>
       <div className="pt-3 pb-1.5 px-1.5">
-        <p className="text-gold-yellow text-[10px] uppercase tracking-widest font-bold font-sans">
+        <p className="text-gold-yellow text-[10px] uppercase tracking-widest font-medium font-sans">
           {product.category}
         </p>
         <p className="mt-1 truncate font-sans text-sm font-semibold text-neutral-800 group-hover:text-forest-green transition-colors leading-tight">
           {product.name}
         </p>
-        <p className="text-forest-green font-sans font-bold mt-1 text-sm">
+        <p className="text-forest-green font-sans font-medium mt-1 text-sm">
           {formatInr(product.price_inr)}
         </p>
       </div>

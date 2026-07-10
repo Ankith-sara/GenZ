@@ -72,7 +72,7 @@ export function WaitlistForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="border-ash bg-white rounded-[4px] border p-8 text-left shadow-none"
+      className="border-ash bg-paper-white rounded-[4px] border p-8 text-left shadow-none"
     >
       <fieldset className="mb-6 border-0 p-0">
         <legend className="text-smoke mb-3 text-xs uppercase tracking-wider font-sans">

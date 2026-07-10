@@ -51,8 +51,8 @@ export function Footer() {
           {/* Column 1: Branding */}
           <div className="col-span-2 flex flex-col justify-start">
             <Link href="/" className="flex items-baseline gap-0.5 mb-4 group">
-              <span className="text-2xl font-bold tracking-tight text-white group-hover:text-gold-yellow transition-colors">Gen</span>
-              <span className="text-2xl font-black tracking-tight text-gold-yellow">Z</span>
+              <span className="text-2xl font-medium tracking-tight text-white group-hover:text-gold-yellow transition-colors">Gen</span>
+              <span className="text-2xl font-normal tracking-tight text-gold-yellow">Z</span>
             </Link>
             <p className="text-xs text-white/60 leading-relaxed font-sans mb-6 max-w-xs">
               A trust commerce and manufacturing platform connecting verified makers directly with buyers.
@@ -87,7 +87,7 @@ export function Footer() {
 
           {/* Column 2: Company */}
           <div>
-            <h4 className="text-[10px] font-bold tracking-widest text-white/40 uppercase mb-4">Company</h4>
+            <h4 className="text-[10px] font-medium tracking-widest text-white/40 uppercase mb-4">Company</h4>
             <ul className="space-y-2.5 text-xs text-white/70 font-sans">
               <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
               <li><Link href="/about#mission" className="hover:text-white transition-colors">Our Mission</Link></li>
@@ -99,7 +99,7 @@ export function Footer() {
 
           {/* Column 3: For Consumers */}
           <div>
-            <h4 className="text-[10px] font-bold tracking-widest text-white/40 uppercase mb-4">For Consumers</h4>
+            <h4 className="text-[10px] font-medium tracking-widest text-white/40 uppercase mb-4">For Consumers</h4>
             <ul className="space-y-2.5 text-xs text-white/70 font-sans">
               <li><Link href="/discover" className="hover:text-white transition-colors">Shop Products</Link></li>
               <li><Link href="/discover?origin=india" className="hover:text-white transition-colors">Made in India</Link></li>
@@ -110,7 +110,7 @@ export function Footer() {
 
           {/* Column 4: For Manufacturers */}
           <div>
-            <h4 className="text-[10px] font-bold tracking-widest text-white/40 uppercase mb-4">Manufacturers</h4>
+            <h4 className="text-[10px] font-medium tracking-widest text-white/40 uppercase mb-4">Manufacturers</h4>
             <ul className="space-y-2.5 text-xs text-white/70 font-sans">
               <li><Link href="/dashboard" className="hover:text-white transition-colors">Join as Manufacturer</Link></li>
               <li><Link href="/dashboard" className="hover:text-white transition-colors">Benefits</Link></li>
@@ -121,7 +121,7 @@ export function Footer() {
 
           {/* Column 5: Import Gap */}
           <div>
-            <h4 className="text-[10px] font-bold tracking-widest text-white/40 uppercase mb-4">Import Gap</h4>
+            <h4 className="text-[10px] font-medium tracking-widest text-white/40 uppercase mb-4">Import Gap</h4>
             <ul className="space-y-2.5 text-xs text-white/70 font-sans">
               <li><Link href="/discover?import_gap=true" className="hover:text-white transition-colors">Top Import Gaps</Link></li>
               <li><Link href="/discover?import_gap=true" className="hover:text-white transition-colors">Opportunity Finder</Link></li>
@@ -136,10 +136,10 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50 font-sans">
           <p>&copy; {new Date().getFullYear()} GenZ Trust Commerce. All rights reserved.</p>
           <div className="flex gap-6 flex-wrap justify-center">
-            <a href="#" className="hover:text-white transition-colors">Help Center</a>
-            <a href="#" className="hover:text-white transition-colors">FAQs</a>
-            <a href="#" className="hover:text-white transition-colors">Terms &amp; Conditions</a>
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+            <Link href="/faqs" className="hover:text-white transition-colors">Help Center</Link>
+            <Link href="/faqs" className="hover:text-white transition-colors">FAQs</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms &amp; Conditions</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
           </div>
           <p className="flex items-center gap-1.5">
             Designed &amp; Built in India <span className="text-sm">🇮🇳</span>

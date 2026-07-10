@@ -137,11 +137,11 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
       </div>
 
       {/* Tab Panels */}
-      <div className="bg-white border rounded-lg shadow-sm overflow-hidden min-h-[300px]">
+      <div className="bg-paper-white border rounded-[4px]  overflow-hidden min-h-[300px]">
         {/* VERIFICATIONS TAB */}
         {activeTab === "verifications" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-bold text-forest-green mb-4">Pending Verification Queue</h3>
+            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">Pending Verification Queue</h3>
             {initialData.pendingManufacturers.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No pending manufacturer verifications.</p>
             ) : (
@@ -190,7 +190,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
               </div>
             )}
 
-            <h3 className="font-serif text-lg font-bold text-forest-green mt-10 mb-4 border-t pt-8">Other Verified / Rejected Manufacturers</h3>
+            <h3 className="font-serif text-lg font-medium text-forest-green mt-10 mb-4 border-t pt-8">Other Verified / Rejected Manufacturers</h3>
             {initialData.verifiedManufacturers.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No other manufacturers listed.</p>
             ) : (
@@ -236,7 +236,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* WAITLIST TAB */}
         {activeTab === "waitlist" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-bold text-forest-green mb-4">Waitlist Signups</h3>
+            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">Waitlist Signups</h3>
             {waitlist.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No waitlist entries.</p>
             ) : (
@@ -281,7 +281,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* PRODUCTS TAB */}
         {activeTab === "products" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-bold text-forest-green mb-4">Platform Products</h3>
+            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">Platform Products</h3>
             {products.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No products listed on the platform.</p>
             ) : (
@@ -336,13 +336,13 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* INQUIRIES TAB */}
         {activeTab === "inquiries" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-bold text-forest-green mb-4">Buyer-to-Manufacturer Inquiries</h3>
+            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">Buyer-to-Manufacturer Inquiries</h3>
             {initialData.inquiries.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No inquiries submitted yet.</p>
             ) : (
               <div className="space-y-4">
                 {initialData.inquiries.map((inq) => (
-                  <div key={inq.id} className="border rounded p-4 bg-gray-50/50 flex flex-col gap-2 hover:shadow-sm transition-shadow">
+                  <div key={inq.id} className="border rounded p-4 bg-gray-50/50 flex flex-col gap-2 hover: transition-shadow">
                     <div className="flex justify-between items-start gap-4">
                       <div>
                         <span className="text-xs text-smoke font-semibold block uppercase">From: {inq.name} ({inq.email})</span>
@@ -350,7 +350,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
                       </div>
                       <Badge className="bg-gray-200 text-neutral-800 capitalize">{inq.status}</Badge>
                     </div>
-                    <div className="my-2 p-3 bg-white border rounded text-sm text-neutral-800 italic">
+                    <div className="my-2 p-3 bg-paper-white border rounded text-sm text-neutral-800 italic">
                       &ldquo;{inq.message}&rdquo;
                     </div>
                     <div className="flex justify-between items-center text-xs text-smoke mt-1">
@@ -367,13 +367,13 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* CONTACT MESSAGES TAB */}
         {activeTab === "contact" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-bold text-forest-green mb-4">General Contact Submissions</h3>
+            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">General Contact Submissions</h3>
             {contactMessages.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No contact form messages.</p>
             ) : (
               <div className="space-y-4">
                 {contactMessages.map((msg) => (
-                  <div key={msg.id} className="border rounded p-4 bg-gray-50/50 flex flex-col gap-2 hover:shadow-sm transition-shadow">
+                  <div key={msg.id} className="border rounded p-4 bg-gray-50/50 flex flex-col gap-2 hover: transition-shadow">
                     <div className="flex justify-between items-start gap-4">
                       <div>
                         <span className="text-sm font-semibold text-forest-green">{msg.name}</span>
@@ -381,7 +381,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
                       </div>
                       {msg.reason && <Badge className="bg-gray-100 text-neutral-800">{msg.reason}</Badge>}
                     </div>
-                    <div className="my-2 p-3 bg-white border rounded text-sm text-neutral-800 italic">
+                    <div className="my-2 p-3 bg-paper-white border rounded text-sm text-neutral-800 italic">
                       &ldquo;{msg.message}&rdquo;
                     </div>
                     <div className="flex justify-between items-center text-xs text-smoke mt-1">

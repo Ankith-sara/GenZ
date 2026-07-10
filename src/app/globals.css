@@ -1,39 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --radius: 0.25rem;
+  --radius: 4px;
 
-  /* Faire-inspired warm-cream catalog palette */
-  --background: #fbf8f6;
-  --foreground: #000000;
+  /* Modern Business Intelligence — sunlit greenhouse editorial */
+  --background: #eef2e3;
+  --foreground: #043f2e;
 
-  --card: #ffffff;
-  --card-foreground: #000000;
+  --card: #fcfcfc;
+  --card-foreground: #043f2e;
 
-  --primary: #000000;
-  --primary-foreground: #ffffff;
+  --primary: #c8f169;
+  --primary-foreground: #000000;
 
-  --secondary: #ffffff;
-  --secondary-foreground: #000000;
+  --secondary: #fcfcfc;
+  --secondary-foreground: #043f2e;
 
-  --muted: #dadada;
-  --muted-foreground: #6c6a6a;
+  --muted: #eef2e3;
+  --muted-foreground: #242423;
 
-  --accent: #f1f29f;
+  --accent: #c8f169;
   --accent-foreground: #000000;
 
   --destructive: #8a2f1c;
   --destructive-foreground: #ffffff;
 
-  --border: #dadada;
-  --input: #dadada;
-  --ring: #000000;
+  --border: #000000;
+  --input: #000000;
+  --ring: #043f2e;
 
-  --dark-band: #23302a;
-  --dark-band-foreground: #ffffff;
-  --forest-green: #0b2216;
-  --gold-yellow: #ebb812;
-  --light-gray-bg: #f8faf9;
+  --dark-band: #043f2e;
+  --dark-band-foreground: #fcfcfc;
+  --forest-green: #043f2e;
+  --forest-mid: #2a6f2b;
+  --gold-yellow: #c8f169;
+  --light-gray-bg: #eef2e3;
 }
 
 @theme inline {
@@ -57,33 +58,53 @@
   --color-dark-band: var(--dark-band);
   --color-dark-band-foreground: var(--dark-band-foreground);
   --color-forest-green: var(--forest-green);
+  --color-forest-mid: var(--forest-mid);
   --color-gold-yellow: var(--gold-yellow);
   --color-light-gray-bg: var(--light-gray-bg);
 
-  /* Specific Faire style token names */
-  --color-cream-paper: #fbf8f6;
-  --color-pure-white: #ffffff;
+  /* Modern BI token names */
+  --color-pale-sage: #eef2e3;
+  --color-paper-white: #fcfcfc;
   --color-ink-black: #000000;
-  --color-charcoal: #333333;
-  --color-smoke: #6c6a6a;
-  --color-ash: #dadada;
-  --color-butter-highlight: #f1f29f;
+  --color-charcoal: #242423;
+  --color-deep-forest: #043f2e;
+  --color-chartreuse-lime: #c8f169;
+  --color-vivid-green: #78c51c;
 
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-pt-serif);
+  /* legacy Faire-era aliases mapped onto new palette so old classnames still work */
+  --color-cream-paper: #eef2e3;
+  --color-pure-white: #fcfcfc;
+  --color-smoke: #242423;
+  --color-ash: #043f2e;
+  --color-butter-highlight: #c8f169;
+
+  --font-sans: var(--font-graphik);
+  --font-serif: var(--font-grenette);
 
   --radius-sm: 4px;
-  --radius-pill: 40px;
+  --radius-pill: 9999px;
+  --radius-card: 16px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: 0.009em;
+  letter-spacing: 0.01em;
 }
 
 h1, h2, h3 {
   font-family: var(--font-serif), ui-serif, Georgia, serif;
   font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* editorial eyebrow label pattern used across sections */
+.eyebrow {
+  font-family: var(--font-sans), ui-sans-serif, sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
