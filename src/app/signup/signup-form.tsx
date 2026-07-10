@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signup, type SignupState } from "./actions";
+import { signupUser, verifyOtpSignup } from "@/app/login/actions";
 import type { Role } from "@/types/database";
 
 const SIGNUP_ROLES: { value: Role; label: string; description: string }[] = [
@@ -25,27 +26,111 @@ interface SignupFormProps {
 }
 
 export function SignupForm({ defaultRole }: SignupFormProps) {
+  const router = useRouter();
   const [role, setRole] = useState<Role>(defaultRole ?? "buyer");
-  const [state, formAction, isPending] = useActionState<SignupState, FormData>(
-    signup,
-    {}
-  );
+  const [step, setStep] = useState<"details" | "otp">("details");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [otpToken, setOtpToken] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
 
-  if (state?.success) {
+  async function handleDetailsSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setIsPending(true);
+
+    try {
+      const res = await signupUser({ email, password, fullName, role });
+      if (res.error) {
+        setError(res.error);
+      } else {
+        setStep("otp");
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "An unexpected error occurred.");
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  async function handleOtpSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setIsPending(true);
+
+    try {
+      const res = await verifyOtpSignup(email, otpToken);
+      if (res.error) {
+        setError(res.error);
+      } else {
+        // Successfully verified! Redirect to appropriate landing page
+        if (role === "manufacturer") {
+          router.push("/dashboard/pending-verification");
+        } else {
+          router.push("/profile");
+        }
+        router.refresh();
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "An unexpected error occurred.");
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  if (step === "otp") {
     return (
-      <div role="status" aria-live="polite" className="py-5 text-center">
-        <h3 className="font-serif text-2xl text-forest-green">Check your inbox.</h3>
-        <p className="text-muted-foreground mt-2 text-sm">
-          We&apos;ve sent a confirmation link to finish setting up your account.
-        </p>
-      </div>
+      <form onSubmit={handleOtpSubmit} className="text-left animate-fade-in">
+        <div className="mb-6">
+          <h3 className="font-serif text-xl text-forest-green mb-1.5 font-normal">Verify Your Email</h3>
+          <p className="text-xs text-smoke leading-relaxed">
+            We have sent a verification code to <strong className="text-forest-green font-mono">{email}</strong>. Enter it below to activate your account.
+          </p>
+        </div>
+
+        <div className="mb-4">
+          <Label htmlFor="otp">Verification Code</Label>
+          <Input
+            id="otp"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={6}
+            placeholder="e.g. 123456"
+            value={otpToken}
+            onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ""))}
+            required
+            className="border-black/10 focus-visible:ring-forest-green font-mono tracking-widest text-center text-lg h-12"
+          />
+        </div>
+
+        {error && (
+          <p role="alert" className="text-destructive mt-2 mb-4 text-xs font-semibold">
+            {error}
+          </p>
+        )}
+
+        <div className="flex flex-col gap-3 mt-6">
+          <Button type="submit" className="w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
+            {isPending ? "Verifying..." : "Verify & Complete Signup"}
+          </Button>
+          <button
+            type="button"
+            onClick={() => setStep("details")}
+            className="text-xs text-smoke hover:text-forest-green text-center hover:underline"
+            disabled={isPending}
+          >
+            ← Back to signup details
+          </button>
+        </div>
+      </form>
     );
   }
 
   return (
-    <form action={formAction} noValidate className="text-left">
-      <input type="hidden" name="role" value={role} />
-
+    <form onSubmit={handleDetailsSubmit} noValidate className="text-left">
       {!defaultRole && (
         <fieldset className="mb-5 border-0 p-0">
           <legend className="text-muted-foreground mb-2.5 text-xs">
@@ -84,21 +169,37 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
 
       <div className="mb-4">
         <Label htmlFor="fullName">Full name</Label>
-        <Input id="fullName" name="fullName" autoComplete="name" required className="border-black/10 focus-visible:ring-forest-green" />
+        <Input
+          id="fullName"
+          autoComplete="name"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          required
+          className="border-black/10 focus-visible:ring-forest-green"
+        />
       </div>
 
       <div className="mb-4">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" name="email" type="email" autoComplete="email" required className="border-black/10 focus-visible:ring-forest-green" />
+        <Input
+          id="email"
+          type="email"
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="border-black/10 focus-visible:ring-forest-green"
+        />
       </div>
 
       <div className="mb-2">
         <Label htmlFor="password">Password</Label>
         <Input
           id="password"
-          name="password"
           type="password"
           autoComplete="new-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           minLength={8}
           required
           className="border-black/10 focus-visible:ring-forest-green"
@@ -106,13 +207,13 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
         <p className="text-muted-foreground mt-1.5 text-xs">At least 8 characters.</p>
       </div>
 
-      {state?.error && (
-        <p role="alert" className="text-destructive mt-2 mb-4 text-sm font-medium">
-          {state.error}
+      {error && (
+        <p role="alert" className="text-destructive mt-2 mb-4 text-xs font-semibold">
+          {error}
         </p>
       )}
 
-      <Button type="submit" className="mt-4 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
+      <Button type="submit" className="mt-6 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
         {isPending ? "Creating account…" : "Create account"}
       </Button>
     </form>

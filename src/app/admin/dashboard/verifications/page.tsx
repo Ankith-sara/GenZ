@@ -48,7 +48,7 @@ export default async function AdminVerificationsPage({
   return (
     <div className="mx-auto max-w-5xl px-6 py-12 sm:px-12">
       <Link
-        href="/dashboard/admin"
+        href="/admin/dashboard"
         className="text-muted-foreground text-sm hover:underline"
       >
         ← Back to dashboard
@@ -59,7 +59,7 @@ export default async function AdminVerificationsPage({
         {TABS.map((tab) => (
           <Link
             key={tab.value}
-            href={`/dashboard/admin/verifications?status=${tab.value}`}
+            href={`/admin/dashboard/verifications?status=${tab.value}`}
             className={`flex h-11 items-center rounded-full border px-5 text-sm ${
               activeTab === tab.value
                 ? "border-foreground bg-foreground text-background"
@@ -82,7 +82,7 @@ export default async function AdminVerificationsPage({
           return (
             <Link
               key={m.id}
-              href={`/dashboard/admin/verifications/${m.id}`}
+              href={`/admin/dashboard/verifications/${m.id}`}
               className="hover:bg-background flex flex-wrap items-center justify-between gap-3 p-6"
             >
               <div>

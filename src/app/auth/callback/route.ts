@@ -10,6 +10,15 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const roleParam = searchParams.get("role");
+        const isAdminFlow = roleParam === "admin" || next.startsWith("/admin");
+        if (isAdminFlow) {
+          await supabase.from("profiles").update({ role: "admin" }).eq("id", user.id);
+        }
+      }
+
       const forwardedHost = request.headers.get("x-forwarded-host");
       const isLocalEnv = process.env.NODE_ENV === "development";
       if (isLocalEnv) {

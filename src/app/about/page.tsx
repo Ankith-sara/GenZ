@@ -1,11 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { getUserAndProfile } from "@/lib/auth";
-import { signOut } from "@/app/login/actions";
-import { MainHeader } from "@/components/main-header";
-import { Footer } from "@/components/footer";
-
 import { 
   CheckCircle2, Package, Handshake, MapPin, Users, ArrowDownLeft, 
   Lightbulb, TrendingUp, Briefcase, Globe, Rocket, LineChart, 
@@ -13,21 +8,8 @@ import {
 } from "lucide-react";
 
 export default async function AboutPage() {
-  const session = await getUserAndProfile();
-  const isLoggedIn = !!session;
-  const role = session?.profile?.role;
-
   return (
-    <div className="bg-background flex min-h-screen flex-col font-sans text-foreground antialiased">
-      {/* Premium Main Header */}
-      <MainHeader
-        isLoggedIn={isLoggedIn}
-        role={role}
-        userName={session?.profile?.full_name || session?.email}
-        signOutAction={signOut}
-      />
-
-      <main className="flex-1">
+    <main className="flex-1 bg-background font-sans text-foreground antialiased">
         {/* About Hero Section */}
         <section className="bg-forest-green text-white py-20 px-6 sm:px-12 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none" />
@@ -460,8 +442,5 @@ export default async function AboutPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
-    </div>
   );
 }

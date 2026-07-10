@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 import { productMediaUrl, formatInr } from "@/lib/products";
 import { VerifiedBadge } from "@/components/verified-badge";
 import { InquiryForm } from "./inquiry-form";
-import { Footer } from "@/components/footer";
 
 export async function generateMetadata({
   params,
@@ -73,14 +72,6 @@ export default async function PublicProductPage({
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      <header className="border-border border-b">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4 sm:px-12">
-          <Link href="/" className="text-lg tracking-[0.22em] uppercase">
-            GenZ
-          </Link>
-        </div>
-      </header>
-
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-6 py-12 sm:px-12">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
@@ -235,8 +226,6 @@ export default async function PublicProductPage({
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

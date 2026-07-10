@@ -28,16 +28,16 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       label: "Inquiries",
       icon: MessageSquare,
     },
-    { href: "/dashboard/account", label: "Account", icon: User },
+    { href: "/profile", label: "Account", icon: User },
   ],
   admin: [
-    { href: "/dashboard/admin", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
     {
-      href: "/dashboard/admin/verifications",
+      href: "/admin/dashboard/verifications",
       label: "Verifications",
       icon: ShieldCheck,
     },
-    { href: "/dashboard/account", label: "Account", icon: User },
+    { href: "/profile", label: "Account", icon: User },
   ],
 };
 

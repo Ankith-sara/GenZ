@@ -177,7 +177,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
                           </td>
                           <td className="p-4 text-right">
                             <Button asChild variant="outline" size="sm" className="border-forest-green text-forest-green hover:bg-forest-green/5">
-                              <Link href={`/dashboard/admin/verifications/${m.id}`}>
+                              <Link href={`/admin/dashboard/verifications/${m.id}`}>
                                 Review Details
                               </Link>
                             </Button>
@@ -219,7 +219,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
                         </td>
                         <td className="p-4 text-right">
                           <Button asChild variant="outline" size="sm">
-                            <Link href={`/dashboard/admin/verifications/${m.id}`}>
+                            <Link href={`/admin/dashboard/verifications/${m.id}`}>
                               View Audit
                             </Link>
                           </Button>

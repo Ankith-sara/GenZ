@@ -11,7 +11,7 @@ export default async function DashboardPage() {
   const role = session.profile?.role ?? "buyer";
 
   if (role === "admin") {
-    redirect("/dashboard/admin");
+    redirect("/admin/dashboard");
   } else if (role === "manufacturer") {
     const supabase = await createClient();
     
@@ -69,6 +69,6 @@ export default async function DashboardPage() {
       redirect("/dashboard/manufacturer");
     }
   } else {
-    redirect("/discover");
+    redirect("/profile");
   }
 }

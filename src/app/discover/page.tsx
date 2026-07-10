@@ -3,10 +3,6 @@ import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/lib/products";
 import { DiscoverFilters } from "./discover-filters";
 import { DiscoverFeed } from "./discover-feed";
 import type { ProductFilters } from "./types";
-import { getUserAndProfile } from "@/lib/auth";
-import { signOut } from "@/app/login/actions";
-import { MainHeader } from "@/components/main-header";
-import { Footer } from "@/components/footer";
 
 export default async function DiscoverPage({
   searchParams,
@@ -28,13 +24,7 @@ export default async function DiscoverPage({
     max_price: params.max_price ?? "",
   };
 
-  const [session, supabase] = await Promise.all([
-    getUserAndProfile(),
-    createClient(),
-  ]);
-  const isLoggedIn = !!session;
-  const role = session?.profile?.role;
-  const userName = session?.profile?.full_name || session?.email || "";
+  const supabase = await createClient();
 
   let query = supabase
     .from("products")
@@ -61,12 +51,6 @@ export default async function DiscoverPage({
 
   return (
     <div className="bg-background flex min-h-screen flex-col font-sans">
-      <MainHeader 
-        isLoggedIn={isLoggedIn} 
-        role={role} 
-        userName={userName} 
-        signOutAction={signOut} 
-      />
 
       <main className="flex-1 pb-24">
         {/* Banner Section with Premium Grid/Background */}
@@ -102,8 +86,6 @@ export default async function DiscoverPage({
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

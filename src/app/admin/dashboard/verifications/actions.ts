@@ -28,8 +28,8 @@ export async function approveManufacturer(manufacturerId: string) {
     return;
   }
 
-  revalidatePath("/dashboard/admin/verifications");
-  redirect(`/dashboard/admin/verifications/${manufacturerId}`);
+  revalidatePath("/admin/dashboard/verifications");
+  redirect(`/admin/dashboard/verifications/${manufacturerId}`);
 }
 
 export async function rejectManufacturer(
@@ -60,6 +60,6 @@ export async function rejectManufacturer(
     return { error: "Could not save the review. Please try again." };
   }
 
-  revalidatePath("/dashboard/admin/verifications");
-  redirect(`/dashboard/admin/verifications/${manufacturerId}`);
+  revalidatePath("/admin/dashboard/verifications");
+  redirect(`/admin/dashboard/verifications/${manufacturerId}`);
 }

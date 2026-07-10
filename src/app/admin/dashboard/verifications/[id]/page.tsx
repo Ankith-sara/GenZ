@@ -50,7 +50,7 @@ export default async function AdminVerificationDetailPage({
   return (
     <div className="mx-auto max-w-4xl px-6 py-12 sm:px-12">
       <Link
-        href="/dashboard/admin"
+        href="/admin/dashboard"
         className="text-smoke text-sm hover:underline hover:text-forest-green flex items-center gap-1"
       >
         ← Back to control center

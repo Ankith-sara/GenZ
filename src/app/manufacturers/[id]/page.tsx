@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/product-card";
 import { VerifiedBadge } from "@/components/verified-badge";
-import { Footer } from "@/components/footer";
 
 export async function generateMetadata({
   params,
@@ -48,17 +46,6 @@ export default async function ManufacturerPublicProfilePage({
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      <header className="border-border border-b">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-12">
-          <Link href="/" className="text-lg tracking-[0.22em] uppercase">
-            GenZ
-          </Link>
-          <Link href="/discover" className="text-sm hover:underline">
-            Discover
-          </Link>
-        </div>
-      </header>
-
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 py-12 sm:px-12">
           <VerifiedBadge />
@@ -93,8 +80,6 @@ export default async function ManufacturerPublicProfilePage({
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

@@ -15,27 +15,9 @@ import {
   Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getUserAndProfile } from "@/lib/auth";
-import { signOut } from "@/app/login/actions";
-import { MainHeader } from "@/components/main-header";
-import { Footer } from "@/components/footer";
-
 export default async function HomePage() {
-  const session = await getUserAndProfile();
-  const isLoggedIn = !!session;
-  const role = session?.profile?.role;
-
   return (
-    <div className="bg-background flex min-h-screen flex-col font-sans text-foreground antialiased">
-      {/* Premium Main Header */}
-      <MainHeader
-        isLoggedIn={isLoggedIn}
-        role={role}
-        userName={session?.profile?.full_name || session?.email}
-        signOutAction={signOut}
-      />
-
-      <main className="flex-1">
+    <main className="flex-1 bg-background font-sans text-foreground antialiased">
         {/* Hero Section */}
         <section className="bg-forest-green text-white pt-16 pb-20 px-6 sm:px-12 relative overflow-hidden">
           {/* Subtle gold grid pattern or gradient overlay */}
@@ -619,8 +601,5 @@ export default async function HomePage() {
         </section>
 
       </main>
-
-      <Footer />
-    </div>
   );
 }

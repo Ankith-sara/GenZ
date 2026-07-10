@@ -1,9 +1,5 @@
-import { Mail, MapPin, Camera, Link2 } from "lucide-react";
+import { Mail, MapPin, Camera, Link2, Phone } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
-import { getUserAndProfile } from "@/lib/auth";
-import { signOut } from "@/app/login/actions";
-import { MainHeader } from "@/components/main-header";
-import { Footer } from "@/components/footer";
 
 export const metadata = {
   title: "Contact — GenZ",
@@ -19,16 +15,22 @@ const CHANNELS = [
     href: "mailto:genz.official.hq@gmail.com",
   },
   {
-    icon: Link2,
-    label: "LinkedIn",
-    value: "linkedin.com/company/genz",
-    href: "https://linkedin.com/company/genz",
+    icon: Phone,
+    label: "Phone",
+    value: "+91 77948 93768",
+    href: "tel:+917794893768",
   },
   {
     icon: Camera,
     label: "Instagram",
-    value: "@genz.india",
-    href: "https://instagram.com/genz.india",
+    value: "@genzonline.in",
+    href: "https://www.instagram.com/genzonline.in",
+  },
+  {
+    icon: Link2,
+    label: "LinkedIn",
+    value: "linkedin.com/company/genz",
+    href: "https://linkedin.com/company/genz",
   },
   {
     icon: MapPin,
@@ -39,19 +41,8 @@ const CHANNELS = [
 ];
 
 export default async function ContactPage() {
-  const session = await getUserAndProfile();
-  const isLoggedIn = !!session;
-  const role = session?.profile?.role;
-
   return (
     <div className="bg-background flex min-h-screen flex-col font-sans">
-      <MainHeader
-        isLoggedIn={isLoggedIn}
-        role={role}
-        userName={session?.profile?.full_name || session?.email}
-        signOutAction={signOut}
-      />
-
       <main className="flex-1">
         <section className="py-20 sm:py-24 bg-background">
           <div className="mx-auto grid max-w-7xl gap-14 px-6 sm:grid-cols-2 sm:px-12">
@@ -110,8 +101,6 @@ export default async function ContactPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

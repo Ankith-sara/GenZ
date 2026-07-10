@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getUserAndProfile } from "@/lib/auth";
-import { signOut } from "@/app/login/actions";
-import { MainHeader } from "@/components/main-header";
-import { Footer } from "@/components/footer";
 
 export const metadata = {
   title: "FAQs — GenZ",
@@ -81,19 +77,8 @@ const FAQ_GROUPS: FaqGroup[] = [
 ];
 
 export default async function FaqsPage() {
-  const session = await getUserAndProfile();
-  const isLoggedIn = !!session;
-  const role = session?.profile?.role;
-
   return (
     <div className="bg-background flex min-h-screen flex-col font-sans text-foreground antialiased">
-      <MainHeader
-        isLoggedIn={isLoggedIn}
-        role={role}
-        userName={session?.profile?.full_name || session?.email}
-        signOutAction={signOut}
-      />
-
       <main className="flex-1">
         {/* Hero */}
         <section className="py-20 sm:py-24 px-6 sm:px-12 border-b border-black/10">
@@ -159,8 +144,6 @@ export default async function FaqsPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

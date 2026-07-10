@@ -1,12 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Routes that require an authenticated session.
-const PROTECTED_PREFIXES = ["/dashboard"];
-
-// Routes an already-logged-in user shouldn't see again.
-const AUTH_ONLY_PREFIXES = ["/login", "/signup"];
-
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -39,20 +33,50 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PREFIXES.some((p) => path.startsWith(p));
-  const isAuthOnly = AUTH_ONLY_PREFIXES.some((p) => path.startsWith(p));
+  const isProtected = path.startsWith("/dashboard") || path.startsWith("/admin/dashboard");
+  const isAdminPath = path.startsWith("/admin/dashboard");
+  const isAuthOnly = path.startsWith("/login") || path.startsWith("/signup") || path.startsWith("/admin/login") || path.startsWith("/admin/signup");
 
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = path.startsWith("/admin") ? "/admin/login" : "/login";
     url.searchParams.set("redirectTo", path);
     return NextResponse.redirect(url);
   }
 
-  if (user && isAuthOnly) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
+  if (user) {
+    // Fetch profile role to handle proper redirect
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    const role = profile?.role ?? "buyer";
+
+    if (isAuthOnly) {
+      const url = request.nextUrl.clone();
+      if (role === "admin") {
+        url.pathname = "/admin/dashboard";
+      } else if (role === "buyer") {
+        url.pathname = "/profile";
+      } else {
+        url.pathname = "/dashboard";
+      }
+      return NextResponse.redirect(url);
+    }
+
+    if (isAdminPath && role !== "admin") {
+      const url = request.nextUrl.clone();
+      url.pathname = role === "buyer" ? "/profile" : "/dashboard";
+      return NextResponse.redirect(url);
+    }
+
+    if (path.startsWith("/dashboard") && role === "buyer") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/profile";
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
