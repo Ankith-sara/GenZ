@@ -244,7 +244,7 @@ export default async function AboutPage() {
                     desc: "Building a manufacturing network covering every Indian state and major industrial clusters."
                   }
                 ].map((item, idx) => (
-                  <div key={idx} className="bg-paper-white border border-black/10 rounded-2xl p-6  hover: transition-all hover:-translate-y-1 flex flex-col items-center text-center">
+                  <div key={idx} className="bg-paper-white border border-black/10 rounded-[4px] p-6  hover: transition-all hover:-translate-y-1 flex flex-col items-center text-center">
                     <div className="h-12 w-12 rounded-full bg-forest-green/5 text-forest-green flex items-center justify-center mb-4">
                       <item.icon className="h-6 w-6" />
                     </div>
@@ -303,7 +303,7 @@ export default async function AboutPage() {
                     desc: "Help Indian manufacturers become more visible to international buyers in the future."
                   }
                 ].map((item, idx) => (
-                  <div key={idx} className="bg-paper-white border border-black/10 rounded-2xl p-6  hover: transition-all flex gap-4 text-left">
+                  <div key={idx} className="bg-paper-white border border-black/10 rounded-[4px] p-6  hover: transition-all flex gap-4 text-left">
                     <div className="h-10 w-10 rounded-full bg-forest-green/5 text-forest-green flex items-center justify-center shrink-0">
                       <item.icon className="h-5 w-5" />
                     </div>
@@ -339,7 +339,7 @@ export default async function AboutPage() {
                     { year: "2029", label: "NATIONAL NETWORK", icon: Share2, desc: "Strengthen manufacturing clusters across India and improve nationwide business connectivity." },
                     { year: "2030", label: "TRUSTED ECOSYSTEM", icon: Trophy, desc: "Become one of India's leading digital platforms connecting manufacturers, innovators and businesses." }
                   ].map((step, idx) => (
-                    <div key={idx} className="bg-paper-white border border-black/10 rounded-2xl p-5  flex flex-col items-center text-center lg:h-full">
+                    <div key={idx} className="bg-paper-white border border-black/10 rounded-[4px] p-5  flex flex-col items-center text-center lg:h-full">
                       <div className="h-10 w-10 rounded-full bg-forest-green text-gold-yellow flex items-center justify-center mb-3 ">
                         <step.icon className="h-5 w-5" />
                       </div>
@@ -353,7 +353,7 @@ export default async function AboutPage() {
             </div>
 
             {/* Our Long-term Mission */}
-            <div className="bg-forest-green text-white rounded-2xl p-8 sm:p-12  grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="bg-forest-green text-white rounded-[4px] p-8 sm:p-12  grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               <div className="lg:col-span-6 text-left">
                 <span className="text-gold-yellow text-xs font-medium tracking-[0.22em] uppercase mb-3 block">
                   Our Long-Term Mission
@@ -369,7 +369,7 @@ export default async function AboutPage() {
                   { icon: Eye, title: "TRANSPARENCY", desc: "Building trust through verified information and quality validation." },
                   { icon: RefreshCw, title: "SUSTAINABILITY", desc: "Promoting local manufacturing for a self-reliant and sustainable India." }
                 ].map((val, idx) => (
-                  <div key={idx} className="bg-paper-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center text-center">
+                  <div key={idx} className="bg-paper-white/5 border border-white/10 rounded-[4px] p-4 flex flex-col items-center text-center">
                     <val.icon className="h-5 w-5 text-gold-yellow mb-2" />
                     <span className="font-sans text-[10px] font-medium uppercase tracking-wider text-white mb-1.5">{val.title}</span>
                     <p className="text-[10px] text-white/70 leading-relaxed">{val.desc}</p>

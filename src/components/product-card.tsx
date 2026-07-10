@@ -10,7 +10,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/products/${product.id}`}
-      className="group bg-paper-white block overflow-hidden rounded-2xl border border-black/10 p-2.5  transition-all duration-300 hover: hover:-translate-y-1 hover:border-forest-green/30"
+      className="group bg-paper-white block overflow-hidden rounded-[4px] border border-black/10 p-2.5  transition-all duration-300 hover: hover:-translate-y-1 hover:border-forest-green/30"
     >
       <div className="bg-[#fbf8f6] relative aspect-square w-full overflow-hidden rounded-[4px]">
         {coverUrl ? (

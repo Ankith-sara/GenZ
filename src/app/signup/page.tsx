@@ -27,7 +27,7 @@ export default async function SignupPage({
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="bg-paper-white py-8 px-6 rounded-2xl sm:px-10 border border-black/5">
+        <div className="bg-paper-white py-8 px-6 rounded-[4px] sm:px-10 border border-black/5">
           {/* We force buyer role for this signup page */}
           <SignupForm defaultRole="buyer" />
 

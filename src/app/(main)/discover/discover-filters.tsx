@@ -40,7 +40,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-paper-white rounded-2xl border border-black/10 p-6 sm:p-8  flex flex-col gap-6"
+      className="bg-paper-white rounded-[4px] border border-black/10 p-6 sm:p-8  flex flex-col gap-6"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
         {/* Search Query */}

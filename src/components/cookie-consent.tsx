@@ -31,14 +31,14 @@ interface PrefRowProps {
 }
 
 const PrefRow = ({ label, desc, locked, checked, onChange }: PrefRowProps) => (
-  <div className="flex items-start gap-3 py-3 border-b border-black/10 last:border-0">
+  <div className="flex items-start gap-3 py-3 border-b border-ash last:border-0">
     <div className="flex-1 min-w-0">
-      <p className="text-sm font-medium text-black font-sans">{label}</p>
-      <p className="text-xs text-gray-500 mt-0.5 leading-snug font-sans">{desc}</p>
+      <p className="text-sm font-graphik font-medium text-ink-black">{label}</p>
+      <p className="text-xs text-smoke mt-0.5 leading-snug font-graphik">{desc}</p>
     </div>
 
     {locked ? (
-      <span className="flex-shrink-0 text-[10px] tracking-widest uppercase text-gray-400 mt-1 pt-0.5 font-sans">
+      <span className="flex-shrink-0 text-[10px] tracking-widest uppercase text-smoke mt-1 pt-0.5 font-graphik">
         Always on
       </span>
     ) : (
@@ -53,11 +53,11 @@ const PrefRow = ({ label, desc, locked, checked, onChange }: PrefRowProps) => (
           className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors duration-150
             ${
               checked
-                ? "bg-black border-black"
-                : "bg-paper-white border-gray-300 group-hover:border-gray-500 group-active:border-gray-700"
+                ? "bg-ink-black border-ink-black"
+                : "bg-pure-white border-ash group-hover:border-charcoal group-active:border-ink-black"
             }`}
         >
-          {checked && <Check size={12} strokeWidth={3} className="text-white" />}
+          {checked && <Check size={12} strokeWidth={3} className="text-pure-white" />}
         </span>
       </button>
     )}
@@ -145,7 +145,7 @@ export function CookieConsent() {
         aria-modal="false"
       >
         <div
-          className="cookie-banner flex flex-col w-full sm:max-w-lg bg-cream-paper border-t sm:border border-black sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+          className="cookie-banner flex flex-col w-full sm:max-w-lg bg-cream-paper border-t sm:border border-ink-black"
           style={{
             maxHeight: "min(92dvh, 500px)",
             paddingBottom: "env(safe-area-inset-bottom, 0px)",
@@ -153,13 +153,13 @@ export function CookieConsent() {
         >
           {/* Header */}
           <div className="flex-shrink-0 flex items-center justify-between px-4 sm:px-5 pt-4 pb-3 border-b border-ash bg-cream-paper">
-            <p className="text-[10px] tracking-[0.25em] uppercase font-normal text-charcoal font-sans">
+            <p className="text-[10px] tracking-[0.25em] uppercase font-normal text-ink-black font-graphik">
               Cookie preferences
             </p>
             <button
               onClick={acceptEssential}
               aria-label="Dismiss"
-              className="w-11 h-11 -mr-2 flex items-center justify-center text-gray-400 hover:text-black active:text-black transition-colors cursor-pointer"
+              className="w-11 h-11 -mr-2 flex items-center justify-center text-smoke hover:text-ink-black active:text-ink-black transition-colors cursor-pointer"
             >
               <X size={16} />
             </button>
@@ -167,11 +167,11 @@ export function CookieConsent() {
 
           {/* Scrollable body */}
           <div className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-5 py-4 bg-cream-paper">
-            <p className="text-sm text-charcoal leading-relaxed font-sans">
+            <p className="text-sm text-charcoal leading-relaxed font-graphik">
               We use cookies to keep your session active, remember preferences, and understand how people discover our verified manufacturing collections.{" "}
               <button
                 onClick={() => setShowDetails((d) => !d)}
-                className="underline underline-offset-2 text-black hover:no-underline active:no-underline font-sans cursor-pointer"
+                className="underline underline-offset-2 text-ink-black hover:no-underline active:no-underline font-graphik cursor-pointer"
               >
                 {showDetails ? "Hide details" : "Manage preferences"}
               </button>
@@ -208,21 +208,21 @@ export function CookieConsent() {
           <div className="flex-shrink-0 px-4 sm:px-5 pt-1 pb-3 flex flex-row gap-2 bg-cream-paper">
             <button
               onClick={acceptAll}
-              className="flex-1 bg-black text-white text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:bg-black/90 active:bg-black/80 transition-colors min-h-[44px] cursor-pointer rounded-[4px] font-sans font-normal"
+              className="flex-1 bg-ink-black text-pure-white text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:bg-charcoal active:bg-charcoal transition-colors min-h-[44px] cursor-pointer rounded-md font-graphik font-normal"
             >
               Accept all
             </button>
             {showDetails ? (
               <button
                 onClick={saveCustom}
-                className="flex-1 border border-black text-black text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:bg-ash/50 active:bg-ash/80 transition-colors min-h-[44px] cursor-pointer rounded-[4px] font-sans font-normal"
+                className="flex-1 border border-ink-black text-ink-black text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:bg-pure-white active:bg-pure-white transition-colors min-h-[44px] cursor-pointer rounded-md font-graphik font-normal"
               >
                 Save preferences
               </button>
             ) : (
               <button
                 onClick={acceptEssential}
-                className="flex-1 border border-gray-300 text-charcoal text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:border-black hover:text-black transition-colors min-h-[44px] cursor-pointer rounded-[4px] font-sans font-normal"
+                className="flex-1 border border-ash text-charcoal text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:border-ink-black hover:text-ink-black transition-colors min-h-[44px] cursor-pointer rounded-md font-graphik font-normal"
               >
                 Essential only
               </button>

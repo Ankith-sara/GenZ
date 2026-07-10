@@ -67,7 +67,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section className="py-16 sm:py-20 px-6 sm:px-12">
-          <div className="mx-auto max-w-3xl bg-paper-white rounded-2xl border border-black/10 p-8 sm:p-12 flex flex-col gap-10">
+          <div className="mx-auto max-w-3xl bg-paper-white rounded-[4px] border border-black/10 p-8 sm:p-12 flex flex-col gap-10">
             {SECTIONS.map((s) => (
               <div key={s.title}>
                 <h2 className="font-serif text-xl sm:text-2xl font-normal text-deep-forest mb-3 tracking-tight">

@@ -110,7 +110,7 @@ export default async function FaqsPage() {
                   {group.items.map((item) => (
                     <details
                       key={item.q}
-                      className="group bg-paper-white rounded-2xl border border-black/10 open:border-deep-forest/30 transition-colors"
+                      className="group bg-paper-white rounded-[4px] border border-black/10 open:border-deep-forest/30 transition-colors"
                     >
                       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 sm:p-6 text-left font-medium text-deep-forest">
                         <span className="text-sm sm:text-base">{item.q}</span>
@@ -129,7 +129,7 @@ export default async function FaqsPage() {
 
         {/* CTA */}
         <section className="pb-24 px-6 sm:px-12">
-          <div className="mx-auto max-w-4xl bg-forest-green rounded-2xl p-10 sm:p-12 text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div className="mx-auto max-w-4xl bg-forest-green rounded-[4px] p-10 sm:p-12 text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div>
               <h3 className="font-serif text-2xl sm:text-3xl font-normal text-white mb-2 tracking-tight">
                 Still have questions?

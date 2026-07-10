@@ -61,7 +61,7 @@ export default function ResetPasswordPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="bg-paper-white py-8 px-6 rounded-2xl sm:px-10 border border-black/5">
+        <div className="bg-paper-white py-8 px-6 rounded-[4px] sm:px-10 border border-black/5">
           {success ? (
             <div className="text-center py-4">
               <h3 className="font-serif text-xl text-forest-green mb-2">Password Updated!</h3>

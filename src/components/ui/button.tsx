@@ -5,22 +5,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-normal tracking-wide transition-colors disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-[200] tracking-[0.15px] transition-colors disabled:pointer-events-none disabled:opacity-50 disabled:bg-[#f1f1f1] disabled:border-[#dadada] disabled:text-[#6c6a6a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground rounded-[4px] hover:bg-forest-mid hover:text-paper-white",
-        ghost: "text-foreground hover:underline underline-offset-4",
+        default: "bg-[#333333] text-white rounded-none hover:bg-black border border-[#333333] hover:border-black",
+        ghost: "text-[#333333] hover:underline underline-offset-4 bg-transparent",
         outline:
-          "border border-ink-black text-ink-black rounded-[4px] bg-transparent hover:bg-ink-black/5",
-        pill: "rounded-full border border-border bg-card text-foreground hover:border-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:border-foreground",
-        link: "text-foreground underline underline-offset-4 hover:no-underline",
+          "border border-[#333333] text-[#333333] rounded-none bg-white hover:bg-black hover:text-white hover:border-black",
+        pill: "rounded-[40px] border border-border bg-card text-foreground hover:border-foreground data-[active=true]:bg-foreground data-[active=true]:text-background data-[active=true]:border-foreground",
+        link: "text-[#333333] underline underline-offset-4 hover:text-black hover:no-underline",
       },
       size: {
-        default: "h-11 px-6 py-3",
-        sm: "h-9 px-4 text-xs",
+        default: "h-12 px-[23px]",
+        sm: "h-9 px-[20px] text-xs",
         lg: "h-12 px-8 text-base",
-        icon: "h-11 w-11",
+        icon: "h-12 w-12",
       },
     },
     defaultVariants: {

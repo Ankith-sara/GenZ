@@ -39,10 +39,10 @@ export default async function HomePage() {
                 </p>
 
                 <div className="flex flex-wrap gap-4 mb-12">
-                  <Button asChild size="lg" className="bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 rounded-[4px] font-sans font-medium text-sm tracking-wider uppercase px-6 h-12 border-none">
+                  <Button asChild size="lg" className="bg-white text-black hover:bg-neutral-100 rounded-[4px] font-sans font-medium text-sm tracking-wider uppercase px-6 h-12 border-none">
                     <Link href="/discover">Explore Made in India</Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="border border-white/30 text-white hover:bg-paper-white/10 rounded-[4px] font-sans font-medium text-sm tracking-wider uppercase px-6 h-12 bg-transparent">
+                  <Button asChild size="lg" variant="outline" className="border border-white/30 text-white hover:bg-white/10 rounded-[4px] font-sans font-medium text-sm tracking-wider uppercase px-6 h-12 bg-transparent">
                     <Link href="/discover">For Manufacturers</Link>
                   </Button>
                 </div>
@@ -530,7 +530,7 @@ export default async function HomePage() {
 
               {/* Right side Goal callout */}
               <div className="lg:col-span-5 flex flex-col justify-center">
-                <div className="bg-[#0c1a11] border border-gold-yellow/20 rounded-[4px] p-8 text-left">
+                <div className="bg-neutral-900/90 border border-white/10 rounded-[4px] p-8 text-left">
                   <span className="text-gold-yellow text-xs font-semibold tracking-wider uppercase mb-3 block">
                     Our Ultimate Goal
                   </span>

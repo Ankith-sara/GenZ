@@ -1,6 +1,6 @@
 "use client";
 
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -215,7 +215,7 @@ export function ProfileClient({
                   <Input
                     id="fullName"
                     value={fullName}
-                    onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFullName(e.target.value)}
+                    onChange={(e) => setFullName(e.target.value)}
                     required
                     className="border-black/10 focus-visible:ring-forest-green mt-1"
                   />
