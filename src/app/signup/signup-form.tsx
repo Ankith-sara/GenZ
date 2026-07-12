@@ -102,7 +102,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
             value={otpToken}
             onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ""))}
             required
-            className="border-black/10 focus-visible:ring-forest-green font-mono tracking-widest text-center text-lg h-12"
+            className="rounded-none border-ash focus-visible:ring-forest-green font-mono tracking-widest text-center text-lg h-12"
           />
         </div>
 
@@ -113,7 +113,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
         )}
 
         <div className="flex flex-col gap-3 mt-6">
-          <Button type="submit" className="w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
+          <Button type="submit" className="w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
             {isPending ? "Verifying..." : "Verify & Complete Signup"}
           </Button>
           <button
@@ -147,10 +147,10 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
                 type="button"
                 aria-pressed={role === r.value}
                 onClick={() => setRole(r.value)}
-                className={`rounded-[4px] border p-3.5 text-left text-sm transition-colors ${
+                className={`rounded-none border p-3.5 text-left text-sm transition-colors ${
                   role === r.value
                     ? "border-forest-green bg-forest-green text-white"
-                    : "border-border bg-background text-foreground hover:border-forest-green"
+                    : "border-ash bg-background text-foreground hover:border-forest-green"
                 }`}
               >
                 <span className="block font-medium">{r.label}</span>
@@ -175,7 +175,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           required
-          className="border-black/10 focus-visible:ring-forest-green"
+          className="rounded-none border-ash focus-visible:ring-forest-green"
         />
       </div>
 
@@ -188,7 +188,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="border-black/10 focus-visible:ring-forest-green"
+          className="rounded-none border-ash focus-visible:ring-forest-green"
         />
       </div>
 
@@ -202,7 +202,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           onChange={(e) => setPassword(e.target.value)}
           minLength={8}
           required
-          className="border-black/10 focus-visible:ring-forest-green"
+          className="rounded-none border-ash focus-visible:ring-forest-green"
         />
         <p className="text-muted-foreground mt-1.5 text-xs">At least 8 characters.</p>
       </div>
@@ -213,7 +213,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
         </p>
       )}
 
-      <Button type="submit" className="mt-6 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
+      <Button type="submit" className="mt-6 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
         {isPending ? "Creating account…" : "Create account"}
       </Button>
     </form>

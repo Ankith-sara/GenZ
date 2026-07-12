@@ -15,10 +15,10 @@ export function LoginMethodTabs({ redirectTo }: { redirectTo: string }) {
             key={m}
             type="button"
             onClick={() => setMethod(m)}
-            className={`h-9 flex-1 rounded-[4px] border text-sm capitalize ${
+            className={`h-9 flex-1 rounded-none border text-sm capitalize transition-all duration-200 ${
               method === m
-                ? "border-foreground bg-foreground text-background"
-                : "border-border bg-background text-foreground hover:border-foreground"
+                ? "border-forest-green bg-forest-green text-pure-white font-medium"
+                : "border-ash bg-pure-white text-ink-black hover:border-forest-green"
             }`}
           >
             {m}

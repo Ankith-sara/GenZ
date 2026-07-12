@@ -1,26 +1,13 @@
 @import "tailwindcss";
 
-/*
- * GenZ Design System — derived from Faire.com's Slate tokens
- * Source: https://www.faire.com production CSS (July 2026)
- *
- * Typography:  Graphik 200 (body)  ·  Nantes 400 (display)
- * Radius:      0 everywhere (Faire uses border-radius: 0 on buttons, cards, toasts)
- * Colors:      #333 text  ·  #fff surface  ·  #dadada border  ·  #6c6a6a subdued
- * Buttons:     #333 fill → #000 hover  ·  48px tall  ·  0 radius
- */
-
 :root {
   --radius: 0px;
-
-  /* ── Slate / Faire Core Palette ── */
   --background: #ffffff;
   --foreground: #333333;
 
   --card: #ffffff;
   --card-foreground: #333333;
 
-  /* Primary = Faire's surface-primary-inverse (#333) */
   --primary: #333333;
   --primary-foreground: #ffffff;
 
@@ -30,7 +17,6 @@
   --muted: #f7f7f7;
   --muted-foreground: #6c6a6a;
 
-  /* Yellow kept as decorative-only accent */
   --accent: #FFDA58;
   --accent-foreground: #333333;
 
@@ -41,12 +27,12 @@
   --input: #333333;
   --ring: #333333;
 
-  /* ── Brand aliases (mapped to Slate values) ── */
-  --dark-band: #333333;
+  --forest-green: #09452b;
+  --forest-mid: #06301e;
+  --gold-yellow: #ffda58;
+  --brand-blue: #0f4c81;
+  --dark-band: #09452b;
   --dark-band-foreground: #ffffff;
-  --forest-green: #333333;
-  --forest-mid: #000000;
-  --gold-yellow: #FFDA58;
   --light-gray-bg: #f7f7f7;
 }
 
@@ -75,6 +61,7 @@
   --color-forest-green: var(--forest-green);
   --color-forest-mid: var(--forest-mid);
   --color-gold-yellow: var(--gold-yellow);
+  --color-brand-blue: var(--brand-blue);
   --color-light-gray-bg: var(--light-gray-bg);
 
   /* ── Slate semantic tokens ── */
@@ -90,19 +77,21 @@
   /* Legacy aliases the components still reference */
   --color-ink-black: #333333;
   --color-charcoal: #6c6a6a;
-  --color-deep-forest: #333333;
+  --color-deep-forest: #09452b;
   --color-smoke: #6c6a6a;
   --color-ash: #dadada;
   --color-cream-paper: #f7f7f7;
   --color-pure-white: #ffffff;
   --color-paper-white: #ffffff;
-  --color-butter-highlight: #FFDA58;
+  --color-butter-highlight: #ffda58;
   --color-pale-sage: #f7f7f7;
-  --color-chartreuse-lime: #FFDA58;
-  --color-vivid-green: #333333;
+  --color-chartreuse-lime: #ffda58;
+  --color-vivid-green: #10b981;
 
   --font-sans: var(--font-graphik);
   --font-serif: var(--font-grenette);
+  --font-graphik: var(--font-graphik);
+  --font-nantes: var(--font-grenette);
 
   /* Faire uses radius 0 everywhere */
   --radius-sm: 0px;
@@ -114,7 +103,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  font-weight: 200;                 /* Faire's Graphik base weight */
+  font-weight: 200;                
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.15px;
@@ -122,7 +111,7 @@ body {
 
 h1, h2, h3 {
   font-family: var(--font-serif), ui-serif, Georgia, serif;
-  font-weight: 400;                 /* Faire's Nantes weight */
+  font-weight: 400;          
   letter-spacing: 0;
   line-height: 1.1;
 }

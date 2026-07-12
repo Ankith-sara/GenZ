@@ -49,7 +49,7 @@ export function OrdersClient() {
       try {
         const parsed = JSON.parse(stored);
         
-        // Dynamically simulate status changes based on time elapsed!
+        // Dynamically simulate status changes based on time elapsed
         const updated = parsed.map((order: Order) => {
           const elapsedSecs = (Date.now() - new Date(order.date).getTime()) / 1000;
           
@@ -73,17 +73,17 @@ export function OrdersClient() {
 
   if (orders.length === 0) {
     return (
-      <div className="text-center py-16 animate-fade-in">
-        <div className="mx-auto w-16 h-16 bg-forest-green/5 text-forest-green flex items-center justify-center rounded-full mb-4">
+      <div className="text-center py-16">
+        <div className="mx-auto w-16 h-16 bg-cream-paper text-forest-green flex items-center justify-center rounded-none border border-ash mb-4">
           <Package className="h-8 w-8" />
         </div>
-        <h2 className="font-serif text-2xl text-forest-green font-normal">No orders found</h2>
-        <p className="text-sm text-smoke mt-2 max-w-sm mx-auto leading-relaxed">
+        <h2 className="font-nantes text-2xl text-ink-black font-normal">No orders found</h2>
+        <p className="text-caption font-graphik mt-2 max-w-sm mx-auto leading-relaxed text-charcoal">
           You haven&apos;t placed any orders yet. Add items to your cart and place an order to see it tracked here.
         </p>
         <Link 
           href="/discover"
-          className="inline-flex items-center justify-center bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11 px-8 mt-8 text-sm"
+          className="inline-flex items-center justify-center bg-forest-green hover:bg-forest-mid text-white rounded-none font-graphik text-xs font-normal tracking-[0.05em] uppercase h-11 px-8 mt-8 border-none"
         >
           Browse Products
         </Link>
@@ -96,7 +96,7 @@ export function OrdersClient() {
     { key: "processing", label: "Confirmed", desc: "Order is processing", icon: Package },
     { key: "packed", label: "Packed", desc: "Ready for shipment", icon: Package },
     { key: "shipped", label: "Shipped", desc: "Out for delivery", icon: Truck },
-    { key: "delivered", label: "Delivered", desc: "Handed over to recipient", icon: CheckCircle2 },
+    { key: "delivered", label: "Delivered", desc: "Handed to recipient", icon: CheckCircle2 },
   ];
 
   const getStepStatus = (orderStatus: Order["status"], stepKey: string) => {
@@ -110,33 +110,33 @@ export function OrdersClient() {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <h2 className="font-serif text-xl text-forest-green font-normal mb-4 border-b pb-2">Order History &amp; Tracking</h2>
+      <h2 className="font-nantes text-xl text-ink-black font-normal mb-4 border-b border-ash pb-3">Order History &amp; Tracking</h2>
 
       <div className="space-y-4">
         {orders.map((order) => {
           const isExpanded = expandedOrderId === order.orderId;
           const statusColors = {
-            processing: "bg-blue-50 text-blue-700 border-blue-200",
-            packed: "bg-amber-50 text-amber-700 border-amber-200",
-            shipped: "bg-indigo-50 text-indigo-700 border-indigo-200",
-            delivered: "bg-green-50 text-green-700 border-green-200",
+            processing: "bg-cream-paper text-brand-blue border-brand-blue/30",
+            packed: "bg-cream-paper text-forest-green border-forest-green/30",
+            shipped: "bg-cream-paper text-forest-green border-forest-green/30",
+            delivered: "bg-forest-green text-white border-none",
           };
 
           return (
-            <div key={order.orderId} className="border border-black/5 bg-paper-white rounded-[4px] overflow-hidden transition-all duration-300">
+            <div key={order.orderId} className="border border-ash bg-pure-white rounded-none overflow-hidden transition-all duration-300">
               {/* Header / Summary row */}
               <div 
                 onClick={() => setExpandedOrderId(isExpanded ? null : order.orderId)}
-                className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 cursor-pointer hover:bg-gray-50/50 transition-colors gap-3 select-none"
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 cursor-pointer hover:bg-cream-paper/40 transition-colors gap-3 select-none"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-semibold text-neutral-800">{order.orderId}</span>
-                    <span className={`text-[10px] px-2.5 py-0.5 border rounded-full font-semibold uppercase tracking-wider ${statusColors[order.status]}`}>
+                    <span className="font-mono text-sm font-semibold text-ink-black">{order.orderId}</span>
+                    <span className={`text-[9px] px-2.5 py-0.5 border rounded-none font-graphik font-semibold uppercase tracking-wider ${statusColors[order.status]}`}>
                       {order.status}
                     </span>
                   </div>
-                  <p className="text-xs text-smoke mt-1">
+                  <p className="text-caption font-graphik mt-1.5 text-smoke">
                     Placed: {new Date(order.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </p>
                 </div>
@@ -148,13 +148,13 @@ export function OrdersClient() {
 
               {/* Expandable details */}
               {isExpanded && (
-                <div className="border-t border-black/5 p-6 space-y-8 animate-fade-in bg-gray-50/10">
+                <div className="border-t border-ash p-6 space-y-8 bg-cream-paper/20">
                   {/* Stepper Timeline */}
                   <div>
-                    <h4 className="text-xs font-bold text-smoke uppercase mb-6 tracking-wide">Shipment Tracking Timeline</h4>
+                    <h4 className="text-[10px] font-medium text-smoke uppercase tracking-wider mb-6 font-graphik">Shipment Tracking Timeline</h4>
                     <div className="grid grid-cols-4 relative items-center justify-between">
                       {/* Connecting Line */}
-                      <div className="absolute left-[12.5%] right-[12.5%] top-4.5 h-0.5 bg-gray-200 pointer-events-none z-0">
+                      <div className="absolute left-[12.5%] right-[12.5%] top-4.5 h-0.5 bg-ash pointer-events-none z-0">
                         <div 
                           className="h-full bg-forest-green transition-all duration-500" 
                           style={{
@@ -171,12 +171,12 @@ export function OrdersClient() {
                         const Icon = step.icon;
 
                         return (
-                          <div key={step.key} className="flex flex-col items-center text-center relative z-10">
+                          <div key={step.key} className="flex flex-col items-center text-center relative z-10 font-graphik">
                             <div 
-                              className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                              className={`w-9 h-9 rounded-none flex items-center justify-center border transition-all duration-300 ${
                                 stepStatus === "completed" 
                                   ? "bg-forest-green text-white border-forest-green" 
-                                  : "bg-white text-smoke border-gray-200"
+                                  : "bg-pure-white text-smoke border-ash"
                               }`}
                             >
                               <Icon className="h-4 w-4" />
@@ -192,62 +192,61 @@ export function OrdersClient() {
                   </div>
 
                   {/* Items List */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4 border-t border-black/5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-6 border-t border-ash">
                     {/* Delivery & Billing */}
-                    <div className="md:col-span-1 space-y-4">
+                    <div className="md:col-span-1 space-y-4 font-graphik text-sm">
                       <div>
-                        <h5 className="text-[10px] font-bold text-smoke uppercase tracking-wider mb-2">Delivery Destination</h5>
-                        <p className="font-semibold text-sm text-neutral-800">{order.shippingAddress.recipientName}</p>
-                        <p className="text-xs text-neutral-600 mt-1">{order.shippingAddress.addressLine}</p>
-                        <p className="text-xs text-neutral-600">
+                        <h5 className="text-[10px] font-medium text-smoke uppercase tracking-wider mb-2">Delivery Destination</h5>
+                        <p className="font-semibold text-sm text-ink-black">{order.shippingAddress.recipientName}</p>
+                        <p className="text-xs text-charcoal mt-1">{order.shippingAddress.addressLine}</p>
+                        <p className="text-xs text-charcoal">
                           {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}
                         </p>
                         <p className="text-[11px] text-smoke mt-1.5 font-mono">{order.shippingAddress.phone}</p>
                       </div>
 
                       <div>
-                        <h5 className="text-[10px] font-bold text-smoke uppercase tracking-wider mb-1.5">Payment Method</h5>
-                        <p className="text-xs text-neutral-700 font-medium">{order.paymentMethod}</p>
+                        <h5 className="text-[10px] font-medium text-smoke uppercase tracking-wider mb-1.5">Payment Method</h5>
+                        <p className="text-xs text-charcoal font-medium">{order.paymentMethod}</p>
                       </div>
                     </div>
 
                     {/* Order Items */}
-                    <div className="md:col-span-2 space-y-3">
-                      <h5 className="text-[10px] font-bold text-smoke uppercase tracking-wider mb-2">Products Purchased</h5>
+                    <div className="md:col-span-2 space-y-3 font-graphik">
+                      <h5 className="text-[10px] font-medium text-smoke uppercase tracking-wider mb-2">Products Purchased</h5>
                       
-                      <div className="divide-y border rounded bg-white overflow-hidden">
+                      <div className="divide-y divide-ash border border-ash rounded-none bg-pure-white overflow-hidden">
                         {order.items.map((item) => (
                           <div key={item.id} className="flex gap-3 p-3.5 items-center justify-between text-xs">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-[4px] overflow-hidden bg-gray-100 shrink-0 border">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <div className="w-10 h-10 rounded-none overflow-hidden bg-cream-paper shrink-0 border border-ash">
                                 <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                               </div>
                               <div>
-                                <p className="font-semibold text-neutral-800 line-clamp-1">{item.name}</p>
+                                <p className="font-semibold text-ink-black line-clamp-1">{item.name}</p>
                                 <p className="text-smoke text-[10px] mt-0.5">Qty: {item.quantity} · Price: ₹{item.price}</p>
                               </div>
                             </div>
-                            <span className="font-semibold text-neutral-800 font-mono">₹{item.price * item.quantity}</span>
+                            <span className="font-semibold text-ink-black font-mono">₹{item.price * item.quantity}</span>
                           </div>
                         ))}
                       </div>
 
                       {/* Calculations breakdown */}
-                      <dl className="space-y-1.5 text-xs pt-2 border-t border-dashed">
+                      <dl className="space-y-1.5 text-xs pt-2 border-t border-ash border-dashed font-graphik">
                         <div className="flex justify-between">
-                          <dt className="text-smoke">Subtotal</dt>
-                          <dd className="font-mono text-neutral-700">₹{order.subtotal.toLocaleString()}</dd>
+                          <dt className="text-charcoal">Subtotal</dt>
+                          <dd className="font-mono text-ink-black">₹{order.subtotal.toLocaleString()}</dd>
                         </div>
                         <div className="flex justify-between">
-                          <dt className="text-smoke">GST (18%)</dt>
-                          <dd className="font-mono text-neutral-700">₹{order.tax.toLocaleString()}</dd>
+                          <dt className="text-charcoal">GST (18%)</dt>
+                          <dd className="font-mono text-ink-black">₹{order.tax.toLocaleString()}</dd>
                         </div>
                         <div className="flex justify-between">
-                          <dt className="text-smoke">Shipping</dt>
-                          <dd className="font-mono text-neutral-700">{order.shipping === 0 ? "FREE" : `₹${order.shipping}`}</dd>
+                          <dt className="text-charcoal">Shipping</dt>
+                          <dd className="font-mono text-ink-black">{order.shipping === 0 ? "FREE" : `₹${order.shipping}`}</dd>
                         </div>
-                        <div className="flex justify-between font-semibold text-sm border-t pt-2 mt-1">
+                        <div className="flex justify-between font-semibold text-sm border-t border-ash pt-2 mt-1">
                           <dt className="text-forest-green">Total Paid</dt>
                           <dd className="font-mono text-forest-green">₹{order.total.toLocaleString()}</dd>
                         </div>

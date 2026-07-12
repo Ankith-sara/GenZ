@@ -90,9 +90,6 @@ export function Header({ isLoggedIn, role, userName, signOutAction }: HeaderProp
     { name: "New", href: "/discover?new=true" },
     { name: "Featured", href: "/discover?featured=true" },
     { name: "Wooden Toys", href: "/discover?category=Wooden Toys" },
-    { name: "Clay Crafts", href: "/discover?category=Clay Crafts" },
-    { name: "Handicrafts", href: "/discover?category=Handicrafts" },
-    { name: "Innovations", href: "/discover?innovations=true" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -118,7 +115,7 @@ export function Header({ isLoggedIn, role, userName, signOutAction }: HeaderProp
               <div className="w-9 h-9 bg-ink-black text-pure-white flex items-center justify-center font-graphik font-normal text-xl rounded-md">
                 Z
               </div>
-              <span className="text-xl font-graphik font-normal tracking-[0.12em] uppercase text-ink-black">GenZ</span>
+              <span className="text-xl font-graphik font-normal tracking-[0.12em] uppercase text-ink-black hidden min-[380px]:block">GenZ</span>
             </Link>
 
             {/* Search Bar (Middle) — the pill is the only non-rectangular control */}

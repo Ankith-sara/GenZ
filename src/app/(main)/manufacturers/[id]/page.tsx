@@ -45,41 +45,50 @@ export default async function ManufacturerPublicProfilePage({
     .order("created_at", { ascending: false });
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
-      <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-6 py-12 sm:px-12">
-          <VerifiedBadge />
-          <h1 className="mt-4 text-4xl leading-[1.2]">{manufacturer.business_name}</h1>
+    <main className="flex-1 bg-cream-paper font-sans text-ink-black antialiased pb-24">
+      <div className="mx-auto max-w-[1280px] px-6 py-16 sm:px-12">
+        {/* Manufacturer Header Box */}
+        <div className="border-b border-ash pb-10 mb-12">
+          <VerifiedBadge className="mb-4 bg-forest-green text-white border-none rounded-none py-1 px-3" />
+          <h1 className="font-nantes text-4xl sm:text-5xl text-ink-black tracking-tight leading-[1.1] mt-2">
+            {manufacturer.business_name}
+          </h1>
+          
           {(manufacturer.city || manufacturer.state) && (
-            <p className="text-muted-foreground mt-2">
+            <p className="text-caption font-graphik text-smoke uppercase tracking-wider mt-3">
               {[manufacturer.city, manufacturer.state].filter(Boolean).join(", ")}
               {manufacturer.established_year
-                ? ` · Est. ${manufacturer.established_year}`
+                ? ` · Established ${manufacturer.established_year}`
                 : ""}
             </p>
           )}
+
           {manufacturer.description && (
-            <p className="text-muted-foreground mt-6 max-w-2xl whitespace-pre-line">
+            <p className="text-body font-graphik text-charcoal mt-6 max-w-2xl whitespace-pre-line leading-relaxed">
               {manufacturer.description}
             </p>
           )}
+        </div>
 
-          <h2 className="mt-12 mb-6 text-2xl leading-[1.27]">
+        {/* Products Grid Section */}
+        <div>
+          <h2 className="font-nantes text-2xl sm:text-3xl text-ink-black mb-8">
             Products from {manufacturer.business_name}
           </h2>
+          
           {(products ?? []).length === 0 ? (
-            <p className="text-muted-foreground text-sm">
+            <p className="text-caption font-graphik text-smoke italic">
               No published products yet — check back soon.
             </p>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
               {(products ?? []).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

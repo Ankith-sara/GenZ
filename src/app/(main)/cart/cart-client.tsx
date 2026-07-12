@@ -81,7 +81,6 @@ export function CartClient({ userAddresses }: CartClientProps) {
   function saveCart(items: CartItem[]) {
     setCartItems(items);
     localStorage.setItem("genz-cart", JSON.stringify(items));
-    // Trigger custom header event to update header badge
     window.dispatchEvent(new Event("cart-updated"));
   }
 
@@ -121,7 +120,6 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
     const selectedAddr = userAddresses.find((a) => a.id === selectedAddressId) || userAddresses[0];
 
-    // Create order object
     const order = {
       // eslint-disable-next-line react-hooks/purity
       orderId: `GZ-${Math.floor(100000 + Math.random() * 900000)}`,
@@ -131,12 +129,11 @@ export function CartClient({ userAddresses }: CartClientProps) {
       tax,
       shipping,
       total,
-      status: "processing", // processing -> packed -> shipped -> delivered
+      status: "processing",
       shippingAddress: selectedAddr,
       paymentMethod: paymentMethod === "cod" ? "Cash on Delivery" : "UPI/Card Online",
     };
 
-    // Save to orders list in localStorage
     const storedOrders = localStorage.getItem("genz-orders");
     let ordersList = [];
     if (storedOrders) {
@@ -147,11 +144,8 @@ export function CartClient({ userAddresses }: CartClientProps) {
     ordersList.unshift(order);
     localStorage.setItem("genz-orders", JSON.stringify(ordersList));
 
-    // Clear cart
     saveCart([]);
     setIsCheckingOut(false);
-
-    // Redirect to orders
     router.push("/orders");
   }
 
@@ -159,15 +153,15 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
   if (cartItems.length === 0) {
     return (
-      <div className="text-center py-16 animate-fade-in">
-        <div className="mx-auto w-16 h-16 bg-forest-green/5 text-forest-green flex items-center justify-center rounded-full mb-4">
+      <div className="text-center py-16">
+        <div className="mx-auto w-16 h-16 bg-cream-paper text-forest-green flex items-center justify-center rounded-none border border-ash mb-4">
           <ShoppingBag className="h-8 w-8" />
         </div>
-        <h2 className="font-serif text-2xl text-forest-green font-normal">Your cart is empty</h2>
-        <p className="text-sm text-smoke mt-2 max-w-sm mx-auto leading-relaxed">
+        <h2 className="font-nantes text-2xl text-ink-black font-normal">Your cart is empty</h2>
+        <p className="text-caption font-graphik text-charcoal mt-2 max-w-sm mx-auto leading-relaxed">
           Looks like you haven&apos;t added any quality Indian toys or crafts to your basket yet.
         </p>
-        <Button asChild className="mt-8 bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11 px-8">
+        <Button asChild className="mt-8 bg-forest-green hover:bg-forest-mid text-white rounded-none font-graphik text-xs font-normal tracking-[0.05em] uppercase h-11 px-8 border-none">
           <Link href="/discover">Continue Shopping</Link>
         </Button>
       </div>
@@ -178,12 +172,12 @@ export function CartClient({ userAddresses }: CartClientProps) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
       {/* Cart Items List */}
       <div className="lg:col-span-2 space-y-6">
-        <h2 className="font-serif text-xl text-forest-green font-normal mb-4 border-b pb-2">Your Items ({cartItems.length})</h2>
+        <h2 className="font-nantes text-xl text-ink-black font-normal mb-4 border-b border-ash pb-3">Your Items ({cartItems.length})</h2>
 
-        <div className="divide-y border border-black/5 bg-paper-white rounded-[4px] overflow-hidden">
+        <div className="divide-y divide-ash border border-ash bg-pure-white rounded-none overflow-hidden">
           {cartItems.map((item) => (
-            <div key={item.id} className="flex flex-col sm:flex-row gap-4 p-5 hover:bg-gray-50/50 transition-colors">
-              <div className="w-20 h-20 rounded-[4px] overflow-hidden bg-gray-100 shrink-0 border relative">
+            <div key={item.id} className="flex flex-col sm:flex-row gap-4 p-5 hover:bg-cream-paper/40 transition-colors">
+              <div className="w-20 h-20 rounded-none overflow-hidden bg-cream-paper shrink-0 border border-ash relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
               </div>
@@ -191,26 +185,26 @@ export function CartClient({ userAddresses }: CartClientProps) {
                 <div>
                   <div className="flex justify-between items-start gap-4">
                     <div>
-                      <h4 className="font-semibold text-neutral-800 text-sm sm:text-base leading-snug">{item.name}</h4>
-                      <span className="text-[10px] text-smoke uppercase font-semibold block mt-0.5">{item.category}</span>
+                      <h4 className="font-graphik font-semibold text-ink-black text-sm sm:text-base leading-snug">{item.name}</h4>
+                      <span className="text-[10px] text-smoke uppercase font-graphik font-medium block mt-1">{item.category}</span>
                     </div>
                     <span className="font-mono text-sm sm:text-base font-semibold text-forest-green shrink-0">₹{item.price * item.quantity}</span>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center mt-4">
-                  <div className="flex items-center border rounded-[4px] h-9 bg-white">
+                  <div className="flex items-center border border-ash rounded-none h-9 bg-pure-white">
                     <button
                       onClick={() => updateQty(item.id, -1)}
-                      className="px-2.5 h-full text-smoke hover:text-forest-green hover:bg-black/5 flex items-center justify-center transition-colors"
+                      className="px-2.5 h-full text-smoke hover:text-ink-black hover:bg-cream-paper flex items-center justify-center transition-colors focus:outline-none"
                       title="Decrease quantity"
                     >
                       <Minus className="h-3.5 w-3.5" />
                     </button>
-                    <span className="px-3 text-sm font-semibold text-neutral-800 font-mono">{item.quantity}</span>
+                    <span className="px-3 text-sm font-semibold text-ink-black font-mono">{item.quantity}</span>
                     <button
                       onClick={() => updateQty(item.id, 1)}
-                      className="px-2.5 h-full text-smoke hover:text-forest-green hover:bg-black/5 flex items-center justify-center transition-colors"
+                      className="px-2.5 h-full text-smoke hover:text-ink-black hover:bg-cream-paper flex items-center justify-center transition-colors focus:outline-none"
                       title="Increase quantity"
                     >
                       <Plus className="h-3.5 w-3.5" />
@@ -219,7 +213,7 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
                   <button
                     onClick={() => removeItem(item.id)}
-                    className="text-smoke hover:text-red-600 p-2 hover:bg-red-50 rounded transition-colors"
+                    className="text-smoke hover:text-red-600 p-2 hover:bg-red-50 transition-colors focus:outline-none"
                     title="Remove item"
                   >
                     <Trash2 className="h-4.5 w-4.5" />
@@ -232,41 +226,41 @@ export function CartClient({ userAddresses }: CartClientProps) {
       </div>
 
       {/* Checkout Summary panel */}
-      <div className="lg:col-span-1 border border-black/5 bg-paper-white rounded-[4px] p-6 space-y-6">
-        <h3 className="font-serif text-lg text-forest-green font-normal border-b pb-2">Order Summary</h3>
+      <div className="lg:col-span-1 border border-ash bg-pure-white rounded-none p-6 space-y-6">
+        <h3 className="font-nantes text-lg text-ink-black font-normal border-b border-ash pb-3">Order Summary</h3>
 
-        <dl className="space-y-3 text-sm">
+        <dl className="space-y-3 text-sm font-graphik">
           <div className="flex justify-between">
-            <dt className="text-smoke">Subtotal</dt>
-            <dd className="font-mono font-medium text-neutral-800">₹{subtotal.toLocaleString()}</dd>
+            <dt className="text-charcoal">Subtotal</dt>
+            <dd className="font-mono font-medium text-ink-black">₹{subtotal.toLocaleString()}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-smoke">GST (18%)</dt>
-            <dd className="font-mono font-medium text-neutral-800">₹{tax.toLocaleString()}</dd>
+            <dt className="text-charcoal">GST (18%)</dt>
+            <dd className="font-mono font-medium text-ink-black">₹{tax.toLocaleString()}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-smoke">Shipping</dt>
-            <dd className="font-mono font-medium text-neutral-800">{shipping === 0 ? "FREE" : `₹${shipping}`}</dd>
+            <dt className="text-charcoal">Shipping</dt>
+            <dd className="font-mono font-medium text-ink-black">{shipping === 0 ? "FREE" : `₹${shipping}`}</dd>
           </div>
           {shipping > 0 && (
             <p className="text-[10px] text-smoke leading-relaxed italic">
               * Add ₹{(1500 - subtotal)} more for free delivery.
             </p>
           )}
-          <div className="border-t pt-3 flex justify-between font-semibold text-base">
-            <dt className="text-forest-green">Total Amount</dt>
+          <div className="border-t border-ash pt-3 flex justify-between font-semibold text-base">
+            <dt className="text-forest-green font-graphik">Total Amount</dt>
             <dd className="font-mono text-forest-green">₹{total.toLocaleString()}</dd>
           </div>
         </dl>
 
-        <form onSubmit={handleCheckout} className="space-y-4 pt-4 border-t">
+        <form onSubmit={handleCheckout} className="space-y-4 pt-4 border-t border-ash">
           {/* Shipping Address Selection */}
           <div>
-            <Label htmlFor="address-select" className="text-xs font-bold text-smoke uppercase mb-1.5 block">
+            <Label htmlFor="address-select" className="text-[10px] font-medium text-smoke uppercase tracking-wider mb-1.5 block font-graphik">
               Deliver To
             </Label>
             {userAddresses.length === 0 ? (
-              <div className="p-3 border rounded border-dashed bg-amber-50 border-amber-200 text-xs text-amber-800">
+              <div className="p-3 border border-dashed bg-cream-paper border-ash text-xs text-charcoal rounded-none">
                 No addresses found.{" "}
                 <Link href="/profile" className="underline font-semibold text-forest-green">
                   Add address in profile
@@ -279,7 +273,7 @@ export function CartClient({ userAddresses }: CartClientProps) {
                   id="address-select"
                   value={selectedAddressId}
                   onChange={(e) => setSelectedAddressId(e.target.value)}
-                  className="w-full h-11 border border-black/10 rounded-[4px] px-3 bg-white text-xs text-neutral-700 focus:outline-none focus:border-forest-green"
+                  className="w-full h-11 border border-ash rounded-none px-3 bg-pure-white text-xs text-ink-black focus:outline-none focus:border-ink-black font-graphik"
                   required
                 >
                   {userAddresses.map((addr) => (
@@ -295,17 +289,17 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
           {/* Payment Method Selector */}
           <div>
-            <Label className="text-xs font-bold text-smoke uppercase mb-1.5 block">
+            <Label className="text-[10px] font-medium text-smoke uppercase tracking-wider mb-1.5 block font-graphik">
               Payment Method
             </Label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setPaymentMethod("cod")}
-                className={`flex h-11 items-center justify-center gap-1.5 rounded-[4px] border text-xs font-semibold uppercase tracking-wider transition-colors ${
+                className={`flex h-11 items-center justify-center gap-1.5 rounded-none border text-xs font-semibold uppercase tracking-wider transition-colors font-graphik focus:outline-none ${
                   paymentMethod === "cod"
                     ? "border-forest-green bg-forest-green text-white"
-                    : "border-black/10 bg-white text-smoke hover:border-forest-green"
+                    : "border-ash bg-pure-white text-charcoal hover:border-ink-black"
                 }`}
               >
                 <CreditCard className="h-4 w-4" /> Cash on Delivery
@@ -313,10 +307,10 @@ export function CartClient({ userAddresses }: CartClientProps) {
               <button
                 type="button"
                 onClick={() => setPaymentMethod("online")}
-                className={`flex h-11 items-center justify-center gap-1.5 rounded-[4px] border text-xs font-semibold uppercase tracking-wider transition-colors ${
+                className={`flex h-11 items-center justify-center gap-1.5 rounded-none border text-xs font-semibold uppercase tracking-wider transition-colors font-graphik focus:outline-none ${
                   paymentMethod === "online"
                     ? "border-forest-green bg-forest-green text-white"
-                    : "border-black/10 bg-white text-smoke hover:border-forest-green"
+                    : "border-ash bg-pure-white text-charcoal hover:border-ink-black"
                 }`}
               >
                 <CreditCard className="h-4 w-4" /> UPI / Cards
@@ -326,7 +320,7 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
           <Button
             type="submit"
-            className="w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-semibold uppercase tracking-wider h-11 mt-4"
+            className="w-full bg-forest-green hover:bg-forest-mid text-white rounded-none font-graphik text-xs font-normal tracking-[0.05em] uppercase h-12 mt-4 border-none"
             disabled={isCheckingOut || userAddresses.length === 0}
           >
             {isCheckingOut ? "Processing..." : "Place Order"}

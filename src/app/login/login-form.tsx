@@ -83,7 +83,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             value={otpToken}
             onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ""))}
             required
-            className="border-black/10 focus-visible:ring-forest-green font-mono tracking-widest text-center text-lg h-12"
+            className="rounded-none border-ash focus-visible:ring-forest-green font-mono tracking-widest text-center text-lg h-12"
           />
         </div>
 
@@ -94,7 +94,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         )}
 
         <div className="flex flex-col gap-3 mt-6">
-          <Button type="submit" className="w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
+          <Button type="submit" className="w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
             {isPending ? "Verifying..." : "Verify & Sign In"}
           </Button>
           <button
@@ -121,7 +121,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="border-black/10 focus-visible:ring-forest-green"
+          className="rounded-none border-ash focus-visible:ring-forest-green"
         />
       </div>
 
@@ -142,7 +142,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="border-black/10 focus-visible:ring-forest-green"
+          className="rounded-none border-ash focus-visible:ring-forest-green"
         />
       </div>
 
@@ -152,7 +152,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         </p>
       )}
 
-      <Button type="submit" className="mt-6 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
+      <Button type="submit" className="mt-6 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
         {isPending ? "Sending OTP..." : "Sign In"}
       </Button>
     </form>

@@ -118,7 +118,7 @@ export function ManufacturerSignupForm() {
                   {otpSent ? `Resend (${otpTimer}s)` : "Send OTP"}
                 </Button>
               ) : (
-                <div className="flex items-center gap-1 text-green-600 bg-green-50 px-3 py-1.5 rounded-[4px] border border-green-200 text-sm font-semibold shrink-0">
+                <div className="flex items-center gap-1 text-green-600 bg-green-50 px-3 py-1.5 rounded-none border border-green-200 text-sm font-semibold shrink-0">
                   <CheckCircle2 className="h-4 w-4" /> Verified
                 </div>
               )}
@@ -695,7 +695,7 @@ export function ManufacturerSignupForm() {
         <p className="text-neutral-500 max-w-sm mx-auto text-sm leading-relaxed">
           We have sent a verification email. Once you confirm, your profile will be submitted to the GenZ administration team for approval.
         </p>
-        <Button asChild className="bg-forest-green text-white hover:bg-forest-green/90 mt-8 rounded-[4px] font-medium tracking-wider">
+        <Button asChild className="bg-forest-green text-white hover:bg-forest-green/90 mt-8 rounded-none font-medium tracking-wider">
           <Link href="/">Return Home</Link>
         </Button>
       </div>
@@ -732,13 +732,13 @@ export function ManufacturerSignupForm() {
                 key={type.id}
                 type="button"
                 onClick={() => setBusinessType(type.id)}
-                className={`flex items-start gap-4 p-4 rounded-[4px] border-2 text-left transition-all ${
+                className={`flex items-start gap-4 p-4 rounded-none border-2 text-left transition-all ${
                   businessType === type.id
                     ? "border-forest-green bg-forest-green/5 ring-1 ring-forest-green"
-                    : "border-black/10 bg-paper-white hover:border-gray-300"
+                    : "border-ash bg-paper-white hover:border-gray-300"
                 }`}
               >
-                <div className={`p-2 rounded-[4px] ${businessType === type.id ? "bg-forest-green text-white" : "bg-gray-100 text-gray-400"}`}>
+                <div className={`p-2 rounded-none ${businessType === type.id ? "bg-forest-green text-white" : "bg-gray-100 text-gray-400"}`}>
                   <Building2 className="h-5 w-5" />
                 </div>
                 <div>
@@ -753,7 +753,7 @@ export function ManufacturerSignupForm() {
         <Button 
           type="button" 
           onClick={() => setStep(1)} 
-          className="w-full bg-forest-green text-white hover:bg-forest-green/90 uppercase tracking-wider font-medium h-12 rounded-[4px] mt-2 flex items-center justify-center gap-1.5"
+          className="w-full bg-forest-green text-white hover:bg-forest-green/90 uppercase tracking-wider font-medium h-12 rounded-none mt-2 flex items-center justify-center gap-1.5"
         >
           Continue <ArrowRight className="h-4 w-4" />
         </Button>
@@ -791,7 +791,7 @@ export function ManufacturerSignupForm() {
         <Button 
           type="submit" 
           disabled={isPending}
-          className="w-full bg-forest-green text-white hover:bg-forest-green/90 uppercase tracking-wider font-medium h-12 rounded-[4px] mt-6"
+          className="w-full bg-forest-green text-white hover:bg-forest-green/90 uppercase tracking-wider font-medium h-12 rounded-none mt-6"
         >
           {isPending ? "Submitting Application..." : "Submit Registration"}
         </Button>
@@ -823,7 +823,7 @@ export function ManufacturerSignupForm() {
         </div>
         
         {/* Progress Bar */}
-        <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden mb-4">
+        <div className="w-full bg-gray-100 h-1.5 rounded-none overflow-hidden mb-4">
           <div 
             className="bg-gold-yellow h-full transition-all duration-300" 
             style={{ width: `${(step / MANUFACTURER_STEPS.length) * 100}%` }}
@@ -849,7 +849,7 @@ export function ManufacturerSignupForm() {
             type="button" 
             variant="outline"
             onClick={handlePrevStep}
-            className="flex-1 border-forest-green text-forest-green hover:bg-forest-green/5 h-11"
+            className="flex-1 border-forest-green text-forest-green hover:bg-forest-green/5 h-11 rounded-none"
           >
             Previous
           </Button>
@@ -859,7 +859,7 @@ export function ManufacturerSignupForm() {
           <Button 
             type="button" 
             onClick={handleNextStep}
-            className="flex-1 bg-forest-green text-white hover:bg-forest-green/90 font-medium uppercase tracking-wider h-11 rounded-[4px] flex items-center justify-center gap-1"
+            className="flex-1 bg-forest-green text-white hover:bg-forest-green/90 font-medium uppercase tracking-wider h-11 rounded-none flex items-center justify-center gap-1"
           >
             Next Step <ArrowRight className="h-4 w-4" />
           </Button>
@@ -867,7 +867,7 @@ export function ManufacturerSignupForm() {
           <Button 
             type="submit" 
             disabled={isPending}
-            className="flex-1 bg-forest-green text-white hover:bg-forest-green/90 font-medium uppercase tracking-wider h-11 rounded-[4px]"
+            className="flex-1 bg-forest-green text-white hover:bg-forest-green/90 font-medium uppercase tracking-wider h-11 rounded-none"
           >
             {isPending ? "Submitting..." : "Submit Registration"}
           </Button>

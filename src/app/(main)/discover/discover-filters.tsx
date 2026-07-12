@@ -8,7 +8,7 @@ import { TOY_CATEGORIES, AGE_GROUPS } from "@/lib/products";
 import type { ProductFilters } from "./types";
 
 const selectClass =
-  "h-11 rounded-[4px] border border-black/10 bg-paper-white px-3.5 text-sm text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-green transition-all duration-300 w-full";
+  "h-11 rounded-none border border-ash bg-pure-white px-3.5 text-sm text-ink-black focus:outline-none focus:border-ink-black focus:ring-1 focus:ring-ink-black transition-colors w-full font-graphik";
 
 export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   const router = useRouter();
@@ -40,17 +40,17 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-paper-white rounded-[4px] border border-black/10 p-6 sm:p-8  flex flex-col gap-6"
+      className="bg-pure-white rounded-none border border-ash p-6 sm:p-8 flex flex-col gap-6"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
         {/* Search Query */}
         <div className="lg:col-span-4">
-          <label htmlFor="q" className="text-black font-sans text-xs font-semibold uppercase tracking-wider mb-2 block">
+          <label htmlFor="q" className="text-ink-black font-graphik text-[10px] font-medium uppercase tracking-wider mb-2 block">
             Search Keyword
           </label>
           <div className="relative">
             <Search
-              className="text-neutral-400 absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
+              className="text-smoke absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
               aria-hidden="true"
             />
             <Input
@@ -58,7 +58,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               name="q"
               placeholder="Wooden puzzle, soft toy, DIY craft kit…"
               defaultValue={filters.q}
-              className="pl-10 h-11 rounded-[4px] border-black/10 focus-visible:ring-forest-green"
+              className="pl-10 h-11 rounded-none border-ash focus-visible:ring-ink-black focus-visible:border-ink-black bg-pure-white text-ink-black font-graphik text-sm"
             />
           </div>
         </div>
@@ -67,7 +67,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
         <div className="lg:col-span-3">
           <label
             htmlFor="category"
-            className="text-black font-sans text-xs font-semibold uppercase tracking-wider mb-2 block"
+            className="text-ink-black font-graphik text-[10px] font-medium uppercase tracking-wider mb-2 block"
           >
             Category
           </label>
@@ -90,7 +90,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
         <div className="lg:col-span-3">
           <label
             htmlFor="age_group"
-            className="text-black font-sans text-xs font-semibold uppercase tracking-wider mb-2 block"
+            className="text-ink-black font-graphik text-[10px] font-medium uppercase tracking-wider mb-2 block"
           >
             Age Group
           </label>
@@ -111,16 +111,16 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
 
         {/* Action button */}
         <div className="lg:col-span-2">
-          <Button type="submit" className="w-full h-11 bg-forest-green hover:bg-forest-green/90 text-white rounded-[4px] font-semibold  transition-all hover:scale-[1.02]">
+          <Button type="submit" className="w-full h-11 bg-forest-green hover:bg-forest-mid text-white rounded-none font-graphik text-xs font-normal tracking-[0.05em] uppercase border-none transition-colors">
             Filter
           </Button>
         </div>
       </div>
 
       {/* Expandable/Secondary price range row */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-neutral-100">
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-ash">
         <div className="flex items-center gap-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-black">Price Range (₹):</span>
+          <span className="text-[10px] font-medium uppercase tracking-wider text-ink-black font-graphik">Price Range (₹):</span>
           
           <div className="flex items-center gap-2">
             <Input
@@ -130,9 +130,9 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               min={0}
               placeholder="Min"
               defaultValue={filters.min_price}
-              className="w-24 h-9 rounded-[4px] border-black/10 text-xs focus-visible:ring-forest-green"
+              className="w-24 h-9 rounded-none border-ash text-xs focus-visible:ring-ink-black bg-pure-white text-ink-black font-graphik"
             />
-            <span className="text-neutral-400 text-xs">to</span>
+            <span className="text-smoke text-xs font-graphik">to</span>
             <Input
               id="max_price"
               name="max_price"
@@ -140,7 +140,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               min={0}
               placeholder="Max"
               defaultValue={filters.max_price}
-              className="w-24 h-9 rounded-[4px] border-black/10 text-xs focus-visible:ring-forest-green"
+              className="w-24 h-9 rounded-none border-ash text-xs focus-visible:ring-ink-black bg-pure-white text-ink-black font-graphik"
             />
           </div>
         </div>
@@ -150,7 +150,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
             type="button"
             variant="ghost"
             onClick={() => router.push("/discover")}
-            className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded-[4px] h-9 font-semibold"
+            className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none h-9 font-graphik font-medium"
           >
             Clear Active Filters
           </Button>

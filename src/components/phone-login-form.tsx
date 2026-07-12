@@ -74,7 +74,7 @@ function CountryCodeSelect({
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex h-11 w-[104px] items-center gap-1.5 rounded-[4px] border border-border bg-background px-2.5 text-sm text-foreground transition-colors hover:border-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+        className="flex h-11 w-[104px] items-center gap-1.5 rounded-none border border-ash bg-background px-2.5 text-sm text-foreground transition-colors hover:border-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
       >
         {active && (
           <Image
@@ -97,7 +97,7 @@ function CountryCodeSelect({
       </button>
 
       {open && (
-        <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-[280px] overflow-hidden rounded-[4px] border border-border bg-background ">
+        <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-[280px] overflow-hidden rounded-none border border-ash bg-background ">
           <div className="flex items-center gap-2 border-b border-border px-3">
             <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
             <input
@@ -227,7 +227,7 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
             autoComplete="one-time-code"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            className="mt-1.5 tracking-widest"
+            className="mt-1.5 tracking-widest rounded-none border-ash"
             required
           />
         </div>
@@ -236,7 +236,7 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
             {error}
           </p>
         )}
-        <Button type="submit" className="mt-4 w-full" disabled={status === "pending"}>
+        <Button type="submit" className="mt-4 w-full bg-forest-green hover:bg-forest-green/90 text-white rounded-none uppercase tracking-wider font-medium h-11" disabled={status === "pending"}>
           {status === "pending" ? "Verifying…" : "Verify & sign in"}
         </Button>
         <button
@@ -272,7 +272,7 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
             autoComplete="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="flex-1"
+            className="flex-1 rounded-none border-ash"
             required
           />
         </div>
@@ -285,7 +285,7 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
           {error}
         </p>
       )}
-      <Button type="submit" className="mt-4 w-full" disabled={status === "pending"}>
+      <Button type="submit" className="mt-4 w-full bg-forest-green hover:bg-forest-green/90 text-white rounded-none uppercase tracking-wider font-medium h-11" disabled={status === "pending"}>
         {status === "pending" ? "Sending…" : "Send code"}
       </Button>
     </form>

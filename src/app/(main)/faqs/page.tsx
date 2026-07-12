@@ -78,72 +78,70 @@ const FAQ_GROUPS: FaqGroup[] = [
 
 export default async function FaqsPage() {
   return (
-    <div className="bg-background flex min-h-screen flex-col font-sans text-foreground antialiased">
-      <main className="flex-1">
-        {/* Hero */}
-        <section className="py-20 sm:py-24 px-6 sm:px-12 border-b border-black/10">
-          <div className="mx-auto max-w-4xl text-left">
-            <span className="eyebrow text-charcoal mb-3 block">Support</span>
-            <h1 className="font-serif text-4xl sm:text-6xl font-normal leading-[1.05] tracking-tight text-deep-forest mb-5">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-charcoal max-w-2xl text-base sm:text-lg leading-relaxed">
-              Everything you need to know about buying from verified Indian manufacturers,
-              selling on GenZ, and how the trust network works. Can&apos;t find your answer?{" "}
-              <Link href="/contact" className="underline decoration-chartreuse-lime decoration-2 underline-offset-4 hover:text-deep-forest">
-                Get in touch
-              </Link>
-              .
+    <main className="flex-1 bg-cream-paper font-sans text-ink-black antialiased">
+      {/* Hero */}
+      <section className="py-20 sm:py-28 px-6 sm:px-12 border-b border-ash">
+        <div className="mx-auto max-w-4xl text-left">
+          <span className="text-caption font-graphik uppercase tracking-[0.2em] text-smoke block mb-4">Support</span>
+          <h1 className="font-nantes text-4xl sm:text-6xl font-normal leading-[1.1] tracking-tight text-ink-black mb-5">
+            Frequently Asked Questions
+          </h1>
+          <p className="text-charcoal max-w-2xl text-body font-graphik leading-relaxed">
+            Everything you need to know about buying from verified Indian manufacturers,
+            selling on GenZ, and how the trust network works. Can&apos;t find your answer?{" "}
+            <Link href="/contact" className="underline decoration-gold-yellow decoration-2 underline-offset-4 hover:text-forest-green font-medium">
+              Get in touch
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ Groups */}
+      <section className="py-16 sm:py-24 px-6 sm:px-12">
+        <div className="mx-auto max-w-4xl flex flex-col gap-14">
+          {FAQ_GROUPS.map((group) => (
+            <div key={group.title}>
+              <h2 className="font-nantes text-2xl sm:text-3xl text-ink-black mb-6 tracking-tight">
+                {group.title}
+              </h2>
+              <div className="flex flex-col gap-3">
+                {group.items.map((item) => (
+                  <details
+                    key={item.q}
+                    className="group bg-pure-white rounded-none border border-ash open:border-forest-green transition-colors"
+                  >
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 sm:p-6 text-left font-medium text-ink-black focus:outline-none select-none">
+                      <span className="text-sm sm:text-base font-graphik font-semibold">{item.q}</span>
+                      <ChevronDown className="h-4 w-4 shrink-0 text-smoke transition-transform duration-200 group-open:rotate-180" />
+                    </summary>
+                    <p className="px-5 sm:px-6 pb-5 sm:pb-6 -mt-1 text-sm text-charcoal font-graphik leading-relaxed">
+                      {item.a}
+                    </p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="pb-24 px-6 sm:px-12">
+        <div className="mx-auto max-w-4xl bg-forest-green rounded-none p-10 sm:p-12 text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div>
+            <h3 className="font-nantes text-2xl sm:text-3xl font-normal text-white mb-2 tracking-tight">
+              Still have questions?
+            </h3>
+            <p className="text-white/70 text-caption font-graphik">
+              Our team typically responds within one business day.
             </p>
           </div>
-        </section>
-
-        {/* FAQ Groups */}
-        <section className="py-16 sm:py-20 px-6 sm:px-12">
-          <div className="mx-auto max-w-4xl flex flex-col gap-14">
-            {FAQ_GROUPS.map((group) => (
-              <div key={group.title}>
-                <h2 className="font-serif text-2xl sm:text-3xl font-normal text-deep-forest mb-6 tracking-tight">
-                  {group.title}
-                </h2>
-                <div className="flex flex-col gap-3">
-                  {group.items.map((item) => (
-                    <details
-                      key={item.q}
-                      className="group bg-paper-white rounded-[4px] border border-black/10 open:border-deep-forest/30 transition-colors"
-                    >
-                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 sm:p-6 text-left font-medium text-deep-forest">
-                        <span className="text-sm sm:text-base">{item.q}</span>
-                        <ChevronDown className="h-4 w-4 shrink-0 text-charcoal transition-transform duration-200 group-open:rotate-180" />
-                      </summary>
-                      <p className="px-5 sm:px-6 pb-5 sm:pb-6 -mt-1 text-sm text-charcoal leading-relaxed">
-                        {item.a}
-                      </p>
-                    </details>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="pb-24 px-6 sm:px-12">
-          <div className="mx-auto max-w-4xl bg-forest-green rounded-[4px] p-10 sm:p-12 text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-            <div>
-              <h3 className="font-serif text-2xl sm:text-3xl font-normal text-white mb-2 tracking-tight">
-                Still have questions?
-              </h3>
-              <p className="text-white/70 text-sm sm:text-base max-w-md">
-                Our team typically responds within one business day.
-              </p>
-            </div>
-            <Button asChild className="bg-chartreuse-lime text-forest-green font-medium rounded-[4px] h-12 px-8 text-sm uppercase tracking-wider border-none shrink-0">
-              <Link href="/contact">Contact Us</Link>
-            </Button>
-          </div>
-        </section>
-      </main>
-    </div>
+          <Button asChild className="bg-gold-yellow text-ink-black hover:bg-gold-yellow/90 font-graphik font-medium rounded-none h-12 px-8 text-xs uppercase tracking-wider border-none shrink-0">
+            <Link href="/contact">Contact Us</Link>
+          </Button>
+        </div>
+      </section>
+    </main>
   );
 }
