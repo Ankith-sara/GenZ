@@ -324,109 +324,61 @@ export function AboutClient() {
 
               <ScrollReveal delay={100}>
                 <p>
-                  This journey began while I was studying for my Bachelor of Business Administration in the United Kingdom.
+                  While studying BBA in London, I worked in a Pakistani restaurant as the only Indian employee. Most of the time, I ignored jokes about my accent, my appearance, and even my country. But during Operation Sindoor, the conversations became more serious. While defending India, I compared India&apos;s progress with Pakistan.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal delay={150}>
-                <p>
-                  At the time, I was working in a restaurant where I was the only Indian on the team. From the beginning, I often felt different. There were comments about my accent, my appearance, and sometimes even statements about India that were difficult to hear.
+                <p className="font-semibold text-forest-green">
+                  The reply I received changed my life forever.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal delay={200}>
-                <p>
-                  I tried to focus on my studies and my work.
-                </p>
+                <div className="bg-cream-paper border-l-2 border-gold-yellow p-5 my-6 italic text-lg text-ink-black font-nantes transition-colors hover:bg-gold-yellow/5">
+                  &ldquo;Why are you comparing India&apos;s progress with Pakistan? Compare it with China and the United States. Then you&apos;ll realize where India stands.&rdquo;
+                </div>
               </ScrollReveal>
 
               <ScrollReveal delay={250}>
                 <p>
-                  But during Operation Sindoor, the conversations became more intense. People openly questioned India&apos;s strength and future. As an Indian living far from home, those moments were not easy.
+                  That one sentence stayed with me.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal delay={300}>
                 <p>
-                  One day, while defending my country, I compared India&apos;s progress with Pakistan.
+                  For the next two months, I spent countless hours researching why countries like China and the United States became global leaders in manufacturing, innovation, and economic growth. The more I learned, the more I realized that India doesn&apos;t lack talent—it lacks trust, visibility, and opportunities. Millions of manufacturers, innovators, artisans, startups, and entrepreneurs have incredible potential, yet many never receive the recognition or market access they deserve.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal delay={350}>
-                <p className="font-semibold text-forest-green">
-                  The response I received changed my life.
+                <p className="font-medium text-ink-black">
+                  That realization became GenZ.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal delay={400}>
-                <div className="bg-cream-paper border-l-2 border-gold-yellow p-5 my-6 italic text-lg text-ink-black font-nantes transition-colors hover:bg-gold-yellow/5">
-                  &ldquo;Why do you always compare India with Pakistan? Compare India with China and the United States.&rdquo;
-                </div>
+                <p>
+                  I made the difficult decision to leave London and return to India to build this vision. Before returning, I told my family that I was leaving everything behind to make this dream a reality. My father respected my decision but made one thing clear—he would not be able to provide any financial support. If I believed in this vision, I would have to build it on my own.
+                </p>
               </ScrollReveal>
 
               <ScrollReveal delay={450}>
                 <p>
-                  That sentence stayed in my mind. I could not stop thinking about it.
+                  After returning to India, I met politicians, startup incubators, and various organizations. Many appreciated the idea, but the support I hoped for never came. Every rejection only strengthened my determination.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal delay={500}>
                 <p>
-                  For the next two months, I spent countless hours researching, trying to understand why countries like China and the United States had become global leaders in manufacturing, innovation, and economic growth.
+                  To support myself while building GenZ, I became a Zomato delivery partner. Every day, I delivered food. Every night, I worked on GenZ. While others saw a delivery partner, I saw someone taking one step closer to a vision that never left my mind.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal delay={550}>
                 <p>
-                  The deeper I looked, the more I realized something important: <strong className="font-semibold text-ink-black">India does not lack talent.</strong>
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={600}>
-                <p>
-                  We have brilliant innovators, skilled manufacturers, hardworking artisans, ambitious entrepreneurs, and millions of people with ideas that can change lives.
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={650}>
-                <p>
-                  Yet many of them remain unseen. Many struggle to gain trust, visibility, and access to markets. Consumers often do not know who is actually making products. Small manufacturers struggle to get noticed. Great ideas remain hidden.
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={700}>
-                <p className="font-medium text-ink-black">
-                  That realization became the foundation of GenZ.
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={750}>
-                <p>
-                  I returned to India with a dream and a strong belief that if I shared this vision, people would help me bring it to life. I met stakeholders, incubators, and organizations across the country. Many appreciated the idea. Many said the vision was powerful.
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={800}>
-                <p>
-                  But as time passed, I realized that believing in an idea and helping build it are two different things. The support I hoped for did not come. There were moments of disappointment and doubt. But every setback only strengthened my determination. I knew this was a problem worth solving.
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={850}>
-                <p>
-                  As my savings slowly ran out, I needed a way to support myself while continuing to work on my dream. <strong className="font-semibold text-ink-black">So I became a Zomato delivery partner.</strong>
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={900}>
-                <p>
-                  Every day, I delivered food to earn a living. Every night, I worked on GenZ. While others saw a delivery partner, I saw someone taking one more step toward a vision that refused to leave his mind.
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={950}>
-                <p>
-                  Today, GenZ is more than a startup. It is the result of a question that changed my life — a question that forced me to look beyond excuses and search for solutions.
+                  Today, GenZ is more than an e-commerce platform. It is a mission to build trust, empower Indian manufacturers and innovators, and create opportunities that help India compete with the world&apos;s best.
                 </p>
               </ScrollReveal>
 
@@ -441,19 +393,13 @@ export function AboutClient() {
 
               <ScrollReveal>
                 <p>
-                  My dream is to help Indian manufacturers become visible, help innovators turn ideas into products, help startups grow, and help consumers discover and trust products proudly made in India.
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal>
-                <p>
-                  I believe India&apos;s greatest strength is not hidden beneath its land. It lives in the minds, skills, and determination of its people.
+                  I believe India&apos;s future will not be built by one person, one company, or one government alone. It will be built when manufacturers, innovators, entrepreneurs, and consumers come together to create opportunities for one another.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal>
                 <p className="font-nantes text-xl text-forest-green font-semibold">
-                  And GenZ exists to help unlock that potential — so that one day the world does not just see India as a market or a workforce, but as a global leader in innovation, manufacturing, and trust.
+                  That is the future I want GenZ to help build.
                 </p>
               </ScrollReveal>
             </div>
