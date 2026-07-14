@@ -62,7 +62,7 @@ export default async function AdminVerificationDetailPage({
             <h1 className="text-3xl font-serif text-forest-green font-normal">
               {manufacturer.business_name}
             </h1>
-            <Badge className="bg-forest-green text-gold-yellow uppercase text-[10px] ml-2">
+            <Badge className="bg-forest-green text-[#FFF0DD] uppercase text-[10px] ml-2">
               {businessType}
             </Badge>
           </div>
@@ -196,7 +196,7 @@ export default async function AdminVerificationDetailPage({
                         <p className="font-semibold text-neutral-700">GST Registration Certificate</p>
                         <p className="font-mono text-neutral-500 mt-0.5">{manufacturer.gst_number}</p>
                       </div>
-                      <Badge className="bg-forest-green text-gold-yellow">Attached</Badge>
+                      <Badge className="bg-forest-green text-[#FFF0DD]">Attached</Badge>
                     </div>
                     {metadata.udyam_certificate_file && (
                       <div className="flex justify-between items-center bg-gray-50 p-2.5 rounded border text-xs">
@@ -204,7 +204,7 @@ export default async function AdminVerificationDetailPage({
                           <p className="font-semibold text-neutral-700">UDYAM / MSME Certificate</p>
                           <p className="text-neutral-500 mt-0.5">{metadata.udyam_certificate_file}</p>
                         </div>
-                        <Badge className="bg-forest-green text-gold-yellow">Attached</Badge>
+                        <Badge className="bg-forest-green text-[#FFF0DD]">Attached</Badge>
                       </div>
                     )}
                     {metadata.factory_license_file && (
@@ -213,7 +213,7 @@ export default async function AdminVerificationDetailPage({
                           <p className="font-semibold text-neutral-700">Factory License</p>
                           <p className="text-neutral-500 mt-0.5">{metadata.factory_license_file}</p>
                         </div>
-                        <Badge className="bg-forest-green text-gold-yellow">Attached</Badge>
+                        <Badge className="bg-forest-green text-[#FFF0DD]">Attached</Badge>
                       </div>
                     )}
                     <div className="grid grid-cols-2 gap-2 text-xs pt-2">

@@ -195,7 +195,7 @@ export function InteractiveTimeline() {
               <div
                 className={`h-10 w-10 flex items-center justify-center transition-all duration-300 ${
                   isActive
-                    ? "bg-forest-green text-gold-yellow"
+                    ? "bg-forest-green text-[#FFF0DD]"
                     : "bg-cream-paper text-smoke group-hover:text-ink-black"
                 }`}
               >
@@ -401,6 +401,84 @@ export function AboutClient() {
                 <p className="font-nantes text-xl text-forest-green font-semibold">
                   That is the future I want GenZ to help build.
                 </p>
+              </ScrollReveal>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Launch Strategy: Starting with Toys */}
+      <section className="bg-pure-white py-20 px-6 sm:px-12 md:py-28 border-b border-ash relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-brand-blue/5 via-transparent to-transparent pointer-events-none" />
+        <div className="mx-auto max-w-[1280px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            {/* Left side: Headline & Mission */}
+            <div className="lg:col-span-6 space-y-6 text-left">
+              <ScrollReveal>
+                <span className="text-caption font-graphik uppercase tracking-[0.2em] text-smoke mb-4 block">
+                  Launch Strategy
+                </span>
+                <h2 className="font-nantes text-4xl sm:text-5xl font-normal leading-[1.1] text-ink-black mb-6">
+                  Starting with Toys. <br />
+                  <span className="italic text-forest-green font-semibold">Growing with Innovation.</span>
+                </h2>
+              </ScrollReveal>
+
+              <ScrollReveal delay={100} className="space-y-6 font-graphik text-body leading-relaxed text-charcoal">
+                <p className="font-semibold text-ink-black text-lg">
+                  We are launching with toys as our first category.
+                </p>
+                <p>
+                  <strong>Why toys?</strong> Because they represent creativity, learning, innovation, and India&apos;s growing manufacturing potential. Starting with one category allows us to build trust, verify manufacturers, and deliver the best experience from day one.
+                </p>
+                <p className="font-semibold text-forest-green text-lg">
+                  This is only the beginning.
+                </p>
+                <p>
+                  Our mission is to build one trusted platform where consumers, manufacturers, startups, creators, and businesses can discover and grow with verified products made through innovation and quality.
+                </p>
+              </ScrollReveal>
+            </div>
+
+            {/* Right side: Future Categories List Card */}
+            <div className="lg:col-span-6 bg-cream-paper border border-ash p-8 sm:p-10 rounded-none relative">
+              <ScrollReveal delay={200}>
+                <h3 className="font-nantes text-2xl text-ink-black mb-4 pb-3 border-b border-ash">
+                  Future Categories
+                </h3>
+                <p className="text-caption font-graphik text-smoke mb-6">
+                  As we grow, we will expand into more trusted manufacturing categories, including:
+                </p>
+                
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-caption font-graphik text-charcoal">
+                  {[
+                    "Toys & Games",
+                    "Educational Products",
+                    "Consumer Electronics",
+                    "Home & Kitchen",
+                    "Furniture & Home Decor",
+                    "Fashion & Textiles",
+                    "Sports & Fitness",
+                    "Beauty & Personal Care",
+                    "Stationery & Office Supplies",
+                    "Industrial & Business Products",
+                    "Packaging Solutions",
+                    "Smart Products",
+                    "Innovative Technologies",
+                    "Future Creations"
+                  ].map((cat, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 bg-forest-green shrink-0" />
+                      <span>{cat}</span>
+                    </li>
+                  ))}
+                  <li className="flex items-center gap-2 font-medium text-forest-green col-span-2 mt-2">
+                    <span className="h-1.5 w-1.5 bg-forest-green shrink-0" />
+                    <span>And many more.</span>
+                  </li>
+                </ul>
               </ScrollReveal>
             </div>
 

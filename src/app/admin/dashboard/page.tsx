@@ -64,10 +64,10 @@ export default async function AdminDashboard() {
       {/* High level Stats Indicators */}
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {[
-          { label: "Pending Reviews", count: pendingCount, color: "border-amber-200 bg-amber-50/50" },
-          { label: "Verified Partners", count: verifiedCount, color: "border-green-200 bg-green-50/50" },
-          { label: "Waitlist Signups", count: waitlistCount, color: "border-blue-200 bg-blue-50/50" },
-          { label: "Listed Products", count: productCount, color: "border-black/10 bg-gray-50/50" }
+          { label: "Pending Reviews", count: pendingCount, color: "border-[#E2A16F]/30 bg-[#E2A16F]/5" },
+          { label: "Verified Partners", count: verifiedCount, color: "border-[#86B0BD]/30 bg-[#86B0BD]/5" },
+          { label: "Waitlist Signups", count: waitlistCount, color: "border-[#D1D3D4] bg-white/40" },
+          { label: "Listed Products", count: productCount, color: "border-black/10 bg-black/[0.02]" }
         ].map((stat, idx) => (
           <div key={idx} className={`border rounded-[4px] p-6 ${stat.color}`}>
             <p className="text-neutral-500 text-xs font-medium uppercase tracking-wider">{stat.label}</p>

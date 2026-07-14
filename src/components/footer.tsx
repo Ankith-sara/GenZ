@@ -23,7 +23,7 @@ function InstagramIcon({ className = "h-5 w-5" }: { className?: string }) {
 
 export function Footer() {
   return (
-    <footer className="bg-forest-green text-white border-t border-white/5 py-20 px-6 sm:px-12 text-left relative overflow-hidden font-sans">
+    <footer className="bg-black text-white border-t border-white/5 py-20 px-6 sm:px-12 text-left relative overflow-hidden font-sans">
       {/* Subtle background glow/pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none" />
 

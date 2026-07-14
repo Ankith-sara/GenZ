@@ -91,7 +91,7 @@ export function NewsletterForm() {
         <Button
           type="submit"
           disabled={status === "submitting"}
-          className="bg-gold-yellow text-forest-green hover:bg-gold-yellow/90 font-medium uppercase tracking-wider text-xs px-6 h-12 rounded-[4px] shrink-0 border-none transition-all hover:scale-[1.02] disabled:opacity-50"
+          className="bg-gold-yellow text-white hover:bg-gold-yellow/90 font-medium uppercase tracking-wider text-xs px-6 h-12 rounded-[4px] shrink-0 border-none transition-all hover:scale-[1.02] disabled:opacity-50"
         >
           {status === "submitting" ? "Subscribing..." : "Subscribe"}
         </Button>

@@ -88,21 +88,36 @@ export default function HomePage() {
 
   return (
     <main className="flex-1 bg-cream-paper font-sans text-ink-black antialiased">
-      <section className="relative border-b border-ash px-6 pt-14 pb-0 sm:px-12">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-6">
-          {/* Left: masthead-style editorial headline */}
-          <div className="flex flex-col justify-center lg:col-span-6 lg:pr-8 lg:pb-24">
-            <span className="mb-6 block text-caption font-graphik uppercase tracking-[0.28em] text-smoke">
+      <section className="relative border-b border-ash min-h-[600px] sm:min-h-[700px] lg:min-h-[750px] flex items-center w-full overflow-hidden py-20 px-6 sm:px-12">
+        {/* Background Image with Dark/Warm Overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/hero_background.png"
+            alt="GenZ Toy Manufacturing Workshop"
+            fill
+            priority
+            className="object-cover object-center"
+          />
+          {/* Overlay to ensure text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-transparent lg:from-black/90 lg:via-black/55 lg:to-black/30" />
+          {/* Accent glow on top left */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(226,161,111,0.2),_transparent_50%)]" />
+        </div>
+
+        <div className="mx-auto max-w-[1280px] w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+          {/* Left Column: text overlay (now high contrast white/cream text on dark overlay) */}
+          <div className="flex flex-col justify-center lg:col-span-8 space-y-6 text-left">
+            <span className="text-caption font-graphik uppercase tracking-[0.28em] text-[#FFF0DD]/70">
               Made in India
             </span>
-            <h1 className="font-nantes text-5xl leading-[0.98] tracking-tight text-ink-black sm:text-6xl lg:text-[4.6rem]">
-              From import
-              <br />
-              dependency to{" "}
-              <span className="relative inline-block italic">
+            
+            <h1 className="font-nantes text-5xl leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[4.8rem] max-w-3xl">
+              From import dependency <br />
+              to{" "}
+              <span className="relative inline-block italic text-gold-yellow font-medium">
                 opportunity
                 <svg
-                  className="absolute -bottom-2 left-0 h-2 w-full text-gold-yellow"
+                  className="absolute -bottom-2 left-0 h-2.5 w-full text-gold-yellow"
                   viewBox="0 0 100 8"
                   preserveAspectRatio="none"
                   aria-hidden="true"
@@ -112,61 +127,38 @@ export default function HomePage() {
               </span>
               .
             </h1>
-            <p className="mt-8 max-w-md text-body font-graphik leading-relaxed text-charcoal">
+
+            <p className="mt-4 max-w-xl text-lg font-graphik leading-relaxed text-[#FFF0DD]/80">
               GenZ connects Indian consumers directly with verified Indian manufacturers —
               trading imported guesswork for factory-validated trust.
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-6">
-              <Button asChild size="lg" className="bg-forest-green hover:bg-forest-mid text-white rounded-none font-graphik text-xs font-normal tracking-[0.05em] uppercase h-12 px-6 border-none">
+            <div className="pt-4 flex flex-wrap items-center gap-6">
+              <Button asChild size="lg" className="bg-[#E2A16F] hover:bg-[#cc8854] text-black font-graphik text-xs font-semibold tracking-[0.05em] uppercase h-12 px-6 rounded-none border-none transition-colors">
                 <Link href="/discover">Explore products</Link>
               </Button>
               <Link
                 href="/signup/manufacturer"
-                className="group inline-flex items-center gap-1.5 text-body font-graphik text-ink-black underline decoration-ash underline-offset-4 hover:decoration-ink-black"
+                className="group inline-flex items-center gap-1.5 text-body font-graphik text-white font-medium underline decoration-white/30 underline-offset-4 hover:decoration-white transition-all"
               >
                 For manufacturers
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="h-4 w-4 text-[#E2A16F] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </div>
 
-            <dl className="mt-14 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ash pt-8">
+            <dl className="pt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 max-w-2xl border-t border-white/10 mt-10">
               {[
                 "100% verified manufacturers",
                 "No imports, no fake resellers",
                 "GST & factory validated",
                 "Built for India, by India",
               ].map((item) => (
-                <div key={item} className="flex items-start gap-2.5">
-                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-forest-green" />
-                  <dd className="text-caption font-graphik leading-snug text-charcoal">{item}</dd>
+                <div key={item} className="flex items-center gap-3">
+                  <ShieldCheck className="h-5 w-5 shrink-0 text-[#E2A16F]" />
+                  <dd className="text-sm font-graphik leading-snug text-[#FFF0DD]/85">{item}</dd>
                 </div>
               ))}
             </dl>
-          </div>
-
-          {/* Right: full-bleed photography */}
-          <div className="relative -mx-6 lg:col-span-6 lg:mx-0">
-            <div className="relative aspect-[4/5] w-full overflow-hidden bg-forest-green sm:aspect-[3/4] lg:aspect-auto lg:h-[640px]">
-              <Image
-                src="/india_glow_map.png"
-                alt="Map of India"
-                fill
-                priority
-                className="object-contain opacity-40 p-10"
-              />
-              <div className="absolute left-8 top-8 z-10">
-                <p className="text-caption font-graphik uppercase tracking-[0.3em] text-white/70">Made in</p>
-                <p className="font-nantes text-3xl italic text-white">India</p>
-              </div>
-
-              <div className="absolute bottom-8 left-8 right-8 z-10 hidden sm:block">
-                <div className="h-px w-full bg-white/15" />
-                <p className="mt-4 max-w-xs text-caption font-graphik text-white/60">
-                  Play Desi. Be Desi. Proudly Desi.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -275,8 +267,8 @@ export default function HomePage() {
                 <svg className="w-full h-32 text-brand-blue" viewBox="0 0 200 80">
                   <defs>
                     <linearGradient id="grad-blue" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#0f4c81" stopOpacity="0.15" />
-                      <stop offset="100%" stopColor="#0f4c81" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#86B0BD" stopOpacity="0.15" />
+                      <stop offset="100%" stopColor="#86B0BD" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   <path
@@ -286,11 +278,11 @@ export default function HomePage() {
                   <path
                     d="M 10 70 Q 40 50 70 60 T 130 30 T 190 10"
                     fill="none"
-                    stroke="#0f4c81"
+                    stroke="#86B0BD"
                     strokeWidth="2"
                   />
-                  <circle cx="130" cy="30" r="3" fill="#ffffff" stroke="#0f4c81" strokeWidth="1.5" />
-                  <circle cx="190" cy="10" r="3" fill="#ffda58" />
+                  <circle cx="130" cy="30" r="3" fill="#ffffff" stroke="#86B0BD" strokeWidth="1.5" />
+                  <circle cx="190" cy="10" r="3" fill="#E2A16F" />
                 </svg>
                 <span className="text-[10px] text-charcoal uppercase tracking-widest font-graphik mt-3 block text-center">
                   Top Import Segments: Toys, Electronics, Spares
@@ -390,11 +382,11 @@ export default function HomePage() {
                         <div
                           className={`h-8 w-8 flex items-center justify-center border transition-all duration-300 ${
                             isActive
-                              ? "bg-forest-green border-forest-green text-gold-yellow rotate-45"
+                              ? "bg-forest-green border-forest-green text-[#FFF0DD] rotate-45"
                               : "border-ash text-smoke group-hover:text-ink-black group-hover:border-ink-black"
                           }`}
                         >
-                          <ArrowRight className="h-4 w-4" />
+                          <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isActive ? "-rotate-45" : ""}`} />
                         </div>
                       </div>
                     </button>
