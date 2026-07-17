@@ -52,10 +52,10 @@ export default async function AdminDashboard() {
     <div className="mx-auto max-w-6xl px-6 py-12 sm:px-12">
       <div className="flex justify-between items-end border-b pb-6">
         <div>
-          <p className="text-gold-yellow text-xs font-medium tracking-[0.2em] uppercase mb-1">
+          <p className="text-neutral-500 text-xs font-medium tracking-[0.2em] uppercase mb-1">
             GenZ Control Center
           </p>
-          <h1 className="text-3xl font-serif text-forest-green">
+          <h1 className="text-3xl font-serif text-black">
             Welcome, {session.profile?.full_name ?? "Administrator"}.
           </h1>
         </div>
@@ -64,14 +64,14 @@ export default async function AdminDashboard() {
       {/* High level Stats Indicators */}
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {[
-          { label: "Pending Reviews", count: pendingCount, color: "border-[#E2A16F]/30 bg-[#E2A16F]/5" },
-          { label: "Verified Partners", count: verifiedCount, color: "border-[#86B0BD]/30 bg-[#86B0BD]/5" },
-          { label: "Waitlist Signups", count: waitlistCount, color: "border-[#D1D3D4] bg-white/40" },
+          { label: "Pending Reviews", count: pendingCount, color: "border-forest-green/30 bg-forest-green/5" },
+          { label: "Verified Partners", count: verifiedCount, color: "border-forest-mid/30 bg-forest-mid/5" },
+          { label: "Waitlist Signups", count: waitlistCount, color: "border-ash bg-white/40" },
           { label: "Listed Products", count: productCount, color: "border-black/10 bg-black/[0.02]" }
         ].map((stat, idx) => (
           <div key={idx} className={`border rounded-[4px] p-6 ${stat.color}`}>
             <p className="text-neutral-500 text-xs font-medium uppercase tracking-wider">{stat.label}</p>
-            <p className="mt-2 font-serif text-4xl text-forest-green font-medium">{stat.count}</p>
+            <p className="mt-2 font-serif text-4xl text-black font-medium">{stat.count}</p>
           </div>
         ))}
       </div>

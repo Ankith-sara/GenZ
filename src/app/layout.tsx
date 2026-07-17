@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   description: "B2C platform",
   icons: {
     icon: "/favicon.jpeg",
+    shortcut: "/favicon.ico",
   },
 };
 

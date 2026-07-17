@@ -17,14 +17,18 @@ export default async function ManufacturerLoginPage({
       <div className="lg:col-span-5 flex flex-col justify-between p-8 sm:p-12 md:p-16 bg-cream-paper min-h-screen">
         <div>
           <Link href="/" className="inline-flex items-center gap-3 mb-12">
-            <div className="w-10 h-10 bg-ink-black text-pure-white flex items-center justify-center font-normal text-2xl rounded-none">
-              Z
-            </div>
+            <Image
+              src="/logo.jpeg"
+              alt="GenZ Logo"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
             <span className="font-graphik text-xl tracking-tight text-ink-black uppercase">GenZ</span>
           </Link>
 
           <div className="max-w-md mx-auto lg:mx-0">
-            <span className="text-forest-green text-xs font-graphik font-semibold tracking-[0.2em] uppercase mb-2 block">
+            <span className="text-primary text-xs font-graphik font-semibold tracking-[0.2em] uppercase mb-2 block">
               Manufacturer Portal
             </span>
             <h2 className="text-3xl font-nantes text-ink-black font-normal mb-2">Welcome back, Maker.</h2>
@@ -49,7 +53,7 @@ export default async function ManufacturerLoginPage({
               <div className="mt-6 border-t border-ash pt-4 text-center">
                 <Link
                   href="/login"
-                  className="text-xs font-graphik font-semibold text-forest-green hover:text-forest-green/80 transition-colors uppercase tracking-wider"
+                  className="text-xs font-graphik font-semibold text-primary hover:text-black transition-colors uppercase tracking-wider"
                 >
                   Looking for products? Sign in as a Buyer →
                 </Link>
@@ -58,7 +62,7 @@ export default async function ManufacturerLoginPage({
 
             <p className="mt-6 text-center text-sm font-graphik text-charcoal">
               Don&apos;t have an account?{" "}
-              <Link href="/signup/manufacturer" className="font-semibold text-forest-green hover:underline">
+              <Link href="/signup/manufacturer" className="font-semibold text-black hover:underline">
                 Register your business
               </Link>
             </p>
@@ -72,14 +76,14 @@ export default async function ManufacturerLoginPage({
       </div>
 
       {/* Right side: Visual Panel */}
-      <div className="lg:col-span-7 relative hidden lg:block overflow-hidden bg-forest-green">
+      <div className="lg:col-span-7 relative hidden lg:block overflow-hidden bg-charcoal">
         {/* Machine Work Background */}
         <Image
           src="/machine_work.png"
           alt="GenZ Manufacturer Studio"
           fill
           priority
-          className="object-cover opacity-25"
+          className="object-cover opacity-40"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
 
@@ -87,7 +91,7 @@ export default async function ManufacturerLoginPage({
         <div className="absolute inset-0 flex flex-col justify-between p-16 z-20">
           <div className="text-white/60 font-graphik text-xs uppercase tracking-[0.3em]">GenZ Maker Network</div>
           <div className="max-w-xl">
-            <p className="font-nantes text-4xl italic text-gold-yellow leading-tight mb-6">
+            <p className="font-nantes text-4xl italic text-white leading-tight mb-6">
               &quot;Showcase your craftsmanship to national buyers. Connect directly, negotiate freely.&quot;
             </p>
             <p className="text-white/80 font-graphik text-sm leading-relaxed">

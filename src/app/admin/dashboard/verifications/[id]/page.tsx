@@ -59,10 +59,10 @@ export default async function AdminVerificationDetailPage({
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-b pb-6">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-serif text-forest-green font-normal">
+            <h1 className="text-3xl font-serif text-black font-semibold">
               {manufacturer.business_name}
             </h1>
-            <Badge className="bg-forest-green text-[#FFF0DD] uppercase text-[10px] ml-2">
+            <Badge className="bg-forest-green text-black uppercase text-[10px] ml-2">
               {businessType}
             </Badge>
           </div>
@@ -85,7 +85,7 @@ export default async function AdminVerificationDetailPage({
               {/* Step 1 & 2: Basic & Factory Details */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="border rounded-[4px] p-6 bg-paper-white ">
-                  <h3 className="font-serif text-base font-medium text-forest-green mb-4 flex items-center gap-2 border-b pb-2">
+                  <h3 className="font-serif text-base font-semibold text-black mb-4 flex items-center gap-2 border-b pb-2">
                     <Building2 className="h-4.5 w-4.5" /> Company & Owner
                   </h3>
                   <dl className="space-y-3 text-sm">
@@ -112,7 +112,7 @@ export default async function AdminVerificationDetailPage({
                 </div>
 
                 <div className="border rounded-[4px] p-6 bg-paper-white ">
-                  <h3 className="font-serif text-base font-medium text-forest-green mb-4 flex items-center gap-2 border-b pb-2">
+                  <h3 className="font-serif text-base font-semibold text-black mb-4 flex items-center gap-2 border-b pb-2">
                     <MapPin className="h-4.5 w-4.5" /> Factory Facility Details
                   </h3>
                   <dl className="space-y-3 text-sm">
@@ -140,7 +140,7 @@ export default async function AdminVerificationDetailPage({
                             href={String(metadata.google_maps_location)} 
                             target="_blank" 
                             rel="noreferrer" 
-                            className="text-xs text-forest-green hover:underline font-semibold"
+                            className="text-xs text-primary hover:underline font-semibold"
                           >
                             Open Maps Location
                           </a>
@@ -153,7 +153,7 @@ export default async function AdminVerificationDetailPage({
 
               {/* Step 3: Manufacturing Details */}
               <div className="border rounded-[4px] p-6 bg-paper-white ">
-                <h3 className="font-serif text-base font-medium text-forest-green mb-4 flex items-center gap-2 border-b pb-2">
+                <h3 className="font-serif text-base font-semibold text-black mb-4 flex items-center gap-2 border-b pb-2">
                   <Award className="h-4.5 w-4.5" /> Manufacturing Capabilities
                 </h3>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
@@ -187,7 +187,7 @@ export default async function AdminVerificationDetailPage({
               {/* Step 4 & 5: Documents & Photos */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="border rounded-[4px] p-6 bg-paper-white ">
-                  <h3 className="font-serif text-base font-medium text-forest-green mb-4 flex items-center gap-2 border-b pb-2">
+                  <h3 className="font-serif text-base font-semibold text-black mb-4 flex items-center gap-2 border-b pb-2">
                     <Shield className="h-4.5 w-4.5" /> Verification Documents
                   </h3>
                   <div className="space-y-3">
@@ -196,7 +196,7 @@ export default async function AdminVerificationDetailPage({
                         <p className="font-semibold text-neutral-700">GST Registration Certificate</p>
                         <p className="font-mono text-neutral-500 mt-0.5">{manufacturer.gst_number}</p>
                       </div>
-                      <Badge className="bg-forest-green text-[#FFF0DD]">Attached</Badge>
+                      <Badge className="bg-forest-green text-black">Attached</Badge>
                     </div>
                     {metadata.udyam_certificate_file && (
                       <div className="flex justify-between items-center bg-gray-50 p-2.5 rounded border text-xs">
@@ -204,7 +204,7 @@ export default async function AdminVerificationDetailPage({
                           <p className="font-semibold text-neutral-700">UDYAM / MSME Certificate</p>
                           <p className="text-neutral-500 mt-0.5">{metadata.udyam_certificate_file}</p>
                         </div>
-                        <Badge className="bg-forest-green text-[#FFF0DD]">Attached</Badge>
+                        <Badge className="bg-forest-green text-black">Attached</Badge>
                       </div>
                     )}
                     {metadata.factory_license_file && (
@@ -213,7 +213,7 @@ export default async function AdminVerificationDetailPage({
                           <p className="font-semibold text-neutral-700">Factory License</p>
                           <p className="text-neutral-500 mt-0.5">{metadata.factory_license_file}</p>
                         </div>
-                        <Badge className="bg-forest-green text-[#FFF0DD]">Attached</Badge>
+                        <Badge className="bg-forest-green text-black">Attached</Badge>
                       </div>
                     )}
                     <div className="grid grid-cols-2 gap-2 text-xs pt-2">
@@ -230,7 +230,7 @@ export default async function AdminVerificationDetailPage({
                 </div>
 
                 <div className="border rounded-[4px] p-6 bg-paper-white ">
-                  <h3 className="font-serif text-base font-medium text-forest-green mb-4 flex items-center gap-2 border-b pb-2">
+                  <h3 className="font-serif text-base font-semibold text-black mb-4 flex items-center gap-2 border-b pb-2">
                     <FileText className="h-4.5 w-4.5" /> Company & Factory Proofs
                   </h3>
                   <ul className="space-y-2.5 text-xs">
@@ -253,11 +253,11 @@ export default async function AdminVerificationDetailPage({
               {/* Step 6: Manufacturing Proof Video */}
               {metadata.walkthrough_video && (
                 <div className="border rounded-[4px] p-6 bg-paper-white ">
-                  <h3 className="font-serif text-base font-medium text-forest-green mb-4 flex items-center gap-2 border-b pb-2">
+                  <h3 className="font-serif text-base font-semibold text-black mb-4 flex items-center gap-2 border-b pb-2">
                     <Video className="h-4.5 w-4.5" /> Mandatory Verification Walkthrough Video
                   </h3>
                   <div className="bg-neutral-900 aspect-video rounded-[4px] overflow-hidden flex flex-col justify-center items-center text-center relative p-6">
-                    <div className="w-16 h-16 bg-gold-yellow text-forest-green flex items-center justify-center rounded-full  mb-4 cursor-pointer  transition-transform duration-300">
+                    <div className="w-16 h-16 bg-gold-yellow text-black flex items-center justify-center rounded-full  mb-4 cursor-pointer  transition-transform duration-300">
                       <Video className="h-8 w-8" />
                     </div>
                     <span className="text-white font-medium block">Play Simulated Walkthrough Video</span>
@@ -290,7 +290,7 @@ export default async function AdminVerificationDetailPage({
           {/* STARTUP / BRAND REVIEW LAYOUT */}
           {businessType === "startup" && (
             <div className="border rounded-[4px] p-6 bg-paper-white ">
-              <h3 className="font-serif text-base font-medium text-forest-green mb-4 flex items-center gap-2 border-b pb-2">
+              <h3 className="font-serif text-base font-semibold text-black mb-4 flex items-center gap-2 border-b pb-2">
                 <Building2 className="h-4.5 w-4.5" /> Brand Profile Summary
               </h3>
               <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
@@ -302,7 +302,7 @@ export default async function AdminVerificationDetailPage({
                   <dt className="text-xs text-smoke uppercase font-semibold">Brand Website</dt>
                   <dd className="font-medium mt-0.5">
                     {metadata.website ? (
-                      <a href={String(metadata.website)} target="_blank" rel="noreferrer" className="text-forest-green underline font-semibold">
+                      <a href={String(metadata.website)} target="_blank" rel="noreferrer" className="text-primary underline font-semibold">
                         {String(metadata.website)}
                       </a>
                     ) : "—"}
@@ -342,7 +342,7 @@ export default async function AdminVerificationDetailPage({
           {businessType === "artisan" && (
             <div className="space-y-6">
               <div className="border rounded-[4px] p-6 bg-paper-white ">
-                <h3 className="font-serif text-base font-medium text-forest-green mb-4 flex items-center gap-2 border-b pb-2">
+                <h3 className="font-serif text-base font-semibold text-black mb-4 flex items-center gap-2 border-b pb-2">
                   <Building2 className="h-4.5 w-4.5" /> Artisan / MSME Profile Details
                 </h3>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
@@ -373,19 +373,19 @@ export default async function AdminVerificationDetailPage({
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="border rounded-[4px] p-4 bg-paper-white  text-center">
                   <span className="text-xs text-smoke uppercase font-semibold block mb-2">Workshop Photo</span>
-                  <div className="bg-gray-100 h-28 flex items-center justify-center text-forest-green font-medium text-xs rounded border border-dashed">
+                  <div className="bg-gray-100 h-28 flex items-center justify-center text-primary font-medium text-xs rounded border border-dashed">
                     ✓ {metadata.workshop_photos || "Attached"}
                   </div>
                 </div>
                 <div className="border rounded-[4px] p-4 bg-paper-white  text-center">
                   <span className="text-xs text-smoke uppercase font-semibold block mb-2">Artisan Products Photo</span>
-                  <div className="bg-gray-100 h-28 flex items-center justify-center text-forest-green font-medium text-xs rounded border border-dashed">
+                  <div className="bg-gray-100 h-28 flex items-center justify-center text-primary font-medium text-xs rounded border border-dashed">
                     ✓ {metadata.artisan_products || "Attached"}
                   </div>
                 </div>
                 <div className="border rounded-[4px] p-4 bg-paper-white  text-center">
                   <span className="text-xs text-smoke uppercase font-semibold block mb-2">Crafting Process Video</span>
-                  <div className="bg-gray-100 h-28 flex items-center justify-center text-forest-green font-medium text-xs rounded border border-dashed">
+                  <div className="bg-gray-100 h-28 flex items-center justify-center text-primary font-medium text-xs rounded border border-dashed">
                     ✓ {metadata.crafting_video || "Attached"}
                   </div>
                 </div>

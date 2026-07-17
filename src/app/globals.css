@@ -2,38 +2,38 @@
 
 :root {
   --radius: 0px;
-  --background: #FFF0DD;
+  --background: #ffffff;
   --foreground: #000000;
 
-  --card: #FFFDFB;
+  --card: #ffffff;
   --card-foreground: #000000;
 
-  --primary: #000000;
-  --primary-foreground: #FFF0DD;
+  --primary: #454040;
+  --primary-foreground: #ffffff;
 
-  --secondary: #FFF0DD;
-  --secondary-foreground: #000000;
+  --secondary: #605B51;
+  --secondary-foreground: #ffffff;
 
-  --muted: #FFF0DD;
-  --muted-foreground: #4A4A4A;
+  --muted: #ffffff;
+  --muted-foreground: #605B51;
 
-  --accent: #E2A16F;
+  --accent: #E6F082;
   --accent-foreground: #000000;
 
   --destructive: #D32F2F;
   --destructive-foreground: #ffffff;
 
-  --border: #D1D3D4;
+  --border: #605B51;
   --input: #000000;
-  --ring: #E2A16F;
+  --ring: #E6F082;
 
-  --forest-green: #E2A16F;
-  --forest-mid: #cc8854;
-  --gold-yellow: #F0E76F;
-  --brand-blue: #86B0BD;
+  --forest-green: #E6F082;
+  --forest-mid: #D8D365;
+  --gold-yellow: #D8D365;
+  --brand-blue: #605B51;
   --dark-band: #000000;
-  --dark-band-foreground: #FFF0DD;
-  --light-gray-bg: #FFF0DD;
+  --dark-band-foreground: #ffffff;
+  --light-gray-bg: #ffffff;
 }
 
 @theme inline {
@@ -66,27 +66,27 @@
 
   /* ── Slate semantic tokens ── */
   --color-slate-text-primary: #000000;
-  --color-slate-text-subdued: #4A4A4A;
-  --color-slate-text-inverse: #FFF0DD;
-  --color-slate-surface-primary: #FFF0DD;
-  --color-slate-surface-secondary: #FFFDFB;
+  --color-slate-text-subdued: #605B51;
+  --color-slate-text-inverse: #ffffff;
+  --color-slate-surface-primary: #ffffff;
+  --color-slate-surface-secondary: #ffffff;
   --color-slate-surface-inverse: #000000;
-  --color-slate-border-muted: #D1D3D4;
-  --color-slate-action-hover: #E2A16F;
+  --color-slate-border-muted: #605B51;
+  --color-slate-action-hover: #E6F082;
 
   /* Legacy aliases the components still reference */
   --color-ink-black: #000000;
-  --color-charcoal: #2A2A2A;
-  --color-deep-forest: #E2A16F;
-  --color-smoke: #4A4A4A;
-  --color-ash: #D1D3D4;
-  --color-cream-paper: #FFF0DD;
-  --color-pure-white: #FFFDFB;
-  --color-paper-white: #FFFDFB;
-  --color-butter-highlight: #F0E76F;
-  --color-pale-sage: #86B0BD;
-  --color-chartreuse-lime: #F0E76F;
-  --color-vivid-green: #E2A16F;
+  --color-charcoal: #454040;
+  --color-deep-forest: #E6F082;
+  --color-smoke: #605B51;
+  --color-ash: #605B51;
+  --color-cream-paper: #ffffff;
+  --color-pure-white: #ffffff;
+  --color-paper-white: #ffffff;
+  --color-butter-highlight: #E6F082;
+  --color-pale-sage: #D8D365;
+  --color-chartreuse-lime: #E6F082;
+  --color-vivid-green: #E6F082;
 
   --font-sans: var(--font-graphik);
   --font-serif: var(--font-grenette);

@@ -100,7 +100,7 @@ export default async function PendingVerificationPage() {
         <div className="p-8">
           <div className="flex justify-between items-center mb-6">
             <h3 className="font-serif text-xl text-forest-green font-semibold">Registration Profile</h3>
-            <Badge className="bg-forest-green text-[#FFF0DD] capitalize">
+            <Badge className="bg-forest-green text-black capitalize">
               {businessType === "manufacturer" ? "Regular Manufacturer" : businessType === "startup" ? "Startup / Brand" : "Artisan / MSME"}
             </Badge>
           </div>

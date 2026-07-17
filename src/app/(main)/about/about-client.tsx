@@ -195,7 +195,7 @@ export function InteractiveTimeline() {
               <div
                 className={`h-10 w-10 flex items-center justify-center transition-all duration-300 ${
                   isActive
-                    ? "bg-forest-green text-[#FFF0DD]"
+                    ? "bg-forest-green text-black"
                     : "bg-cream-paper text-smoke group-hover:text-ink-black"
                 }`}
               >
@@ -203,7 +203,7 @@ export function InteractiveTimeline() {
               </div>
               <span
                 className={`font-nantes text-lg font-medium transition-colors ${
-                  isActive ? "text-forest-green font-semibold" : "text-smoke"
+                  isActive ? "text-black font-semibold" : "text-smoke"
                 }`}
               >
                 {step.year}
@@ -232,7 +232,7 @@ export function InteractiveTimeline() {
             {timelineSteps[activeIndex].desc}
           </p>
         </div>
-        <div className="h-16 w-16 bg-cream-paper flex items-center justify-center border border-ash text-forest-green shrink-0">
+        <div className="h-16 w-16 bg-cream-paper flex items-center justify-center border border-ash text-black shrink-0">
           {(() => {
             const CurrentIcon = timelineSteps[activeIndex].icon;
             return <CurrentIcon className="h-8 w-8 animate-pulse" />;
@@ -298,7 +298,7 @@ export function AboutClient() {
 
               <ScrollReveal delay={200} className="w-full">
                 <div className="border-l-2 border-forest-green pl-5 py-3 text-left bg-cream-paper p-4 w-full rounded-none">
-                  <p className="font-nantes text-base italic text-forest-green leading-relaxed">
+                  <p className="font-nantes text-base italic text-black leading-relaxed">
                     &ldquo;India does not lack talent. It lacks a trusted system that connects talent with opportunity.&rdquo;
                   </p>
                   <span className="text-[10px] text-smoke uppercase tracking-wider block mt-3 font-graphik">
@@ -317,7 +317,7 @@ export function AboutClient() {
               </ScrollReveal>
               
               <ScrollReveal delay={50}>
-                <p className="font-semibold text-forest-green text-base">
+                <p className="font-semibold text-black text-base">
                   My name is Appala Sairam, and I founded GenZ at the age of 23.
                 </p>
               </ScrollReveal>
@@ -329,7 +329,7 @@ export function AboutClient() {
               </ScrollReveal>
 
               <ScrollReveal delay={150}>
-                <p className="font-semibold text-forest-green">
+                <p className="font-semibold text-black">
                   The reply I received changed my life forever.
                 </p>
               </ScrollReveal>
@@ -383,8 +383,8 @@ export function AboutClient() {
               </ScrollReveal>
 
               <ScrollReveal>
-                <div className="bg-forest-green text-white p-8 rounded-none my-8 text-center transition-transform duration-500 hover:scale-[1.01] border border-ash">
-                  <p className="text-gold-yellow text-caption font-graphik font-medium tracking-wider uppercase mb-2">Our Founding Belief</p>
+                <div className="bg-forest-green text-black p-8 rounded-none my-8 text-center transition-transform duration-500 hover:scale-[1.01] border border-ash">
+                  <p className="text-black/70 text-caption font-graphik font-medium tracking-wider uppercase mb-2">Our Founding Belief</p>
                   <p className="font-nantes text-2xl font-normal leading-relaxed">
                     India does not lack talent. It lacks a trusted system that connects talent with opportunity.
                   </p>
@@ -398,7 +398,7 @@ export function AboutClient() {
               </ScrollReveal>
 
               <ScrollReveal>
-                <p className="font-nantes text-xl text-forest-green font-semibold">
+                <p className="font-nantes text-xl text-black font-semibold">
                   That is the future I want GenZ to help build.
                 </p>
               </ScrollReveal>
@@ -422,7 +422,7 @@ export function AboutClient() {
                 </span>
                 <h2 className="font-nantes text-4xl sm:text-5xl font-normal leading-[1.1] text-ink-black mb-6">
                   Starting with Toys. <br />
-                  <span className="italic text-forest-green font-semibold">Growing with Innovation.</span>
+                  <span className="italic text-black font-semibold">Growing with Innovation.</span>
                 </h2>
               </ScrollReveal>
 
@@ -433,7 +433,7 @@ export function AboutClient() {
                 <p>
                   <strong>Why toys?</strong> Because they represent creativity, learning, innovation, and India&apos;s growing manufacturing potential. Starting with one category allows us to build trust, verify manufacturers, and deliver the best experience from day one.
                 </p>
-                <p className="font-semibold text-forest-green text-lg">
+                <p className="font-semibold text-black text-lg">
                   This is only the beginning.
                 </p>
                 <p>
@@ -474,7 +474,7 @@ export function AboutClient() {
                       <span>{cat}</span>
                     </li>
                   ))}
-                  <li className="flex items-center gap-2 font-medium text-forest-green col-span-2 mt-2">
+                  <li className="flex items-center gap-2 font-medium text-black col-span-2 mt-2">
                     <span className="h-1.5 w-1.5 bg-forest-green shrink-0" />
                     <span>And many more.</span>
                   </li>
@@ -540,7 +540,7 @@ export function AboutClient() {
                 <ScrollReveal key={idx} delay={idx * 100} className="h-full">
                   <div className="bg-pure-white border border-ash p-6 flex flex-col justify-between rounded-none min-h-[220px] h-full group hover:border-forest-green transition-colors duration-300">
                     <div>
-                      <div className="h-10 w-10 bg-cream-paper text-forest-green flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-105">
+                      <div className="h-10 w-10 bg-cream-paper text-black flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-105">
                         <item.icon className="h-5 w-5" />
                       </div>
                       <span className="font-nantes text-2xl font-normal text-ink-black mb-1 block">
@@ -606,7 +606,7 @@ export function AboutClient() {
               ].map((item, idx) => (
                 <ScrollReveal key={idx} delay={idx * 80} className="h-full">
                   <div className="bg-pure-white border border-ash p-6 flex gap-4 text-left rounded-none h-full group hover:border-brand-blue transition-colors duration-300">
-                    <div className="h-10 w-10 bg-cream-paper text-forest-green flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105">
+                    <div className="h-10 w-10 bg-cream-paper text-black flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105">
                       <item.icon className="h-5 w-5" />
                     </div>
                     <div>
@@ -638,9 +638,9 @@ export function AboutClient() {
 
           {/* Long Term Mission */}
           <ScrollReveal>
-            <div className="bg-forest-green text-white p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center rounded-none border border-ash transition-transform duration-500 hover:scale-[1.005]">
+            <div className="bg-forest-green text-black p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center rounded-none border border-ash transition-transform duration-500 hover:scale-[1.005]">
               <div className="lg:col-span-6 text-left">
-                <span className="text-gold-yellow text-caption font-graphik uppercase tracking-[0.2em] mb-3 block">
+                <span className="text-black/70 text-caption font-graphik uppercase tracking-[0.2em] mb-3 block">
                   Our Long-Term Mission
                 </span>
                 <p className="font-nantes text-2xl font-light leading-snug mb-0">
@@ -654,10 +654,10 @@ export function AboutClient() {
                   { icon: Eye, title: "TRANSPARENCY", desc: "Building trust through validated details." },
                   { icon: RefreshCw, title: "SUSTAINABILITY", desc: "Promoting domestic manufacture for self-reliance." }
                 ].map((val, idx) => (
-                  <div key={idx} className="bg-white/5 border border-white/10 p-4 flex flex-col items-center text-center group hover:bg-white/10 transition-colors duration-300">
-                    <val.icon className="h-5 w-5 text-gold-yellow mb-2.5 transition-transform duration-300 group-hover:scale-110" />
-                    <span className="font-graphik text-[9px] font-medium uppercase tracking-wider text-white mb-1.5 block">{val.title}</span>
-                    <p className="text-[10px] text-white/70 leading-normal">{val.desc}</p>
+                  <div key={idx} className="bg-black/5 border border-black/10 p-4 flex flex-col items-center text-center group hover:bg-black/10 transition-colors duration-300">
+                    <val.icon className="h-5 w-5 text-black mb-2.5 transition-transform duration-300 group-hover:scale-110" />
+                    <span className="font-graphik text-[9px] font-medium uppercase tracking-wider text-black mb-1.5 block">{val.title}</span>
+                    <p className="text-[10px] text-black/70 leading-normal">{val.desc}</p>
                   </div>
                 ))}
               </div>
@@ -694,7 +694,7 @@ export function AboutClient() {
             <Button
               asChild
               size="lg"
-              className="h-12 rounded-none bg-forest-green text-white hover:bg-forest-mid px-6 font-graphik text-xs font-normal tracking-wider uppercase border-none transition-transform hover:scale-102"
+              className="h-12 rounded-none bg-forest-green text-black hover:bg-forest-mid px-6 font-graphik text-xs font-normal tracking-wider uppercase border-none transition-transform hover:scale-102"
             >
               <Link href="/#waitlist">Join the Waitlist</Link>
             </Button>

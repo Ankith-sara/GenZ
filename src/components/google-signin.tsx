@@ -33,33 +33,25 @@ export function GoogleSignInButton({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full animate-fade-in">
       <Button
         type="button"
-        variant="outline"
-        className="w-full h-11 border-border font-medium hover:bg-muted/50"
+        className="w-full h-11 bg-white hover:bg-[#F8F9FA] text-[#3C4043] border border-[#DADCE0] hover:shadow-sm font-medium text-sm flex items-center justify-center gap-3 rounded-none transition-all"
         onClick={handleGoogleLogin}
         disabled={loading}
       >
-        <svg
-          className="mr-2 h-4 w-4 text-[#EA4335]"
-          aria-hidden="true"
-          focusable="false"
-          data-prefix="fab"
-          data-icon="google"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 488 512"
-        >
-          <path
-            fill="currentColor"
-            d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-          ></path>
-        </svg>
-        {loading ? "Connecting…" : text}
+        <div className="w-5 h-5 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.5 24c0-1.61-.15-3.16-.42-4.69H24v9.09h12.75c-.53 2.64-2.01 4.88-4.24 6.39l7.7 5.97C44.9 36.58 46.5 30.73 46.5 24z"/>
+            <path fill="#34A853" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"/>
+            <path fill="#FBBC05" d="M24 38.5c-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48c6.48 0 11.93-2.13 15.89-5.81l-7.7-5.97c-2.28 1.52-5.18 2.28-8.19 2.28z"/>
+          </svg>
+        </div>
+        <span>{loading ? "Connecting…" : text}</span>
       </Button>
       {error && (
-        <p role="alert" className="text-destructive mt-2 text-center text-sm">
+        <p role="alert" className="text-destructive mt-2 text-center text-sm font-semibold">
           {error}
         </p>
       )}

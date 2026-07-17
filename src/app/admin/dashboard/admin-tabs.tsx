@@ -119,15 +119,15 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
             onClick={() => setActiveTab(tab.id as "verifications" | "waitlist" | "products" | "inquiries" | "contact")}
             className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
               activeTab === tab.id
-                ? "border-forest-green text-forest-green"
-                : "border-transparent text-smoke hover:text-forest-green hover:border-gray-300"
+                ? "border-forest-green text-black"
+                : "border-transparent text-smoke hover:text-black hover:border-forest-green/50"
             }`}
           >
             <tab.icon className="h-4.5 w-4.5" />
             {tab.label}
             {tab.count > 0 && (
               <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] ${
-                activeTab === tab.id ? "bg-forest-green text-gold-yellow" : "bg-gray-100 text-smoke"
+                activeTab === tab.id ? "bg-forest-green text-black" : "bg-gray-100 text-smoke"
               }`}>
                 {tab.count}
               </span>
@@ -141,7 +141,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* VERIFICATIONS TAB */}
         {activeTab === "verifications" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">Pending Verification Queue</h3>
+            <h3 className="font-serif text-lg font-semibold text-black mb-4">Pending Verification Queue</h3>
             {initialData.pendingManufacturers.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No pending manufacturer verifications.</p>
             ) : (
@@ -165,7 +165,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
                       return (
                         <tr key={m.id} className="hover:bg-gray-50/50">
                           <td className="p-4">
-                            <span className="font-semibold text-forest-green block">{m.business_name}</span>
+                            <span className="font-semibold text-primary block">{m.business_name}</span>
                             <span className="text-xs text-smoke block mt-0.5">{String(meta["owner_name"] || meta["founder_name"] || "—")}</span>
                           </td>
                           <td className="p-4 font-mono text-xs">{m.gst_number}</td>
@@ -176,7 +176,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
                             </Badge>
                           </td>
                           <td className="p-4 text-right">
-                            <Button asChild variant="outline" size="sm" className="border-forest-green text-forest-green hover:bg-forest-green/5">
+                            <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary/5">
                               <Link href={`/admin/dashboard/verifications/${m.id}`}>
                                 Review Details
                               </Link>
@@ -190,7 +190,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
               </div>
             )}
 
-            <h3 className="font-serif text-lg font-medium text-forest-green mt-10 mb-4 border-t pt-8">Other Verified / Rejected Manufacturers</h3>
+            <h3 className="font-serif text-lg font-semibold text-black mt-10 mb-4 border-t pt-8">Other Verified / Rejected Manufacturers</h3>
             {initialData.verifiedManufacturers.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No other manufacturers listed.</p>
             ) : (
@@ -236,7 +236,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* WAITLIST TAB */}
         {activeTab === "waitlist" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">Waitlist Signups</h3>
+            <h3 className="font-serif text-lg font-semibold text-black mb-4">Waitlist Signups</h3>
             {waitlist.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No waitlist entries.</p>
             ) : (
@@ -281,7 +281,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* PRODUCTS TAB */}
         {activeTab === "products" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">Platform Products</h3>
+            <h3 className="font-serif text-lg font-semibold text-black mb-4">Platform Products</h3>
             {products.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No products listed on the platform.</p>
             ) : (
@@ -312,7 +312,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
                             onClick={() => handleTogglePublish(p.id, p.status)}
                             variant="outline" 
                             size="sm"
-                            className="h-8 text-xs border-forest-green text-forest-green hover:bg-forest-green/5"
+                            className="h-8 text-xs border-primary text-primary hover:bg-primary/5"
                           >
                             {p.status === "published" ? "Unpublish" : "Publish"}
                           </Button>
@@ -336,7 +336,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* INQUIRIES TAB */}
         {activeTab === "inquiries" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">Buyer-to-Manufacturer Inquiries</h3>
+            <h3 className="font-serif text-lg font-semibold text-black mb-4">Buyer-to-Manufacturer Inquiries</h3>
             {initialData.inquiries.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No inquiries submitted yet.</p>
             ) : (
@@ -367,7 +367,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
         {/* CONTACT MESSAGES TAB */}
         {activeTab === "contact" && (
           <div className="p-6">
-            <h3 className="font-serif text-lg font-medium text-forest-green mb-4">General Contact Submissions</h3>
+            <h3 className="font-serif text-lg font-semibold text-black mb-4">General Contact Submissions</h3>
             {contactMessages.length === 0 ? (
               <p className="text-sm text-smoke py-6 text-center">No contact form messages.</p>
             ) : (
@@ -376,7 +376,7 @@ export function AdminDashboardTabs({ initialData }: AdminTabsProps) {
                   <div key={msg.id} className="border rounded p-4 bg-gray-50/50 flex flex-col gap-2 hover: transition-shadow">
                     <div className="flex justify-between items-start gap-4">
                       <div>
-                        <span className="text-sm font-semibold text-forest-green">{msg.name}</span>
+                        <span className="text-sm font-semibold text-primary">{msg.name}</span>
                         <span className="text-xs text-smoke block mt-0.5">{msg.email}</span>
                       </div>
                       {msg.reason && <Badge className="bg-gray-100 text-neutral-800">{msg.reason}</Badge>}

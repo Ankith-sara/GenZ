@@ -236,7 +236,7 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
             {error}
           </p>
         )}
-        <Button type="submit" className="mt-4 w-full bg-forest-green hover:bg-forest-green/90 text-white rounded-none uppercase tracking-wider font-medium h-11" disabled={status === "pending"}>
+        <Button type="submit" className="mt-4 w-full bg-black text-white hover:bg-black/90 rounded-none uppercase tracking-wider font-medium h-11" disabled={status === "pending"}>
           {status === "pending" ? "Verifying…" : "Verify & sign in"}
         </Button>
         <button
@@ -285,7 +285,7 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
           {error}
         </p>
       )}
-      <Button type="submit" className="mt-4 w-full bg-forest-green hover:bg-forest-green/90 text-white rounded-none uppercase tracking-wider font-medium h-11" disabled={status === "pending"}>
+      <Button type="submit" className="mt-4 w-full bg-black text-white hover:bg-black/90 rounded-none uppercase tracking-wider font-medium h-11" disabled={status === "pending"}>
         {status === "pending" ? "Sending…" : "Send code"}
       </Button>
     </form>

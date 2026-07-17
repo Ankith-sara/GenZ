@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Menu,
@@ -112,8 +113,15 @@ export function Header({ isLoggedIn, role, userName, signOutAction }: HeaderProp
 
             {/* Logo */}
             <Link id="faire-logo-link" aria-label="Go to GenZ homepage" className="flex items-center gap-2 shrink-0 py-2" href="/">
-              <div className="w-9 h-9 bg-ink-black text-pure-white flex items-center justify-center font-graphik font-normal text-xl rounded-md">
-                Z
+              <div className="relative w-9 h-9 overflow-hidden rounded-md border border-ash">
+                <Image
+                  src="/logo.jpeg"
+                  alt="GenZ Logo"
+                  fill
+                  className="object-cover"
+                  sizes="36px"
+                  priority
+                />
               </div>
               <span className="text-xl font-graphik font-normal tracking-[0.12em] uppercase text-ink-black hidden min-[380px]:block">GenZ</span>
             </Link>
@@ -300,8 +308,14 @@ export function Header({ isLoggedIn, role, userName, signOutAction }: HeaderProp
               {/* Drawer Header */}
               <div className="flex items-center justify-between border-b border-ash pb-4 mb-6">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
-                  <div className="w-8 h-8 bg-ink-black text-pure-white flex items-center justify-center font-graphik font-normal text-lg rounded-md">
-                    Z
+                  <div className="relative w-8 h-8 overflow-hidden rounded-md border border-ash">
+                    <Image
+                      src="/logo.jpeg"
+                      alt="GenZ Logo"
+                      fill
+                      className="object-cover"
+                      sizes="32px"
+                    />
                   </div>
                   <span className="text-lg font-graphik font-normal tracking-[0.12em] uppercase text-ink-black">GenZ</span>
                 </Link>

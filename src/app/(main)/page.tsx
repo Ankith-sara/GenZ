@@ -107,7 +107,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-[1280px] w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left Column: text overlay (now high contrast white/cream text on dark overlay) */}
           <div className="flex flex-col justify-center lg:col-span-8 space-y-6 text-left">
-            <span className="text-caption font-graphik uppercase tracking-[0.28em] text-[#FFF0DD]/70">
+            <span className="text-caption font-graphik uppercase tracking-[0.28em] text-white/70">
               Made in India
             </span>
             
@@ -128,13 +128,13 @@ export default function HomePage() {
               .
             </h1>
 
-            <p className="mt-4 max-w-xl text-lg font-graphik leading-relaxed text-[#FFF0DD]/80">
+            <p className="mt-4 max-w-xl text-lg font-graphik leading-relaxed text-white/80">
               GenZ connects Indian consumers directly with verified Indian manufacturers —
               trading imported guesswork for factory-validated trust.
             </p>
 
             <div className="pt-4 flex flex-wrap items-center gap-6">
-              <Button asChild size="lg" className="bg-[#E2A16F] hover:bg-[#cc8854] text-black font-graphik text-xs font-semibold tracking-[0.05em] uppercase h-12 px-6 rounded-none border-none transition-colors">
+              <Button asChild size="lg" className="bg-forest-green hover:bg-forest-mid text-black font-graphik text-xs font-semibold tracking-[0.05em] uppercase h-12 px-6 rounded-none border-none transition-colors">
                 <Link href="/discover">Explore products</Link>
               </Button>
               <Link
@@ -142,7 +142,7 @@ export default function HomePage() {
                 className="group inline-flex items-center gap-1.5 text-body font-graphik text-white font-medium underline decoration-white/30 underline-offset-4 hover:decoration-white transition-all"
               >
                 For manufacturers
-                <ArrowUpRight className="h-4 w-4 text-[#E2A16F] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="h-4 w-4 text-forest-green transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </div>
 
@@ -154,8 +154,8 @@ export default function HomePage() {
                 "Built for India, by India",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 shrink-0 text-[#E2A16F]" />
-                  <dd className="text-sm font-graphik leading-snug text-[#FFF0DD]/85">{item}</dd>
+                  <ShieldCheck className="h-5 w-5 shrink-0 text-forest-green" />
+                  <dd className="text-sm font-graphik leading-snug text-white/85">{item}</dd>
                 </div>
               ))}
             </dl>
@@ -267,8 +267,8 @@ export default function HomePage() {
                 <svg className="w-full h-32 text-brand-blue" viewBox="0 0 200 80">
                   <defs>
                     <linearGradient id="grad-blue" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#86B0BD" stopOpacity="0.15" />
-                      <stop offset="100%" stopColor="#86B0BD" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#D8D365" stopOpacity="0.15" />
+                      <stop offset="100%" stopColor="#D8D365" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   <path
@@ -278,11 +278,11 @@ export default function HomePage() {
                   <path
                     d="M 10 70 Q 40 50 70 60 T 130 30 T 190 10"
                     fill="none"
-                    stroke="#86B0BD"
+                    stroke="#D8D365"
                     strokeWidth="2"
                   />
-                  <circle cx="130" cy="30" r="3" fill="#ffffff" stroke="#86B0BD" strokeWidth="1.5" />
-                  <circle cx="190" cy="10" r="3" fill="#E2A16F" />
+                  <circle cx="130" cy="30" r="3" fill="#ffffff" stroke="#D8D365" strokeWidth="1.5" />
+                  <circle cx="190" cy="10" r="3" fill="#E6F082" />
                 </svg>
                 <span className="text-[10px] text-charcoal uppercase tracking-widest font-graphik mt-3 block text-center">
                   Top Import Segments: Toys, Electronics, Spares

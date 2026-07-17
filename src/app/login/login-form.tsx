@@ -65,9 +65,9 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     return (
       <form onSubmit={handleOtpSubmit} className="text-left animate-fade-in">
         <div className="mb-6">
-          <h3 className="font-serif text-xl text-forest-green mb-1.5 font-normal">Enter Verification Code</h3>
+          <h3 className="font-serif text-xl text-black mb-1.5 font-normal">Enter Verification Code</h3>
           <p className="text-xs text-smoke leading-relaxed">
-            We have sent a 6-digit security code to <strong className="text-forest-green font-mono">{email}</strong>. Please enter it below to complete your login.
+            We have sent a 6-digit security code to <strong className="text-black font-semibold font-mono">{email}</strong>. Please enter it below to complete your login.
           </p>
         </div>
 
@@ -83,7 +83,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             value={otpToken}
             onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ""))}
             required
-            className="rounded-none border-ash focus-visible:ring-forest-green font-mono tracking-widest text-center text-lg h-12"
+            className="rounded-none border-ash focus-visible:ring-black font-mono tracking-widest text-center text-lg h-12"
           />
         </div>
 
@@ -94,13 +94,13 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         )}
 
         <div className="flex flex-col gap-3 mt-6">
-          <Button type="submit" className="w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
+          <Button type="submit" className="w-full bg-black text-white hover:bg-black/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
             {isPending ? "Verifying..." : "Verify & Sign In"}
           </Button>
           <button
             type="button"
             onClick={() => setStep("credentials")}
-            className="text-xs text-smoke hover:text-forest-green text-center hover:underline"
+            className="text-xs text-smoke hover:text-black text-center hover:underline"
             disabled={isPending}
           >
             ← Back to credentials
@@ -121,7 +121,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="rounded-none border-ash focus-visible:ring-forest-green"
+          className="rounded-none border-ash focus-visible:ring-black"
         />
       </div>
 
@@ -130,7 +130,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           <Label htmlFor="password">Password</Label>
           <Link
             href="/forgot-password"
-            className="text-xs font-semibold text-forest-green hover:underline"
+            className="text-xs font-semibold text-neutral-600 hover:text-black hover:underline"
           >
             Forgot Password?
           </Link>
@@ -142,7 +142,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="rounded-none border-ash focus-visible:ring-forest-green"
+          className="rounded-none border-ash focus-visible:ring-black"
         />
       </div>
 
@@ -152,7 +152,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         </p>
       )}
 
-      <Button type="submit" className="mt-6 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
+      <Button type="submit" className="mt-6 w-full bg-black text-white hover:bg-black/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
         {isPending ? "Sending OTP..." : "Sign In"}
       </Button>
     </form>
