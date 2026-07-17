@@ -33,9 +33,14 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isProtected = path.startsWith("/dashboard") || path.startsWith("/admin/dashboard");
+  const isProtected =
+    path.startsWith("/dashboard") || path.startsWith("/admin/dashboard");
   const isAdminPath = path.startsWith("/admin/dashboard");
-  const isAuthOnly = path.startsWith("/login") || path.startsWith("/signup") || path.startsWith("/admin/login") || path.startsWith("/admin/signup");
+  const isAuthOnly =
+    path.startsWith("/login") ||
+    path.startsWith("/signup") ||
+    path.startsWith("/admin/login") ||
+    path.startsWith("/admin/signup");
 
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
@@ -99,4 +104,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
-

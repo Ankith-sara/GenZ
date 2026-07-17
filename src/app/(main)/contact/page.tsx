@@ -36,18 +36,18 @@ const CHANNELS = [
 
 export default async function ContactPage() {
   return (
-    <main className="flex-1 bg-cream-paper font-sans text-ink-black antialiased">
+    <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
       <section className="py-20 sm:py-28">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-14 px-6 sm:grid-cols-2 sm:px-12">
           <div>
-            <span className="text-caption font-graphik uppercase tracking-[0.2em] text-smoke block mb-4">
+            <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
               Get in Touch
             </span>
-            <div className="bg-gold-yellow mb-5 h-[3px] w-12" />
-            <h1 className="font-nantes text-4xl sm:text-6xl font-normal leading-[1.1] tracking-tight text-ink-black">
+            <div className="bg-brand-yellow-dark mb-5 h-[3px] w-12" />
+            <h1 className="font-nantes text-ink-black text-4xl leading-[1.1] font-normal tracking-tight sm:text-6xl">
               Let&apos;s talk.
             </h1>
-            <p className="text-charcoal mt-6 max-w-md text-body font-graphik leading-relaxed">
+            <p className="text-charcoal text-body font-graphik mt-6 max-w-md leading-relaxed">
               Manufacturer partnership, investment, press, or just a question —
               we&apos;d love to hear from you.
             </p>
@@ -57,14 +57,16 @@ export default async function ContactPage() {
                 const Icon = c.icon;
                 const content = (
                   <span className="flex items-center gap-4">
-                    <span className="border border-ash bg-pure-white flex h-11 w-11 shrink-0 items-center justify-center rounded-none text-ink-black">
-                      <Icon className="h-4 w-4 text-forest-green" aria-hidden="true" />
+                    <span className="border-ash bg-pure-white text-ink-black flex h-11 w-11 shrink-0 items-center justify-center rounded-none border">
+                      <Icon className="text-brand-yellow h-4 w-4" aria-hidden="true" />
                     </span>
                     <span>
-                      <span className="text-smoke block text-[10px] uppercase tracking-wider font-graphik font-medium">
+                      <span className="text-smoke font-graphik block text-[10px] font-medium tracking-wider uppercase">
                         {c.label}
                       </span>
-                      <span className="block text-sm font-graphik text-charcoal">{c.value}</span>
+                      <span className="font-graphik text-charcoal block text-sm">
+                        {c.value}
+                      </span>
                     </span>
                   </span>
                 );
@@ -75,11 +77,9 @@ export default async function ContactPage() {
                         href={c.href}
                         target={c.href.startsWith("http") ? "_blank" : undefined}
                         rel={
-                          c.href.startsWith("http")
-                            ? "noopener noreferrer"
-                            : undefined
+                          c.href.startsWith("http") ? "noopener noreferrer" : undefined
                         }
-                        className="hover:underline underline-offset-4 decoration-gold-yellow decoration-2 block w-fit"
+                        className="decoration-brand-yellow-dark block w-fit decoration-2 underline-offset-4 hover:underline"
                       >
                         {content}
                       </a>
@@ -92,7 +92,7 @@ export default async function ContactPage() {
             </ul>
           </div>
 
-          <div className="bg-pure-white border border-ash p-8 sm:p-10 rounded-none">
+          <div className="bg-pure-white border-ash rounded-none border p-8 sm:p-10">
             <ContactForm />
           </div>
         </div>

@@ -33,7 +33,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${graphik.variable} ${grenette.variable} antialiased min-h-screen flex flex-col`} suppressHydrationWarning>
+      <body
+        className={`${graphik.variable} ${grenette.variable} flex min-h-screen flex-col antialiased`}
+        suppressHydrationWarning
+      >
         {children}
         <CookieConsent />
       </body>

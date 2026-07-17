@@ -13,6 +13,7 @@ export async function getUserAndProfile(): Promise<{
   userId: string;
   email: string | undefined;
   profile: Profile | null;
+  avatarUrl: string | null;
 } | null> {
   const supabase = await createClient();
   const {
@@ -27,5 +28,11 @@ export async function getUserAndProfile(): Promise<{
     .eq("id", user.id)
     .single();
 
-  return { userId: user.id, email: user.email, profile: profile ?? null };
+  const avatarUrl =
+    profile?.avatar_url ||
+    user.user_metadata?.avatar_url ||
+    user.user_metadata?.picture ||
+    null;
+
+  return { userId: user.id, email: user.email, profile: profile ?? null, avatarUrl };
 }

@@ -167,7 +167,7 @@ trigger, and the `manufacturer-documents` storage bucket + policies.
 - **Reel upload & management** — video + optional thumbnail per reel,
   attached to a product (`/dashboard/manufacturer/products/[id]/reels`).
   Files live in the public `product-media` bucket (`supabase/migrations/
-  0003_products_reels.sql`), folder-scoped to the manufacturer for writes;
+0003_products_reels.sql`), folder-scoped to the manufacturer for writes;
   reads are public since published listings are meant to be browsable
   without auth. Video capped at 50MB, thumbnail at 5MB.
 - **Product detail page with reels** — `/products/[id]`, a public page (no
@@ -274,6 +274,7 @@ git init      # if you haven't already — husky needs a git repo to hook into
 ## Week 2/3/4 gap-fill (closes out the audit below)
 
 `supabase/migrations/0006_gapfill_week2_3_4.sql` adds:
+
 - `products.materials` (`text[]`)
 - `product_variants` table (named axis + value, optional price override and
   stock, RLS scoped to the owning manufacturer for writes / product
@@ -285,6 +286,7 @@ git init      # if you haven't already — husky needs a git repo to hook into
   read, manufacturer status updates)
 
 New/changed UI:
+
 - **Document upload wizard** (`components/document-upload-wizard.tsx`) —
   GST certificate → factory photos → quality certificates (optional) →
   review & submit, replacing the single-step dropdown form on
@@ -314,6 +316,7 @@ New/changed UI:
 **Week 2, 3, 4** — all closed out above.
 
 **Week 5** (polish & launch) — not started:
+
 - Manufacturer analytics placeholder
 - Admin panel improvements beyond the verification queue
 - Mobile responsiveness/performance pass, SEO meta + Open Graph tags

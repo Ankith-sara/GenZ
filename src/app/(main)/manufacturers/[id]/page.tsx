@@ -45,17 +45,17 @@ export default async function ManufacturerPublicProfilePage({
     .order("created_at", { ascending: false });
 
   return (
-    <main className="flex-1 bg-cream-paper font-sans text-ink-black antialiased pb-24">
+    <main className="bg-cream-paper text-ink-black flex-1 pb-24 font-sans antialiased">
       <div className="mx-auto max-w-[1280px] px-6 py-16 sm:px-12">
         {/* Manufacturer Header Box */}
-        <div className="border-b border-ash pb-10 mb-12">
-          <VerifiedBadge className="mb-4 bg-forest-green text-white border-none rounded-none py-1 px-3" />
-          <h1 className="font-nantes text-4xl sm:text-5xl text-ink-black tracking-tight leading-[1.1] mt-2">
+        <div className="border-ash mb-12 border-b pb-10">
+          <VerifiedBadge className="bg-brand-yellow mb-4 rounded-none border-none px-3 py-1 text-white" />
+          <h1 className="font-nantes text-ink-black mt-2 text-4xl leading-[1.1] tracking-tight sm:text-5xl">
             {manufacturer.business_name}
           </h1>
-          
+
           {(manufacturer.city || manufacturer.state) && (
-            <p className="text-caption font-graphik text-smoke uppercase tracking-wider mt-3">
+            <p className="text-caption font-graphik text-smoke mt-3 tracking-wider uppercase">
               {[manufacturer.city, manufacturer.state].filter(Boolean).join(", ")}
               {manufacturer.established_year
                 ? ` · Established ${manufacturer.established_year}`
@@ -64,7 +64,7 @@ export default async function ManufacturerPublicProfilePage({
           )}
 
           {manufacturer.description && (
-            <p className="text-body font-graphik text-charcoal mt-6 max-w-2xl whitespace-pre-line leading-relaxed">
+            <p className="text-body font-graphik text-charcoal mt-6 max-w-2xl leading-relaxed whitespace-pre-line">
               {manufacturer.description}
             </p>
           )}
@@ -72,10 +72,10 @@ export default async function ManufacturerPublicProfilePage({
 
         {/* Products Grid Section */}
         <div>
-          <h2 className="font-nantes text-2xl sm:text-3xl text-ink-black mb-8">
+          <h2 className="font-nantes text-ink-black mb-8 text-2xl sm:text-3xl">
             Products from {manufacturer.business_name}
           </h2>
-          
+
           {(products ?? []).length === 0 ? (
             <p className="text-caption font-graphik text-smoke italic">
               No published products yet — check back soon.

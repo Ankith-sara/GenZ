@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "FAQs — GenZ",
-  description: "Answers to common questions about buying, selling, and verification on GenZ.",
+  description:
+    "Answers to common questions about buying, selling, and verification on GenZ.",
 };
 
 type Faq = { q: string; a: string };
@@ -78,18 +79,24 @@ const FAQ_GROUPS: FaqGroup[] = [
 
 export default async function FaqsPage() {
   return (
-    <main className="flex-1 bg-cream-paper font-sans text-ink-black antialiased">
+    <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
       {/* Hero */}
-      <section className="py-20 sm:py-28 px-6 sm:px-12 border-b border-ash">
+      <section className="border-ash border-b px-6 py-20 sm:px-12 sm:py-28">
         <div className="mx-auto max-w-4xl text-left">
-          <span className="text-caption font-graphik uppercase tracking-[0.2em] text-smoke block mb-4">Support</span>
-          <h1 className="font-nantes text-4xl sm:text-6xl font-normal leading-[1.1] tracking-tight text-ink-black mb-5">
+          <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
+            Support
+          </span>
+          <h1 className="font-nantes text-ink-black mb-5 text-4xl leading-[1.1] font-normal tracking-tight sm:text-6xl">
             Frequently Asked Questions
           </h1>
-          <p className="text-charcoal max-w-2xl text-body font-graphik leading-relaxed">
+          <p className="text-charcoal text-body font-graphik max-w-2xl leading-relaxed">
             Everything you need to know about buying from verified Indian manufacturers,
-            selling on GenZ, and how the trust network works. Can&apos;t find your answer?{" "}
-            <Link href="/contact" className="underline decoration-gold-yellow decoration-2 underline-offset-4 hover:text-forest-green font-medium">
+            selling on GenZ, and how the trust network works. Can&apos;t find your
+            answer?{" "}
+            <Link
+              href="/contact"
+              className="decoration-brand-yellow-dark hover:text-brand-yellow font-medium underline decoration-2 underline-offset-4"
+            >
               Get in touch
             </Link>
             .
@@ -98,24 +105,26 @@ export default async function FaqsPage() {
       </section>
 
       {/* FAQ Groups */}
-      <section className="py-16 sm:py-24 px-6 sm:px-12">
-        <div className="mx-auto max-w-4xl flex flex-col gap-14">
+      <section className="px-6 py-16 sm:px-12 sm:py-24">
+        <div className="mx-auto flex max-w-4xl flex-col gap-14">
           {FAQ_GROUPS.map((group) => (
             <div key={group.title}>
-              <h2 className="font-nantes text-2xl sm:text-3xl text-ink-black mb-6 tracking-tight">
+              <h2 className="font-nantes text-ink-black mb-6 text-2xl tracking-tight sm:text-3xl">
                 {group.title}
               </h2>
               <div className="flex flex-col gap-3">
                 {group.items.map((item) => (
                   <details
                     key={item.q}
-                    className="group bg-pure-white rounded-none border border-ash open:border-forest-green transition-colors"
+                    className="group bg-pure-white border-ash open:border-brand-yellow rounded-none border transition-colors"
                   >
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 sm:p-6 text-left font-medium text-ink-black focus:outline-none select-none">
-                      <span className="text-sm sm:text-base font-graphik font-semibold">{item.q}</span>
-                      <ChevronDown className="h-4 w-4 shrink-0 text-smoke transition-transform duration-200 group-open:rotate-180" />
+                    <summary className="text-ink-black flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-left font-medium select-none focus:outline-none sm:p-6">
+                      <span className="font-graphik text-sm font-semibold sm:text-base">
+                        {item.q}
+                      </span>
+                      <ChevronDown className="text-smoke h-4 w-4 shrink-0 transition-transform duration-200 group-open:rotate-180" />
                     </summary>
-                    <p className="px-5 sm:px-6 pb-5 sm:pb-6 -mt-1 text-sm text-charcoal font-graphik leading-relaxed">
+                    <p className="text-charcoal font-graphik -mt-1 px-5 pb-5 text-sm leading-relaxed sm:px-6 sm:pb-6">
                       {item.a}
                     </p>
                   </details>
@@ -127,17 +136,20 @@ export default async function FaqsPage() {
       </section>
 
       {/* CTA */}
-      <section className="pb-24 px-6 sm:px-12">
-        <div className="mx-auto max-w-4xl bg-forest-green rounded-none p-10 sm:p-12 text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+      <section className="px-6 pb-24 sm:px-12">
+        <div className="bg-brand-yellow mx-auto flex max-w-4xl flex-col gap-6 rounded-none p-10 text-left sm:flex-row sm:items-center sm:justify-between sm:p-12">
           <div>
-            <h3 className="font-nantes text-2xl sm:text-3xl font-normal text-white mb-2 tracking-tight">
+            <h3 className="font-nantes mb-2 text-2xl font-normal tracking-tight text-white sm:text-3xl">
               Still have questions?
             </h3>
-            <p className="text-white/70 text-caption font-graphik">
+            <p className="text-caption font-graphik text-white/70">
               Our team typically responds within one business day.
             </p>
           </div>
-          <Button asChild className="bg-gold-yellow text-ink-black hover:bg-gold-yellow/90 font-graphik font-medium rounded-none h-12 px-8 text-xs uppercase tracking-wider border-none shrink-0">
+          <Button
+            asChild
+            className="bg-brand-yellow-dark text-ink-black hover:bg-brand-yellow-dark/90 font-graphik h-12 shrink-0 rounded-none border-none px-8 text-xs font-medium tracking-wider uppercase"
+          >
             <Link href="/contact">Contact Us</Link>
           </Button>
         </div>

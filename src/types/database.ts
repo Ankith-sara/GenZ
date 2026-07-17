@@ -120,7 +120,6 @@ export type NewsletterSubscriber = {
   created_at: string;
 };
 
-
 export type Reel = {
   id: string;
   product_id: string;

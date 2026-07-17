@@ -13,7 +13,7 @@ export default async function AdminDashboard() {
     { data: waitlist },
     { data: products },
     { data: inquiries },
-    { data: contactMessages }
+    { data: contactMessages },
   ] = await Promise.all([
     supabase
       .from("manufacturer_profiles")
@@ -25,37 +25,30 @@ export default async function AdminDashboard() {
       .select("*")
       .neq("status", "pending")
       .order("updated_at", { ascending: false }),
-    supabase
-      .from("waitlist")
-      .select("*")
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("products")
-      .select("*")
-      .order("updated_at", { ascending: false }),
-    supabase
-      .from("inquiries")
-      .select("*")
-      .order("created_at", { ascending: false }),
+    supabase.from("waitlist").select("*").order("created_at", { ascending: false }),
+    supabase.from("products").select("*").order("updated_at", { ascending: false }),
+    supabase.from("inquiries").select("*").order("created_at", { ascending: false }),
     supabase
       .from("contact_messages")
       .select("*")
-      .order("created_at", { ascending: false })
+      .order("created_at", { ascending: false }),
   ]);
 
   const pendingCount = pendingManufacturers?.length ?? 0;
-  const verifiedCount = (verifiedManufacturers ?? []).filter(m => m.status === "verified").length;
+  const verifiedCount = (verifiedManufacturers ?? []).filter(
+    (m) => m.status === "verified"
+  ).length;
   const waitlistCount = waitlist?.length ?? 0;
   const productCount = products?.length ?? 0;
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-12 sm:px-12">
-      <div className="flex justify-between items-end border-b pb-6">
+      <div className="flex items-end justify-between border-b pb-6">
         <div>
-          <p className="text-neutral-500 text-xs font-medium tracking-[0.2em] uppercase mb-1">
+          <p className="mb-1 text-xs font-medium tracking-[0.2em] text-neutral-500 uppercase">
             GenZ Control Center
           </p>
-          <h1 className="text-3xl font-serif text-black">
+          <h1 className="font-serif text-3xl text-black">
             Welcome, {session.profile?.full_name ?? "Administrator"}.
           </h1>
         </div>
@@ -64,28 +57,48 @@ export default async function AdminDashboard() {
       {/* High level Stats Indicators */}
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {[
-          { label: "Pending Reviews", count: pendingCount, color: "border-forest-green/30 bg-forest-green/5" },
-          { label: "Verified Partners", count: verifiedCount, color: "border-forest-mid/30 bg-forest-mid/5" },
-          { label: "Waitlist Signups", count: waitlistCount, color: "border-ash bg-white/40" },
-          { label: "Listed Products", count: productCount, color: "border-black/10 bg-black/[0.02]" }
+          {
+            label: "Pending Reviews",
+            count: pendingCount,
+            color: "border-brand-yellow/30 bg-brand-yellow/5",
+          },
+          {
+            label: "Verified Partners",
+            count: verifiedCount,
+            color: "border-brand-yellow-hover/30 bg-brand-yellow-hover/5",
+          },
+          {
+            label: "Waitlist Signups",
+            count: waitlistCount,
+            color: "border-ash bg-white/40",
+          },
+          {
+            label: "Listed Products",
+            count: productCount,
+            color: "border-black/10 bg-black/[0.02]",
+          },
         ].map((stat, idx) => (
-          <div key={idx} className={`border rounded-[4px] p-6 ${stat.color}`}>
-            <p className="text-neutral-500 text-xs font-medium uppercase tracking-wider">{stat.label}</p>
-            <p className="mt-2 font-serif text-4xl text-black font-medium">{stat.count}</p>
+          <div key={idx} className={`rounded-[4px] border p-6 ${stat.color}`}>
+            <p className="text-xs font-medium tracking-wider text-neutral-500 uppercase">
+              {stat.label}
+            </p>
+            <p className="mt-2 font-serif text-4xl font-medium text-black">
+              {stat.count}
+            </p>
           </div>
         ))}
       </div>
 
       {/* Tabs list to manage different lists */}
-      <AdminDashboardTabs 
+      <AdminDashboardTabs
         initialData={{
           pendingManufacturers: pendingManufacturers ?? [],
           verifiedManufacturers: verifiedManufacturers ?? [],
           waitlist: waitlist ?? [],
           products: products ?? [],
           inquiries: inquiries ?? [],
-          contactMessages: contactMessages ?? []
-        }} 
+          contactMessages: contactMessages ?? [],
+        }}
       />
     </div>
   );

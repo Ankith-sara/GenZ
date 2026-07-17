@@ -49,19 +49,20 @@ export default async function DiscoverPage({
   const hasMore = count !== null ? (products?.length ?? 0) < count : false;
 
   return (
-    <main className="flex-1 bg-cream-paper font-sans text-ink-black antialiased pb-24">
+    <main className="bg-cream-paper text-ink-black flex-1 pb-24 font-sans antialiased">
       {/* Banner Section */}
-      <div className="bg-forest-green text-white py-16 px-6 sm:px-12 relative overflow-hidden border-b border-ash">
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
-        <div className="mx-auto max-w-[1280px] relative z-10 text-left">
-          <span className="text-gold-yellow font-graphik text-caption uppercase tracking-[0.2em] mb-3 block">
+      <div className="relative overflow-hidden border-b border-white/5 bg-black px-6 py-16 text-white sm:px-12">
+        <div className="absolute inset-0 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] opacity-5" />
+        <div className="relative z-10 mx-auto max-w-[1280px] text-left">
+          <span className="text-brand-yellow font-graphik text-caption mb-3 block tracking-[0.2em] uppercase">
             B2C DISCOVERY HUB
           </span>
-          <h1 className="font-nantes text-3xl sm:text-5xl font-normal leading-[1.15] tracking-tight mb-4 max-w-3xl">
+          <h1 className="font-nantes mb-4 max-w-3xl text-3xl leading-[1.15] font-normal tracking-tight sm:text-5xl">
             Discover Verified Indian Manufacturers &amp; Products
           </h1>
-          <p className="text-white/70 max-w-2xl text-body font-graphik leading-relaxed">
-            Source high-quality toys, educational games, puzzles, and custom crafts directly from verified MSMEs, startups, and local artisans.
+          <p className="text-body font-graphik max-w-2xl leading-relaxed text-white/70">
+            Source high-quality toys, educational games, puzzles, and custom crafts
+            directly from verified MSMEs, startups, and local artisans.
           </p>
         </div>
       </div>

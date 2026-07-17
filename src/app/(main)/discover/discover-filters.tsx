@@ -40,12 +40,15 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-pure-white rounded-none border border-ash p-6 sm:p-8 flex flex-col gap-6"
+      className="bg-pure-white border-ash flex flex-col gap-6 rounded-none border p-6 sm:p-8"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
+      <div className="grid grid-cols-1 items-end gap-4 lg:grid-cols-12">
         {/* Search Query */}
         <div className="lg:col-span-4">
-          <label htmlFor="q" className="text-ink-black font-graphik text-[10px] font-medium uppercase tracking-wider mb-2 block">
+          <label
+            htmlFor="q"
+            className="text-ink-black font-graphik mb-2 block text-[10px] font-medium tracking-wider uppercase"
+          >
             Search Keyword
           </label>
           <div className="relative">
@@ -58,7 +61,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               name="q"
               placeholder="Wooden puzzle, soft toy, DIY craft kit…"
               defaultValue={filters.q}
-              className="pl-10 h-11 rounded-none border-ash focus-visible:ring-ink-black focus-visible:border-ink-black bg-pure-white text-ink-black font-graphik text-sm"
+              className="border-ash focus-visible:ring-ink-black focus-visible:border-ink-black bg-pure-white text-ink-black font-graphik h-11 rounded-none pl-10 text-sm"
             />
           </div>
         </div>
@@ -67,7 +70,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
         <div className="lg:col-span-3">
           <label
             htmlFor="category"
-            className="text-ink-black font-graphik text-[10px] font-medium uppercase tracking-wider mb-2 block"
+            className="text-ink-black font-graphik mb-2 block text-[10px] font-medium tracking-wider uppercase"
           >
             Category
           </label>
@@ -90,7 +93,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
         <div className="lg:col-span-3">
           <label
             htmlFor="age_group"
-            className="text-ink-black font-graphik text-[10px] font-medium uppercase tracking-wider mb-2 block"
+            className="text-ink-black font-graphik mb-2 block text-[10px] font-medium tracking-wider uppercase"
           >
             Age Group
           </label>
@@ -111,17 +114,22 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
 
         {/* Action button */}
         <div className="lg:col-span-2">
-          <Button type="submit" className="w-full h-11 bg-forest-green hover:bg-forest-mid text-white rounded-none font-graphik text-xs font-normal tracking-[0.05em] uppercase border-none transition-colors">
+          <Button
+            type="submit"
+            className="bg-brand-yellow hover:bg-brand-yellow/90 font-graphik h-11 w-full rounded-none border-none text-xs font-semibold tracking-[0.05em] text-black uppercase transition-all hover:scale-[1.02]"
+          >
             Filter
           </Button>
         </div>
       </div>
 
       {/* Expandable/Secondary price range row */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-ash">
+      <div className="border-ash flex flex-wrap items-center justify-between gap-4 border-t pt-4">
         <div className="flex items-center gap-3">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-ink-black font-graphik">Price Range (₹):</span>
-          
+          <span className="text-ink-black font-graphik text-[10px] font-medium tracking-wider uppercase">
+            Price Range (₹):
+          </span>
+
           <div className="flex items-center gap-2">
             <Input
               id="min_price"
@@ -130,9 +138,9 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               min={0}
               placeholder="Min"
               defaultValue={filters.min_price}
-              className="w-24 h-9 rounded-none border-ash text-xs focus-visible:ring-ink-black bg-pure-white text-ink-black font-graphik"
+              className="border-ash focus-visible:ring-ink-black bg-pure-white text-ink-black font-graphik h-9 w-24 rounded-none text-xs"
             />
-            <span className="text-smoke text-xs font-graphik">to</span>
+            <span className="text-smoke font-graphik text-xs">to</span>
             <Input
               id="max_price"
               name="max_price"
@@ -140,7 +148,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
               min={0}
               placeholder="Max"
               defaultValue={filters.max_price}
-              className="w-24 h-9 rounded-none border-ash text-xs focus-visible:ring-ink-black bg-pure-white text-ink-black font-graphik"
+              className="border-ash focus-visible:ring-ink-black bg-pure-white text-ink-black font-graphik h-9 w-24 rounded-none text-xs"
             />
           </div>
         </div>
@@ -150,7 +158,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
             type="button"
             variant="ghost"
             onClick={() => router.push("/discover")}
-            className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded-none h-9 font-graphik font-medium"
+            className="font-graphik h-9 rounded-none text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700"
           >
             Clear Active Filters
           </Button>

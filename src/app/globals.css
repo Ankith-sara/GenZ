@@ -11,26 +11,26 @@
   --primary: #454040;
   --primary-foreground: #ffffff;
 
-  --secondary: #605B51;
+  --secondary: #605b51;
   --secondary-foreground: #ffffff;
 
   --muted: #ffffff;
-  --muted-foreground: #605B51;
+  --muted-foreground: #605b51;
 
-  --accent: #E6F082;
+  --accent: #fae251;
   --accent-foreground: #000000;
 
-  --destructive: #D32F2F;
+  --destructive: #d32f2f;
   --destructive-foreground: #ffffff;
 
-  --border: #605B51;
+  --border: #605b51;
   --input: #000000;
-  --ring: #E6F082;
+  --ring: #fae251;
 
-  --forest-green: #E6F082;
-  --forest-mid: #D8D365;
-  --gold-yellow: #D8D365;
-  --brand-blue: #605B51;
+  --brand-yellow: #fae251;
+  --brand-yellow-hover: #e5cd30;
+  --brand-yellow-dark: #d4bd2c;
+  --brand-blue: #605b51;
   --dark-band: #000000;
   --dark-band-foreground: #ffffff;
   --light-gray-bg: #ffffff;
@@ -58,35 +58,38 @@
   /* Brand mappings */
   --color-dark-band: var(--dark-band);
   --color-dark-band-foreground: var(--dark-band-foreground);
-  --color-forest-green: var(--forest-green);
-  --color-forest-mid: var(--forest-mid);
-  --color-gold-yellow: var(--gold-yellow);
+  --color-brand-yellow: var(--brand-yellow);
+  --color-brand-yellow-hover: var(--brand-yellow-hover);
+  --color-brand-yellow-dark: var(--brand-yellow-dark);
+  --color-forest-green: var(--brand-yellow);
+  --color-forest-mid: var(--brand-yellow-hover);
+  --color-gold-yellow: var(--brand-yellow-dark);
   --color-brand-blue: var(--brand-blue);
   --color-light-gray-bg: var(--light-gray-bg);
 
   /* ── Slate semantic tokens ── */
   --color-slate-text-primary: #000000;
-  --color-slate-text-subdued: #605B51;
+  --color-slate-text-subdued: #605b51;
   --color-slate-text-inverse: #ffffff;
   --color-slate-surface-primary: #ffffff;
   --color-slate-surface-secondary: #ffffff;
   --color-slate-surface-inverse: #000000;
-  --color-slate-border-muted: #605B51;
-  --color-slate-action-hover: #E6F082;
+  --color-slate-border-muted: #605b51;
+  --color-slate-action-hover: #fae251;
 
   /* Legacy aliases the components still reference */
   --color-ink-black: #000000;
   --color-charcoal: #454040;
-  --color-deep-forest: #E6F082;
-  --color-smoke: #605B51;
-  --color-ash: #605B51;
+  --color-deep-forest: #fae251;
+  --color-smoke: #605b51;
+  --color-ash: #605b51;
   --color-cream-paper: #ffffff;
   --color-pure-white: #ffffff;
   --color-paper-white: #ffffff;
-  --color-butter-highlight: #E6F082;
-  --color-pale-sage: #D8D365;
-  --color-chartreuse-lime: #E6F082;
-  --color-vivid-green: #E6F082;
+  --color-butter-highlight: #fae251;
+  --color-pale-sage: #e5cd30;
+  --color-chartreuse-lime: #fae251;
+  --color-vivid-green: #fae251;
 
   --font-sans: var(--font-graphik);
   --font-serif: var(--font-grenette);
@@ -103,15 +106,17 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  font-weight: 200;                
+  font-weight: 200;
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.15px;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-serif), ui-serif, Georgia, serif;
-  font-weight: 400;          
+  font-weight: 400;
   letter-spacing: 0;
   line-height: 1.1;
 }

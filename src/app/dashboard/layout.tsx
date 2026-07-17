@@ -20,18 +20,16 @@ export default async function DashboardLayout({
   if (role === "buyer") {
     return (
       <div className="bg-background flex min-h-screen flex-col">
-        <header className="border-border border-b bg-card">
+        <header className="border-border bg-card border-b">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
             <Link href="/discover" className="text-sm hover:underline">
               ← Back to Shop
             </Link>
             <div className="flex items-center gap-4">
-              <span className="text-muted-foreground text-sm">
-                {session.email}
-              </span>
+              <span className="text-muted-foreground text-sm">{session.email}</span>
               <UserAvatar
                 name={session.profile?.full_name}
-                avatarUrl={session.profile?.avatar_url}
+                avatarUrl={session.avatarUrl}
                 size={32}
               />
               <form action={signOut}>
@@ -61,7 +59,7 @@ export default async function DashboardLayout({
             <div className="flex items-center gap-4">
               <UserAvatar
                 name={session.profile?.full_name}
-                avatarUrl={session.profile?.avatar_url}
+                avatarUrl={session.avatarUrl}
                 size={32}
               />
               <form action={signOut}>
@@ -89,4 +87,3 @@ export default async function DashboardLayout({
     </div>
   );
 }
-

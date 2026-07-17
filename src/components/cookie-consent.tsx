@@ -12,8 +12,15 @@ interface PreferenceState {
 }
 
 const applyPreferences = (prefs: PreferenceState) => {
-  if (typeof window !== "undefined" && typeof (window as unknown as Record<string, unknown>).gtag === "function") {
-    ((window as unknown as Record<string, unknown>).gtag as (...args: unknown[]) => void)("consent", "update", {
+  if (
+    typeof window !== "undefined" &&
+    typeof (window as unknown as Record<string, unknown>).gtag === "function"
+  ) {
+    (
+      (window as unknown as Record<string, unknown>).gtag as (
+        ...args: unknown[]
+      ) => void
+    )("consent", "update", {
       analytics_storage: prefs.analytics ? "granted" : "denied",
       ad_storage: prefs.marketing ? "granted" : "denied",
       ad_user_data: prefs.marketing ? "granted" : "denied",
@@ -31,14 +38,14 @@ interface PrefRowProps {
 }
 
 const PrefRow = ({ label, desc, locked, checked, onChange }: PrefRowProps) => (
-  <div className="flex items-start gap-3 py-3 border-b border-ash last:border-0">
-    <div className="flex-1 min-w-0">
-      <p className="text-sm font-graphik font-medium text-ink-black">{label}</p>
-      <p className="text-xs text-smoke mt-0.5 leading-snug font-graphik">{desc}</p>
+  <div className="border-ash flex items-start gap-3 border-b py-3 last:border-0">
+    <div className="min-w-0 flex-1">
+      <p className="font-graphik text-ink-black text-sm font-medium">{label}</p>
+      <p className="text-smoke font-graphik mt-0.5 text-xs leading-snug">{desc}</p>
     </div>
 
     {locked ? (
-      <span className="flex-shrink-0 text-[10px] tracking-widest uppercase text-smoke mt-1 pt-0.5 font-graphik">
+      <span className="text-smoke font-graphik mt-1 flex-shrink-0 pt-0.5 text-[10px] tracking-widest uppercase">
         Always on
       </span>
     ) : (
@@ -47,15 +54,14 @@ const PrefRow = ({ label, desc, locked, checked, onChange }: PrefRowProps) => (
         aria-checked={checked}
         aria-label={`${label} cookies`}
         onClick={onChange}
-        className="flex-shrink-0 flex items-center justify-center w-11 h-11 -mr-1 -mt-1 focus-visible:outline-none group cursor-pointer"
+        className="group -mt-1 -mr-1 flex h-11 w-11 flex-shrink-0 cursor-pointer items-center justify-center focus-visible:outline-none"
       >
         <span
-          className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors duration-150
-            ${
-              checked
-                ? "bg-ink-black border-ink-black"
-                : "bg-pure-white border-ash group-hover:border-charcoal group-active:border-ink-black"
-            }`}
+          className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-colors duration-150 ${
+            checked
+              ? "bg-ink-black border-ink-black"
+              : "bg-pure-white border-ash group-hover:border-charcoal group-active:border-ink-black"
+          }`}
         >
           {checked && <Check size={12} strokeWidth={3} className="text-pure-white" />}
         </span>
@@ -68,7 +74,10 @@ export function CookieConsent() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [prefs, setPrefs] = useState<PreferenceState>({ analytics: true, marketing: false });
+  const [prefs, setPrefs] = useState<PreferenceState>({
+    analytics: true,
+    marketing: false,
+  });
 
   // Reset/hide when navigating to a blocked path (e.g. /assistant or /dashboard)
   const isBlocked = pathname === "/assistant" || pathname?.startsWith("/dashboard");
@@ -145,40 +154,41 @@ export function CookieConsent() {
         aria-modal="false"
       >
         <div
-          className="cookie-banner flex flex-col w-full sm:max-w-lg bg-cream-paper border-t sm:border border-ink-black"
+          className="cookie-banner bg-cream-paper border-ink-black flex w-full flex-col border-t sm:max-w-lg sm:border"
           style={{
             maxHeight: "min(92dvh, 500px)",
             paddingBottom: "env(safe-area-inset-bottom, 0px)",
           }}
         >
           {/* Header */}
-          <div className="flex-shrink-0 flex items-center justify-between px-4 sm:px-5 pt-4 pb-3 border-b border-ash bg-cream-paper">
-            <p className="text-[10px] tracking-[0.25em] uppercase font-normal text-ink-black font-graphik">
+          <div className="border-ash bg-cream-paper flex flex-shrink-0 items-center justify-between border-b px-4 pt-4 pb-3 sm:px-5">
+            <p className="text-ink-black font-graphik text-[10px] font-normal tracking-[0.25em] uppercase">
               Cookie preferences
             </p>
             <button
               onClick={acceptEssential}
               aria-label="Dismiss"
-              className="w-11 h-11 -mr-2 flex items-center justify-center text-smoke hover:text-ink-black active:text-ink-black transition-colors cursor-pointer"
+              className="text-smoke hover:text-ink-black active:text-ink-black -mr-2 flex h-11 w-11 cursor-pointer items-center justify-center transition-colors"
             >
               <X size={16} />
             </button>
           </div>
 
           {/* Scrollable body */}
-          <div className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-5 py-4 bg-cream-paper">
-            <p className="text-sm text-charcoal leading-relaxed font-graphik">
-              We use cookies to keep your session active, remember preferences, and understand how people discover our verified manufacturing collections.{" "}
+          <div className="bg-cream-paper flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-5">
+            <p className="text-charcoal font-graphik text-sm leading-relaxed">
+              We use cookies to keep your session active, remember preferences, and
+              understand how people discover our verified manufacturing collections.{" "}
               <button
                 onClick={() => setShowDetails((d) => !d)}
-                className="underline underline-offset-2 text-ink-black hover:no-underline active:no-underline font-graphik cursor-pointer"
+                className="text-ink-black font-graphik cursor-pointer underline underline-offset-2 hover:no-underline active:no-underline"
               >
                 {showDetails ? "Hide details" : "Manage preferences"}
               </button>
             </p>
 
             {showDetails && (
-              <div className="mt-4 border-t border-ash pt-1">
+              <div className="border-ash mt-4 border-t pt-1">
                 <PrefRow
                   key="essential"
                   label="Essential"
@@ -205,24 +215,24 @@ export function CookieConsent() {
           </div>
 
           {/* Actions */}
-          <div className="flex-shrink-0 px-4 sm:px-5 pt-1 pb-3 flex flex-row gap-2 bg-cream-paper">
+          <div className="bg-cream-paper flex flex-shrink-0 flex-row gap-2 px-4 pt-1 pb-3 sm:px-5">
             <button
               onClick={acceptAll}
-              className="flex-1 bg-ink-black text-pure-white text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:bg-charcoal active:bg-charcoal transition-colors min-h-[44px] cursor-pointer rounded-md font-graphik font-normal"
+              className="bg-ink-black text-pure-white hover:bg-charcoal active:bg-charcoal font-graphik min-h-[44px] flex-1 cursor-pointer rounded-md px-3 py-3 text-[11px] font-normal tracking-[0.18em] uppercase transition-colors"
             >
               Accept all
             </button>
             {showDetails ? (
               <button
                 onClick={saveCustom}
-                className="flex-1 border border-ink-black text-ink-black text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:bg-pure-white active:bg-pure-white transition-colors min-h-[44px] cursor-pointer rounded-md font-graphik font-normal"
+                className="border-ink-black text-ink-black hover:bg-pure-white active:bg-pure-white font-graphik min-h-[44px] flex-1 cursor-pointer rounded-md border px-3 py-3 text-[11px] font-normal tracking-[0.18em] uppercase transition-colors"
               >
                 Save preferences
               </button>
             ) : (
               <button
                 onClick={acceptEssential}
-                className="flex-1 border border-ash text-charcoal text-[11px] tracking-[0.18em] uppercase py-3 px-3 hover:border-ink-black hover:text-ink-black transition-colors min-h-[44px] cursor-pointer rounded-md font-graphik font-normal"
+                className="border-ash text-charcoal hover:border-ink-black hover:text-ink-black font-graphik min-h-[44px] flex-1 cursor-pointer rounded-md border px-3 py-3 text-[11px] font-normal tracking-[0.18em] uppercase transition-colors"
               >
                 Essential only
               </button>

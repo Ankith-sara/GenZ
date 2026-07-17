@@ -13,11 +13,15 @@ export async function signupManufacturer(
 ): Promise<ManufacturerSignupState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const fullName = String(formData.get("owner_name") ?? formData.get("fullName") ?? "").trim();
+  const fullName = String(
+    formData.get("owner_name") ?? formData.get("fullName") ?? ""
+  ).trim();
   const businessType = String(formData.get("business_type") ?? "manufacturer");
 
   if (!email || !password || !fullName) {
-    return { error: "Please fill in your email, password, and owner/authorized person name." };
+    return {
+      error: "Please fill in your email, password, and owner/authorized person name.",
+    };
   }
   if (password.length < 8) {
     return { error: "Password must be at least 8 characters." };

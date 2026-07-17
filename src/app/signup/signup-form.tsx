@@ -82,11 +82,15 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
 
   if (step === "otp") {
     return (
-      <form onSubmit={handleOtpSubmit} className="text-left animate-fade-in">
+      <form onSubmit={handleOtpSubmit} className="animate-fade-in text-left">
         <div className="mb-6">
-          <h3 className="font-serif text-xl text-black mb-1.5 font-normal">Verify Your Email</h3>
-          <p className="text-xs text-smoke leading-relaxed">
-            We have sent a verification code to <strong className="text-black font-semibold font-mono">{email}</strong>. Enter it below to activate your account.
+          <h3 className="mb-1.5 font-serif text-xl font-normal text-black">
+            Verify Your Email
+          </h3>
+          <p className="text-smoke text-xs leading-relaxed">
+            We have sent a verification code to{" "}
+            <strong className="font-mono font-semibold text-black">{email}</strong>.
+            Enter it below to activate your account.
           </p>
         </div>
 
@@ -102,7 +106,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
             value={otpToken}
             onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ""))}
             required
-            className="rounded-none border-ash focus-visible:ring-black font-mono tracking-widest text-center text-lg h-12"
+            className="border-ash h-12 rounded-none text-center font-mono text-lg tracking-widest focus-visible:ring-black"
           />
         </div>
 
@@ -112,14 +116,18 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           </p>
         )}
 
-        <div className="flex flex-col gap-3 mt-6">
-          <Button type="submit" className="w-full bg-black text-white hover:bg-black/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
+        <div className="mt-6 flex flex-col gap-3">
+          <Button
+            type="submit"
+            className="h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
+            disabled={isPending}
+          >
             {isPending ? "Verifying..." : "Verify & Complete Signup"}
           </Button>
           <button
             type="button"
             onClick={() => setStep("details")}
-            className="text-xs text-smoke hover:text-black text-center hover:underline"
+            className="text-smoke text-center text-xs hover:text-black hover:underline"
             disabled={isPending}
           >
             ← Back to signup details
@@ -175,7 +183,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           required
-          className="rounded-none border-ash focus-visible:ring-black"
+          className="border-ash rounded-none focus-visible:ring-black"
         />
       </div>
 
@@ -188,7 +196,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="rounded-none border-ash focus-visible:ring-black"
+          className="border-ash rounded-none focus-visible:ring-black"
         />
       </div>
 
@@ -202,7 +210,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           onChange={(e) => setPassword(e.target.value)}
           minLength={8}
           required
-          className="rounded-none border-ash focus-visible:ring-black"
+          className="border-ash rounded-none focus-visible:ring-black"
         />
         <p className="text-muted-foreground mt-1.5 text-xs">At least 8 characters.</p>
       </div>
@@ -213,7 +221,11 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
         </p>
       )}
 
-      <Button type="submit" className="mt-6 w-full bg-black text-white hover:bg-black/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
+      <Button
+        type="submit"
+        className="mt-6 h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
+        disabled={isPending}
+      >
         {isPending ? "Creating account…" : "Create account"}
       </Button>
     </form>

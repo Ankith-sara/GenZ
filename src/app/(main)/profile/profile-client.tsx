@@ -167,9 +167,9 @@ export function ProfileClient({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
       {/* Sidebar Navigation */}
-      <div className="md:col-span-1 flex flex-col gap-1 border-r border-black/5 pr-4">
+      <div className="flex flex-col gap-1 border-r border-black/5 pr-4 md:col-span-1">
         {[
           { id: "info", label: "Personal Info", icon: User },
           { id: "addresses", label: "Shipping Addresses", icon: MapPin },
@@ -180,10 +180,10 @@ export function ProfileClient({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as "info" | "addresses" | "security")}
-              className={`flex h-11 items-center gap-3 rounded-[4px] px-3 text-sm font-semibold transition-colors text-left ${
+              className={`flex h-11 items-center gap-3 rounded-[4px] px-3 text-left text-sm font-semibold transition-colors ${
                 activeTab === tab.id
-                  ? "bg-forest-green text-white"
-                  : "text-smoke hover:bg-black/5 hover:text-forest-green"
+                  ? "bg-black text-white"
+                  : "text-smoke hover:bg-black/5 hover:text-black"
               }`}
             >
               <Icon className="h-4.5 w-4.5" />
@@ -194,22 +194,32 @@ export function ProfileClient({
       </div>
 
       {/* Content Area */}
-      <div className="md:col-span-3 bg-paper-white border border-black/5 rounded-[4px] p-8 min-h-[400px]">
+      <div className="bg-paper-white min-h-[400px] rounded-[4px] border border-black/5 p-8 md:col-span-3">
         {/* PERSONAL INFO TAB */}
         {activeTab === "info" && (
-          <div className="space-y-8 animate-fade-in">
+          <div className="animate-fade-in space-y-8">
             <div>
-              <h2 className="font-serif text-xl text-forest-green font-normal">Personal Information</h2>
-              <p className="text-xs text-smoke mt-1">Manage your basic profile details and avatar photo.</p>
+              <h2 className="font-serif text-xl font-normal text-black">
+                Personal Information
+              </h2>
+              <p className="text-smoke mt-1 text-xs">
+                Manage your basic profile details and avatar photo.
+              </p>
             </div>
 
             <div className="border-b pb-6">
-              <Label className="text-xs font-bold text-smoke uppercase mb-3 block">Profile photo</Label>
-              <AvatarUploader userId={userId} fullName={fullName} currentUrl={avatarUrl} />
+              <Label className="text-smoke mb-3 block text-xs font-bold uppercase">
+                Profile photo
+              </Label>
+              <AvatarUploader
+                userId={userId}
+                fullName={fullName}
+                currentUrl={avatarUrl}
+              />
             </div>
 
             <form onSubmit={handleInfoSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="fullName">Full Name</Label>
                   <Input
@@ -217,7 +227,7 @@ export function ProfileClient({
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
-                    className="border-black/10 focus-visible:ring-forest-green mt-1"
+                    className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                   />
                 </div>
                 <div>
@@ -226,19 +236,19 @@ export function ProfileClient({
                     id="email"
                     value={email}
                     disabled
-                    className="bg-gray-50 border-black/10 mt-1 cursor-not-allowed font-mono text-xs"
+                    className="mt-1 cursor-not-allowed border-black/10 bg-gray-50 font-mono text-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input
                     id="phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="border-black/10 focus-visible:ring-forest-green mt-1"
+                    className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                     placeholder="e.g. +91 9999999999"
                   />
                 </div>
@@ -248,17 +258,29 @@ export function ProfileClient({
                     id="city"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="border-black/10 focus-visible:ring-forest-green mt-1"
+                    className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                     placeholder="e.g. New Delhi"
                   />
                 </div>
               </div>
 
-              {infoError && <p className="text-xs font-semibold text-destructive mt-2">{infoError}</p>}
-              {infoSuccess && <p className="text-xs font-semibold text-green-600 mt-2">Profile updated successfully!</p>}
+              {infoError && (
+                <p className="text-destructive mt-2 text-xs font-semibold">
+                  {infoError}
+                </p>
+              )}
+              {infoSuccess && (
+                <p className="mt-2 text-xs font-semibold text-green-600">
+                  Profile updated successfully!
+                </p>
+              )}
 
               <div className="pt-4">
-                <Button type="submit" className="bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11 px-6" disabled={infoPending}>
+                <Button
+                  type="submit"
+                  className="bg-brand-yellow hover:bg-brand-yellow/90 h-11 rounded-[4px] px-6 font-medium tracking-wider text-black uppercase transition-all hover:scale-[1.02]"
+                  disabled={infoPending}
+                >
                   {infoPending ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
@@ -268,24 +290,36 @@ export function ProfileClient({
 
         {/* SHIPPING ADDRESSES TAB */}
         {activeTab === "addresses" && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="flex justify-between items-center border-b pb-4">
+          <div className="animate-fade-in space-y-6">
+            <div className="flex items-center justify-between border-b pb-4">
               <div>
-                <h2 className="font-serif text-xl text-forest-green font-normal">Shipping Address Book</h2>
-                <p className="text-xs text-smoke mt-1">Add and manage your primary product delivery destinations.</p>
+                <h2 className="font-serif text-xl font-normal text-black">
+                  Shipping Address Book
+                </h2>
+                <p className="text-smoke mt-1 text-xs">
+                  Add and manage your primary product delivery destinations.
+                </p>
               </div>
               {!showAddAddress && (
-                <Button onClick={() => setShowAddAddress(true)} className="bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] text-xs font-semibold uppercase tracking-wider h-9">
+                <Button
+                  onClick={() => setShowAddAddress(true)}
+                  className="bg-brand-yellow hover:bg-brand-yellow/90 h-9 rounded-[4px] text-xs font-semibold tracking-wider text-black uppercase transition-all hover:scale-[1.02]"
+                >
                   <Plus className="mr-1.5 h-4 w-4" /> Add Address
                 </Button>
               )}
             </div>
 
             {showAddAddress && (
-              <form onSubmit={handleAddAddress} className="bg-gray-50/50 p-6 border rounded-[4px] space-y-4 animate-fade-in">
-                <h3 className="font-serif text-base text-forest-green font-normal">Add Shipping Address</h3>
+              <form
+                onSubmit={handleAddAddress}
+                className="animate-fade-in space-y-4 rounded-[4px] border bg-gray-50/50 p-6"
+              >
+                <h3 className="font-serif text-base font-normal text-black">
+                  Add Shipping Address
+                </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <Label htmlFor="recipientName">Recipient Full Name</Label>
                     <Input
@@ -294,7 +328,7 @@ export function ProfileClient({
                       onChange={(e) => setRecipientName(e.target.value)}
                       required
                       placeholder="e.g. Saravanan"
-                      className="border-black/10 focus-visible:ring-forest-green mt-1"
+                      className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                     />
                   </div>
                   <div>
@@ -305,7 +339,7 @@ export function ProfileClient({
                       onChange={(e) => setAddressPhone(e.target.value)}
                       required
                       placeholder="e.g. 9876543210"
-                      className="border-black/10 focus-visible:ring-forest-green mt-1"
+                      className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                     />
                   </div>
                 </div>
@@ -318,11 +352,11 @@ export function ProfileClient({
                     onChange={(e) => setAddressLine(e.target.value)}
                     required
                     placeholder="e.g. Flat 301, Emerald Towers, Near Metro Station"
-                    className="border-black/10 focus-visible:ring-forest-green mt-1"
+                    className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <div>
                     <Label htmlFor="addressCity">City</Label>
                     <Input
@@ -331,7 +365,7 @@ export function ProfileClient({
                       onChange={(e) => setAddressCity(e.target.value)}
                       required
                       placeholder="e.g. Bangalore"
-                      className="border-black/10 focus-visible:ring-forest-green mt-1"
+                      className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                     />
                   </div>
                   <div>
@@ -342,7 +376,7 @@ export function ProfileClient({
                       onChange={(e) => setAddressState(e.target.value)}
                       required
                       placeholder="e.g. Karnataka"
-                      className="border-black/10 focus-visible:ring-forest-green mt-1"
+                      className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                     />
                   </div>
                   <div>
@@ -353,16 +387,25 @@ export function ProfileClient({
                       onChange={(e) => setAddressPincode(e.target.value)}
                       required
                       placeholder="e.g. 560001"
-                      className="border-black/10 focus-visible:ring-forest-green mt-1"
+                      className="mt-1 border-black/10 focus-visible:border-black focus-visible:ring-black"
                     />
                   </div>
                 </div>
 
-                <div className="flex gap-2 pt-2 justify-end">
-                  <Button type="button" variant="outline" onClick={() => setShowAddAddress(false)} className="rounded-[4px] text-xs font-semibold h-10 px-4">
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowAddAddress(false)}
+                    className="h-10 rounded-[4px] px-4 text-xs font-semibold"
+                  >
                     Cancel
                   </Button>
-                  <Button type="submit" className="bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] text-xs font-semibold uppercase tracking-wider h-10 px-4" disabled={addressPending}>
+                  <Button
+                    type="submit"
+                    className="bg-brand-yellow hover:bg-brand-yellow/90 h-10 rounded-[4px] px-4 text-xs font-semibold tracking-wider text-black uppercase transition-all hover:scale-[1.02]"
+                    disabled={addressPending}
+                  >
                     {addressPending ? "Saving..." : "Save Address"}
                   </Button>
                 </div>
@@ -371,23 +414,31 @@ export function ProfileClient({
 
             <div className="space-y-4">
               {addresses.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50/50 rounded border border-dashed border-gray-200">
-                  <p className="text-sm text-smoke">No shipping addresses saved yet.</p>
+                <div className="rounded border border-dashed border-gray-200 bg-gray-50/50 py-12 text-center">
+                  <p className="text-smoke text-sm">No shipping addresses saved yet.</p>
                 </div>
               ) : (
                 addresses.map((addr) => (
-                  <div key={addr.id} className="flex justify-between items-start p-5 border rounded-[4px] hover:bg-gray-50/50 transition-colors">
+                  <div
+                    key={addr.id}
+                    className="flex items-start justify-between rounded-[4px] border p-5 transition-colors hover:bg-gray-50/50"
+                  >
                     <div>
-                      <p className="font-semibold text-neutral-800">{addr.recipientName}</p>
-                      <p className="text-xs text-neutral-500 mt-0.5">{addr.phone}</p>
-                      <p className="text-sm text-neutral-700 mt-2">{addr.addressLine}</p>
-                      <p className="text-xs text-smoke font-medium mt-1">
-                        {addr.city}, {addr.state} - <span className="font-mono">{addr.pincode}</span>
+                      <p className="font-semibold text-neutral-800">
+                        {addr.recipientName}
+                      </p>
+                      <p className="mt-0.5 text-xs text-neutral-500">{addr.phone}</p>
+                      <p className="mt-2 text-sm text-neutral-700">
+                        {addr.addressLine}
+                      </p>
+                      <p className="text-smoke mt-1 text-xs font-medium">
+                        {addr.city}, {addr.state} -{" "}
+                        <span className="font-mono">{addr.pincode}</span>
                       </p>
                     </div>
                     <button
                       onClick={() => handleDeleteAddress(addr.id)}
-                      className="text-smoke hover:text-red-600 p-2 hover:bg-red-50 rounded transition-colors"
+                      className="text-smoke rounded p-2 transition-colors hover:bg-red-50 hover:text-red-600"
                       title="Delete Address"
                     >
                       <Trash2 className="h-4.5 w-4.5" />
@@ -401,10 +452,14 @@ export function ProfileClient({
 
         {/* SECURITY TAB */}
         {activeTab === "security" && (
-          <div className="space-y-6 animate-fade-in">
+          <div className="animate-fade-in space-y-6">
             <div>
-              <h2 className="font-serif text-xl text-forest-green font-normal">Security & password</h2>
-              <p className="text-xs text-smoke mt-1">Update your password regularly to keep your account safe.</p>
+              <h2 className="font-serif text-xl font-normal text-black">
+                Security & password
+              </h2>
+              <p className="text-smoke mt-1 text-xs">
+                Update your password regularly to keep your account safe.
+              </p>
             </div>
 
             <form onSubmit={handlePasswordSubmit} className="space-y-4 border-t pt-6">
@@ -417,7 +472,7 @@ export function ProfileClient({
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Min 8 characters"
-                  className="border-black/10 focus-visible:ring-forest-green mt-1 max-w-md"
+                  className="mt-1 max-w-md border-black/10 focus-visible:border-black focus-visible:ring-black"
                 />
               </div>
 
@@ -430,15 +485,27 @@ export function ProfileClient({
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   placeholder="Re-enter password"
-                  className="border-black/10 focus-visible:ring-forest-green mt-1 max-w-md"
+                  className="mt-1 max-w-md border-black/10 focus-visible:border-black focus-visible:ring-black"
                 />
               </div>
 
-              {passError && <p className="text-xs font-semibold text-destructive mt-2">{passError}</p>}
-              {passSuccess && <p className="text-xs font-semibold text-green-600 mt-2">Password updated successfully!</p>}
+              {passError && (
+                <p className="text-destructive mt-2 text-xs font-semibold">
+                  {passError}
+                </p>
+              )}
+              {passSuccess && (
+                <p className="mt-2 text-xs font-semibold text-green-600">
+                  Password updated successfully!
+                </p>
+              )}
 
               <div className="pt-4">
-                <Button type="submit" className="bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11 px-6" disabled={passPending}>
+                <Button
+                  type="submit"
+                  className="bg-brand-yellow hover:bg-brand-yellow/90 h-11 rounded-[4px] px-6 font-medium tracking-wider text-black uppercase transition-all hover:scale-[1.02]"
+                  disabled={passPending}
+                >
                   {passPending ? "Updating..." : "Update Password"}
                 </Button>
               </div>

@@ -33,31 +33,37 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="min-h-screen bg-forest-green flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none" />
+    <main className="bg-brand-yellow relative flex min-h-screen flex-col justify-center overflow-hidden py-12 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent" />
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 text-center">
-        <Link href="/" className="inline-flex items-center gap-2 group mb-6">
-          <div className="w-10 h-10 bg-gold-yellow flex items-center justify-center text-forest-green font-normal text-2xl rounded-[4px] transition-transform duration-300">
+      <div className="relative z-10 text-center sm:mx-auto sm:w-full sm:max-w-md">
+        <Link href="/" className="group mb-6 inline-flex items-center gap-2">
+          <div className="bg-brand-yellow-dark text-brand-yellow flex h-10 w-10 items-center justify-center rounded-[4px] text-2xl font-normal transition-transform duration-300">
             Z
           </div>
           <span className="text-xl font-medium tracking-tight text-white">GenZ</span>
         </Link>
-        <h2 className="text-3xl font-serif text-white font-normal">Reset Password.</h2>
+        <h2 className="font-serif text-3xl font-normal text-white">Reset Password.</h2>
         <p className="mt-2 text-sm text-white/70">
           Enter your email to receive a recovery link.
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="bg-paper-white py-8 px-6 rounded-[4px] sm:px-10 border border-black/5">
+      <div className="relative z-10 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-paper-white rounded-[4px] border border-black/5 px-6 py-8 sm:px-10">
           {success ? (
-            <div className="text-center py-4">
-              <h3 className="font-serif text-xl text-forest-green mb-2">Check your email</h3>
-              <p className="text-sm text-smoke leading-relaxed">
-                We have sent a password recovery link to <strong className="text-forest-green">{email}</strong>.
+            <div className="py-4 text-center">
+              <h3 className="text-brand-yellow mb-2 font-serif text-xl">
+                Check your email
+              </h3>
+              <p className="text-smoke text-sm leading-relaxed">
+                We have sent a password recovery link to{" "}
+                <strong className="text-brand-yellow">{email}</strong>.
               </p>
-              <Button asChild className="mt-6 w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11">
+              <Button
+                asChild
+                className="bg-brand-yellow hover:bg-brand-yellow/90 mt-6 h-11 w-full rounded-[4px] font-medium tracking-wider text-white uppercase"
+              >
                 <Link href="/login">Back to Login</Link>
               </Button>
             </div>
@@ -73,22 +79,32 @@ export default function ForgotPasswordPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="name@example.com"
-                  className="border-black/10 focus-visible:ring-forest-green"
+                  className="focus-visible:ring-brand-yellow border-black/10"
                 />
               </div>
 
               {error && (
-                <p role="alert" className="text-destructive mt-2 mb-4 text-xs font-semibold">
+                <p
+                  role="alert"
+                  className="text-destructive mt-2 mb-4 text-xs font-semibold"
+                >
                   {error}
                 </p>
               )}
 
-              <Button type="submit" className="w-full bg-forest-green text-white hover:bg-forest-green/90 rounded-[4px] font-medium uppercase tracking-wider h-11" disabled={isPending}>
+              <Button
+                type="submit"
+                className="bg-brand-yellow hover:bg-brand-yellow/90 h-11 w-full rounded-[4px] font-medium tracking-wider text-white uppercase"
+                disabled={isPending}
+              >
                 {isPending ? "Sending Link..." : "Send Reset Link"}
               </Button>
 
               <div className="mt-4 text-center">
-                <Link href="/login" className="text-xs text-smoke hover:underline hover:text-forest-green">
+                <Link
+                  href="/login"
+                  className="text-smoke hover:text-brand-yellow text-xs hover:underline"
+                >
                   ← Back to Login
                 </Link>
               </div>

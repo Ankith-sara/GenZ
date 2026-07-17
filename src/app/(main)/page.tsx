@@ -11,7 +11,7 @@ import {
   MessageCircle,
   Share2,
   Star,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -20,32 +20,32 @@ const stakeholdersList = [
     index: "01",
     name: "Consumers",
     image: "/consumers.jpeg",
-    copy: "Trusted, high-quality Indian products, straight from the source. We connect you directly to the factory floor, ensuring verified quality and competitive pricing without middleman markups."
+    copy: "Trusted, high-quality Indian products, straight from the source. We connect you directly to the factory floor, ensuring verified quality and competitive pricing without middleman markups.",
   },
   {
     index: "02",
     name: "Manufacturers",
     image: "/manufacturers.jpeg",
-    copy: "Visibility, market demand insights, and a direct line to national buyers. We help you digitize your profile, showcase catalogs, and build lasting business relationships."
+    copy: "Visibility, market demand insights, and a direct line to national buyers. We help you digitize your profile, showcase catalogs, and build lasting business relationships.",
   },
   {
     index: "03",
     name: "Startups",
     image: "/startups.jpeg",
-    copy: "Reliable manufacturing partners for products that don't exist yet. Discover local fabricators, request custom quotes, and turn prototypes into physical products."
+    copy: "Reliable manufacturing partners for products that don't exist yet. Discover local fabricators, request custom quotes, and turn prototypes into physical products.",
   },
   {
     index: "04",
     name: "Creators",
     image: "/creators.jpeg",
-    copy: "A stage to showcase process, not just the finished product. Share factory reels, tell your brand story, and build direct emotional and commercial trust with buyers."
+    copy: "A stage to showcase process, not just the finished product. Share factory reels, tell your brand story, and build direct emotional and commercial trust with buyers.",
   },
   {
     index: "05",
     name: "Investors",
     image: "/india_glow_map.png",
-    copy: "Verified manufacturer listings and regional innovation clusters worth backing. Gain access to transparent manufacturing metrics, production capacity data, and growth indicators."
-  }
+    copy: "Verified manufacturer listings and regional innovation clusters worth backing. Gain access to transparent manufacturing metrics, production capacity data, and growth indicators.",
+  },
 ];
 
 const pillars = [
@@ -87,8 +87,8 @@ export default function HomePage() {
   const [activeStakeholder, setActiveStakeholder] = useState(0);
 
   return (
-    <main className="flex-1 bg-cream-paper font-sans text-ink-black antialiased">
-      <section className="relative border-b border-ash min-h-[600px] sm:min-h-[700px] lg:min-h-[750px] flex items-center w-full overflow-hidden py-20 px-6 sm:px-12">
+    <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
+      <section className="border-ash relative flex min-h-[600px] w-full items-center overflow-hidden border-b px-6 py-20 sm:min-h-[700px] sm:px-12 lg:min-h-[750px]">
         {/* Background Image with Dark/Warm Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -104,20 +104,20 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(226,161,111,0.2),_transparent_50%)]" />
         </div>
 
-        <div className="mx-auto max-w-[1280px] w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="relative z-10 mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-10 lg:grid-cols-12">
           {/* Left Column: text overlay (now high contrast white/cream text on dark overlay) */}
-          <div className="flex flex-col justify-center lg:col-span-8 space-y-6 text-left">
-            <span className="text-caption font-graphik uppercase tracking-[0.28em] text-white/70">
+          <div className="flex flex-col justify-center space-y-6 text-left lg:col-span-8">
+            <span className="text-caption font-graphik tracking-[0.28em] text-white/70 uppercase">
               Made in India
             </span>
-            
-            <h1 className="font-nantes text-5xl leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[4.8rem] max-w-3xl">
+
+            <h1 className="font-nantes max-w-3xl text-5xl leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[4.8rem]">
               From import dependency <br />
               to{" "}
-              <span className="relative inline-block italic text-gold-yellow font-medium">
+              <span className="text-brand-yellow-dark relative inline-block font-medium italic">
                 opportunity
                 <svg
-                  className="absolute -bottom-2 left-0 h-2.5 w-full text-gold-yellow"
+                  className="text-brand-yellow-dark absolute -bottom-2 left-0 h-2.5 w-full"
                   viewBox="0 0 100 8"
                   preserveAspectRatio="none"
                   aria-hidden="true"
@@ -128,25 +128,29 @@ export default function HomePage() {
               .
             </h1>
 
-            <p className="mt-4 max-w-xl text-lg font-graphik leading-relaxed text-white/80">
-              GenZ connects Indian consumers directly with verified Indian manufacturers —
-              trading imported guesswork for factory-validated trust.
+            <p className="font-graphik mt-4 max-w-xl text-lg leading-relaxed text-white/80">
+              GenZ connects Indian consumers directly with verified Indian manufacturers
+              — trading imported guesswork for factory-validated trust.
             </p>
 
-            <div className="pt-4 flex flex-wrap items-center gap-6">
-              <Button asChild size="lg" className="bg-forest-green hover:bg-forest-mid text-black font-graphik text-xs font-semibold tracking-[0.05em] uppercase h-12 px-6 rounded-none border-none transition-colors">
+            <div className="flex flex-wrap items-center gap-6 pt-4">
+              <Button
+                asChild
+                size="lg"
+                className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik h-12 rounded-none border-none px-6 text-xs font-semibold tracking-[0.05em] text-black uppercase transition-colors"
+              >
                 <Link href="/discover">Explore products</Link>
               </Button>
               <Link
                 href="/signup/manufacturer"
-                className="group inline-flex items-center gap-1.5 text-body font-graphik text-white font-medium underline decoration-white/30 underline-offset-4 hover:decoration-white transition-all"
+                className="group text-body font-graphik inline-flex items-center gap-1.5 font-medium text-white underline decoration-white/30 underline-offset-4 transition-all hover:decoration-white"
               >
                 For manufacturers
-                <ArrowUpRight className="h-4 w-4 text-forest-green transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="text-brand-yellow h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </div>
 
-            <dl className="pt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 max-w-2xl border-t border-white/10 mt-10">
+            <dl className="mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-4 border-t border-white/10 pt-10 sm:grid-cols-2">
               {[
                 "100% verified manufacturers",
                 "No imports, no fake resellers",
@@ -154,8 +158,10 @@ export default function HomePage() {
                 "Built for India, by India",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 shrink-0 text-forest-green" />
-                  <dd className="text-sm font-graphik leading-snug text-white/85">{item}</dd>
+                  <ShieldCheck className="text-brand-yellow h-5 w-5 shrink-0" />
+                  <dd className="font-graphik text-sm leading-snug text-white/85">
+                    {item}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -164,29 +170,32 @@ export default function HomePage() {
       </section>
 
       {/* Core Pillars — list/grid hybrids with lines */}
-      <section className="border-b border-ash px-6 py-20 sm:px-12 md:py-28">
+      <section className="border-ash border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-[1280px]">
           <div className="mb-14 max-w-xl">
-            <span className="text-caption font-graphik uppercase tracking-[0.2em] text-smoke block mb-4">
+            <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
               Foundations of Trust
             </span>
-            <h2 className="font-nantes text-4xl sm:text-5xl text-ink-black">
+            <h2 className="font-nantes text-ink-black text-4xl sm:text-5xl">
               The pillars that build direct commerce.
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 divide-y divide-ash lg:grid-cols-5 lg:divide-y-0 lg:divide-x divide-ash border-y border-ash">
+          <div className="divide-ash divide-ash border-ash grid grid-cols-1 divide-y border-y lg:grid-cols-5 lg:divide-x lg:divide-y-0">
             {pillars.map((pillar) => (
-              <div key={pillar.index} className="py-8 lg:px-6 lg:py-12 first:pl-0 last:pr-0 flex flex-col justify-between min-h-[220px]">
+              <div
+                key={pillar.index}
+                className="flex min-h-[220px] flex-col justify-between py-8 first:pl-0 last:pr-0 lg:px-6 lg:py-12"
+              >
                 <div>
-                  <span className="block text-caption font-graphik text-brand-blue tracking-[0.1em] font-medium mb-3">
+                  <span className="text-caption font-graphik text-brand-blue mb-3 block font-medium tracking-[0.1em]">
                     {pillar.index}
                   </span>
-                  <h3 className="font-nantes text-xl font-normal text-ink-black mb-3">
+                  <h3 className="font-nantes text-ink-black mb-3 text-xl font-normal">
                     {pillar.title}
                   </h3>
                 </div>
-                <p className="text-body font-graphik leading-relaxed text-charcoal">
+                <p className="text-body font-graphik text-charcoal leading-relaxed">
                   {pillar.copy}
                 </p>
               </div>
@@ -196,53 +205,60 @@ export default function HomePage() {
       </section>
 
       {/* What Makes Us Different */}
-      <section className="border-b border-ash px-6 py-20 sm:px-12 md:py-28 bg-pure-white">
+      <section className="border-ash bg-pure-white border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-[1280px]">
-          <div className="text-center mb-16">
-            <span className="text-caption font-graphik uppercase tracking-[0.2em] text-smoke block mb-4">
+          <div className="mb-16 text-center">
+            <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
               Differentiation
             </span>
-            <h2 className="font-nantes text-4xl sm:text-5xl text-ink-black">
+            <h2 className="font-nantes text-ink-black text-4xl sm:text-5xl">
               How GenZ changes the game.
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {/* Card 1: Video Reels */}
-            <div className="bg-cream-paper border border-ash p-8 flex flex-col justify-between h-full min-h-[520px] relative group">
+            <div className="bg-cream-paper border-ash group relative flex h-full min-h-[520px] flex-col justify-between border p-8">
               <div>
-                <h3 className="font-nantes text-2xl text-ink-black mb-3">
-                  We show <span className="italic text-forest-green font-semibold">who makes</span> what you buy.
+                <h3 className="font-nantes text-ink-black mb-3 text-2xl">
+                  We show{" "}
+                  <span className="text-brand-yellow font-semibold italic">
+                    who makes
+                  </span>{" "}
+                  what you buy.
                 </h3>
                 <p className="text-body font-graphik text-charcoal leading-relaxed">
-                  Watch real reels from real factories. Complete process transparency builds complete commercial trust.
+                  Watch real reels from real factories. Complete process transparency
+                  builds complete commercial trust.
                 </p>
               </div>
 
               {/* iPhone Reel Mockup */}
-              <div className="relative w-44 h-60 mx-auto border-4 border-ink-black bg-black rounded-3xl overflow-hidden mt-6">
-                <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-3 bg-white/20 rounded-full z-30" />
-                <div className="relative w-full h-full">
+              <div className="border-ink-black relative mx-auto mt-6 h-60 w-44 overflow-hidden rounded-3xl border-4 bg-black">
+                <div className="absolute top-2 left-1/2 z-30 h-3 w-14 -translate-x-1/2 rounded-full bg-white/20" />
+                <div className="relative h-full w-full">
                   <Image
                     src="/machine_work.png"
                     alt="Reel Screen"
                     fill
-                    className="object-cover brightness-95 opacity-90"
+                    className="object-cover opacity-90 brightness-95"
                     sizes="180px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="h-10 w-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <Play className="h-4 w-4 text-white fill-white" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-sm transition-transform group-hover:scale-105">
+                      <Play className="h-4 w-4 fill-white text-white" />
                     </div>
                   </div>
                   <div className="absolute bottom-3 left-3 text-left">
-                    <span className="text-[8px] bg-gold-yellow text-ink-black font-graphik font-medium px-1.5 py-0.5 rounded tracking-wide uppercase">
+                    <span className="bg-brand-yellow-dark text-ink-black font-graphik rounded px-1.5 py-0.5 text-[8px] font-medium tracking-wide uppercase">
                       100% Verified
                     </span>
-                    <p className="text-[10px] font-graphik font-semibold mt-1 text-white">Precision machining process.</p>
+                    <p className="font-graphik mt-1 text-[10px] font-semibold text-white">
+                      Precision machining process.
+                    </p>
                   </div>
-                  <div className="absolute bottom-3 right-2 flex flex-col gap-2 items-center text-white/90">
+                  <div className="absolute right-2 bottom-3 flex flex-col items-center gap-2 text-white/90">
                     <Heart className="h-3.5 w-3.5 fill-red-500 text-red-500" />
                     <MessageCircle className="h-3.5 w-3.5" />
                     <Share2 className="h-3.5 w-3.5" />
@@ -252,19 +268,24 @@ export default function HomePage() {
             </div>
 
             {/* Card 2: Import data */}
-            <div className="bg-cream-paper border border-ash p-8 flex flex-col justify-between h-full min-h-[520px] relative group">
+            <div className="bg-cream-paper border-ash group relative flex h-full min-h-[520px] flex-col justify-between border p-8">
               <div>
-                <h3 className="font-nantes text-2xl text-ink-black mb-3">
-                  We turn import data into <span className="italic text-brand-blue font-semibold">Indian opportunities</span>.
+                <h3 className="font-nantes text-ink-black mb-3 text-2xl">
+                  We turn import data into{" "}
+                  <span className="text-brand-blue font-semibold italic">
+                    Indian opportunities
+                  </span>
+                  .
                 </h3>
                 <p className="text-body font-graphik text-charcoal leading-relaxed">
-                  Our system highlights the top imported products India needs — routing that demand to local makers.
+                  Our system highlights the top imported products India needs — routing
+                  that demand to local makers.
                 </p>
               </div>
 
               {/* Import Chart Graphic */}
-              <div className="w-full flex flex-col items-center my-6">
-                <svg className="w-full h-32 text-brand-blue" viewBox="0 0 200 80">
+              <div className="my-6 flex w-full flex-col items-center">
+                <svg className="text-brand-blue h-32 w-full" viewBox="0 0 200 80">
                   <defs>
                     <linearGradient id="grad-blue" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="#D8D365" stopOpacity="0.15" />
@@ -281,47 +302,67 @@ export default function HomePage() {
                     stroke="#D8D365"
                     strokeWidth="2"
                   />
-                  <circle cx="130" cy="30" r="3" fill="#ffffff" stroke="#D8D365" strokeWidth="1.5" />
+                  <circle
+                    cx="130"
+                    cy="30"
+                    r="3"
+                    fill="#ffffff"
+                    stroke="#D8D365"
+                    strokeWidth="1.5"
+                  />
                   <circle cx="190" cy="10" r="3" fill="#E6F082" />
                 </svg>
-                <span className="text-[10px] text-charcoal uppercase tracking-widest font-graphik mt-3 block text-center">
+                <span className="text-charcoal font-graphik mt-3 block text-center text-[10px] tracking-widest uppercase">
                   Top Import Segments: Toys, Electronics, Spares
                 </span>
               </div>
 
-              <Button asChild variant="outline" className="border-ash text-ink-black hover:bg-ash/10 w-full rounded-none h-11 uppercase text-[10px] font-graphik tracking-[0.05em] bg-transparent">
+              <Button
+                asChild
+                variant="outline"
+                className="border-ash text-ink-black hover:bg-ash/10 font-graphik h-11 w-full rounded-none bg-transparent text-[10px] tracking-[0.05em] uppercase"
+              >
                 <Link href="/discover?import_gap=true">Explore Import Gaps</Link>
               </Button>
             </div>
 
             {/* Card 3: Innovation */}
-            <div className="bg-cream-paper border border-ash p-8 flex flex-col justify-between h-full min-h-[520px] relative group">
+            <div className="bg-cream-paper border-ash group relative flex h-full min-h-[520px] flex-col justify-between border p-8">
               <div>
-                <h3 className="font-nantes text-2xl text-ink-black mb-3">
-                  We promote <span className="italic text-forest-green font-semibold">innovation</span>, not replication.
+                <h3 className="font-nantes text-ink-black mb-3 text-2xl">
+                  We promote{" "}
+                  <span className="text-brand-yellow font-semibold italic">
+                    innovation
+                  </span>
+                  , not replication.
                 </h3>
                 <p className="text-body font-graphik text-charcoal leading-relaxed">
-                  Encouraging Indian makers to redesign and upgrade — securing better materials and larger export margins.
+                  Encouraging Indian makers to redesign and upgrade — securing better
+                  materials and larger export margins.
                 </p>
               </div>
 
               {/* Speaker rendering illustration */}
-              <div className="relative w-40 h-40 mx-auto flex items-center justify-center my-6">
-                <div className="w-24 h-32 bg-ink-black border border-ash p-2 flex flex-col items-center justify-between">
-                  <div className="w-full h-20 bg-neutral-900 border border-neutral-800 flex flex-col items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:6px_6px]" />
-                    <div className="h-8 w-8 rounded-full border border-neutral-700 bg-black flex items-center justify-center">
-                      <div className="h-4.5 w-4.5 rounded-full bg-gold-yellow" />
+              <div className="relative mx-auto my-6 flex h-40 w-40 items-center justify-center">
+                <div className="bg-ink-black border-ash flex h-32 w-24 flex-col items-center justify-between border p-2">
+                  <div className="relative flex h-20 w-full flex-col items-center justify-center overflow-hidden border border-neutral-800 bg-neutral-900">
+                    <div className="absolute inset-0 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:6px_6px] opacity-10" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-700 bg-black">
+                      <div className="bg-brand-yellow-dark h-4.5 w-4.5 rounded-full" />
                     </div>
                   </div>
-                  <div className="w-full h-6 bg-pure-white border-t border-ash flex items-center justify-between px-2 text-[7px] text-charcoal font-graphik">
+                  <div className="bg-pure-white border-ash text-charcoal font-graphik flex h-6 w-full items-center justify-between border-t px-2 text-[7px]">
                     <span>DESIGN #042</span>
-                    <div className="h-1.5 w-1.5 bg-forest-green rounded-full" />
+                    <div className="bg-brand-yellow h-1.5 w-1.5 rounded-full" />
                   </div>
                 </div>
               </div>
 
-              <Button asChild variant="outline" className="border-ash text-ink-black hover:bg-ash/10 w-full rounded-none h-11 uppercase text-[10px] font-graphik tracking-[0.05em] bg-transparent">
+              <Button
+                asChild
+                variant="outline"
+                className="border-ash text-ink-black hover:bg-ash/10 font-graphik h-11 w-full rounded-none bg-transparent text-[10px] tracking-[0.05em] uppercase"
+              >
                 <Link href="/discover?innovations=true">Discover Innovations</Link>
               </Button>
             </div>
@@ -330,22 +371,21 @@ export default function HomePage() {
       </section>
 
       {/* Our Community — interactive split grid */}
-      <section className="border-b border-ash px-6 py-20 sm:px-12 md:py-28 bg-pure-white">
+      <section className="border-ash bg-pure-white border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="mb-16 text-left">
-            <span className="text-caption font-graphik uppercase tracking-[0.2em] text-smoke block mb-4">
+            <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
               Our Community
             </span>
-            <h2 className="font-nantes text-4xl sm:text-5xl text-ink-black max-w-xl">
+            <h2 className="font-nantes text-ink-black max-w-xl text-4xl sm:text-5xl">
               Built for all Indian stakeholders.
             </h2>
           </div>
 
           {/* Interactive Split Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch min-h-[500px]">
-
+          <div className="grid min-h-[500px] grid-cols-1 items-stretch gap-12 lg:grid-cols-12">
             {/* Left Column: Interactive Menu List */}
-            <div className="lg:col-span-7 flex flex-col justify-center divide-y divide-ash border-t border-b border-ash">
+            <div className="divide-ash border-ash flex flex-col justify-center divide-y border-t border-b lg:col-span-7">
               {stakeholdersList.map((s, idx) => {
                 const isActive = idx === activeStakeholder;
                 return (
@@ -353,19 +393,21 @@ export default function HomePage() {
                     <button
                       onMouseEnter={() => setActiveStakeholder(idx)}
                       onClick={() => setActiveStakeholder(idx)}
-                      className="w-full text-left py-6 flex items-center justify-between group cursor-pointer focus:outline-none transition-colors duration-300"
+                      className="group flex w-full cursor-pointer items-center justify-between py-6 text-left transition-colors duration-300 focus:outline-none"
                     >
                       <div className="flex items-center gap-6">
                         <span
                           className={`font-mono text-xs transition-colors duration-300 ${
-                            isActive ? "text-forest-green font-semibold" : "text-smoke"
+                            isActive ? "text-brand-yellow font-semibold" : "text-smoke"
                           }`}
                         >
                           {s.index}
                         </span>
                         <span
-                          className={`font-nantes text-2xl sm:text-3xl transition-colors duration-300 ${
-                            isActive ? "text-forest-green italic font-medium translate-x-1" : "text-ink-black"
+                          className={`font-nantes text-2xl transition-colors duration-300 sm:text-3xl ${
+                            isActive
+                              ? "text-brand-yellow translate-x-1 font-medium italic"
+                              : "text-ink-black"
                           }`}
                         >
                           {s.name}
@@ -375,30 +417,34 @@ export default function HomePage() {
                       <div className="flex items-center gap-4">
                         {/* Active Indicator Line */}
                         <div
-                          className={`h-[1px] bg-forest-green transition-all duration-500 hidden md:block ${
+                          className={`bg-brand-yellow hidden h-[1px] transition-all duration-500 md:block ${
                             isActive ? "w-24 opacity-100" : "w-0 opacity-0"
                           }`}
                         />
                         <div
-                          className={`h-8 w-8 flex items-center justify-center border transition-all duration-300 ${
+                          className={`flex h-8 w-8 items-center justify-center border transition-all duration-300 ${
                             isActive
-                              ? "bg-forest-green border-forest-green text-[#FFF0DD] rotate-45"
+                              ? "bg-brand-yellow border-brand-yellow text-ink-black rotate-45"
                               : "border-ash text-smoke group-hover:text-ink-black group-hover:border-ink-black"
                           }`}
                         >
-                          <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isActive ? "-rotate-45" : ""}`} />
+                          <ArrowRight
+                            className={`h-4 w-4 transition-transform duration-300 ${isActive ? "-rotate-45" : ""}`}
+                          />
                         </div>
                       </div>
                     </button>
 
                     {/* Mobile-only Collapsible Detail Panel */}
                     <div
-                      className={`lg:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-                        isActive ? "max-h-[500px] opacity-100 pb-6" : "max-h-0 opacity-0"
+                      className={`overflow-hidden transition-all duration-500 ease-in-out lg:hidden ${
+                        isActive
+                          ? "max-h-[500px] pb-6 opacity-100"
+                          : "max-h-0 opacity-0"
                       }`}
                     >
-                      <div className="border border-ash bg-cream-paper p-4 flex flex-col gap-4">
-                        <div className="relative aspect-[4/3] w-full overflow-hidden border border-ash bg-pure-white">
+                      <div className="border-ash bg-cream-paper flex flex-col gap-4 border p-4">
+                        <div className="border-ash bg-pure-white relative aspect-[4/3] w-full overflow-hidden border">
                           <Image
                             src={s.image}
                             alt={s.name}
@@ -408,8 +454,12 @@ export default function HomePage() {
                           />
                         </div>
                         <div>
-                          <h4 className="font-nantes text-xl text-ink-black mb-2">For {s.name}</h4>
-                          <p className="text-sm font-graphik leading-relaxed text-charcoal">{s.copy}</p>
+                          <h4 className="font-nantes text-ink-black mb-2 text-xl">
+                            For {s.name}
+                          </h4>
+                          <p className="font-graphik text-charcoal text-sm leading-relaxed">
+                            {s.copy}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -419,15 +469,15 @@ export default function HomePage() {
             </div>
 
             {/* Right Column: Image & Details Showcase */}
-            <div className="hidden lg:flex lg:col-span-5 flex-col justify-between border border-ash bg-cream-paper p-6 relative">
-              <div className="relative aspect-[4/3] w-full overflow-hidden border border-ash bg-pure-white mb-6">
+            <div className="border-ash bg-cream-paper relative hidden flex-col justify-between border p-6 lg:col-span-5 lg:flex">
+              <div className="border-ash bg-pure-white relative mb-6 aspect-[4/3] w-full overflow-hidden border">
                 {stakeholdersList.map((s, idx) => (
                   <div
                     key={s.name}
                     className={`absolute inset-0 transition-all duration-700 ease-out ${
                       idx === activeStakeholder
-                        ? "opacity-100 scale-100 pointer-events-auto"
-                        : "opacity-0 scale-95 pointer-events-none"
+                        ? "pointer-events-auto scale-100 opacity-100"
+                        : "pointer-events-none scale-95 opacity-0"
                     }`}
                   >
                     <Image
@@ -438,21 +488,24 @@ export default function HomePage() {
                       sizes="(max-width: 1024px) 100vw, 400px"
                     />
                     {/* Subtle color highlight overlay */}
-                    <div className="absolute inset-0 bg-forest-green/5" />
+                    <div className="bg-brand-yellow/5 absolute inset-0" />
                   </div>
                 ))}
               </div>
 
               {/* Content description area with fade-in */}
-              <div className="flex-1 flex flex-col justify-end min-h-[140px]">
+              <div className="flex min-h-[140px] flex-1 flex-col justify-end">
                 {stakeholdersList.map((s, idx) => {
                   if (idx !== activeStakeholder) return null;
                   return (
-                    <div key={s.name} className="animate-[fade-in_0.5s_ease-out_forwards]">
-                      <h3 className="font-nantes text-2xl text-ink-black mb-3">
+                    <div
+                      key={s.name}
+                      className="animate-[fade-in_0.5s_ease-out_forwards]"
+                    >
+                      <h3 className="font-nantes text-ink-black mb-3 text-2xl">
                         For {s.name}
                       </h3>
-                      <p className="text-body font-graphik leading-relaxed text-charcoal">
+                      <p className="text-body font-graphik text-charcoal leading-relaxed">
                         {s.copy}
                       </p>
                     </div>
@@ -460,24 +513,22 @@ export default function HomePage() {
                 })}
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
       {/* Stats & Impact Section */}
-      <section className="border-b border-ash px-6 py-20 sm:px-12 md:py-28 bg-pure-white">
+      <section className="border-ash bg-pure-white border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
             {/* Left side stats grid */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-10">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-7">
               {stats.map((stat) => (
-                <div key={stat.label} className="border-l border-ash pl-6">
-                  <p className="text-4xl sm:text-5xl font-nantes text-forest-green font-normal">
+                <div key={stat.label} className="border-ash border-l pl-6">
+                  <p className="font-nantes text-brand-yellow text-4xl font-normal sm:text-5xl">
                     {stat.value}
                   </p>
-                  <p className="text-caption font-graphik uppercase tracking-wider text-smoke mt-2">
+                  <p className="text-caption font-graphik text-smoke mt-2 tracking-wider uppercase">
                     {stat.label}
                   </p>
                 </div>
@@ -486,63 +537,83 @@ export default function HomePage() {
 
             {/* Right side Goal callout */}
             <div className="lg:col-span-5">
-              <div className="bg-cream-paper border border-ash p-8 sm:p-10">
-                <span className="text-caption font-graphik text-brand-blue uppercase tracking-widest block mb-3 font-medium">
+              <div className="bg-cream-paper border-ash border p-8 sm:p-10">
+                <span className="text-caption font-graphik text-brand-blue mb-3 block font-medium tracking-widest uppercase">
                   The Mission
                 </span>
-                <h3 className="font-nantes text-2xl text-ink-black mb-4">
+                <h3 className="font-nantes text-ink-black mb-4 text-2xl">
                   10 million Indian businesses by 2030.
                 </h3>
-                <p className="text-body font-graphik leading-relaxed text-charcoal">
-                  To build the most trusted direct-discovery commerce engine for Indian manufacturing — helping local factories grow, create jobs, and access the global market.
+                <p className="text-body font-graphik text-charcoal leading-relaxed">
+                  To build the most trusted direct-discovery commerce engine for Indian
+                  manufacturing — helping local factories grow, create jobs, and access
+                  the global market.
                 </p>
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
       {/* Trust & Certification Row */}
-      <section className="border-b border-ash px-6 py-16 sm:px-12">
-        <div className="mx-auto max-w-7xl flex flex-col gap-12 text-center">
+      <section className="border-ash border-b px-6 py-16 sm:px-12">
+        <div className="mx-auto flex max-w-7xl flex-col gap-12 text-center">
           <div className="flex flex-col gap-4">
-            <span className="text-[10px] text-smoke uppercase tracking-[0.25em] font-graphik font-medium">
+            <span className="text-smoke font-graphik text-[10px] font-medium tracking-[0.25em] uppercase">
               Institutional validation
             </span>
-            <div className="flex flex-wrap items-center justify-center gap-10 sm:gap-20 opacity-90">
-              <span className="text-lg font-graphik font-semibold tracking-tighter text-brand-blue">sidbi</span>
-              <span className="text-lg font-graphik font-semibold tracking-tighter text-red-700">NSIC</span>
-              <span className="text-base font-graphik font-medium tracking-wide text-neutral-800 uppercase">DPIIT</span>
-              <span className="text-xs font-graphik font-medium tracking-widest text-neutral-800 uppercase border border-neutral-800 px-3 py-1.5">
+            <div className="flex flex-wrap items-center justify-center gap-10 opacity-90 sm:gap-20">
+              <span className="font-graphik text-brand-blue text-lg font-semibold tracking-tighter">
+                sidbi
+              </span>
+              <span className="font-graphik text-lg font-semibold tracking-tighter text-red-700">
+                NSIC
+              </span>
+              <span className="font-graphik text-base font-medium tracking-wide text-neutral-800 uppercase">
+                DPIIT
+              </span>
+              <span className="font-graphik border border-neutral-800 px-3 py-1.5 text-xs font-medium tracking-widest text-neutral-800 uppercase">
                 MAKE IN INDIA
               </span>
             </div>
           </div>
 
           {/* Minimal Testimonial Card */}
-          <div className="border border-ash bg-pure-white p-8 sm:p-10 max-w-2xl mx-auto flex flex-col items-center">
-            <div className="flex gap-1 text-gold-yellow mb-5">
+          <div className="border-ash bg-pure-white mx-auto flex max-w-2xl flex-col items-center border p-8 sm:p-10">
+            <div className="text-brand-yellow-dark mb-5 flex gap-1">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-4 w-4 fill-gold-yellow text-gold-yellow" />
+                <Star
+                  key={i}
+                  className="fill-brand-yellow-dark text-brand-yellow-dark h-4 w-4"
+                />
               ))}
             </div>
-            <blockquote className="font-nantes text-xl text-ink-black italic text-center mb-6 leading-relaxed">
-              &ldquo;GenZ is not just a commercial platform, it&apos;s a movement to bring our manufacturing roots back to life.&rdquo;
+            <blockquote className="font-nantes text-ink-black mb-6 text-center text-xl leading-relaxed italic">
+              &ldquo;GenZ is not just a commercial platform, it&apos;s a movement to
+              bring our manufacturing roots back to life.&rdquo;
             </blockquote>
             <div className="flex items-center gap-3">
-              <div className="relative h-9 w-9 overflow-hidden rounded-full border border-ash bg-cream-paper">
-                <Image src="/founder.jpeg" alt="Founder" fill className="object-cover" sizes="36px" />
+              <div className="border-ash bg-cream-paper relative h-9 w-9 overflow-hidden rounded-full border">
+                <Image
+                  src="/founder.jpeg"
+                  alt="Founder"
+                  fill
+                  className="object-cover"
+                  sizes="36px"
+                />
               </div>
               <div className="text-left">
-                <h4 className="text-caption font-graphik font-medium text-ink-black">Appala Sairam</h4>
-                <p className="text-[10px] text-smoke font-graphik">Founder &amp; Delivery Partner, GenZ</p>
+                <h4 className="text-caption font-graphik text-ink-black font-medium">
+                  Appala Sairam
+                </h4>
+                <p className="text-smoke font-graphik text-[10px]">
+                  Founder &amp; Delivery Partner, GenZ
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-
     </main>
   );
 }

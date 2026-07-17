@@ -5,8 +5,15 @@ import type { ElementType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Building2, FileText, Package, ShieldCheck,
-  User, Menu, X, MessageSquare,
+  LayoutDashboard,
+  Building2,
+  FileText,
+  Package,
+  ShieldCheck,
+  User,
+  Menu,
+  X,
+  MessageSquare,
 } from "lucide-react";
 import type { Role } from "@/types/database";
 
@@ -79,7 +86,9 @@ export function DashboardSidebar({ role }: { role: Role }) {
     <>
       {/* Mobile top bar trigger */}
       <div className="border-border flex items-center justify-between border-b p-4 sm:hidden">
-        <span className="text-sm tracking-[0.22em] uppercase">GenZ</span>
+        <span className="text-sm tracking-[0.22em] uppercase">
+          Gen<span className="text-brand-yellow">Z</span>
+        </span>
         <button
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}

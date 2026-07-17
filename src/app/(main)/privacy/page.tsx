@@ -1,5 +1,3 @@
-
-
 export const metadata = {
   title: "Privacy Policy — GenZ",
   description: "How GenZ collects, uses, and protects your data.",
@@ -54,26 +52,28 @@ const SECTIONS = [
 
 export default async function PrivacyPage() {
   return (
-    <div className="bg-background flex min-h-screen flex-col font-sans text-foreground antialiased">
+    <div className="bg-background text-foreground flex min-h-screen flex-col font-sans antialiased">
       <main className="flex-1">
-        <section className="py-20 sm:py-24 px-6 sm:px-12 border-b border-black/10">
+        <section className="border-b border-black/10 px-6 py-20 sm:px-12 sm:py-24">
           <div className="mx-auto max-w-3xl text-left">
             <span className="eyebrow text-charcoal mb-3 block">Legal</span>
-            <h1 className="font-serif text-4xl sm:text-6xl font-normal leading-[1.05] tracking-tight text-deep-forest mb-4">
+            <h1 className="text-deep-forest mb-4 font-serif text-4xl leading-[1.05] font-normal tracking-tight sm:text-6xl">
               Privacy Policy
             </h1>
             <p className="text-charcoal text-sm">Last updated: July 2026</p>
           </div>
         </section>
 
-        <section className="py-16 sm:py-20 px-6 sm:px-12">
-          <div className="mx-auto max-w-3xl bg-paper-white rounded-[4px] border border-black/10 p-8 sm:p-12 flex flex-col gap-10">
+        <section className="px-6 py-16 sm:px-12 sm:py-20">
+          <div className="bg-paper-white mx-auto flex max-w-3xl flex-col gap-10 rounded-[4px] border border-black/10 p-8 sm:p-12">
             {SECTIONS.map((s) => (
               <div key={s.title}>
-                <h2 className="font-serif text-xl sm:text-2xl font-normal text-deep-forest mb-3 tracking-tight">
+                <h2 className="text-deep-forest mb-3 font-serif text-xl font-normal tracking-tight sm:text-2xl">
                   {s.title}
                 </h2>
-                <p className="text-charcoal text-sm sm:text-base leading-relaxed">{s.body}</p>
+                <p className="text-charcoal text-sm leading-relaxed sm:text-base">
+                  {s.body}
+                </p>
               </div>
             ))}
           </div>

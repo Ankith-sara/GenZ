@@ -14,7 +14,7 @@ function getTempClient() {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
-      }
+      },
     }
   );
 }
@@ -31,7 +31,7 @@ export async function verifyPasswordAndSendOtp(email: string, password: string) 
   }
 
   const tempSupabase = getTempClient();
-  
+
   // 1. Verify password credentials
   const { error: signInError } = await tempSupabase.auth.signInWithPassword({
     email,
@@ -47,7 +47,7 @@ export async function verifyPasswordAndSendOtp(email: string, password: string) 
     email,
     options: {
       shouldCreateUser: false,
-    }
+    },
   });
 
   if (otpError) {
@@ -76,7 +76,12 @@ export async function verifyOtpLogin(email: string, token: string) {
   return { success: true };
 }
 
-export async function signupUser(formData: { email: string; password?: string; fullName: string; role: Role }) {
+export async function signupUser(formData: {
+  email: string;
+  password?: string;
+  fullName: string;
+  role: Role;
+}) {
   const { email, password, fullName, role } = formData;
 
   if (!email || !fullName || !password) {

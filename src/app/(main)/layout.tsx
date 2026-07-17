@@ -12,6 +12,7 @@ export default async function StorefrontLayout({
   const isLoggedIn = !!session;
   const role = session?.profile?.role;
   const userName = session?.profile?.full_name || session?.email;
+  const avatarUrl = session?.avatarUrl || null;
 
   return (
     <>
@@ -19,6 +20,7 @@ export default async function StorefrontLayout({
         isLoggedIn={isLoggedIn}
         role={role}
         userName={userName}
+        avatarUrl={avatarUrl}
         signOutAction={signOut}
       />
       {children}

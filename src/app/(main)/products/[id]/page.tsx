@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { productMediaUrl, formatInr } from "@/lib/products";
 import { VerifiedBadge } from "@/components/verified-badge";
+import { ProductWishlistButton } from "@/components/product-wishlist-button";
 import { InquiryForm } from "./inquiry-form";
 
 export async function generateMetadata({
@@ -118,9 +119,12 @@ export default async function PublicProductPage({
             </div>
 
             <div>
-              <div className="flex items-center gap-2">
-                <p className="text-muted-foreground text-sm">{product.category}</p>
-                <VerifiedBadge />
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <p className="text-muted-foreground text-sm">{product.category}</p>
+                  <VerifiedBadge />
+                </div>
+                <ProductWishlistButton product={product} />
               </div>
               <h1 className="mt-2 text-4xl leading-[1.2]">{product.name}</h1>
               <p className="mt-3 font-serif text-2xl">{formatInr(product.price_inr)}</p>

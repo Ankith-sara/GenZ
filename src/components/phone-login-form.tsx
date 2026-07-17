@@ -74,7 +74,7 @@ function CountryCodeSelect({
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex h-11 w-[104px] items-center gap-1.5 rounded-none border border-ash bg-background px-2.5 text-sm text-foreground transition-colors hover:border-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+        className="border-ash bg-background text-foreground hover:border-foreground/40 focus:ring-ring flex h-11 w-[104px] items-center gap-1.5 rounded-none border px-2.5 text-sm transition-colors focus:ring-2 focus:ring-offset-1 focus:outline-none"
       >
         {active && (
           <Image
@@ -90,28 +90,28 @@ function CountryCodeSelect({
           +{active?.phonecode ?? "—"}
         </span>
         <ChevronDown
-          className={`h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform ${
+          className={`text-muted-foreground h-3.5 w-3.5 shrink-0 transition-transform ${
             open ? "rotate-180" : ""
           }`}
         />
       </button>
 
       {open && (
-        <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-[280px] overflow-hidden rounded-none border border-ash bg-background ">
-          <div className="flex items-center gap-2 border-b border-border px-3">
-            <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+        <div className="border-ash bg-background absolute top-[calc(100%+6px)] left-0 z-50 w-[280px] overflow-hidden rounded-none border">
+          <div className="border-border flex items-center gap-2 border-b px-3">
+            <Search className="text-muted-foreground h-3.5 w-3.5 shrink-0" />
             <input
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search country or code"
-              className="h-10 w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+              className="text-foreground placeholder:text-muted-foreground h-10 w-full bg-transparent text-sm focus:outline-none"
             />
           </div>
 
           <ul role="listbox" className="max-h-64 overflow-y-auto py-1">
             {filtered.length === 0 && (
-              <li className="px-3 py-6 text-center text-sm text-muted-foreground">
+              <li className="text-muted-foreground px-3 py-6 text-center text-sm">
                 No matches
               </li>
             )}
@@ -126,7 +126,7 @@ function CountryCodeSelect({
                     setOpen(false);
                     setQuery("");
                   }}
-                  className={`flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors hover:bg-muted ${
+                  className={`hover:bg-muted flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ${
                     c.isoCode === value ? "bg-muted" : ""
                   }`}
                 >
@@ -138,8 +138,8 @@ function CountryCodeSelect({
                     className="h-3.5 w-5 shrink-0 rounded-[2px] object-cover"
                     unoptimized
                   />
-                  <span className="flex-1 truncate text-foreground">{c.name}</span>
-                  <span className="shrink-0 tabular-nums text-muted-foreground">
+                  <span className="text-foreground flex-1 truncate">{c.name}</span>
+                  <span className="text-muted-foreground shrink-0 tabular-nums">
                     +{c.phonecode}
                   </span>
                 </button>
@@ -227,16 +227,20 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
             autoComplete="one-time-code"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            className="mt-1.5 tracking-widest rounded-none border-ash"
+            className="border-ash mt-1.5 rounded-none tracking-widest"
             required
           />
         </div>
         {error && (
-          <p role="alert" className="mb-4 mt-2 text-sm text-destructive">
+          <p role="alert" className="text-destructive mt-2 mb-4 text-sm">
             {error}
           </p>
         )}
-        <Button type="submit" className="mt-4 w-full bg-black text-white hover:bg-black/90 rounded-none uppercase tracking-wider font-medium h-11" disabled={status === "pending"}>
+        <Button
+          type="submit"
+          className="mt-4 h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
+          disabled={status === "pending"}
+        >
           {status === "pending" ? "Verifying…" : "Verify & sign in"}
         </Button>
         <button
@@ -247,7 +251,7 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
             setError(null);
             setStatus("idle");
           }}
-          className="mt-3 w-full text-center text-xs text-muted-foreground underline-offset-2 hover:underline"
+          className="text-muted-foreground mt-3 w-full text-center text-xs underline-offset-2 hover:underline"
         >
           Use a different number
         </button>
@@ -272,20 +276,24 @@ export function PhoneLoginForm({ redirectTo }: { redirectTo: string }) {
             autoComplete="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="flex-1 rounded-none border-ash"
+            className="border-ash flex-1 rounded-none"
             required
           />
         </div>
-        <p className="mt-1.5 text-xs text-muted-foreground">
+        <p className="text-muted-foreground mt-1.5 text-xs">
           Select country code and enter phone number.
         </p>
       </div>
       {error && (
-        <p role="alert" className="mb-4 mt-2 text-sm text-destructive">
+        <p role="alert" className="text-destructive mt-2 mb-4 text-sm">
           {error}
         </p>
       )}
-      <Button type="submit" className="mt-4 w-full bg-black text-white hover:bg-black/90 rounded-none uppercase tracking-wider font-medium h-11" disabled={status === "pending"}>
+      <Button
+        type="submit"
+        className="mt-4 h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
+        disabled={status === "pending"}
+      >
         {status === "pending" ? "Sending…" : "Send code"}
       </Button>
     </form>

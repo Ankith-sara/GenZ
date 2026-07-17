@@ -75,7 +75,7 @@ export function WaitlistForm() {
       className="border-ash bg-paper-white rounded-[4px] border p-8 text-left shadow-none"
     >
       <fieldset className="mb-6 border-0 p-0">
-        <legend className="text-smoke mb-3 text-xs uppercase tracking-wider font-sans">
+        <legend className="text-smoke mb-3 font-sans text-xs tracking-wider uppercase">
           I am joining as a...
         </legend>
         <div
@@ -102,8 +102,11 @@ export function WaitlistForm() {
 
       <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <Label htmlFor="wlName" className="text-charcoal text-xs mb-1.5 block">
-            Full name <span aria-hidden="true" className="text-destructive">*</span>
+          <Label htmlFor="wlName" className="text-charcoal mb-1.5 block text-xs">
+            Full name{" "}
+            <span aria-hidden="true" className="text-destructive">
+              *
+            </span>
           </Label>
           <Input
             id="wlName"
@@ -112,7 +115,7 @@ export function WaitlistForm() {
             required
             aria-invalid={!!errors.name}
             value={name}
-            className="border-ash focus-visible:ring-black rounded-[4px] h-11 animate-none"
+            className="border-ash h-11 animate-none rounded-[4px] focus-visible:ring-black"
             onChange={(e) => setName(e.target.value)}
           />
           {errors.name && (
@@ -122,8 +125,11 @@ export function WaitlistForm() {
           )}
         </div>
         <div>
-          <Label htmlFor="wlEmail" className="text-charcoal text-xs mb-1.5 block">
-            Email <span aria-hidden="true" className="text-destructive">*</span>
+          <Label htmlFor="wlEmail" className="text-charcoal mb-1.5 block text-xs">
+            Email{" "}
+            <span aria-hidden="true" className="text-destructive">
+              *
+            </span>
           </Label>
           <Input
             id="wlEmail"
@@ -133,7 +139,7 @@ export function WaitlistForm() {
             required
             aria-invalid={!!errors.email}
             value={email}
-            className="border-ash focus-visible:ring-black rounded-[4px] h-11 animate-none"
+            className="border-ash h-11 animate-none rounded-[4px] focus-visible:ring-black"
             onChange={(e) => setEmail(e.target.value)}
           />
           {errors.email && (
@@ -146,31 +152,35 @@ export function WaitlistForm() {
 
       <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <Label htmlFor="wlCity" className="text-charcoal text-xs mb-1.5 block">City</Label>
+          <Label htmlFor="wlCity" className="text-charcoal mb-1.5 block text-xs">
+            City
+          </Label>
           <Input
             id="wlCity"
             name="city"
             autoComplete="address-level2"
             value={city}
-            className="border-ash focus-visible:ring-black rounded-[4px] h-11 animate-none"
+            className="border-ash h-11 animate-none rounded-[4px] focus-visible:ring-black"
             onChange={(e) => setCity(e.target.value)}
           />
         </div>
         <div>
-          <Label htmlFor="wlPhone" className="text-charcoal text-xs mb-1.5 block">Phone (optional)</Label>
+          <Label htmlFor="wlPhone" className="text-charcoal mb-1.5 block text-xs">
+            Phone (optional)
+          </Label>
           <Input
             id="wlPhone"
             name="phone"
             type="tel"
             autoComplete="tel"
             value={phone}
-            className="border-ash focus-visible:ring-black rounded-[4px] h-11 animate-none"
+            className="border-ash h-11 animate-none rounded-[4px] focus-visible:ring-black"
             onChange={(e) => setPhone(e.target.value)}
           />
         </div>
       </div>
 
-      <p className="text-smoke mb-6 text-xs font-sans">
+      <p className="text-smoke mb-6 font-sans text-xs">
         We&apos;ll only use this to reach out about the founding cohort.
       </p>
 
@@ -180,7 +190,11 @@ export function WaitlistForm() {
         </p>
       )}
 
-      <Button type="submit" className="w-full bg-black text-white hover:bg-black/90 rounded-[4px] h-11 font-sans text-sm uppercase tracking-wider font-normal" disabled={status === "submitting"}>
+      <Button
+        type="submit"
+        className="h-11 w-full rounded-[4px] bg-black font-sans text-sm font-normal tracking-wider text-white uppercase hover:bg-black/90"
+        disabled={status === "submitting"}
+      >
         {status === "submitting" ? "Reserving your spot…" : "Reserve My Spot"}
       </Button>
     </form>

@@ -85,14 +85,13 @@ export function CartClient({ userAddresses }: CartClientProps) {
   }
 
   function updateQty(id: string, delta: number) {
-    const updated = cartItems
-      .map((item) => {
-        if (item.id === id) {
-          const newQty = item.quantity + delta;
-          return { ...item, quantity: Math.max(1, newQty) };
-        }
-        return item;
-      });
+    const updated = cartItems.map((item) => {
+      if (item.id === id) {
+        const newQty = item.quantity + delta;
+        return { ...item, quantity: Math.max(1, newQty) };
+      }
+      return item;
+    });
     saveCart(updated);
   }
 
@@ -118,7 +117,8 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
     setIsCheckingOut(true);
 
-    const selectedAddr = userAddresses.find((a) => a.id === selectedAddressId) || userAddresses[0];
+    const selectedAddr =
+      userAddresses.find((a) => a.id === selectedAddressId) || userAddresses[0];
 
     const order = {
       // eslint-disable-next-line react-hooks/purity
@@ -153,15 +153,21 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
   if (cartItems.length === 0) {
     return (
-      <div className="text-center py-16">
-        <div className="mx-auto w-16 h-16 bg-cream-paper text-forest-green flex items-center justify-center rounded-none border border-ash mb-4">
+      <div className="py-16 text-center">
+        <div className="bg-cream-paper text-brand-yellow border-ash mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-none border">
           <ShoppingBag className="h-8 w-8" />
         </div>
-        <h2 className="font-nantes text-2xl text-ink-black font-normal">Your cart is empty</h2>
-        <p className="text-caption font-graphik text-charcoal mt-2 max-w-sm mx-auto leading-relaxed">
-          Looks like you haven&apos;t added any quality Indian toys or crafts to your basket yet.
+        <h2 className="font-nantes text-ink-black text-2xl font-normal">
+          Your cart is empty
+        </h2>
+        <p className="text-caption font-graphik text-charcoal mx-auto mt-2 max-w-sm leading-relaxed">
+          Looks like you haven&apos;t added any quality Indian toys or crafts to your
+          basket yet.
         </p>
-        <Button asChild className="mt-8 bg-forest-green hover:bg-forest-mid text-white rounded-none font-graphik text-xs font-normal tracking-[0.05em] uppercase h-11 px-8 border-none">
+        <Button
+          asChild
+          className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik mt-8 h-11 rounded-none border-none px-8 text-xs font-normal tracking-[0.05em] text-white uppercase"
+        >
           <Link href="/discover">Continue Shopping</Link>
         </Button>
       </div>
@@ -169,42 +175,59 @@ export function CartClient({ userAddresses }: CartClientProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+    <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-3">
       {/* Cart Items List */}
-      <div className="lg:col-span-2 space-y-6">
-        <h2 className="font-nantes text-xl text-ink-black font-normal mb-4 border-b border-ash pb-3">Your Items ({cartItems.length})</h2>
+      <div className="space-y-6 lg:col-span-2">
+        <h2 className="font-nantes text-ink-black border-ash mb-4 border-b pb-3 text-xl font-normal">
+          Your Items ({cartItems.length})
+        </h2>
 
-        <div className="divide-y divide-ash border border-ash bg-pure-white rounded-none overflow-hidden">
+        <div className="divide-ash border-ash bg-pure-white divide-y overflow-hidden rounded-none border">
           {cartItems.map((item) => (
-            <div key={item.id} className="flex flex-col sm:flex-row gap-4 p-5 hover:bg-cream-paper/40 transition-colors">
-              <div className="w-20 h-20 rounded-none overflow-hidden bg-cream-paper shrink-0 border border-ash relative">
+            <div
+              key={item.id}
+              className="hover:bg-cream-paper/40 flex flex-col gap-4 p-5 transition-colors sm:flex-row"
+            >
+              <div className="bg-cream-paper border-ash relative h-20 w-20 shrink-0 overflow-hidden rounded-none border">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="h-full w-full object-cover"
+                />
               </div>
-              <div className="flex-1 flex flex-col justify-between">
+              <div className="flex flex-1 flex-col justify-between">
                 <div>
-                  <div className="flex justify-between items-start gap-4">
+                  <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h4 className="font-graphik font-semibold text-ink-black text-sm sm:text-base leading-snug">{item.name}</h4>
-                      <span className="text-[10px] text-smoke uppercase font-graphik font-medium block mt-1">{item.category}</span>
+                      <h4 className="font-graphik text-ink-black text-sm leading-snug font-semibold sm:text-base">
+                        {item.name}
+                      </h4>
+                      <span className="text-smoke font-graphik mt-1 block text-[10px] font-medium uppercase">
+                        {item.category}
+                      </span>
                     </div>
-                    <span className="font-mono text-sm sm:text-base font-semibold text-forest-green shrink-0">₹{item.price * item.quantity}</span>
+                    <span className="text-brand-yellow shrink-0 font-mono text-sm font-semibold sm:text-base">
+                      ₹{item.price * item.quantity}
+                    </span>
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center mt-4">
-                  <div className="flex items-center border border-ash rounded-none h-9 bg-pure-white">
+                <div className="mt-4 flex items-center justify-between">
+                  <div className="border-ash bg-pure-white flex h-9 items-center rounded-none border">
                     <button
                       onClick={() => updateQty(item.id, -1)}
-                      className="px-2.5 h-full text-smoke hover:text-ink-black hover:bg-cream-paper flex items-center justify-center transition-colors focus:outline-none"
+                      className="text-smoke hover:text-ink-black hover:bg-cream-paper flex h-full items-center justify-center px-2.5 transition-colors focus:outline-none"
                       title="Decrease quantity"
                     >
                       <Minus className="h-3.5 w-3.5" />
                     </button>
-                    <span className="px-3 text-sm font-semibold text-ink-black font-mono">{item.quantity}</span>
+                    <span className="text-ink-black px-3 font-mono text-sm font-semibold">
+                      {item.quantity}
+                    </span>
                     <button
                       onClick={() => updateQty(item.id, 1)}
-                      className="px-2.5 h-full text-smoke hover:text-ink-black hover:bg-cream-paper flex items-center justify-center transition-colors focus:outline-none"
+                      className="text-smoke hover:text-ink-black hover:bg-cream-paper flex h-full items-center justify-center px-2.5 transition-colors focus:outline-none"
                       title="Increase quantity"
                     >
                       <Plus className="h-3.5 w-3.5" />
@@ -213,7 +236,7 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
                   <button
                     onClick={() => removeItem(item.id)}
-                    className="text-smoke hover:text-red-600 p-2 hover:bg-red-50 transition-colors focus:outline-none"
+                    className="text-smoke p-2 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none"
                     title="Remove item"
                   >
                     <Trash2 className="h-4.5 w-4.5" />
@@ -226,43 +249,57 @@ export function CartClient({ userAddresses }: CartClientProps) {
       </div>
 
       {/* Checkout Summary panel */}
-      <div className="lg:col-span-1 border border-ash bg-pure-white rounded-none p-6 space-y-6">
-        <h3 className="font-nantes text-lg text-ink-black font-normal border-b border-ash pb-3">Order Summary</h3>
+      <div className="border-ash bg-pure-white space-y-6 rounded-none border p-6 lg:col-span-1">
+        <h3 className="font-nantes text-ink-black border-ash border-b pb-3 text-lg font-normal">
+          Order Summary
+        </h3>
 
-        <dl className="space-y-3 text-sm font-graphik">
+        <dl className="font-graphik space-y-3 text-sm">
           <div className="flex justify-between">
             <dt className="text-charcoal">Subtotal</dt>
-            <dd className="font-mono font-medium text-ink-black">₹{subtotal.toLocaleString()}</dd>
+            <dd className="text-ink-black font-mono font-medium">
+              ₹{subtotal.toLocaleString()}
+            </dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-charcoal">GST (18%)</dt>
-            <dd className="font-mono font-medium text-ink-black">₹{tax.toLocaleString()}</dd>
+            <dd className="text-ink-black font-mono font-medium">
+              ₹{tax.toLocaleString()}
+            </dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-charcoal">Shipping</dt>
-            <dd className="font-mono font-medium text-ink-black">{shipping === 0 ? "FREE" : `₹${shipping}`}</dd>
+            <dd className="text-ink-black font-mono font-medium">
+              {shipping === 0 ? "FREE" : `₹${shipping}`}
+            </dd>
           </div>
           {shipping > 0 && (
-            <p className="text-[10px] text-smoke leading-relaxed italic">
-              * Add ₹{(1500 - subtotal)} more for free delivery.
+            <p className="text-smoke text-[10px] leading-relaxed italic">
+              * Add ₹{1500 - subtotal} more for free delivery.
             </p>
           )}
-          <div className="border-t border-ash pt-3 flex justify-between font-semibold text-base">
-            <dt className="text-forest-green font-graphik">Total Amount</dt>
-            <dd className="font-mono text-forest-green">₹{total.toLocaleString()}</dd>
+          <div className="border-ash flex justify-between border-t pt-3 text-base font-semibold">
+            <dt className="text-brand-yellow font-graphik">Total Amount</dt>
+            <dd className="text-brand-yellow font-mono">₹{total.toLocaleString()}</dd>
           </div>
         </dl>
 
-        <form onSubmit={handleCheckout} className="space-y-4 pt-4 border-t border-ash">
+        <form onSubmit={handleCheckout} className="border-ash space-y-4 border-t pt-4">
           {/* Shipping Address Selection */}
           <div>
-            <Label htmlFor="address-select" className="text-[10px] font-medium text-smoke uppercase tracking-wider mb-1.5 block font-graphik">
+            <Label
+              htmlFor="address-select"
+              className="text-smoke font-graphik mb-1.5 block text-[10px] font-medium tracking-wider uppercase"
+            >
               Deliver To
             </Label>
             {userAddresses.length === 0 ? (
-              <div className="p-3 border border-dashed bg-cream-paper border-ash text-xs text-charcoal rounded-none">
+              <div className="bg-cream-paper border-ash text-charcoal rounded-none border border-dashed p-3 text-xs">
                 No addresses found.{" "}
-                <Link href="/profile" className="underline font-semibold text-forest-green">
+                <Link
+                  href="/profile"
+                  className="text-brand-yellow font-semibold underline"
+                >
                   Add address in profile
                 </Link>{" "}
                 first.
@@ -273,7 +310,7 @@ export function CartClient({ userAddresses }: CartClientProps) {
                   id="address-select"
                   value={selectedAddressId}
                   onChange={(e) => setSelectedAddressId(e.target.value)}
-                  className="w-full h-11 border border-ash rounded-none px-3 bg-pure-white text-xs text-ink-black focus:outline-none focus:border-ink-black font-graphik"
+                  className="border-ash bg-pure-white text-ink-black focus:border-ink-black font-graphik h-11 w-full rounded-none border px-3 text-xs focus:outline-none"
                   required
                 >
                   {userAddresses.map((addr) => (
@@ -282,23 +319,23 @@ export function CartClient({ userAddresses }: CartClientProps) {
                     </option>
                   ))}
                 </select>
-                <MapPin className="absolute right-3 top-3.5 h-4 w-4 text-smoke pointer-events-none" />
+                <MapPin className="text-smoke pointer-events-none absolute top-3.5 right-3 h-4 w-4" />
               </div>
             )}
           </div>
 
           {/* Payment Method Selector */}
           <div>
-            <Label className="text-[10px] font-medium text-smoke uppercase tracking-wider mb-1.5 block font-graphik">
+            <Label className="text-smoke font-graphik mb-1.5 block text-[10px] font-medium tracking-wider uppercase">
               Payment Method
             </Label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setPaymentMethod("cod")}
-                className={`flex h-11 items-center justify-center gap-1.5 rounded-none border text-xs font-semibold uppercase tracking-wider transition-colors font-graphik focus:outline-none ${
+                className={`font-graphik flex h-11 items-center justify-center gap-1.5 rounded-none border text-xs font-semibold tracking-wider uppercase transition-colors focus:outline-none ${
                   paymentMethod === "cod"
-                    ? "border-forest-green bg-forest-green text-white"
+                    ? "border-brand-yellow bg-brand-yellow text-white"
                     : "border-ash bg-pure-white text-charcoal hover:border-ink-black"
                 }`}
               >
@@ -307,9 +344,9 @@ export function CartClient({ userAddresses }: CartClientProps) {
               <button
                 type="button"
                 onClick={() => setPaymentMethod("online")}
-                className={`flex h-11 items-center justify-center gap-1.5 rounded-none border text-xs font-semibold uppercase tracking-wider transition-colors font-graphik focus:outline-none ${
+                className={`font-graphik flex h-11 items-center justify-center gap-1.5 rounded-none border text-xs font-semibold tracking-wider uppercase transition-colors focus:outline-none ${
                   paymentMethod === "online"
-                    ? "border-forest-green bg-forest-green text-white"
+                    ? "border-brand-yellow bg-brand-yellow text-white"
                     : "border-ash bg-pure-white text-charcoal hover:border-ink-black"
                 }`}
               >
@@ -320,7 +357,7 @@ export function CartClient({ userAddresses }: CartClientProps) {
 
           <Button
             type="submit"
-            className="w-full bg-forest-green hover:bg-forest-mid text-white rounded-none font-graphik text-xs font-normal tracking-[0.05em] uppercase h-12 mt-4 border-none"
+            className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik mt-4 h-12 w-full rounded-none border-none text-xs font-normal tracking-[0.05em] text-white uppercase"
             disabled={isCheckingOut || userAddresses.length === 0}
           >
             {isCheckingOut ? "Processing..." : "Place Order"}

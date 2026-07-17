@@ -63,11 +63,15 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 
   if (step === "otp") {
     return (
-      <form onSubmit={handleOtpSubmit} className="text-left animate-fade-in">
+      <form onSubmit={handleOtpSubmit} className="animate-fade-in text-left">
         <div className="mb-6">
-          <h3 className="font-serif text-xl text-black mb-1.5 font-normal">Enter Verification Code</h3>
-          <p className="text-xs text-smoke leading-relaxed">
-            We have sent a 6-digit security code to <strong className="text-black font-semibold font-mono">{email}</strong>. Please enter it below to complete your login.
+          <h3 className="mb-1.5 font-serif text-xl font-normal text-black">
+            Enter Verification Code
+          </h3>
+          <p className="text-smoke text-xs leading-relaxed">
+            We have sent a 6-digit security code to{" "}
+            <strong className="font-mono font-semibold text-black">{email}</strong>.
+            Please enter it below to complete your login.
           </p>
         </div>
 
@@ -83,7 +87,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             value={otpToken}
             onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ""))}
             required
-            className="rounded-none border-ash focus-visible:ring-black font-mono tracking-widest text-center text-lg h-12"
+            className="border-ash h-12 rounded-none text-center font-mono text-lg tracking-widest focus-visible:ring-black"
           />
         </div>
 
@@ -93,14 +97,18 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           </p>
         )}
 
-        <div className="flex flex-col gap-3 mt-6">
-          <Button type="submit" className="w-full bg-black text-white hover:bg-black/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
+        <div className="mt-6 flex flex-col gap-3">
+          <Button
+            type="submit"
+            className="h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
+            disabled={isPending}
+          >
             {isPending ? "Verifying..." : "Verify & Sign In"}
           </Button>
           <button
             type="button"
             onClick={() => setStep("credentials")}
-            className="text-xs text-smoke hover:text-black text-center hover:underline"
+            className="text-smoke text-center text-xs hover:text-black hover:underline"
             disabled={isPending}
           >
             ← Back to credentials
@@ -121,12 +129,12 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="rounded-none border-ash focus-visible:ring-black"
+          className="border-ash rounded-none focus-visible:ring-black"
         />
       </div>
 
-      <div className="mb-2 relative">
-        <div className="flex justify-between items-center mb-1">
+      <div className="relative mb-2">
+        <div className="mb-1 flex items-center justify-between">
           <Label htmlFor="password">Password</Label>
           <Link
             href="/forgot-password"
@@ -142,7 +150,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="rounded-none border-ash focus-visible:ring-black"
+          className="border-ash rounded-none focus-visible:ring-black"
         />
       </div>
 
@@ -152,7 +160,11 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         </p>
       )}
 
-      <Button type="submit" className="mt-6 w-full bg-black text-white hover:bg-black/90 rounded-none font-medium uppercase tracking-wider h-11" disabled={isPending}>
+      <Button
+        type="submit"
+        className="mt-6 h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
+        disabled={isPending}
+      >
         {isPending ? "Sending OTP..." : "Sign In"}
       </Button>
     </form>
