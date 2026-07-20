@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
-
-const MAX_VIDEO_BYTES = 50 * 1024 * 1024; // 50MB
-const MAX_THUMB_BYTES = 5 * 1024 * 1024; // 5MB
+import { validateFileContent } from "@/lib/file-validation";
 
 export function ReelUploader({
   productId,
@@ -30,21 +28,31 @@ export function ReelUploader({
     const video = videoRef.current?.files?.[0];
     const thumb = thumbRef.current?.files?.[0];
 
+    setStatus("uploading");
+    setError(null);
+
     if (!video) {
-      setError("Choose a video file first.");
-      return;
-    }
-    if (video.size > MAX_VIDEO_BYTES) {
-      setError("Video must be under 50MB.");
-      return;
-    }
-    if (thumb && thumb.size > MAX_THUMB_BYTES) {
-      setError("Thumbnail must be under 5MB.");
+      setError("Please select a video file first.");
       return;
     }
 
-    setStatus("uploading");
-    setError(null);
+    // Validate video file
+    const videoValidation = await validateFileContent(video, ["video"]);
+    if (!videoValidation.valid) {
+      setStatus("error");
+      setError(videoValidation.error || "Invalid video file content.");
+      return;
+    }
+
+    // Validate optional thumbnail image
+    if (thumb) {
+      const thumbValidation = await validateFileContent(thumb, ["image"]);
+      if (!thumbValidation.valid) {
+        setStatus("error");
+        setError(thumbValidation.error || "Invalid thumbnail image content.");
+        return;
+      }
+    }
 
     const supabase = createClient();
     const stamp = Date.now();

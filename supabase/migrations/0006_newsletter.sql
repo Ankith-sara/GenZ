@@ -1,5 +1,5 @@
 -- ============================================================
--- GenZ — Newsletter Subscribers
+-- Newsletter Subscribers
 -- ============================================================
 
 create table public.newsletter_subscribers (

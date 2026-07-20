@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/require-role";
 import { parseMaterials } from "@/lib/products";
 import type { ProductStatus } from "@/types/database";
+import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { productSchema, variantSchema } from "@/lib/validation";
 
 export interface ProductFormState {
   error?: string;
@@ -27,12 +29,22 @@ export async function createProduct(
   formData: FormData
 ): Promise<ProductFormState> {
   const session = await requireRole("manufacturer");
-  const { name, category, age_group, description, price_inr, materials } =
-    parseProductFields(formData);
 
-  if (!name) return { error: "Product name is required." };
-  if (price_inr !== null && Number.isNaN(price_inr)) {
-    return { error: "Price must be a number." };
+  // 1. Rate Limit
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "create_product",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Parse and Validate
+  const fields = parseProductFields(formData);
+  const validation = productSchema.safeParse(fields);
+  if (!validation.success) {
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
@@ -40,20 +52,24 @@ export async function createProduct(
     .from("products")
     .insert({
       manufacturer_id: session.userId,
-      name,
-      category,
-      age_group,
-      description: description || null,
-      price_inr,
-      materials,
+      name: validation.data.name,
+      category: validation.data.category,
+      age_group: validation.data.age_group,
+      description: validation.data.description || null,
+      price_inr: validation.data.price_inr,
+      materials: validation.data.materials,
     })
     .select("id")
     .single();
 
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "create_product",
+    identifier: session.userId,
+  });
+
   if (error) {
-    console.error(error);
-    // The insert policy requires a verified manufacturer — surface that
-    // distinctly rather than a generic database error.
+    console.error("Create product DB error:", error);
     if (error.code === "42501") {
       return {
         error:
@@ -73,30 +89,46 @@ export async function updateProduct(
   formData: FormData
 ): Promise<ProductFormState> {
   const session = await requireRole("manufacturer");
-  const { name, category, age_group, description, price_inr, materials } =
-    parseProductFields(formData);
 
-  if (!name) return { error: "Product name is required." };
-  if (price_inr !== null && Number.isNaN(price_inr)) {
-    return { error: "Price must be a number." };
+  // 1. Rate Limit
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "update_product",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Parse and Validate
+  const fields = parseProductFields(formData);
+  const validation = productSchema.safeParse(fields);
+  if (!validation.success) {
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
   const { error } = await supabase
     .from("products")
     .update({
-      name,
-      category,
-      age_group,
-      description: description || null,
-      price_inr,
-      materials,
+      name: validation.data.name,
+      category: validation.data.category,
+      age_group: validation.data.age_group,
+      description: validation.data.description || null,
+      price_inr: validation.data.price_inr,
+      materials: validation.data.materials,
     })
     .eq("id", productId)
     .eq("manufacturer_id", session.userId);
 
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "update_product",
+    identifier: session.userId,
+  });
+
   if (error) {
-    console.error(error);
+    console.error("Update product DB error:", error);
     return { error: "Could not save changes. Please try again." };
   }
 
@@ -107,13 +139,27 @@ export async function updateProduct(
 
 export async function setProductStatus(productId: string, status: ProductStatus) {
   const session = await requireRole("manufacturer");
-  const supabase = await createClient();
 
+  // Rate Limit
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "set_product_status",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) return;
+
+  const supabase = await createClient();
   await supabase
     .from("products")
     .update({ status })
     .eq("id", productId)
     .eq("manufacturer_id", session.userId);
+
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "set_product_status",
+    identifier: session.userId,
+  });
 
   revalidatePath(`/dashboard/manufacturer/products/${productId}`);
   revalidatePath("/dashboard/manufacturer/products");
@@ -121,10 +167,17 @@ export async function setProductStatus(productId: string, status: ProductStatus)
 
 export async function deleteProduct(productId: string) {
   const session = await requireRole("manufacturer");
+
+  // Rate Limit
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "delete_product",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) return;
+
   const supabase = await createClient();
 
-  // Pull reel file paths first so we can clean up storage after the row
-  // (and its reels, via ON DELETE CASCADE) are gone.
   const { data: reels } = await supabase
     .from("reels")
     .select("video_path, thumbnail_path")
@@ -151,6 +204,12 @@ export async function deleteProduct(productId: string) {
     await supabase.storage.from("product-media").remove(paths);
   }
 
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "delete_product",
+    identifier: session.userId,
+  });
+
   revalidatePath("/dashboard/manufacturer/products");
   redirect("/dashboard/manufacturer/products");
 }
@@ -166,37 +225,52 @@ export async function addVariant(
 ): Promise<VariantFormState> {
   const session = await requireRole("manufacturer");
 
+  // 1. Rate Limit
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "add_variant",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Parse and Validate
   const variant_name = String(formData.get("variant_name") ?? "").trim();
   const variant_value = String(formData.get("variant_value") ?? "").trim();
   const priceRaw = String(formData.get("price_inr") ?? "").trim();
   const stockRaw = String(formData.get("stock_qty") ?? "").trim();
-  const price_inr = priceRaw ? Number(priceRaw) : null;
-  const stock_qty = stockRaw ? Number(stockRaw) : null;
+  const price_inr = priceRaw ? Number(priceRaw) : undefined;
+  const stock_qty = stockRaw ? Number(stockRaw) : undefined;
 
-  if (!variant_name || !variant_value) {
-    return {
-      error: "Both a variant name (e.g. Color) and value (e.g. Red) are required.",
-    };
-  }
-  if (price_inr !== null && Number.isNaN(price_inr)) {
-    return { error: "Price override must be a number." };
-  }
-  if (stock_qty !== null && Number.isNaN(stock_qty)) {
-    return { error: "Stock must be a number." };
+  const validation = variantSchema.safeParse({
+    variant_name,
+    variant_value,
+    price_inr,
+    stock_qty,
+  });
+  if (!validation.success) {
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.from("product_variants").insert({
     product_id: productId,
     manufacturer_id: session.userId,
-    variant_name,
-    variant_value,
-    price_inr,
-    stock_qty,
+    variant_name: validation.data.variant_name,
+    variant_value: validation.data.variant_value,
+    price_inr: validation.data.price_inr ?? null,
+    stock_qty: validation.data.stock_qty ?? null,
+  });
+
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "add_variant",
+    identifier: session.userId,
   });
 
   if (error) {
-    console.error(error);
+    console.error("Add variant DB error:", error);
     return { error: "Could not add the variant. Please try again." };
   }
 
@@ -206,6 +280,15 @@ export async function addVariant(
 
 export async function deleteVariant(productId: string, variantId: string) {
   const session = await requireRole("manufacturer");
+
+  // Rate Limit
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "delete_variant",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) return;
+
   const supabase = await createClient();
 
   await supabase
@@ -213,6 +296,12 @@ export async function deleteVariant(productId: string, variantId: string) {
     .delete()
     .eq("id", variantId)
     .eq("manufacturer_id", session.userId);
+
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "delete_variant",
+    identifier: session.userId,
+  });
 
   revalidatePath(`/dashboard/manufacturer/products/${productId}`);
 }

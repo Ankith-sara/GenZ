@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { createClient } from "@/lib/supabase/client";
+import { submitContactMessage } from "@/app/actions/public-actions";
 
 const REASONS = [
   "General",
@@ -27,6 +27,7 @@ export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">(
     "idle"
   );
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,16 +41,15 @@ export function ContactForm() {
     if (Object.keys(nextErrors).length > 0) return;
 
     setStatus("submitting");
-    const supabase = createClient();
-    const { error } = await supabase.from("contact_messages").insert({
+    const result = await submitContactMessage({
       name: name.trim(),
       email: email.trim(),
       reason,
       message: message.trim(),
     });
 
-    if (error) {
-      console.error(error);
+    if (result.error) {
+      setErrorMsg(result.error);
       setStatus("error");
       return;
     }
@@ -187,7 +187,7 @@ export function ContactForm() {
 
       {status === "error" && (
         <p role="alert" className="text-destructive font-graphik mb-4 text-sm">
-          Something went wrong. Please try again.
+          {errorMsg || "Something went wrong. Please try again."}
         </p>
       )}
 

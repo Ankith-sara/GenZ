@@ -6,9 +6,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { validateFileContent } from "@/lib/file-validation";
 import { productMediaUrl } from "@/lib/products";
-
-const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5MB
 
 export function ProductCoverUploader({
   productId,
@@ -29,13 +28,15 @@ export function ProductCoverUploader({
     e.preventDefault();
     const file = fileInputRef.current?.files?.[0];
     if (!file) return;
-    if (file.size > MAX_FILE_BYTES) {
-      setError("Image must be under 5MB.");
-      return;
-    }
-
     setStatus("uploading");
     setError(null);
+
+    const validation = await validateFileContent(file, ["image"]);
+    if (!validation.valid) {
+      setStatus("error");
+      setError(validation.error || "Invalid file content.");
+      return;
+    }
 
     const supabase = createClient();
     const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");

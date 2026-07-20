@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Upload, Trash2, Check, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { validateFileContent } from "@/lib/file-validation";
 import type {
   DocType,
   ManufacturerDocument,
@@ -13,7 +14,6 @@ import type {
 import { STATUS_LABEL } from "@/lib/verification";
 import { submitForVerification } from "@/app/dashboard/manufacturer/onboarding/actions";
 
-const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 const ACCEPTED = ".pdf,.jpg,.jpeg,.png,.webp";
 
 type WizardStep = {
@@ -71,17 +71,20 @@ function StepUploader({
   async function handleUpload(e: React.FormEvent) {
     e.preventDefault();
     const file = fileInputRef.current?.files?.[0];
+    setStatus("uploading");
+    setError(null);
+
     if (!file) {
-      setError("Choose a file first.");
-      return;
-    }
-    if (file.size > MAX_FILE_BYTES) {
-      setError("File must be under 10MB.");
+      setError("Please select a file first.");
       return;
     }
 
-    setStatus("uploading");
-    setError(null);
+    const validation = await validateFileContent(file, ["image", "pdf"]);
+    if (!validation.valid) {
+      setStatus("error");
+      setError(validation.error || "Invalid file content.");
+      return;
+    }
 
     const supabase = createClient();
     const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");

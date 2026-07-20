@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user-avatar";
 import { createClient } from "@/lib/supabase/client";
-
-const MAX_FILE_BYTES = 3 * 1024 * 1024; // 3MB
+import { validateFileContent } from "@/lib/file-validation";
 
 export function AvatarUploader({
   userId,
@@ -26,13 +25,15 @@ export function AvatarUploader({
     e.preventDefault();
     const file = fileInputRef.current?.files?.[0];
     if (!file) return;
-    if (file.size > MAX_FILE_BYTES) {
-      setError("Image must be under 3MB.");
-      return;
-    }
-
     setStatus("uploading");
     setError(null);
+
+    const validation = await validateFileContent(file, ["image"]);
+    if (!validation.valid) {
+      setStatus("error");
+      setError(validation.error || "Invalid file content.");
+      return;
+    }
 
     const supabase = createClient();
     const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");

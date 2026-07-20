@@ -11,7 +11,7 @@ import type { Role } from "@/types/database";
 const SIGNUP_ROLES: { value: Role; label: string; description: string }[] = [
   {
     value: "buyer",
-    label: "Buyer",
+    label: "User",
     description: "I want to discover and buy trusted Indian products.",
   },
   {

@@ -1,5 +1,5 @@
 -- ============================================================
--- GenZ — public marketing "Contact" page submissions
+-- public marketing "Contact" page submissions
 -- Distinct from `inquiries` (buyer → manufacturer, product-scoped):
 -- this is the general "Email / Contact Us" form on the About/Contact
 -- pages — press, partnerships, general questions, etc.

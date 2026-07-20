@@ -1,5 +1,5 @@
 -- ============================================================
--- GenZ — Inquiries schema (buyer → manufacturer)
+-- Inquiries schema (buyer → manufacturer)
 -- ============================================================
 
 -- 1. Inquiry status enum -------------------------------------------

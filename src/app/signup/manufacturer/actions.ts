@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { manufacturerSignupSchema } from "@/lib/validation";
 
 export interface ManufacturerSignupState {
   error?: string;
@@ -18,13 +20,31 @@ export async function signupManufacturer(
   ).trim();
   const businessType = String(formData.get("business_type") ?? "manufacturer");
 
-  if (!email || !password || !fullName) {
-    return {
-      error: "Please fill in your email, password, and owner/authorized person name.",
-    };
+  // 1. Rate Limiting Check
+  const rateLimit = await checkRateLimit({
+    endpointType: "auth",
+    actionName: "signup_manufacturer",
+    identifier: email,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
   }
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters." };
+
+  // 2. Schema Validation
+  const validation = manufacturerSignupSchema.safeParse({
+    email,
+    password,
+    fullName,
+    businessType,
+  });
+  if (!validation.success) {
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "signup_manufacturer",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: validation.error.issues[0].message };
   }
 
   // Gather ALL metadata based on business type to save into Auth Metadata
@@ -52,8 +72,23 @@ export async function signupManufacturer(
   });
 
   if (error) {
-    return { error: error.message };
+    console.error("Manufacturer signup error:", error);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "signup_manufacturer",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: "Failed to register manufacturer account. Please try again." };
   }
+
+  // Log successful attempt
+  await logRateLimitAttempt({
+    endpointType: "auth",
+    actionName: "signup_manufacturer",
+    identifier: email,
+    isFailed: false,
+  });
 
   return { success: true };
 }

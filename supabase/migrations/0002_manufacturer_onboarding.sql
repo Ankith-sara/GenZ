@@ -1,5 +1,5 @@
 -- ============================================================
--- GenZ — Manufacturer Onboarding & Verification schema
+-- Manufacturer Onboarding & Verification schema
 -- ============================================================
 
 -- 1. Verification status enum ------------------------------------

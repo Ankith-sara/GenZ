@@ -30,7 +30,7 @@ export default async function SignupPage({
 
           <div className="mx-auto max-w-md lg:mx-0">
             <h2 className="font-nantes text-ink-black mb-2 text-3xl font-normal">
-              Create your buyer account.
+              Create your account.
             </h2>
             <p className="font-graphik text-charcoal mb-8 text-sm">
               Discover and buy trusted, high-quality Indian products directly from the
@@ -88,7 +88,7 @@ export default async function SignupPage({
       {/* Right side: Visual Panel */}
       <div className="bg-charcoal relative hidden overflow-hidden lg:col-span-7 lg:block">
         <Image
-          src="/female_worker.png"
+          src="/signup_hero.png"
           alt="GenZ Sourcing Community"
           fill
           priority
@@ -99,7 +99,7 @@ export default async function SignupPage({
         {/* Brand visual text overlay */}
         <div className="absolute inset-0 z-20 flex flex-col justify-between p-16">
           <div className="font-graphik text-xs tracking-[0.3em] text-white/60 uppercase">
-            GenZ Buyers
+            GenZ Community
           </div>
           <div className="max-w-xl">
             <p className="font-nantes mb-6 text-4xl leading-tight text-white italic">

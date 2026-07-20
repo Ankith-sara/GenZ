@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { validateFileContent } from "@/lib/file-validation";
 import { productMediaUrl } from "@/lib/products";
 import type { ProductImage } from "@/types/database";
 
-const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGES = 8;
 
 export function ProductImageUploader({
@@ -34,14 +34,18 @@ export function ProductImageUploader({
       setError(`Up to ${MAX_IMAGES} gallery images per product.`);
       return;
     }
-    const oversize = files.find((f) => f.size > MAX_FILE_BYTES);
-    if (oversize) {
-      setError("Each image must be under 5MB.");
-      return;
-    }
-
     setStatus("uploading");
     setError(null);
+
+    // Validate all files first
+    for (const file of files) {
+      const validation = await validateFileContent(file, ["image"]);
+      if (!validation.valid) {
+        setStatus("error");
+        setError(validation.error || "Invalid file content.");
+        return;
+      }
+    }
 
     const supabase = createClient();
     let nextPosition = images.length;

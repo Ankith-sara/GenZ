@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClient } from "@/lib/supabase/client";
+import { submitWaitlist } from "@/app/actions/public-actions";
 
 const ROLES = [
   "Consumer",
@@ -25,9 +25,11 @@ export function WaitlistForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">(
     "idle"
   );
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setErrorMsg("");
 
     const nextErrors: typeof errors = {};
     if (!name.trim()) nextErrors.name = "Please enter your name.";
@@ -37,17 +39,16 @@ export function WaitlistForm() {
     if (Object.keys(nextErrors).length > 0) return;
 
     setStatus("submitting");
-    const supabase = createClient();
-    const { error } = await supabase.from("waitlist").insert({
+    const result = await submitWaitlist({
       name: name.trim(),
       email: email.trim(),
-      city: city.trim() || null,
-      phone: phone.trim() || null,
+      city: city.trim() || undefined,
+      phone: phone.trim() || undefined,
       role,
     });
 
-    if (error) {
-      console.error(error);
+    if (result.error) {
+      setErrorMsg(result.error);
       setStatus("error");
       return;
     }
@@ -186,7 +187,7 @@ export function WaitlistForm() {
 
       {status === "error" && (
         <p role="alert" className="text-destructive mb-4 text-sm">
-          Something went wrong. Please try again.
+          {errorMsg || "Something went wrong. Please try again."}
         </p>
       )}
 

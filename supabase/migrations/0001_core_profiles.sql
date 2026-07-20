@@ -1,5 +1,5 @@
 -- ============================================================
--- GenZ — Core & Profiles schema: roles, profiles, waitlist, avatars
+-- Core & Profiles schema: roles, profiles, waitlist, avatars
 -- ============================================================
 
 -- 1. Role enum -------------------------------------------------

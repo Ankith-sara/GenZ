@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/require-role";
+import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { adminRejectSchema } from "@/lib/validation";
 
 export interface ReviewState {
   error?: string;
@@ -11,6 +13,15 @@ export interface ReviewState {
 
 export async function approveManufacturer(manufacturerId: string) {
   const session = await requireRole("admin");
+
+  // Rate limit check
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "approve_manufacturer",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) return;
+
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -23,8 +34,14 @@ export async function approveManufacturer(manufacturerId: string) {
     })
     .eq("id", manufacturerId);
 
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "approve_manufacturer",
+    identifier: session.userId,
+  });
+
   if (error) {
-    console.error(error);
+    console.error("Approve manufacturer DB error:", error);
     return;
   }
 
@@ -37,11 +54,24 @@ export async function rejectManufacturer(
   formData: FormData
 ): Promise<ReviewState> {
   const session = await requireRole("admin");
+
+  // 1. Rate limit check
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "reject_manufacturer",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
   const manufacturerId = String(formData.get("manufacturerId") ?? "");
   const reason = String(formData.get("reason") ?? "").trim();
 
-  if (!reason) {
-    return { error: "Please explain what needs to change." };
+  // 2. Schema validation
+  const validation = adminRejectSchema.safeParse({ reason });
+  if (!validation.success) {
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
@@ -49,14 +79,20 @@ export async function rejectManufacturer(
     .from("manufacturer_profiles")
     .update({
       status: "rejected",
-      rejection_reason: reason,
+      rejection_reason: validation.data.reason,
       reviewed_at: new Date().toISOString(),
       reviewed_by: session.userId,
     })
     .eq("id", manufacturerId);
 
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "reject_manufacturer",
+    identifier: session.userId,
+  });
+
   if (error) {
-    console.error(error);
+    console.error("Reject manufacturer DB error:", error);
     return { error: "Could not save the review. Please try again." };
   }
 

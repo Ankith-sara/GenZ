@@ -3,16 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  ShieldCheck,
-  ArrowUpRight,
-  Play,
-  Heart,
-  MessageCircle,
-  Share2,
-  Star,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowUpRight, Play, Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const stakeholdersList = [
@@ -43,7 +34,7 @@ const stakeholdersList = [
   {
     index: "05",
     name: "Investors",
-    image: "/india_glow_map.png",
+    image: "/investors.png",
     copy: "Verified manufacturer listings and regional innovation clusters worth backing. Gain access to transparent manufacturing metrics, production capacity data, and growth indicators.",
   },
 ];
@@ -53,6 +44,7 @@ const pillars = [
     index: "01",
     title: "Trust Layer",
     copy: "GST verification, factory validation and certification checks run on every seller before they ever list a product.",
+    featured: true,
   },
   {
     index: "02",
@@ -83,37 +75,24 @@ const stats = [
   { value: "1M+", label: "Jobs & livelihoods" },
 ];
 
+const marqueeLogos = ["sidbi", "NSIC", "DPIIT", "MAKE IN INDIA"];
+
 export default function HomePage() {
   const [activeStakeholder, setActiveStakeholder] = useState(0);
 
   return (
     <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
-      <section className="border-ash relative flex min-h-[600px] w-full items-center overflow-hidden border-b px-6 py-20 sm:min-h-[700px] sm:px-12 lg:min-h-[750px]">
-        {/* Background Image with Dark/Warm Overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/hero_background.png"
-            alt="GenZ Toy Manufacturing Workshop"
-            fill
-            priority
-            className="object-cover object-center"
-          />
-          {/* Overlay to ensure text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-transparent lg:from-black/90 lg:via-black/55 lg:to-black/30" />
-          {/* Accent glow on top left */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(226,161,111,0.2),_transparent_50%)]" />
-        </div>
-
-        <div className="relative z-10 mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-10 lg:grid-cols-12">
-          {/* Left Column: text overlay (now high contrast white/cream text on dark overlay) */}
-          <div className="flex flex-col justify-center space-y-6 text-left lg:col-span-8">
-            <span className="text-caption font-graphik tracking-[0.28em] text-white/70 uppercase">
+      <section className="border-ash relative w-full overflow-hidden border-b">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 lg:grid-cols-12">
+          <div className="relative z-10 flex flex-col justify-center gap-8 px-6 py-16 sm:px-12 sm:py-20 lg:col-span-6 lg:py-0">
+            <span className="text-caption font-graphik text-smoke tracking-[0.28em] uppercase">
               Made in India
             </span>
 
-            <h1 className="font-nantes max-w-3xl text-5xl leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[4.8rem]">
-              From import dependency <br />
-              to{" "}
+            <h1 className="font-nantes max-w-xl text-5xl leading-[1.03] tracking-tight sm:text-6xl lg:text-[4.2rem]">
+              From import
+              <br />
+              dependency to{" "}
               <span className="text-brand-yellow-dark relative inline-block font-medium italic">
                 opportunity
                 <svg
@@ -128,12 +107,12 @@ export default function HomePage() {
               .
             </h1>
 
-            <p className="font-graphik mt-4 max-w-xl text-lg leading-relaxed text-white/80">
+            <p className="font-graphik text-charcoal max-w-md text-lg leading-relaxed">
               GenZ connects Indian consumers directly with verified Indian manufacturers
               — trading imported guesswork for factory-validated trust.
             </p>
 
-            <div className="flex flex-wrap items-center gap-6 pt-4">
+            <div className="flex flex-wrap items-center gap-6">
               <Button
                 asChild
                 size="lg"
@@ -143,71 +122,95 @@ export default function HomePage() {
               </Button>
               <Link
                 href="/signup/manufacturer"
-                className="group text-body font-graphik inline-flex items-center gap-1.5 font-medium text-white underline decoration-white/30 underline-offset-4 transition-all hover:decoration-white"
+                className="group text-body font-graphik text-ink-black decoration-ash inline-flex items-center gap-1.5 font-medium underline underline-offset-4 transition-all hover:decoration-current"
               >
                 For manufacturers
                 <ArrowUpRight className="text-brand-yellow h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </div>
+          </div>
 
-            <dl className="mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-4 border-t border-white/10 pt-10 sm:grid-cols-2">
-              {[
-                "100% verified manufacturers",
-                "No imports, no fake resellers",
-                "GST & factory validated",
-                "Built for India, by India",
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-3">
-                  <ShieldCheck className="text-brand-yellow h-5 w-5 shrink-0" />
-                  <dd className="font-graphik text-sm leading-snug text-white/85">
-                    {item}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+          {/* Image column — full bleed, diagonal cut against the text column, with an overlapping metric card */}
+          <div className="relative min-h-[420px] lg:col-span-6 lg:min-h-[720px]">
+            <div
+              className="absolute inset-0 hidden lg:block"
+              style={{ clipPath: "polygon(6% 0, 100% 0, 100% 100%, 0 100%)" }}
+            >
+              <Image
+                src="/hero_background.png"
+                alt="GenZ Toy Manufacturing Workshop"
+                fill
+                priority
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+            </div>
+            <div className="absolute inset-0 lg:hidden">
+              <Image
+                src="/hero_background.png"
+                alt="GenZ Toy Manufacturing Workshop"
+                fill
+                priority
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-black/40" />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Core Pillars — list/grid hybrids with lines */}
+      {/* PILLARS — broken grid, one featured pillar, staggered offsets */}
       <section className="border-ash border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-[1280px]">
-          <div className="mb-14 max-w-xl">
-            <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
-              Foundations of Trust
-            </span>
-            <h2 className="font-nantes text-ink-black text-4xl sm:text-5xl">
-              The pillars that build direct commerce.
-            </h2>
+          <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div className="max-w-xl">
+              <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
+                Foundations of Trust
+              </span>
+              <h2 className="font-nantes text-ink-black text-4xl sm:text-5xl">
+                The pillars that build direct commerce.
+              </h2>
+            </div>
+            <p className="font-graphik text-charcoal max-w-xs text-sm leading-relaxed lg:text-right">
+              Five commitments, running underneath every listing, every reel, every
+              transaction.
+            </p>
           </div>
 
-          <div className="divide-ash divide-ash border-ash grid grid-cols-1 divide-y border-y lg:grid-cols-5 lg:divide-x lg:divide-y-0">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {pillars.map((pillar) => (
               <div
-                key={pillar.index}
-                className="flex min-h-[220px] flex-col justify-between py-8 first:pl-0 last:pr-0 lg:px-6 lg:py-12"
+                key={pillar.title}
+                className={`border-ash bg-pure-white relative overflow-hidden border p-8 md:p-10 ${
+                  pillar.featured ? "lg:col-span-2 lg:p-12" : "lg:col-span-1"
+                }`}
               >
-                <div>
-                  <span className="text-caption font-graphik text-brand-blue mb-3 block font-medium tracking-[0.1em]">
-                    {pillar.index}
-                  </span>
-                  <h3 className="font-nantes text-ink-black mb-3 text-xl font-normal">
+                <div className="relative">
+                  <h3
+                    className={`font-nantes text-ink-black mb-3 font-normal ${
+                      pillar.featured ? "text-3xl" : "text-xl"
+                    }`}
+                  >
                     {pillar.title}
                   </h3>
+                  <p
+                    className={`text-body font-graphik text-charcoal leading-relaxed ${
+                      pillar.featured ? "max-w-xl" : ""
+                    }`}
+                  >
+                    {pillar.copy}
+                  </p>
                 </div>
-                <p className="text-body font-graphik text-charcoal leading-relaxed">
-                  {pillar.copy}
-                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* What Makes Us Different */}
+      {/* WHAT MAKES US DIFFERENT — bento: one lead card + two stacked */}
       <section className="border-ash bg-pure-white border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-[1280px]">
-          <div className="mb-16 text-center">
+          <div className="mb-16 max-w-xl">
             <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
               Differentiation
             </span>
@@ -216,76 +219,72 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-            {/* Card 1: Video Reels */}
-            <div className="bg-cream-paper border-ash group relative flex h-full min-h-[520px] flex-col justify-between border p-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="bg-cream-paper border-ash flex flex-col justify-between gap-6 border p-8">
               <div>
-                <h3 className="font-nantes text-ink-black mb-3 text-2xl">
+                <h3 className="font-nantes text-ink-black mb-3 text-xl">
                   We show{" "}
                   <span className="text-brand-yellow font-semibold italic">
                     who makes
                   </span>{" "}
                   what you buy.
                 </h3>
-                <p className="text-body font-graphik text-charcoal leading-relaxed">
+                <p className="text-body font-graphik text-charcoal text-sm leading-relaxed">
                   Watch real reels from real factories. Complete process transparency
                   builds complete commercial trust.
                 </p>
               </div>
 
-              {/* iPhone Reel Mockup */}
-              <div className="border-ink-black relative mx-auto mt-6 h-60 w-44 overflow-hidden rounded-3xl border-4 bg-black">
-                <div className="absolute top-2 left-1/2 z-30 h-3 w-14 -translate-x-1/2 rounded-full bg-white/20" />
+              <div className="border-ink-black relative mx-auto h-40 w-28 shrink-0 overflow-hidden rounded-2xl border-4 bg-black">
+                <div className="absolute top-1 left-1/2 z-30 h-2 w-10 -translate-x-1/2 rounded-full bg-white/20" />
                 <div className="relative h-full w-full">
                   <Image
                     src="/machine_work.png"
                     alt="Reel Screen"
                     fill
                     className="object-cover opacity-90 brightness-95"
-                    sizes="180px"
+                    sizes="120px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-sm transition-transform group-hover:scale-105">
-                      <Play className="h-4 w-4 fill-white text-white" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-sm">
+                      <Play className="h-3 w-3 fill-white text-white" />
                     </div>
                   </div>
-                  <div className="absolute bottom-3 left-3 text-left">
-                    <span className="bg-brand-yellow-dark text-ink-black font-graphik rounded px-1.5 py-0.5 text-[8px] font-medium tracking-wide uppercase">
+                  <div className="absolute bottom-2 left-2 text-left">
+                    <span className="bg-brand-yellow-dark text-ink-black font-graphik rounded px-1 py-0.5 text-[6px] font-medium tracking-wide uppercase">
                       100% Verified
                     </span>
-                    <p className="font-graphik mt-1 text-[10px] font-semibold text-white">
-                      Precision machining process.
-                    </p>
-                  </div>
-                  <div className="absolute right-2 bottom-3 flex flex-col items-center gap-2 text-white/90">
-                    <Heart className="h-3.5 w-3.5 fill-red-500 text-red-500" />
-                    <MessageCircle className="h-3.5 w-3.5" />
-                    <Share2 className="h-3.5 w-3.5" />
                   </div>
                 </div>
               </div>
+
+              <Button
+                asChild
+                variant="outline"
+                className="border-ash text-ink-black hover:bg-ash/10 font-graphik h-11 w-full shrink-0 rounded-none bg-transparent text-[10px] tracking-[0.05em] uppercase"
+              >
+                <Link href="/discover">Watch reels</Link>
+              </Button>
             </div>
 
-            {/* Card 2: Import data */}
-            <div className="bg-cream-paper border-ash group relative flex h-full min-h-[520px] flex-col justify-between border p-8">
+            <div className="bg-cream-paper border-ash flex flex-col justify-between gap-6 border p-8">
               <div>
-                <h3 className="font-nantes text-ink-black mb-3 text-2xl">
-                  We turn import data into{" "}
+                <h3 className="font-nantes text-ink-black mb-3 text-xl">
+                  Import data becomes{" "}
                   <span className="text-brand-blue font-semibold italic">
-                    Indian opportunities
+                    Indian opportunity
                   </span>
                   .
                 </h3>
-                <p className="text-body font-graphik text-charcoal leading-relaxed">
+                <p className="text-body font-graphik text-charcoal text-sm leading-relaxed">
                   Our system highlights the top imported products India needs — routing
                   that demand to local makers.
                 </p>
               </div>
 
-              {/* Import Chart Graphic */}
-              <div className="my-6 flex w-full flex-col items-center">
-                <svg className="text-brand-blue h-32 w-full" viewBox="0 0 200 80">
+              <div className="flex h-40 w-full shrink-0 items-center justify-center">
+                <svg className="text-brand-blue h-20 w-full" viewBox="0 0 200 80">
                   <defs>
                     <linearGradient id="grad-blue" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="#D8D365" stopOpacity="0.15" />
@@ -312,48 +311,43 @@ export default function HomePage() {
                   />
                   <circle cx="190" cy="10" r="3" fill="#E6F082" />
                 </svg>
-                <span className="text-charcoal font-graphik mt-3 block text-center text-[10px] tracking-widest uppercase">
-                  Top Import Segments: Toys, Electronics, Spares
-                </span>
               </div>
 
               <Button
                 asChild
                 variant="outline"
-                className="border-ash text-ink-black hover:bg-ash/10 font-graphik h-11 w-full rounded-none bg-transparent text-[10px] tracking-[0.05em] uppercase"
+                className="border-ash text-ink-black hover:bg-ash/10 font-graphik h-11 w-full shrink-0 rounded-none bg-transparent text-[10px] tracking-[0.05em] uppercase"
               >
-                <Link href="/discover?import_gap=true">Explore Import Gaps</Link>
+                <Link href="/discover?import_gap=true">Explore gaps</Link>
               </Button>
             </div>
 
-            {/* Card 3: Innovation */}
-            <div className="bg-cream-paper border-ash group relative flex h-full min-h-[520px] flex-col justify-between border p-8">
+            <div className="bg-cream-paper border-ash flex flex-col justify-between gap-6 border p-8">
               <div>
-                <h3 className="font-nantes text-ink-black mb-3 text-2xl">
+                <h3 className="font-nantes text-ink-black mb-3 text-xl">
                   We promote{" "}
                   <span className="text-brand-yellow font-semibold italic">
                     innovation
                   </span>
                   , not replication.
                 </h3>
-                <p className="text-body font-graphik text-charcoal leading-relaxed">
+                <p className="text-body font-graphik text-charcoal text-sm leading-relaxed">
                   Encouraging Indian makers to redesign and upgrade — securing better
                   materials and larger export margins.
                 </p>
               </div>
 
-              {/* Speaker rendering illustration */}
-              <div className="relative mx-auto my-6 flex h-40 w-40 items-center justify-center">
-                <div className="bg-ink-black border-ash flex h-32 w-24 flex-col items-center justify-between border p-2">
-                  <div className="relative flex h-20 w-full flex-col items-center justify-center overflow-hidden border border-neutral-800 bg-neutral-900">
+              <div className="flex h-40 w-full shrink-0 items-center justify-center">
+                <div className="bg-ink-black border-ash flex h-24 w-18 flex-col items-center justify-between border p-2">
+                  <div className="relative flex h-12 w-full flex-col items-center justify-center overflow-hidden border border-neutral-800 bg-neutral-900">
                     <div className="absolute inset-0 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:6px_6px] opacity-10" />
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-700 bg-black">
-                      <div className="bg-brand-yellow-dark h-4.5 w-4.5 rounded-full" />
+                    <div className="flex h-5 w-5 items-center justify-center rounded-full border border-neutral-700 bg-black">
+                      <div className="bg-brand-yellow-dark h-2 w-2 rounded-full" />
                     </div>
                   </div>
-                  <div className="bg-pure-white border-ash text-charcoal font-graphik flex h-6 w-full items-center justify-between border-t px-2 text-[7px]">
+                  <div className="bg-pure-white border-ash text-charcoal font-graphik flex h-4 w-full items-center justify-between border-t px-2 text-[5px]">
                     <span>DESIGN #042</span>
-                    <div className="bg-brand-yellow h-1.5 w-1.5 rounded-full" />
+                    <div className="bg-brand-yellow h-1 w-1 rounded-full" />
                   </div>
                 </div>
               </div>
@@ -361,16 +355,16 @@ export default function HomePage() {
               <Button
                 asChild
                 variant="outline"
-                className="border-ash text-ink-black hover:bg-ash/10 font-graphik h-11 w-full rounded-none bg-transparent text-[10px] tracking-[0.05em] uppercase"
+                className="border-ash text-ink-black hover:bg-ash/10 font-graphik h-11 w-full shrink-0 rounded-none bg-transparent text-[10px] tracking-[0.05em] uppercase"
               >
-                <Link href="/discover?innovations=true">Discover Innovations</Link>
+                <Link href="/discover?innovations=true">See designs</Link>
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Our Community — interactive split grid */}
+      {/* COMMUNITY — image bleeds behind the list, watermark numeral */}
       <section className="border-ash bg-pure-white border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="mb-16 text-left">
@@ -384,7 +378,6 @@ export default function HomePage() {
 
           {/* Interactive Split Grid */}
           <div className="grid min-h-[500px] grid-cols-1 items-stretch gap-12 lg:grid-cols-12">
-            {/* Left Column: Interactive Menu List */}
             <div className="divide-ash border-ash flex flex-col justify-center divide-y border-t border-b lg:col-span-7">
               {stakeholdersList.map((s, idx) => {
                 const isActive = idx === activeStakeholder;
@@ -415,7 +408,6 @@ export default function HomePage() {
                       </div>
 
                       <div className="flex items-center gap-4">
-                        {/* Active Indicator Line */}
                         <div
                           className={`bg-brand-yellow hidden h-[1px] transition-all duration-500 md:block ${
                             isActive ? "w-24 opacity-100" : "w-0 opacity-0"
@@ -487,7 +479,6 @@ export default function HomePage() {
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 400px"
                     />
-                    {/* Subtle color highlight overlay */}
                     <div className="bg-brand-yellow/5 absolute inset-0" />
                   </div>
                 ))}
@@ -517,100 +508,113 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats & Impact Section */}
+      {/* STATS — unified bento with mission card folded into the same grid */}
       <section className="border-ash bg-pure-white border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-            {/* Left side stats grid */}
-            <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-7">
-              {stats.map((stat) => (
-                <div key={stat.label} className="border-ash border-l pl-6">
-                  <p className="font-nantes text-brand-yellow text-4xl font-normal sm:text-5xl">
-                    {stat.value}
-                  </p>
-                  <p className="text-caption font-graphik text-smoke mt-2 tracking-wider uppercase">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Right side Goal callout */}
-            <div className="lg:col-span-5">
-              <div className="bg-cream-paper border-ash border p-8 sm:p-10">
-                <span className="text-caption font-graphik text-brand-blue mb-3 block font-medium tracking-widest uppercase">
-                  The Mission
-                </span>
-                <h3 className="font-nantes text-ink-black mb-4 text-2xl">
-                  10 million Indian businesses by 2030.
-                </h3>
-                <p className="text-body font-graphik text-charcoal leading-relaxed">
-                  To build the most trusted direct-discovery commerce engine for Indian
-                  manufacturing — helping local factories grow, create jobs, and access
-                  the global market.
+          <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
+            {stats.map((stat, i) => (
+              <div key={stat.label} className="border-ash bg-cream-paper border p-8">
+                <p className="font-nantes text-brand-yellow text-5xl font-normal sm:text-6xl">
+                  {stat.value}
+                </p>
+                <p className="text-caption font-graphik text-smoke mt-3 tracking-wider uppercase">
+                  {stat.label}
                 </p>
               </div>
+            ))}
+          </div>
+
+          {/* Mission strip runs full-width beneath the stat row instead of sitting beside it */}
+          <div className="border-ash bg-ink-black text-pure-white mt-px flex flex-col gap-6 border border-t-0 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-xl">
+              <span className="text-caption font-graphik text-brand-yellow mb-3 block font-medium tracking-widest uppercase">
+                The Mission
+              </span>
+              <h3 className="font-nantes mb-2 text-2xl sm:text-3xl">
+                10 million Indian businesses by 2030.
+              </h3>
+              <p className="text-body font-graphik text-pure-white/70 leading-relaxed">
+                Building the most trusted direct-discovery commerce engine for Indian
+                manufacturing.
+              </p>
             </div>
+            <Button
+              asChild
+              size="lg"
+              className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik h-12 shrink-0 rounded-none border-none px-6 text-xs font-semibold tracking-[0.05em] text-black uppercase transition-colors"
+            >
+              <Link href="/about">Read the vision</Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Trust & Certification Row */}
+      {/* TRUST — full-width pull-quote first, marquee logo strip underneath */}
       <section className="border-ash border-b px-6 py-16 sm:px-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-12 text-center">
-          <div className="flex flex-col gap-4">
-            <span className="text-smoke font-graphik text-[10px] font-medium tracking-[0.25em] uppercase">
-              Institutional validation
-            </span>
-            <div className="flex flex-wrap items-center justify-center gap-10 opacity-90 sm:gap-20">
-              <span className="font-graphik text-brand-blue text-lg font-semibold tracking-tighter">
-                sidbi
-              </span>
-              <span className="font-graphik text-lg font-semibold tracking-tighter text-red-700">
-                NSIC
-              </span>
-              <span className="font-graphik text-base font-medium tracking-wide text-neutral-800 uppercase">
-                DPIIT
-              </span>
-              <span className="font-graphik border border-neutral-800 px-3 py-1.5 text-xs font-medium tracking-widest text-neutral-800 uppercase">
-                MAKE IN INDIA
-              </span>
-            </div>
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 text-center">
+          <div className="text-brand-yellow-dark flex gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className="fill-brand-yellow-dark text-brand-yellow-dark h-4 w-4"
+              />
+            ))}
           </div>
 
-          {/* Minimal Testimonial Card */}
-          <div className="border-ash bg-pure-white mx-auto flex max-w-2xl flex-col items-center border p-8 sm:p-10">
-            <div className="text-brand-yellow-dark mb-5 flex gap-1">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className="fill-brand-yellow-dark text-brand-yellow-dark h-4 w-4"
-                />
-              ))}
+          <blockquote className="font-nantes text-ink-black text-2xl leading-snug italic sm:text-3xl">
+            &ldquo;GenZ is not just a commercial platform, it&apos;s a movement to bring
+            our manufacturing roots back to life.&rdquo;
+          </blockquote>
+
+          <div className="flex items-center gap-3">
+            <div className="border-ash bg-cream-paper relative h-10 w-10 overflow-hidden rounded-full border">
+              <Image
+                src="/founder.jpeg"
+                alt="Founder"
+                fill
+                className="object-cover"
+                sizes="40px"
+              />
             </div>
-            <blockquote className="font-nantes text-ink-black mb-6 text-center text-xl leading-relaxed italic">
-              &ldquo;GenZ is not just a commercial platform, it&apos;s a movement to
-              bring our manufacturing roots back to life.&rdquo;
-            </blockquote>
-            <div className="flex items-center gap-3">
-              <div className="border-ash bg-cream-paper relative h-9 w-9 overflow-hidden rounded-full border">
-                <Image
-                  src="/founder.jpeg"
-                  alt="Founder"
-                  fill
-                  className="object-cover"
-                  sizes="36px"
-                />
-              </div>
-              <div className="text-left">
-                <h4 className="text-caption font-graphik text-ink-black font-medium">
-                  Appala Sairam
-                </h4>
-                <p className="text-smoke font-graphik text-[10px]">
-                  Founder &amp; Delivery Partner, GenZ
-                </p>
-              </div>
+            <div className="text-left">
+              <h4 className="text-caption font-graphik text-ink-black font-medium">
+                Appala Sairam
+              </h4>
+              <p className="text-smoke font-graphik text-[10px]">
+                Founder &amp; Delivery Partner, GenZ
+              </p>
             </div>
+          </div>
+        </div>
+
+        <div className="border-ash bg-cream-paper mx-auto mt-14 flex max-w-7xl flex-wrap items-center justify-between gap-8 border px-8 py-6">
+          <span className="text-smoke font-graphik shrink-0 text-[10px] font-medium tracking-[0.25em] uppercase">
+            Institutional validation
+          </span>
+          <div className="flex flex-1 flex-wrap items-center justify-end gap-10 sm:gap-16">
+            {marqueeLogos.map((logo) =>
+              logo === "MAKE IN INDIA" ? (
+                <span
+                  key={logo}
+                  className="font-graphik border border-neutral-800 px-3 py-1.5 text-xs font-medium tracking-widest text-neutral-800 uppercase"
+                >
+                  {logo}
+                </span>
+              ) : (
+                <span
+                  key={logo}
+                  className={`font-graphik text-lg font-semibold tracking-tighter ${
+                    logo === "sidbi"
+                      ? "text-brand-blue"
+                      : logo === "NSIC"
+                        ? "text-red-700"
+                        : "text-base font-medium tracking-wide text-neutral-800 uppercase"
+                  }`}
+                >
+                  {logo}
+                </span>
+              )
+            )}
           </div>
         </div>
       </section>

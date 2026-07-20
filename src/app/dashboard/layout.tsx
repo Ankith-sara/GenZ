@@ -23,7 +23,7 @@ export default async function DashboardLayout({
         <header className="border-border bg-card border-b">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
             <Link href="/discover" className="text-sm hover:underline">
-              ← Back to Shop
+              Back to Shop
             </Link>
             <div className="flex items-center gap-4">
               <span className="text-muted-foreground text-sm">{session.email}</span>

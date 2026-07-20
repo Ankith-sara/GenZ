@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { validateFileContent } from "@/lib/file-validation";
 import { DOC_TYPE_LABEL, DOC_TYPES } from "@/lib/verification";
 import type { DocType } from "@/types/database";
 
-const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 const ACCEPTED = ".pdf,.jpg,.jpeg,.png,.webp";
 
 export function DocumentUploader({
@@ -28,17 +28,20 @@ export function DocumentUploader({
   async function handleUpload(e: React.FormEvent) {
     e.preventDefault();
     const file = fileInputRef.current?.files?.[0];
+    setStatus("uploading");
+    setError(null);
+
     if (!file) {
-      setError("Choose a file first.");
-      return;
-    }
-    if (file.size > MAX_FILE_BYTES) {
-      setError("File must be under 10MB.");
+      setError("Please select a file first.");
       return;
     }
 
-    setStatus("uploading");
-    setError(null);
+    const validation = await validateFileContent(file, ["image", "pdf"]);
+    if (!validation.valid) {
+      setStatus("error");
+      setError(validation.error || "Invalid file content.");
+      return;
+    }
 
     const supabase = createClient();
     const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");

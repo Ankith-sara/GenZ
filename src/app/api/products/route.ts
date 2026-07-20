@@ -1,15 +1,60 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/lib/products";
+import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { z } from "zod";
+
+const querySchema = z.object({
+  q: z.string().max(100).optional().default(""),
+  category: z.string().max(50).optional().default(""),
+  age_group: z.string().max(50).optional().default(""),
+  min_price: z.preprocess(
+    (val) => (val === null || val === "" ? undefined : Number(val)),
+    z.number().nonnegative().optional()
+  ),
+  max_price: z.preprocess(
+    (val) => (val === null || val === "" ? undefined : Number(val)),
+    z.number().nonnegative().optional()
+  ),
+  page: z.preprocess(
+    (val) => (val === null || val === "" ? 0 : Number(val)),
+    z.number().int().nonnegative().default(0)
+  ),
+});
 
 export async function GET(request: NextRequest) {
+  // 1. Rate Limiting Check
+  const rateLimit = await checkRateLimit({
+    endpointType: "public",
+    actionName: "api_get_products",
+  });
+  if (rateLimit.blocked) {
+    return NextResponse.json(
+      { error: rateLimit.error || "Too many requests. Please slow down." },
+      { status: 429 }
+    );
+  }
+
+  // 2. Parse and Validate Query Parameters
   const { searchParams } = new URL(request.url);
-  const q = searchParams.get("q")?.trim() ?? "";
-  const category = searchParams.get("category")?.trim() ?? "";
-  const ageGroup = searchParams.get("age_group")?.trim() ?? "";
-  const minPrice = searchParams.get("min_price");
-  const maxPrice = searchParams.get("max_price");
-  const page = Math.max(0, Number(searchParams.get("page") ?? "0") || 0);
+  const rawParams = {
+    q: searchParams.get("q") ?? "",
+    category: searchParams.get("category") ?? "",
+    age_group: searchParams.get("age_group") ?? "",
+    min_price: searchParams.get("min_price"),
+    max_price: searchParams.get("max_price"),
+    page: searchParams.get("page") ?? "0",
+  };
+
+  const validation = querySchema.safeParse(rawParams);
+  if (!validation.success) {
+    return NextResponse.json(
+      { error: validation.error.issues[0].message },
+      { status: 400 }
+    );
+  }
+
+  const { q, category, age_group, min_price, max_price, page } = validation.data;
 
   const supabase = await createClient();
 
@@ -19,17 +64,15 @@ export async function GET(request: NextRequest) {
     .eq("status", "published");
 
   if (q) {
-    // websearch_to_tsquery handles natural phrases ("wooden puzzle") and
-    // quoted/boolean input gracefully, which is what shoppers actually type.
     query = query.textSearch("search_vector", q, {
       type: "websearch",
       config: "english",
     });
   }
   if (category) query = query.eq("category", category);
-  if (ageGroup) query = query.eq("age_group", ageGroup);
-  if (minPrice) query = query.gte("price_inr", Number(minPrice));
-  if (maxPrice) query = query.lte("price_inr", Number(maxPrice));
+  if (age_group) query = query.eq("age_group", age_group);
+  if (min_price !== undefined) query = query.gte("price_inr", min_price);
+  if (max_price !== undefined) query = query.lte("price_inr", max_price);
 
   const from = page * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
@@ -38,8 +81,13 @@ export async function GET(request: NextRequest) {
     .order("created_at", { ascending: false })
     .range(from, to);
 
+  await logRateLimitAttempt({
+    endpointType: "public",
+    actionName: "api_get_products",
+  });
+
   if (error) {
-    console.error(error);
+    console.error("GET /api/products database search error:", error);
     return NextResponse.json({ error: "Search failed." }, { status: 500 });
   }
 

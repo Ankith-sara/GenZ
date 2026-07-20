@@ -4,19 +4,29 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/require-role";
+import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { manufacturerProfileSchema } from "@/lib/validation";
 
 export interface ProfileFormState {
   error?: string;
   success?: boolean;
 }
 
-const GST_PATTERN = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
-
 export async function saveManufacturerProfile(
   _prevState: ProfileFormState,
   formData: FormData
 ): Promise<ProfileFormState> {
   const session = await requireRole("manufacturer");
+
+  // 1. Rate Limit Check
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "save_manufacturer_profile",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
 
   const business_name = String(formData.get("business_name") ?? "").trim();
   const gst_number = String(formData.get("gst_number") ?? "")
@@ -28,32 +38,45 @@ export async function saveManufacturerProfile(
   const pincode = String(formData.get("pincode") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const establishedYearRaw = String(formData.get("established_year") ?? "").trim();
+  const established_year = establishedYearRaw ? Number(establishedYearRaw) : undefined;
 
-  if (!business_name) return { error: "Business name is required." };
-  if (!GST_PATTERN.test(gst_number)) {
-    return { error: "That doesn't look like a valid 15-character GSTIN." };
-  }
+  // 2. Schema Validation
+  const validation = manufacturerProfileSchema.safeParse({
+    business_name,
+    gst_number,
+    factory_address,
+    city,
+    state,
+    pincode,
+    description,
+    established_year,
+  });
 
-  const established_year = establishedYearRaw ? Number(establishedYearRaw) : null;
-  if (established_year !== null && Number.isNaN(established_year)) {
-    return { error: "Established year must be a number." };
+  if (!validation.success) {
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.from("manufacturer_profiles").upsert({
     id: session.userId,
-    business_name,
-    gst_number,
-    factory_address: factory_address || null,
-    city: city || null,
-    state: state || null,
-    pincode: pincode || null,
-    description: description || null,
-    established_year,
+    business_name: validation.data.business_name,
+    gst_number: validation.data.gst_number,
+    factory_address: validation.data.factory_address || null,
+    city: validation.data.city || null,
+    state: validation.data.state || null,
+    pincode: validation.data.pincode || null,
+    description: validation.data.description || null,
+    established_year: validation.data.established_year ?? null,
+  });
+
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "save_manufacturer_profile",
+    identifier: session.userId,
   });
 
   if (error) {
-    console.error(error);
+    console.error("Save manufacturer profile DB error:", error);
     return { error: "Could not save your profile. Please try again." };
   }
 
@@ -64,6 +87,15 @@ export async function saveManufacturerProfile(
 
 export async function submitForVerification() {
   const session = await requireRole("manufacturer");
+
+  // Rate Limit Check
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "submit_for_verification",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) return;
+
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -71,8 +103,14 @@ export async function submitForVerification() {
     .update({ status: "pending" })
     .eq("id", session.userId);
 
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "submit_for_verification",
+    identifier: session.userId,
+  });
+
   if (error) {
-    console.error(error);
+    console.error("Submit for verification DB error:", error);
     return;
   }
 

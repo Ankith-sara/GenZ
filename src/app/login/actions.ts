@@ -4,6 +4,14 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Role } from "@/types/database";
+import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import {
+  loginSchema,
+  otpLoginSchema,
+  signupSchema,
+  emailSchema,
+  passwordSchema,
+} from "@/lib/validation";
 
 // Temporary client for password verification that does NOT write cookies
 function getTempClient() {
@@ -26,52 +34,125 @@ export async function signOut() {
 }
 
 export async function verifyPasswordAndSendOtp(email: string, password: string) {
-  if (!email || !password) {
-    return { error: "Please enter your email and password." };
+  // 1. Rate limiting check
+  const rateLimit = await checkRateLimit({
+    endpointType: "auth",
+    actionName: "verify_password_send_otp",
+    identifier: email,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Schema validation
+  const validation = loginSchema.safeParse({ email, password });
+  if (!validation.success) {
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "verify_password_send_otp",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: validation.error.issues[0].message };
   }
 
   const tempSupabase = getTempClient();
 
-  // 1. Verify password credentials
+  // 3. Verify password credentials
   const { error: signInError } = await tempSupabase.auth.signInWithPassword({
-    email,
-    password,
+    email: validation.data.email,
+    password: validation.data.password,
   });
 
   if (signInError) {
-    return { error: signInError.message };
+    console.error("Password verification failed:", signInError);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "verify_password_send_otp",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: "Invalid email or password." }; // Safe generic message
   }
 
-  // 2. Trigger Email OTP
+  // 4. Trigger Email OTP
   const { error: otpError } = await tempSupabase.auth.signInWithOtp({
-    email,
+    email: validation.data.email,
     options: {
       shouldCreateUser: false,
     },
   });
 
   if (otpError) {
-    return { error: otpError.message };
+    console.error("OTP generation failed:", otpError);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "verify_password_send_otp",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: "Failed to send verification code. Please try again." };
   }
+
+  // Log successful password check
+  await logRateLimitAttempt({
+    endpointType: "auth",
+    actionName: "verify_password_send_otp",
+    identifier: email,
+    isFailed: false,
+  });
 
   return { success: true };
 }
 
 export async function verifyOtpLogin(email: string, token: string) {
-  if (!email || !token) {
-    return { error: "Please enter the verification code." };
+  // 1. Rate limiting check
+  const rateLimit = await checkRateLimit({
+    endpointType: "auth",
+    actionName: "verify_otp_login",
+    identifier: email,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Schema validation
+  const validation = otpLoginSchema.safeParse({ email, token });
+  if (!validation.success) {
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "verify_otp_login",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.verifyOtp({
-    email,
-    token,
+    email: validation.data.email,
+    token: validation.data.token,
     type: "email",
   });
 
   if (error) {
-    return { error: error.message };
+    console.error("OTP verification failed:", error);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "verify_otp_login",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: "Invalid or expired verification code." };
   }
+
+  // Log successful login
+  await logRateLimitAttempt({
+    endpointType: "auth",
+    actionName: "verify_otp_login",
+    identifier: email,
+    isFailed: false,
+  });
 
   return { success: true };
 }
@@ -84,23 +165,37 @@ export async function signupUser(formData: {
 }) {
   const { email, password, fullName, role } = formData;
 
-  if (!email || !fullName || !password) {
-    return { error: "Please fill in all required fields." };
+  // 1. Rate limiting check
+  const rateLimit = await checkRateLimit({
+    endpointType: "auth",
+    actionName: "signup_user",
+    identifier: email,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
   }
 
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters." };
+  // 2. Schema validation
+  const validation = signupSchema.safeParse({ email, password, fullName, role });
+  if (!validation.success) {
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "signup_user",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
 
   const signUpOptions = {
-    email,
-    password,
+    email: validation.data.email,
+    password: validation.data.password,
     options: {
       data: {
-        full_name: fullName,
-        role,
+        full_name: validation.data.fullName,
+        role: validation.data.role,
       },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/confirm`,
     },
@@ -109,61 +204,171 @@ export async function signupUser(formData: {
   const { error } = await supabase.auth.signUp(signUpOptions);
 
   if (error) {
-    return { error: error.message };
+    console.error("Signup failed:", error);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "signup_user",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: "Failed to create account. Please try again." };
   }
+
+  // Log successful signup
+  await logRateLimitAttempt({
+    endpointType: "auth",
+    actionName: "signup_user",
+    identifier: email,
+    isFailed: false,
+  });
 
   return { success: true };
 }
 
 export async function verifyOtpSignup(email: string, token: string) {
-  if (!email || !token) {
-    return { error: "Please enter the verification code." };
+  // 1. Rate limiting check
+  const rateLimit = await checkRateLimit({
+    endpointType: "auth",
+    actionName: "verify_otp_signup",
+    identifier: email,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Schema validation
+  const validation = otpLoginSchema.safeParse({ email, token });
+  if (!validation.success) {
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "verify_otp_signup",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.verifyOtp({
-    email,
-    token,
+    email: validation.data.email,
+    token: validation.data.token,
     type: "signup",
   });
 
   if (error) {
-    return { error: error.message };
+    console.error("Signup OTP verification failed:", error);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "verify_otp_signup",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: "Invalid or expired verification code." };
   }
+
+  // Log successful signup confirmation
+  await logRateLimitAttempt({
+    endpointType: "auth",
+    actionName: "verify_otp_signup",
+    identifier: email,
+    isFailed: false,
+  });
 
   return { success: true };
 }
 
 export async function sendPasswordReset(email: string) {
-  if (!email) {
-    return { error: "Please enter your email address." };
+  // 1. Rate limiting check
+  const rateLimit = await checkRateLimit({
+    endpointType: "auth",
+    actionName: "send_password_reset",
+    identifier: email,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Schema validation
+  const validation = emailSchema.safeParse(email);
+  if (!validation.success) {
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "send_password_reset",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  const { error } = await supabase.auth.resetPasswordForEmail(validation.data, {
     redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/reset-password`,
   });
 
   if (error) {
-    return { error: error.message };
+    console.error("Password reset request failed:", error);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "send_password_reset",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: "Failed to send reset link. Please try again." };
   }
+
+  // Log success
+  await logRateLimitAttempt({
+    endpointType: "auth",
+    actionName: "send_password_reset",
+    identifier: email,
+    isFailed: false,
+  });
 
   return { success: true };
 }
 
 export async function updatePassword(password: string) {
-  if (!password || password.length < 8) {
-    return { error: "Password must be at least 8 characters." };
+  // 1. Rate limiting check
+  const rateLimit = await checkRateLimit({
+    endpointType: "auth",
+    actionName: "update_password",
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Schema validation
+  const validation = passwordSchema.safeParse(password);
+  if (!validation.success) {
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "update_password",
+      isFailed: true,
+    });
+    return { error: validation.error.issues[0].message };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({
-    password,
+    password: validation.data,
   });
 
   if (error) {
-    return { error: error.message };
+    console.error("Password update failed:", error);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "update_password",
+      isFailed: true,
+    });
+    return { error: "Failed to update password. Please try again." };
   }
+
+  // Log success
+  await logRateLimitAttempt({
+    endpointType: "auth",
+    actionName: "update_password",
+    isFailed: false,
+  });
 
   return { success: true };
 }

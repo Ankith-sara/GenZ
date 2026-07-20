@@ -28,7 +28,7 @@ export default function ManufacturerSignupPage() {
               Register your Business.
             </h2>
             <p className="font-graphik text-charcoal mb-8 text-sm">
-              Join GenZ to connect with buyers, list products, and showcase your
+              Join GenZ to connect with customers, list products, and showcase your
               manufacturing capabilities.
             </p>
 
@@ -40,7 +40,7 @@ export default function ManufacturerSignupPage() {
                   href="/signup"
                   className="font-graphik text-primary text-xs font-semibold tracking-wider uppercase transition-colors hover:text-black"
                 >
-                  Looking to source products? Sign up as a Buyer
+                  Looking to source products? Sign up here
                 </Link>
               </div>
             </div>
@@ -86,11 +86,11 @@ export default function ManufacturerSignupPage() {
           <div className="max-w-xl">
             <p className="font-nantes mb-6 text-4xl leading-tight text-white italic">
               &quot;Visibility, demand insights, and a direct line to regional and
-              national buyers.&quot;
+              national customers.&quot;
             </p>
             <p className="font-graphik text-sm leading-relaxed text-white/80">
               We provide you with digital tooling, logistics integrations, and verified
-              buyer leads to expand your reach beyond geographic boundaries.
+              leads to expand your reach beyond geographic boundaries.
             </p>
           </div>
           <div className="font-graphik text-xs text-white/40">

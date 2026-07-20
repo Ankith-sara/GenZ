@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { subscribeNewsletter } from "@/app/actions/public-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -27,44 +27,11 @@ export function NewsletterForm() {
     }
 
     setStatus("submitting");
-    const supabase = createClient();
+    const result = await subscribeNewsletter(trimmedEmail);
 
-    // Try inserting into newsletter_subscribers table first
-    let { error } = await supabase.from("newsletter_subscribers").insert({
-      email: trimmedEmail,
-    });
-
-    // Fallback to waitlist table if newsletter_subscribers table doesn't exist (Postgres 42P01 or PostgREST PGRST205)
-    if (error && (error.code === "42P01" || error.code === "PGRST205")) {
-      console.warn(
-        "newsletter_subscribers table not found. falling back to waitlist table."
-      );
-      const { error: fallbackError } = await supabase.from("waitlist").insert({
-        name: "Newsletter Subscriber",
-        email: trimmedEmail,
-        city: null,
-        phone: null,
-        role: "newsletter",
-      });
-      error = fallbackError;
-    }
-
-    if (error) {
-      console.error("Newsletter subscription error:", error);
-      if (error.code === "23505") {
-        // Unique violation
-        // If already subscribed, show success to avoid exposing info but confirm it
-        setStatus("success");
-      } else if (error.code === "PGRST205" || error.code === "42P01") {
-        // Fallback to simulated success for local development/preview when database tables are not yet created
-        console.warn(
-          "No database tables found. Simulating subscription success for development preview."
-        );
-        setStatus("success");
-      } else {
-        setStatus("error");
-        setErrorMsg("Something went wrong. Please try again later.");
-      }
+    if (result.error) {
+      setStatus("error");
+      setErrorMsg(result.error);
       return;
     }
 

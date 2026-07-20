@@ -33,7 +33,7 @@ export default async function LoginPage({
               Welcome back.
             </h2>
             <p className="font-graphik text-charcoal mb-8 text-sm">
-              Sign in to your buyer or administrator account.
+              Sign in to your account.
             </p>
 
             <div className="bg-pure-white border-ash rounded-none border p-6 shadow-none sm:p-8">
@@ -65,7 +65,7 @@ export default async function LoginPage({
             <p className="font-graphik text-charcoal mt-6 text-center text-sm">
               Don&apos;t have an account?{" "}
               <Link href="/signup" className="font-semibold text-black hover:underline">
-                Sign up as a Buyer
+                Sign up here
               </Link>
             </p>
           </div>

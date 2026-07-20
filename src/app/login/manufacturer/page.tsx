@@ -60,7 +60,7 @@ export default async function ManufacturerLoginPage({
                   href="/login"
                   className="font-graphik text-primary text-xs font-semibold tracking-wider uppercase transition-colors hover:text-black"
                 >
-                  Looking for products? Sign in as a Buyer →
+                  Looking for products? Sign in here →
                 </Link>
               </div>
             </div>
@@ -106,7 +106,7 @@ export default async function ManufacturerLoginPage({
           </div>
           <div className="max-w-xl">
             <p className="font-nantes mb-6 text-4xl leading-tight text-white italic">
-              &quot;Showcase your craftsmanship to national buyers. Connect directly,
+              &quot;Showcase your craftsmanship to national customers. Connect directly,
               negotiate freely.&quot;
             </p>
             <p className="font-graphik text-sm leading-relaxed text-white/80">
