@@ -18,6 +18,17 @@ export async function getClientIp(): Promise<string> {
   return "127.0.0.1";
 }
 
+function handleDbError(
+  err: { code?: string; message?: string } | null | undefined,
+  label: string
+) {
+  if (err?.code === "PGRST205" || err?.message?.includes("rate_limit_logs")) {
+    // Table not yet migrated in database — fail open silently without error spam
+    return;
+  }
+  console.error(`${label}:`, err);
+}
+
 // Config thresholds
 const AUTH_IP_MAX = Number(process.env.RATE_LIMIT_AUTH_IP_MAX || "30");
 const AUTH_IP_WINDOW = Number(process.env.RATE_LIMIT_AUTH_IP_WINDOW || "600"); // 10 mins
@@ -65,7 +76,7 @@ export async function checkRateLimit(options: {
       .gte("created_at", windowStart);
 
     if (error) {
-      console.error("Rate limiter user check db error:", error);
+      handleDbError(error, "Rate limiter user check db error");
       return { blocked: false }; // Fail-open
     }
 
@@ -91,7 +102,7 @@ export async function checkRateLimit(options: {
       .gte("created_at", windowStart);
 
     if (error) {
-      console.error("Rate limiter public check db error:", error);
+      handleDbError(error, "Rate limiter public check db error");
       return { blocked: false }; // Fail-open
     }
 
@@ -116,7 +127,7 @@ export async function checkRateLimit(options: {
     .gte("created_at", ipWindowStart);
 
   if (ipErr) {
-    console.error("Rate limiter IP check db error:", ipErr);
+    handleDbError(ipErr, "Rate limiter IP check db error");
   } else if (ipCount !== null && ipCount >= AUTH_IP_MAX) {
     return {
       blocked: true,
@@ -138,7 +149,7 @@ export async function checkRateLimit(options: {
       .gte("created_at", accountWindowStart);
 
     if (accountErr) {
-      console.error("Rate limiter account check db error:", accountErr);
+      handleDbError(accountErr, "Rate limiter account check db error");
     } else if (accountCount !== null && accountCount >= AUTH_ACCOUNT_MAX) {
       return {
         blocked: true,
@@ -149,7 +160,6 @@ export async function checkRateLimit(options: {
   }
 
   // Exponential backoff check (per IP & per account combined)
-  // Find the recent failed attempts sorted by created_at DESC
   let query = supabase
     .from("rate_limit_logs")
     .select("is_failed, created_at")
@@ -167,23 +177,21 @@ export async function checkRateLimit(options: {
     .limit(10);
 
   if (logsErr) {
-    console.error("Rate limiter backoff logs db error:", logsErr);
+    handleDbError(logsErr, "Rate limiter backoff logs db error");
     return { blocked: false };
   }
 
   if (logs && logs.length > 0) {
-    // Count consecutive failures starting from the most recent
     let consecutiveFailures = 0;
     for (const log of logs) {
       if (log.is_failed) {
         consecutiveFailures++;
       } else {
-        break; // Stop at first success
+        break;
       }
     }
 
     if (consecutiveFailures > 0) {
-      // Calculate delay: base * 2 ^ (consecutiveFailures - 1)
       const delaySeconds = Math.min(
         AUTH_BACKOFF_BASE * Math.pow(2, consecutiveFailures - 1),
         AUTH_BACKOFF_MAX
@@ -217,14 +225,17 @@ export async function logRateLimitAttempt(options: {
     const ip = await getClientIp();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const supabase = (await createClient()) as any;
-    await supabase.from("rate_limit_logs").insert({
+    const { error } = await supabase.from("rate_limit_logs").insert({
       ip_address: ip,
       identifier: options.identifier || null,
       endpoint_type: options.endpointType,
       action_name: options.actionName,
       is_failed: options.isFailed ?? false,
     });
-  } catch (e) {
-    console.error("Failed to log rate limit attempt:", e);
+    if (error) {
+      handleDbError(error, "Failed to log rate limit attempt");
+    }
+  } catch {
+    // Fail silent
   }
 }

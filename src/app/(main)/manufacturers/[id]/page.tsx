@@ -13,12 +13,30 @@ export async function generateMetadata({
   const supabase = await createClient();
   const { data: manufacturer } = await supabase
     .from("manufacturer_public_profiles")
-    .select("business_name")
+    .select("business_name, city, state, description")
     .eq("id", id)
     .maybeSingle();
 
-  if (!manufacturer) return { title: "Manufacturer not found — GenZ" };
-  return { title: `${manufacturer.business_name} — GenZ` };
+  if (!manufacturer) return { title: "Manufacturer Not Found — GenZ" };
+
+  const locationStr = [manufacturer.city, manufacturer.state]
+    .filter(Boolean)
+    .join(", ");
+
+  return {
+    title: `${manufacturer.business_name} — Verified Indian Manufacturer`,
+    description:
+      manufacturer.description ||
+      `Explore factory products and sourcing information from ${manufacturer.business_name}${
+        locationStr ? ` located in ${locationStr}` : ""
+      }. Verified manufacturer on GenZ.`,
+    openGraph: {
+      title: `${manufacturer.business_name} — Verified Indian Manufacturer`,
+      description:
+        manufacturer.description ||
+        `Explore verified Indian manufacturing capabilities from ${manufacturer.business_name}.`,
+    },
+  };
 }
 
 export default async function ManufacturerPublicProfilePage({
@@ -44,8 +62,27 @@ export default async function ManufacturerPublicProfilePage({
     .eq("status", "published")
     .order("created_at", { ascending: false });
 
+  const manufacturerJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: manufacturer.business_name,
+    description:
+      manufacturer.description ||
+      `Verified Indian manufacturer profile for ${manufacturer.business_name}.`,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: manufacturer.city || undefined,
+      addressRegion: manufacturer.state || undefined,
+      addressCountry: "IN",
+    },
+  };
+
   return (
     <main className="bg-cream-paper text-ink-black flex-1 pb-24 font-sans antialiased">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(manufacturerJsonLd) }}
+      />
       <div className="mx-auto max-w-[1280px] px-6 py-16 sm:px-12">
         {/* Manufacturer Header Box */}
         <div className="border-ash mb-12 border-b pb-10">

@@ -17,14 +17,26 @@ export async function generateMetadata({
   const supabase = await createClient();
   const { data: product } = await supabase
     .from("products")
-    .select("name, description")
+    .select("name, description, cover_image_path, price_inr, category")
     .eq("id", id)
     .maybeSingle();
 
-  if (!product) return { title: "Product not found — GenZ" };
+  if (!product) return { title: "Product Not Found — GenZ" };
+
+  const coverUrl = productMediaUrl(product.cover_image_path);
+
   return {
-    title: `${product.name} — GenZ`,
-    description: product.description ?? undefined,
+    title: `${product.name} — Direct Indian Manufacturer`,
+    description:
+      product.description ||
+      `Buy ${product.name} directly from verified Indian manufacturers on GenZ.`,
+    openGraph: {
+      title: product.name,
+      description:
+        product.description ||
+        `Buy ${product.name} directly from verified Indian manufacturers on GenZ.`,
+      images: coverUrl ? [{ url: coverUrl }] : [],
+    },
   };
 }
 
@@ -71,8 +83,35 @@ export default async function PublicProductPage({
 
   const coverUrl = productMediaUrl(product.cover_image_path);
 
+  const productJsonLd = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    name: product.name,
+    image: coverUrl ? [coverUrl] : [],
+    description: product.description || `Verified Indian Product: ${product.name}`,
+    category: product.category,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "INR",
+      price: product.price_inr,
+      availability: "https://schema.org/InStock",
+    },
+    ...(manufacturer
+      ? {
+          brand: {
+            "@type": "Brand",
+            name: manufacturer.business_name,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="bg-background flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-6 py-12 sm:px-12">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">

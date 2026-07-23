@@ -1,22 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { verifyPasswordAndSendOtp, verifyOtpLogin } from "./actions";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 interface LoginFormProps {
   redirectTo: string;
 }
 
 export function LoginForm({ redirectTo }: LoginFormProps) {
-  const router = useRouter();
   const [step, setStep] = useState<"credentials" | "otp">("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [otpToken, setOtpToken] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -49,14 +49,13 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       const res = await verifyOtpLogin(email, otpToken);
       if (res.error) {
         setError(res.error);
+        setIsPending(false);
       } else {
-        // Successfully verified! Redirect
-        router.push(redirectTo);
-        router.refresh();
+        // Successfully verified! Redirect instantly
+        window.location.href = redirectTo;
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred.");
-    } finally {
       setIsPending(false);
     }
   }
@@ -111,7 +110,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             className="text-smoke text-center text-xs hover:text-black hover:underline"
             disabled={isPending}
           >
-            ← Back to credentials
+            Back to credentials
           </button>
         </div>
       </form>
@@ -143,15 +142,29 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             Forgot Password?
           </Link>
         </div>
-        <Input
-          id="password"
-          type="password"
-          autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="border-ash rounded-none focus-visible:ring-black"
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="border-ash rounded-none pr-10 focus-visible:ring-black"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="text-smoke absolute top-1/2 right-3 -translate-y-1/2 hover:text-black focus:outline-none"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
+        </div>
       </div>
 
       {error && (

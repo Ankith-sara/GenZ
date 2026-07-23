@@ -78,8 +78,26 @@ const FAQ_GROUPS: FaqGroup[] = [
 ];
 
 export default async function FaqsPage() {
+  const allFaqs = FAQ_GROUPS.flatMap((g) => g.items);
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: allFaqs.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+
   return (
     <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* Hero */}
       <section className="border-ash border-b px-6 py-20 sm:px-12 sm:py-28">
         <div className="mx-auto max-w-4xl text-left">

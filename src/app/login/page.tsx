@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { LoginMethodTabs } from "./auth-method-tabs";
+import { LoginForm } from "./login-form";
 import { GoogleSignInButton } from "@/components/google-signin";
 
 export default async function LoginPage({
@@ -37,7 +37,7 @@ export default async function LoginPage({
             </p>
 
             <div className="bg-pure-white border-ash rounded-none border p-6 shadow-none sm:p-8">
-              <LoginMethodTabs redirectTo={redirectTo ?? "/dashboard"} />
+              <LoginForm redirectTo={redirectTo ?? "/dashboard"} />
 
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signupUser, verifyOtpSignup } from "@/app/login/actions";
 import type { Role } from "@/types/database";
+import { Eye, EyeOff } from "lucide-react";
 
 const SIGNUP_ROLES: { value: Role; label: string; description: string }[] = [
   {
@@ -26,12 +26,12 @@ interface SignupFormProps {
 }
 
 export function SignupForm({ defaultRole }: SignupFormProps) {
-  const router = useRouter();
   const [role, setRole] = useState<Role>(defaultRole ?? "buyer");
   const [step, setStep] = useState<"details" | "otp">("details");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [otpToken, setOtpToken] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -64,14 +64,12 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
       const res = await verifyOtpSignup(email, otpToken);
       if (res.error) {
         setError(res.error);
+        setIsPending(false);
       } else {
-        // Successfully verified! Redirect to appropriate landing page
-        if (role === "manufacturer") {
-          router.push("/dashboard/pending-verification");
-        } else {
-          router.push("/profile");
-        }
-        router.refresh();
+        // Successfully verified! Redirect instantly
+        const target =
+          role === "manufacturer" ? "/dashboard/pending-verification" : "/profile";
+        window.location.href = target;
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred.");
@@ -88,14 +86,14 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
             Verify Your Email
           </h3>
           <p className="text-smoke text-xs leading-relaxed">
-            We have sent a verification code to{" "}
+            We have sent a 6-digit verification code to{" "}
             <strong className="font-mono font-semibold text-black">{email}</strong>.
-            Enter it below to activate your account.
+            Please enter it below to activate your account.
           </p>
         </div>
 
         <div className="mb-4">
-          <Label htmlFor="otp">Verification Code</Label>
+          <Label htmlFor="otp">6-Digit Verification Code</Label>
           <Input
             id="otp"
             type="text"
@@ -120,17 +118,18 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           <Button
             type="submit"
             className="h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
-            disabled={isPending}
+            disabled={isPending || otpToken.length < 6}
           >
             {isPending ? "Verifying..." : "Verify & Complete Signup"}
           </Button>
+
           <button
             type="button"
             onClick={() => setStep("details")}
-            className="text-smoke text-center text-xs hover:text-black hover:underline"
+            className="text-smoke mt-1 text-center text-xs hover:text-black hover:underline"
             disabled={isPending}
           >
-            ← Back to signup details
+            Back to signup details
           </button>
         </div>
       </form>
@@ -202,16 +201,30 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
 
       <div className="mb-2">
         <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          autoComplete="new-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          minLength={8}
-          required
-          className="border-ash rounded-none focus-visible:ring-black"
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            minLength={8}
+            required
+            className="border-ash rounded-none pr-10 focus-visible:ring-black"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="text-smoke absolute top-1/2 right-3 -translate-y-1/2 hover:text-black focus:outline-none"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
+        </div>
         <p className="text-muted-foreground mt-1.5 text-xs">At least 8 characters.</p>
       </div>
 

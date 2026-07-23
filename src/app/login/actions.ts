@@ -146,13 +146,13 @@ export async function verifyOtpLogin(email: string, token: string) {
     return { error: "Invalid or expired verification code." };
   }
 
-  // Log successful login
-  await logRateLimitAttempt({
+  // Log successful login non-blocking
+  logRateLimitAttempt({
     endpointType: "auth",
     actionName: "verify_otp_login",
     identifier: email,
     isFailed: false,
-  });
+  }).catch(() => {});
 
   return { success: true };
 }
@@ -249,7 +249,7 @@ export async function verifyOtpSignup(email: string, token: string) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.verifyOtp({
+  const { data, error } = await supabase.auth.verifyOtp({
     email: validation.data.email,
     token: validation.data.token,
     type: "signup",
@@ -266,13 +266,47 @@ export async function verifyOtpSignup(email: string, token: string) {
     return { error: "Invalid or expired verification code." };
   }
 
-  // Log successful signup confirmation
-  await logRateLimitAttempt({
+  // Ensure profile row exists in DB now that user is verified
+  if (data?.user) {
+    const user = data.user;
+    const role =
+      (user.user_metadata?.role as "buyer" | "manufacturer" | "admin") || "buyer";
+    const fullName = user.user_metadata?.full_name || null;
+
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (!existingProfile) {
+      await supabase.from("profiles").insert({
+        id: user.id,
+        role,
+        full_name: fullName,
+      });
+
+      if (role === "manufacturer") {
+        await supabase.from("manufacturer_profiles").insert({
+          id: user.id,
+          business_name: user.user_metadata?.business_name || "Unnamed Business",
+          gst_number: user.user_metadata?.gst_number || "PENDING",
+          factory_address: user.user_metadata?.factory_address || null,
+          state: user.user_metadata?.state || null,
+          pincode: user.user_metadata?.pincode || null,
+          status: "pending",
+        });
+      }
+    }
+  }
+
+  // Log successful signup confirmation non-blocking
+  logRateLimitAttempt({
     endpointType: "auth",
     actionName: "verify_otp_signup",
     identifier: email,
     isFailed: false,
-  });
+  }).catch(() => {});
 
   return { success: true };
 }
