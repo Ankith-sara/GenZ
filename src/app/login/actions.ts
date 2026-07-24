@@ -406,3 +406,47 @@ export async function updatePassword(password: string) {
 
   return { success: true };
 }
+
+export async function resetPasswordWithOtp(formData: {
+  email: string;
+  token: string;
+  password: string;
+}) {
+  const { email, token, password } = formData;
+
+  const emailVal = emailSchema.safeParse(email);
+  if (!emailVal.success) return { error: "Invalid email address." };
+
+  const passVal = passwordSchema.safeParse(password);
+  if (!passVal.success) return { error: passVal.error.issues[0].message };
+
+  if (!token || token.trim().length < 6) {
+    return { error: "Please enter a valid 6-digit verification code." };
+  }
+
+  const supabase = await createClient();
+
+  // 1. Verify 6-digit recovery OTP code
+  const { error: otpError } = await supabase.auth.verifyOtp({
+    email: emailVal.data,
+    token: token.trim(),
+    type: "recovery",
+  });
+
+  if (otpError) {
+    console.error("Recovery OTP verification failed:", otpError);
+    return { error: "Invalid or expired 6-digit verification code." };
+  }
+
+  // 2. Update user password
+  const { error: updateError } = await supabase.auth.updateUser({
+    password: passVal.data,
+  });
+
+  if (updateError) {
+    console.error("Password update failed:", updateError);
+    return { error: "Failed to update password. Please try again." };
+  }
+
+  return { success: true };
+}

@@ -7,76 +7,85 @@ export const metadata = {
 const SECTIONS = [
   {
     title: "1. Who We Are",
-    body: `GenZ ("we", "us", "the platform") operates a trust-commerce marketplace connecting Indian consumers with verified Indian manufacturers, MSMEs, startups, and artisan businesses. By creating an account or using any part of the platform, you agree to these Terms & Conditions.`,
+    body: `GenZ ("we", "us", "the platform") operates a direct commerce marketplace connecting Indian consumers with verified Indian manufacturers, MSMEs, startups, and artisan businesses. By creating an account or using any part of the platform, you agree to these Terms & Conditions.`,
   },
   {
     title: "2. Eligibility & Accounts",
-    body: `You must be at least 18 years old, or have the consent of a parent or guardian, to create an account. You're responsible for the accuracy of the information you provide and for keeping your login credentials secure. Manufacturer accounts additionally require valid GST registration and pass our verification review before a storefront goes live.`,
+    body: `You must be at least 18 years old to create an account. You are responsible for the accuracy of the information you provide and for maintaining the confidentiality of your login credentials. Manufacturer accounts require valid GST registration and pass our verification review before a storefront is activated.`,
   },
   {
     title: "3. Verified Manufacturer Listings",
-    body: `We verify manufacturer identity, GST status, and — where applicable — factory or production claims before listings are published. Verification confirms that a business is who it claims to be; it does not constitute a guarantee of product quality, delivery timelines, or fitness for a particular purpose. Buyers should still exercise ordinary care when placing orders.`,
+    body: `We verify manufacturer identity, GST status, and production capabilities before listings are published. Verification confirms business legitimacy; it does not constitute a explicit guarantee of individual product performance or fitness for a specific purpose. Buyers are encouraged to review product specifications carefully.`,
   },
   {
     title: "4. Orders, Pricing & Payments",
-    body: `Product pricing, availability, and accepted payment methods are set by individual manufacturers and displayed on each listing. GenZ facilitates the connection between buyer and manufacturer; order fulfillment, shipping, and after-sales support are the responsibility of the manufacturer unless otherwise stated on the platform.`,
+    body: `Product pricing, availability, and accepted payment methods are set by manufacturers and displayed on each listing. GenZ facilitates secure order processing between buyers and manufacturers. Order fulfillment and shipping are handled in accordance with platform delivery standards.`,
   },
   {
     title: "5. Cancellations, Returns & Refunds",
-    body: `Cancellation and return policies may vary by manufacturer and will be disclosed on the relevant product or storefront page before you complete a purchase. Where a manufacturer's policy is silent or unclear, contact our support team and we'll help mediate a resolution.`,
+    body: `Cancellation and return terms are governed by platform policies and specified on listing pages. For disputed orders, our customer support team mediates resolutions in accordance with buyer protection guidelines.`,
   },
   {
     title: "6. Manufacturer Obligations",
-    body: `Manufacturers agree to list only products they are legally entitled to sell, to represent product details (materials, dimensions, origin, pricing) accurately, and to fulfill confirmed orders in good faith. Repeated inaccurate listings, non-fulfillment, or misrepresentation of verification status may result in suspension or removal from the platform.`,
+    body: `Manufacturers agree to list only products they are legally authorized to sell, represent product specifications accurately, and fulfill confirmed orders in good faith. Misrepresentation or failure to honor orders may result in storefront suspension.`,
   },
   {
-    title: "7. Prohibited Use",
-    body: `You agree not to use GenZ to list or purchase counterfeit, stolen, or illegal goods; to misrepresent your identity or business credentials; to scrape or reverse-engineer the platform; or to interfere with the security or normal operation of the service.`,
+    title: "7. Prohibited Uses",
+    body: `You agree not to use GenZ to list or purchase counterfeit, stolen, or unlawful goods; misrepresent credentials; scrape or reverse-engineer platform components; or compromise platform security.`,
   },
   {
-    title: "8. Content & Intellectual Property",
-    body: `Product photos, descriptions, and reels uploaded by manufacturers remain their intellectual property, but by uploading you grant GenZ a license to display that content on the platform for the purpose of listing and promoting the product. The GenZ name, logo, and platform design are the property of GenZ and may not be reproduced without permission.`,
+    title: "8. Intellectual Property",
+    body: `Product media uploaded by manufacturers remains their intellectual property, licensed to GenZ for display and marketing on the platform. The GenZ name, logo, software, and brand assets are the exclusive property of GenZ.`,
   },
   {
     title: "9. Limitation of Liability",
-    body: `GenZ is provided on an "as is" basis. To the extent permitted by law, we are not liable for indirect, incidental, or consequential damages arising from transactions between buyers and manufacturers, delays, or product defects — responsibility for the product itself rests with the manufacturer.`,
+    body: `GenZ is provided on an "as is" and "as available" basis. To the maximum extent permitted by law, GenZ shall not be liable for indirect, incidental, or consequential damages arising from buyer-seller transactions.`,
   },
   {
-    title: "10. Suspension & Termination",
-    body: `We may suspend or terminate accounts that violate these terms, provide false verification information, or engage in fraudulent activity, with or without notice depending on severity.`,
+    title: "10. Account Termination",
+    body: `We reserve the right to suspend or terminate accounts that violate these terms, submit fraudulent verification credentials, or engage in suspicious activity.`,
   },
   {
-    title: "11. Changes to These Terms",
-    body: `We may update these Terms & Conditions from time to time to reflect changes in our platform or legal requirements. Material changes will be communicated via the platform or registered email before they take effect.`,
+    title: "11. Changes to Terms",
+    body: `We may update these Terms & Conditions periodically. Continued use of the platform following published changes constitutes acceptance of the revised terms.`,
   },
   {
-    title: "12. Contact",
-    body: `Questions about these terms can be sent to genz.official.hq@gmail.com or via our Contact page.`,
+    title: "12. Contact & Legal Inquiries",
+    body: `For questions regarding these terms, please contact our legal team at genz.official.hq@gmail.com.`,
   },
 ];
 
 export default async function TermsPage() {
   return (
-    <div className="bg-background text-foreground flex min-h-screen flex-col font-sans antialiased">
+    <div className="bg-cream-paper text-ink-black flex min-h-screen flex-col font-sans antialiased">
       <main className="flex-1">
-        <section className="border-b border-black/10 px-6 py-20 sm:px-12 sm:py-24">
+        {/* Page Header */}
+        <section className="border-ash border-b px-6 py-16 sm:px-12 sm:py-20">
           <div className="mx-auto max-w-3xl text-left">
-            <span className="eyebrow text-charcoal mb-3 block">Legal</span>
-            <h1 className="text-deep-forest mb-4 font-serif text-4xl leading-[1.05] font-normal tracking-tight sm:text-6xl">
+            <span className="text-caption font-graphik text-smoke mb-3 block tracking-[0.2em] uppercase">
+              Legal &amp; Governance
+            </span>
+            <h1 className="font-nantes text-ink-black mb-4 text-4xl leading-[1.05] font-normal tracking-tight sm:text-5xl">
               Terms &amp; Conditions
             </h1>
-            <p className="text-charcoal text-sm">Last updated: July 2026</p>
+            <p className="font-graphik text-smoke text-xs sm:text-sm">
+              Last updated: July 2026 &bull; Governing Platform Usage &amp; Commerce
+            </p>
           </div>
         </section>
 
-        <section className="px-6 py-16 sm:px-12 sm:py-20">
-          <div className="bg-paper-white mx-auto flex max-w-3xl flex-col gap-10 rounded-[4px] border border-black/10 p-8 sm:p-12">
+        {/* Content Section */}
+        <section className="px-6 py-12 sm:px-12 sm:py-16">
+          <div className="bg-pure-white border-ash mx-auto flex max-w-3xl flex-col gap-10 rounded-none border p-8 shadow-sm sm:p-12">
             {SECTIONS.map((s) => (
-              <div key={s.title}>
-                <h2 className="text-deep-forest mb-3 font-serif text-xl font-normal tracking-tight sm:text-2xl">
+              <div
+                key={s.title}
+                className="border-ash/30 border-b pb-8 last:border-b-0 last:pb-0"
+              >
+                <h2 className="font-nantes text-ink-black mb-3 text-xl font-normal tracking-tight sm:text-2xl">
                   {s.title}
                 </h2>
-                <p className="text-charcoal text-sm leading-relaxed sm:text-base">
+                <p className="font-graphik text-charcoal text-sm leading-relaxed sm:text-base">
                   {s.body}
                 </p>
               </div>

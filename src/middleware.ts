@@ -25,14 +25,43 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // IMPORTANT: Avoid writing logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard
-  // to debug issues with users being randomly logged out.
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const code = request.nextUrl.searchParams.get("code");
+  const errorParam = request.nextUrl.searchParams.get("error");
   const path = request.nextUrl.pathname;
+
+  // 1. If incoming request has an auth code and is not already on /auth/callback,
+  // rewrite internally to /auth/callback so code is exchanged in a single request without double-redirects
+  if (code && !path.startsWith("/auth/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/callback";
+    return NextResponse.rewrite(url);
+  }
+
+  // 2. If user is already authenticated (or code was already consumed) and has error/code in URL,
+  // redirect them directly to their appropriate dashboard instead of showing error
+  if (user && (code || errorParam)) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    const role = profile?.role ?? "buyer";
+    const url = request.nextUrl.clone();
+    url.search = ""; // clear query params
+    url.pathname =
+      role === "admin"
+        ? "/admin/dashboard"
+        : role === "buyer"
+          ? "/profile"
+          : "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
   const isProtected =
     path.startsWith("/dashboard") || path.startsWith("/admin/dashboard");
   const isAdminPath = path.startsWith("/admin/dashboard");
@@ -84,7 +113,6 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
   return supabaseResponse;
 }
 
@@ -94,13 +122,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

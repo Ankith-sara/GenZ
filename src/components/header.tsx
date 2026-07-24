@@ -154,7 +154,7 @@ export function Header({
             >
               <div className="border-ash relative h-9 w-9 overflow-hidden rounded-md border">
                 <Image
-                  src="/logo.jpeg"
+                  src="/logo.png"
                   alt="GenZ Logo"
                   fill
                   className="object-cover"
@@ -219,11 +219,13 @@ export function Header({
                   >
                     <div className="bg-ink-black text-pure-white font-graphik flex h-7 w-7 items-center justify-center overflow-hidden rounded-full text-xs font-medium uppercase">
                       {avatarUrl ? (
-                        <img
+                        <Image
                           src={avatarUrl}
-                          alt=""
+                          alt="Avatar"
+                          width={28}
+                          height={28}
                           className="h-full w-full object-cover"
-                          referrerPolicy="no-referrer"
+                          unoptimized
                         />
                       ) : (
                         <User className="h-4 w-4 text-white" />
@@ -386,7 +388,7 @@ export function Header({
                 >
                   <div className="border-ash relative h-8 w-8 overflow-hidden rounded-md border">
                     <Image
-                      src="/logo.jpeg"
+                      src="/logo.png"
                       alt="GenZ Logo"
                       fill
                       className="object-cover"

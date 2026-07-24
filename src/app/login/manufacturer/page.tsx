@@ -17,7 +17,7 @@ export default async function ManufacturerLoginPage({
         <div>
           <Link href="/" className="mb-12 inline-flex items-center gap-3">
             <Image
-              src="/logo.jpeg"
+              src="/logo.png"
               alt="GenZ Logo"
               width={40}
               height={40}

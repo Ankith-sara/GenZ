@@ -1,37 +1,53 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SignupForm } from "@/app/signup/signup-form";
 import { GoogleSignInButton } from "@/components/google-signin";
 
 export default async function AdminSignupPage() {
   return (
-    <main className="bg-brand-yellow relative flex min-h-screen flex-col justify-center overflow-hidden py-12 sm:px-6 lg:px-8">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent" />
+    <main className="bg-cream-paper text-ink-black flex min-h-screen flex-col justify-center px-6 py-12 font-sans antialiased sm:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-md">
+        {/* Header Block */}
+        <div className="mb-8 text-center">
+          <Link href="/" className="group mb-4 inline-flex items-center gap-3">
+            <div className="border-ash/30 relative h-10 w-10 overflow-hidden rounded-md border">
+              <Image
+                src="/logo.png"
+                alt="GenZ Logo"
+                fill
+                className="object-cover"
+                sizes="40px"
+              />
+            </div>
+            <span className="font-graphik text-ink-black text-2xl font-normal tracking-[0.12em] uppercase">
+              Gen<span className="text-brand-yellow">Z</span>
+            </span>
+          </Link>
 
-      <div className="relative z-10 text-center sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/" className="group mb-6 inline-flex items-center gap-2">
-          <div className="bg-brand-yellow-dark text-brand-yellow flex h-10 w-10 items-center justify-center rounded-[4px] text-2xl font-normal transition-transform duration-300">
-            Z
+          <div>
+            <span className="text-brand-yellow font-graphik mb-3 inline-block rounded-none bg-black px-3 py-1 text-[10px] font-bold tracking-[0.2em] uppercase">
+              Control Center
+            </span>
           </div>
-          <span className="text-xl font-medium tracking-tight text-white">
-            GenZ Admin
-          </span>
-        </Link>
-        <h2 className="font-serif text-3xl font-normal text-white">Register Admin.</h2>
-        <p className="mt-2 text-sm text-white/70">
-          Create a new platform administrator account.
-        </p>
-      </div>
 
-      <div className="relative z-10 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-paper-white rounded-[4px] border border-black/5 px-6 py-8 sm:px-10">
+          <h1 className="text-ink-black font-serif text-3xl font-normal tracking-tight">
+            Register Administrator
+          </h1>
+          <p className="text-smoke font-graphik mt-2 text-sm">
+            Create a new platform administrator account.
+          </p>
+        </div>
+
+        {/* Auth Form Card */}
+        <div className="bg-pure-white border-ash rounded-none border p-6 shadow-sm sm:p-8">
           <SignupForm defaultRole="admin" />
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-black/10" />
+              <span className="border-ash/30 w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-paper-white px-2 text-gray-400">
+              <span className="bg-pure-white text-smoke font-graphik px-3">
                 Or continue with
               </span>
             </div>
@@ -40,15 +56,25 @@ export default async function AdminSignupPage() {
           <GoogleSignInButton redirectTo="/admin/dashboard?role=admin" />
         </div>
 
-        <p className="mt-6 text-center text-sm text-white/70">
+        {/* Footer info */}
+        <p className="text-smoke font-graphik mt-6 text-center text-sm">
           Already have an admin account?{" "}
           <Link
             href="/admin/login"
-            className="text-brand-yellow-dark font-semibold hover:underline"
+            className="text-ink-black font-semibold hover:underline"
           >
             Sign in
           </Link>
         </p>
+
+        <div className="font-graphik text-smoke mt-8 flex justify-center gap-4 text-xs">
+          <Link href="/terms" className="hover:underline">
+            Terms of Service
+          </Link>
+          <Link href="/privacy" className="hover:underline">
+            Privacy Policy
+          </Link>
+        </div>
       </div>
     </main>
   );

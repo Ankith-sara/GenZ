@@ -305,7 +305,7 @@ export function AboutClient() {
               <ScrollReveal>
                 <div className="border-ash bg-cream-paper group relative mb-6 h-48 w-48 cursor-pointer overflow-hidden rounded-none border">
                   <Image
-                    src="/founder.jpeg"
+                    src="/founder.png"
                     alt="Appala Sairam"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"

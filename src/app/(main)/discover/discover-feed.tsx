@@ -1,9 +1,24 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
+import { Search } from "lucide-react";
 import type { Product } from "@/types/database";
 import type { ProductFilters } from "./types";
+
+export function ProductCardSkeleton() {
+  return (
+    <div className="bg-paper-white animate-pulse rounded-[4px] border border-black/10 p-2.5">
+      <div className="aspect-square w-full rounded-[4px] bg-neutral-100" />
+      <div className="space-y-2 px-1.5 pt-3 pb-1.5">
+        <div className="h-3.5 w-1/3 rounded bg-neutral-100" />
+        <div className="h-4.5 w-3/4 rounded bg-neutral-100" />
+        <div className="h-4.5 w-1/4 rounded bg-neutral-100" />
+      </div>
+    </div>
+  );
+}
 
 export function DiscoverFeed({
   initialProducts,
@@ -65,9 +80,41 @@ export function DiscoverFeed({
 
   if (products.length === 0) {
     return (
-      <p className="text-muted-foreground py-16 text-center text-sm">
-        No products match those filters yet.
-      </p>
+      <div className="border-ash/30 bg-pure-white flex flex-col items-center justify-center border px-4 py-20 text-center">
+        <div className="bg-brand-yellow/10 text-brand-yellow-dark mb-5 flex h-16 w-16 items-center justify-center rounded-full">
+          <Search className="h-8 w-8 stroke-[1.5]" />
+        </div>
+        <h3 className="text-ink-black font-serif text-2xl font-normal tracking-tight sm:text-3xl">
+          No matches found
+        </h3>
+        <p className="text-smoke font-graphik mt-3 max-w-md text-sm leading-relaxed">
+          {filters.q ? (
+            <>
+              We couldn&apos;t find any products or manufacturers matching &ldquo;
+              <span className="text-ink-black font-semibold">{filters.q}</span>
+              &rdquo;.
+            </>
+          ) : (
+            "We couldn't find any products matching those filters."
+          )}
+        </p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <button
+            onClick={() => {
+              window.location.href = "/discover";
+            }}
+            className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik text-ink-black h-11 cursor-pointer border-none px-6 text-xs font-semibold tracking-wider uppercase transition-all"
+          >
+            Clear all filters
+          </button>
+          <Link
+            href="/"
+            className="border-ash text-ink-black hover:bg-cream-paper font-graphik flex h-11 items-center justify-center border bg-transparent px-6 text-xs font-semibold tracking-wider uppercase transition-all"
+          >
+            Go to Home
+          </Link>
+        </div>
+      </div>
     );
   }
 
@@ -82,7 +129,12 @@ export function DiscoverFeed({
       <div ref={sentinelRef} className="h-1" />
 
       {loading && (
-        <p className="text-muted-foreground py-8 text-center text-sm">Loading more…</p>
+        <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+        </div>
       )}
       {error && (
         <div className="py-8 text-center">
@@ -97,7 +149,7 @@ export function DiscoverFeed({
         </div>
       )}
       {!hasMore && !loading && (
-        <p className="text-muted-foreground py-8 text-center text-sm">
+        <p className="text-muted-foreground font-graphik py-8 text-center text-sm">
           You&apos;ve seen everything that matches.
         </p>
       )}

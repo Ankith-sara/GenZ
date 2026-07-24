@@ -17,7 +17,7 @@ export default async function SignupPage({
         <div>
           <Link href="/" className="mb-12 inline-flex items-center gap-3">
             <Image
-              src="/logo.jpeg"
+              src="/logo.png"
               alt="GenZ Logo"
               width={40}
               height={40}

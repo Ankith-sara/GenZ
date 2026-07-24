@@ -10,25 +10,25 @@ const stakeholdersList = [
   {
     index: "01",
     name: "Consumers",
-    image: "/consumers.jpeg",
+    image: "/consumers.png",
     copy: "Trusted, high-quality Indian products, straight from the source. We connect you directly to the factory floor, ensuring verified quality and competitive pricing without middleman markups.",
   },
   {
     index: "02",
     name: "Manufacturers",
-    image: "/manufacturers.jpeg",
+    image: "/manufacturers.png",
     copy: "Visibility, market demand insights, and a direct line to national buyers. We help you digitize your profile, showcase catalogs, and build lasting business relationships.",
   },
   {
     index: "03",
     name: "Startups",
-    image: "/startups.jpeg",
+    image: "/startups.png",
     copy: "Reliable manufacturing partners for products that don't exist yet. Discover local fabricators, request custom quotes, and turn prototypes into physical products.",
   },
   {
     index: "04",
     name: "Creators",
-    image: "/creators.jpeg",
+    image: "/creators.png",
     copy: "A stage to showcase process, not just the finished product. Share factory reels, tell your brand story, and build direct emotional and commercial trust with buyers.",
   },
   {
@@ -512,7 +512,7 @@ export default function HomePage() {
       <section className="border-ash bg-pure-white border-b px-6 py-20 sm:px-12 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat, i) => (
+            {stats.map((stat) => (
               <div key={stat.label} className="border-ash bg-cream-paper border p-8">
                 <p className="font-nantes text-brand-yellow text-5xl font-normal sm:text-6xl">
                   {stat.value}
@@ -569,7 +569,7 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <div className="border-ash bg-cream-paper relative h-10 w-10 overflow-hidden rounded-full border">
               <Image
-                src="/founder.jpeg"
+                src="/founder.png"
                 alt="Founder"
                 fill
                 className="object-cover"

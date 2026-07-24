@@ -1032,10 +1032,10 @@ export function ManufacturerSignupForm() {
     return (
       <div className="animate-fade-in text-left">
         <fieldset className="mb-6 border-0 p-0">
-          <legend className="mb-3 text-xs font-medium tracking-widest text-neutral-400 uppercase">
+          <legend className="mb-4 text-xs font-semibold tracking-widest text-neutral-500 uppercase">
             Select Your Business Profile
           </legend>
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {[
               {
                 id: "manufacturer" as BusinessType,
@@ -1057,22 +1057,40 @@ export function ManufacturerSignupForm() {
                 key={type.id}
                 type="button"
                 onClick={() => setBusinessType(type.id)}
-                className={`flex items-start gap-4 rounded-none border-2 p-4 text-left transition-all ${
+                className={`flex h-full cursor-pointer flex-col justify-between rounded-none border-2 p-5 text-left transition-all ${
                   businessType === type.id
-                    ? "border-black bg-black/5 ring-1 ring-black"
-                    : "border-ash bg-paper-white hover:border-gray-300"
+                    ? "border-black bg-black/5 shadow-sm ring-1 ring-black"
+                    : "border-ash/40 bg-paper-white hover:border-black/50"
                 }`}
               >
-                <div
-                  className={`rounded-none p-2 ${businessType === type.id ? "bg-black text-white" : "bg-gray-100 text-gray-400"}`}
-                >
-                  <Building2 className="h-5 w-5" />
-                </div>
                 <div>
-                  <h4 className="font-serif text-base font-semibold text-black">
+                  <div className="mb-3 flex items-center justify-between">
+                    <div
+                      className={`rounded-none p-2.5 ${
+                        businessType === type.id
+                          ? "bg-black text-white"
+                          : "bg-gray-100 text-gray-500"
+                      }`}
+                    >
+                      <Building2 className="h-5 w-5" />
+                    </div>
+                    {/* Dot indicator */}
+                    <div
+                      className={`flex h-4 w-4 items-center justify-center rounded-full border ${
+                        businessType === type.id
+                          ? "border-black bg-black"
+                          : "border-gray-400 bg-transparent"
+                      }`}
+                    >
+                      {businessType === type.id && (
+                        <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                      )}
+                    </div>
+                  </div>
+                  <h4 className="font-serif text-base leading-snug font-semibold text-black">
                     {type.title}
                   </h4>
-                  <p className="text-smoke mt-1 text-xs leading-relaxed">{type.desc}</p>
+                  <p className="text-smoke mt-2 text-xs leading-relaxed">{type.desc}</p>
                 </div>
               </button>
             ))}
@@ -1082,7 +1100,7 @@ export function ManufacturerSignupForm() {
         <Button
           type="button"
           onClick={() => setStep(1)}
-          className="mt-2 flex h-12 w-full items-center justify-center gap-1.5 rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
+          className="mt-4 flex h-12 w-full cursor-pointer items-center justify-center gap-1.5 rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
         >
           Continue <ArrowRight className="h-4 w-4" />
         </Button>

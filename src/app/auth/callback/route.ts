@@ -4,32 +4,64 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  let next = searchParams.get("next");
 
-  if (code) {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        const roleParam = searchParams.get("role");
-        const isAdminFlow = roleParam === "admin" || next.startsWith("/admin");
-        if (isAdminFlow) {
-          await supabase.from("profiles").update({ role: "admin" }).eq("id", user.id);
-        }
-      }
+  const supabase = await createClient();
 
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const isLocalEnv = process.env.NODE_ENV === "development";
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      } else {
-        return NextResponse.redirect(`${origin}${next}`);
+  // 1. Check if user already has an active session from an earlier exchange
+  const {
+    data: { user: existingUser },
+  } = await supabase.auth.getUser();
+
+  let user = existingUser;
+
+  // 2. If not logged in yet and code is present, exchange PKCE code for session
+  if (code && !user) {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error && data?.user) {
+      user = data.user;
+    }
+  }
+
+  // 3. If user is authenticated, direct them to their target dashboard based on role
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    const roleParam = searchParams.get("role");
+    const currentRole = profile?.role ?? user.user_metadata?.role;
+
+    if (
+      roleParam === "admin" ||
+      currentRole === "admin" ||
+      (next && next.startsWith("/admin"))
+    ) {
+      if (profile?.role !== "admin") {
+        await supabase.from("profiles").upsert({ id: user.id, role: "admin" });
       }
+      next = "/admin/dashboard";
+    } else if (!next) {
+      next =
+        currentRole === "manufacturer"
+          ? "/dashboard"
+          : currentRole === "buyer"
+            ? "/profile"
+            : "/dashboard";
+    }
+
+    const redirectPath = next ?? "/dashboard";
+    const forwardedHost = request.headers.get("x-forwarded-host");
+    const isLocalEnv = process.env.NODE_ENV === "development";
+
+    if (isLocalEnv) {
+      return NextResponse.redirect(`${origin}${redirectPath}`);
+    } else if (forwardedHost) {
+      return NextResponse.redirect(`https://${forwardedHost}${redirectPath}`);
+    } else {
+      return NextResponse.redirect(`${origin}${redirectPath}`);
     }
   }
 

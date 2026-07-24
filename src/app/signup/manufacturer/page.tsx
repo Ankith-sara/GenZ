@@ -4,12 +4,13 @@ import { ManufacturerSignupForm } from "./signup-form";
 
 export default function ManufacturerSignupPage() {
   return (
-    <main className="bg-cream-paper text-ink-black grid min-h-screen grid-cols-1 font-sans antialiased lg:grid-cols-12">
-      <div className="bg-cream-paper flex min-h-screen flex-col justify-between p-8 sm:p-12 md:p-16 lg:col-span-5">
+    <main className="bg-cream-paper text-ink-black flex min-h-screen flex-col items-center justify-between px-6 py-12 font-sans antialiased sm:px-12 md:px-16">
+      <div className="flex w-full max-w-md flex-1 flex-col justify-between md:max-w-2xl lg:max-w-4xl">
         <div>
+          {/* Header Link */}
           <Link href="/" className="mb-12 inline-flex items-center gap-3">
             <Image
-              src="/logo.jpeg"
+              src="/logo.png"
               alt="GenZ Logo"
               width={40}
               height={40}
@@ -20,7 +21,8 @@ export default function ManufacturerSignupPage() {
             </span>
           </Link>
 
-          <div className="mx-auto max-w-md lg:mx-0">
+          {/* Form Content Block */}
+          <div className="w-full">
             <span className="text-primary font-graphik mb-2 block text-xs font-semibold tracking-[0.2em] uppercase">
               Manufacturer Registration
             </span>
@@ -57,45 +59,14 @@ export default function ManufacturerSignupPage() {
           </div>
         </div>
 
-        <div className="font-graphik text-smoke mt-12 flex justify-center gap-4 text-xs lg:justify-start">
+        {/* Footer Links */}
+        <div className="font-graphik text-smoke mt-12 flex justify-center gap-4 text-xs">
           <Link href="/terms" className="hover:underline">
             Terms of Service
           </Link>
           <Link href="/privacy" className="hover:underline">
             Privacy Policy
           </Link>
-        </div>
-      </div>
-
-      {/* Right side: Visual Panel */}
-      <div className="bg-charcoal relative hidden overflow-hidden lg:col-span-7 lg:block">
-        <Image
-          src="/manufacturers.jpeg"
-          alt="GenZ Manufacturer Community"
-          fill
-          priority
-          className="object-cover opacity-40"
-        />
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-        {/* Brand visual text overlay */}
-        <div className="absolute inset-0 z-20 flex flex-col justify-between p-16">
-          <div className="font-graphik text-xs tracking-[0.3em] text-white/60 uppercase">
-            GenZ Partners
-          </div>
-          <div className="max-w-xl">
-            <p className="font-nantes mb-6 text-4xl leading-tight text-white italic">
-              &quot;Visibility, demand insights, and a direct line to regional and
-              national customers.&quot;
-            </p>
-            <p className="font-graphik text-sm leading-relaxed text-white/80">
-              We provide you with digital tooling, logistics integrations, and verified
-              leads to expand your reach beyond geographic boundaries.
-            </p>
-          </div>
-          <div className="font-graphik text-xs text-white/40">
-            © 2026 GenZ. All rights reserved.
-          </div>
         </div>
       </div>
     </main>

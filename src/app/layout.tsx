@@ -45,9 +45,9 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: "/favicon.jpeg",
+    icon: "/favicon.png",
     shortcut: "/favicon.ico",
-    apple: "/logo.jpeg",
+    apple: "/logo.png",
   },
   openGraph: {
     type: "website",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     siteName: "GenZ Platform",
     images: [
       {
-        url: "/logo.jpeg",
+        url: "/logo.png",
         width: 800,
         height: 800,
         alt: "GenZ Logo",
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     title: "GenZ — Direct Made-in-India Manufacturing Platform",
     description:
       "Connect directly with verified Indian manufacturers and source quality products with zero middleman markups.",
-    images: ["/logo.jpeg"],
+    images: ["/logo.png"],
   },
   robots: {
     index: true,
@@ -96,7 +96,7 @@ export default function RootLayout({
     "@type": "Organization",
     name: "GenZ Platform",
     url: siteUrl,
-    logo: `${siteUrl}/logo.jpeg`,
+    logo: `${siteUrl}/logo.png`,
     description:
       "India's trusted B2C manufacturing and innovation platform connecting buyers with verified domestic makers.",
     sameAs: ["https://www.instagram.com/genzonline.in"],
