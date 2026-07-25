@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/require-role";
 import { AdminDashboardTabs } from "./admin-tabs";
+import { signOut } from "@/app/login/actions";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 
 export default async function AdminDashboard() {
   const session = await requireRole("admin");
@@ -52,6 +55,17 @@ export default async function AdminDashboard() {
             Welcome, {session.profile?.full_name ?? "Administrator"}.
           </h1>
         </div>
+        <form action={signOut}>
+          <Button
+            type="submit"
+            variant="outline"
+            size="sm"
+            className="border-ash text-ink-black hover:bg-cream-paper rounded-none"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Sign out
+          </Button>
+        </form>
       </div>
 
       {/* High level Stats Indicators */}
