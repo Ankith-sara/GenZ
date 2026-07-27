@@ -16,6 +16,15 @@ export type Profile = {
   avatar_url: string | null;
   city: string | null;
   phone: string | null;
+  state: string | null;
+  pincode: string | null;
+  alternate_phone: string | null;
+  bio: string | null;
+  email_notifications: boolean;
+  gst_number: string | null;
+  shipping_address: string | null;
+  account_status: string;
+  last_active_at: string | null;
   created_at: string;
 };
 

@@ -22,51 +22,33 @@ begin
       phone = excluded.phone,
       city = excluded.city;
 
-    -- If registered as manufacturer, also populate public.manufacturer_profiles
+    -- If registered as manufacturer with initial onboarding data in metadata, populate manufacturer_profiles
     if (new.raw_user_meta_data ->> 'role') = 'manufacturer' then
-      insert into public.manufacturer_profiles (
-        id,
-        business_name,
-        owner_name,
-        business_type,
-        factory_address,
-        state,
-        district,
-        pincode,
-        established_year,
-        google_maps_location,
-        employee_count,
-        product_categories,
-        products_manufactured,
-        manufacturing_capacity,
-        moq,
-        pan_number,
-        cin_number,
-        walkthrough_video_url,
-        status
-      )
-      values (
-        new.id,
-        coalesce(new.raw_user_meta_data ->> 'business_name', 'Unnamed Business'),
-        coalesce(new.raw_user_meta_data ->> 'owner_name', new.raw_user_meta_data ->> 'full_name', 'Owner'),
-        coalesce(new.raw_user_meta_data ->> 'business_type', 'manufacturer'),
-        new.raw_user_meta_data ->> 'factory_address',
-        new.raw_user_meta_data ->> 'state',
-        new.raw_user_meta_data ->> 'district',
-        new.raw_user_meta_data ->> 'pincode',
-        nullif(new.raw_user_meta_data ->> 'established_year', '')::integer,
-        new.raw_user_meta_data ->> 'google_maps_location',
-        nullif(new.raw_user_meta_data ->> 'employee_count', '')::integer,
-        new.raw_user_meta_data ->> 'product_categories',
-        new.raw_user_meta_data ->> 'products_manufactured',
-        new.raw_user_meta_data ->> 'manufacturing_capacity',
-        new.raw_user_meta_data ->> 'moq',
-        new.raw_user_meta_data ->> 'pan_number',
-        new.raw_user_meta_data ->> 'cin_number',
-        new.raw_user_meta_data ->> 'walkthrough_video',
-        'pending'
-      )
-      on conflict (id) do nothing;
+      if (new.raw_user_meta_data ->> 'business_name') is not null and (new.raw_user_meta_data ->> 'gst_number') is not null then
+        insert into public.manufacturer_profiles (
+          id,
+          business_name,
+          gst_number,
+          factory_address,
+          city,
+          state,
+          pincode,
+          description,
+          established_year
+        )
+        values (
+          new.id,
+          new.raw_user_meta_data ->> 'business_name',
+          new.raw_user_meta_data ->> 'gst_number',
+          new.raw_user_meta_data ->> 'factory_address',
+          new.raw_user_meta_data ->> 'city',
+          new.raw_user_meta_data ->> 'state',
+          new.raw_user_meta_data ->> 'pincode',
+          new.raw_user_meta_data ->> 'description',
+          nullif(new.raw_user_meta_data ->> 'established_year', '')::integer
+        )
+        on conflict (id) do nothing;
+      end if;
     end if;
   end if;
 
@@ -74,7 +56,7 @@ begin
 end;
 $$;
 
--- Drop previous trigger and attach trigger to INSERT or UPDATE of email_confirmed_at
+-- Drop previous triggers and attach trigger to INSERT or UPDATE of email_confirmed_at
 drop trigger if exists on_auth_user_created on auth.users;
 drop trigger if exists on_auth_user_created_or_verified on auth.users;
 
