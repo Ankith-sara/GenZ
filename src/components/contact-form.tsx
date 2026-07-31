@@ -73,10 +73,10 @@ export function ContactForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="border-ash bg-pure-white rounded-md border p-8 text-left shadow-none"
+      className="border-ash rounded-2xl border bg-white p-8 text-left shadow-xs"
     >
       <fieldset className="mb-6 border-0 p-0">
-        <legend className="text-smoke font-graphik mb-3 text-xs tracking-[0.154px] uppercase">
+        <legend className="text-smoke font-graphik mb-3 text-xs font-medium tracking-[0.154px] uppercase">
           What&apos;s this about?
         </legend>
         <div
@@ -90,10 +90,10 @@ export function ContactForm() {
               type="button"
               aria-pressed={reason === r}
               onClick={() => setReason(r)}
-              className={`font-graphik h-9 rounded-full border px-4 text-xs font-normal tracking-[0.009em] transition-colors ${
+              className={`font-graphik h-9 rounded-full border px-4 text-xs font-semibold tracking-wider transition-all ${
                 reason === r
-                  ? "bg-ink-black text-pure-white border-ink-black"
-                  : "bg-pure-white text-charcoal border-charcoal hover:border-ink-black"
+                  ? "bg-brand-yellow border-brand-yellow text-black shadow-xs"
+                  : "text-smoke border-ash bg-white hover:border-black hover:text-black"
               }`}
             >
               {r}
@@ -106,7 +106,7 @@ export function ContactForm() {
         <div>
           <Label
             htmlFor="contactName"
-            className="text-charcoal font-graphik mb-1.5 block text-xs"
+            className="text-smoke font-graphik mb-1.5 block text-xs font-medium"
           >
             Full name{" "}
             <span aria-hidden="true" className="text-destructive">
@@ -120,7 +120,7 @@ export function ContactForm() {
             required
             aria-invalid={!!errors.name}
             value={name}
-            className="border-ash focus-visible:ring-ink-black font-graphik h-11 animate-none rounded-md"
+            className="border-ash focus-visible:ring-ink-black font-graphik h-11 animate-none rounded-xl bg-[#FAF7F0]/50"
             onChange={(e) => setName(e.target.value)}
           />
           {errors.name && (
@@ -132,7 +132,7 @@ export function ContactForm() {
         <div>
           <Label
             htmlFor="contactEmail"
-            className="text-charcoal font-graphik mb-1.5 block text-xs"
+            className="text-smoke font-graphik mb-1.5 block text-xs font-medium"
           >
             Email{" "}
             <span aria-hidden="true" className="text-destructive">
@@ -147,7 +147,7 @@ export function ContactForm() {
             required
             aria-invalid={!!errors.email}
             value={email}
-            className="border-ash focus-visible:ring-ink-black font-graphik h-11 animate-none rounded-md"
+            className="border-ash focus-visible:ring-ink-black font-graphik h-11 animate-none rounded-xl bg-[#FAF7F0]/50"
             onChange={(e) => setEmail(e.target.value)}
           />
           {errors.email && (
@@ -161,7 +161,7 @@ export function ContactForm() {
       <div className="mb-6">
         <Label
           htmlFor="contactMessage"
-          className="text-charcoal font-graphik mb-1.5 block text-xs"
+          className="text-smoke font-graphik mb-1.5 block text-xs font-medium"
         >
           Message{" "}
           <span aria-hidden="true" className="text-destructive">
@@ -175,7 +175,7 @@ export function ContactForm() {
           required
           aria-invalid={!!errors.message}
           value={message}
-          className="border-ash focus-visible:ring-ink-black font-graphik animate-none rounded-md"
+          className="border-ash focus-visible:ring-ink-black font-graphik animate-none rounded-xl bg-[#FAF7F0]/50"
           onChange={(e) => setMessage(e.target.value)}
         />
         {errors.message && (
@@ -193,7 +193,7 @@ export function ContactForm() {
 
       <Button
         type="submit"
-        className="bg-ink-black text-pure-white hover:bg-charcoal font-graphik h-11 w-full rounded-md text-sm font-normal tracking-[0.009em] uppercase"
+        className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik h-11 w-full rounded-full text-xs font-semibold tracking-wider text-black uppercase shadow-xs transition-all"
         disabled={status === "submitting"}
       >
         {status === "submitting" ? "Sending…" : "Send Message"}

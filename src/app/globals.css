@@ -128,3 +128,20 @@ h3 {
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+
+@keyframes verticalMarquee {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-vertical-marquee {
+  animation: verticalMarquee 25s linear infinite;
+}
+
+.animate-vertical-marquee:hover {
+  animation-play-state: paused;
+}

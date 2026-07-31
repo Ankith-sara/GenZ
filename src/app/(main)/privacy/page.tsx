@@ -1,6 +1,9 @@
+import { Lock, Sparkles } from "lucide-react";
+import Link from "next/link";
+
 export const metadata = {
-  title: "Privacy Policy — GenZ",
-  description: "How GenZ collects, uses, and protects your data.",
+  title: "Privacy Policy — GenZ Platform",
+  description: "How GenZ collects, uses, and protects your data under DPDP standards.",
 };
 
 const SECTIONS = [
@@ -48,43 +51,59 @@ const SECTIONS = [
 
 export default async function PrivacyPage() {
   return (
-    <div className="bg-cream-paper text-ink-black flex min-h-screen flex-col font-sans antialiased">
-      <main className="flex-1">
-        {/* Page Header */}
-        <section className="border-ash border-b px-6 py-16 sm:px-12 sm:py-20">
-          <div className="mx-auto max-w-3xl text-left">
-            <span className="text-caption font-graphik text-smoke mb-3 block tracking-[0.2em] uppercase">
+    <main className="bg-cream-paper text-ink-black min-h-screen flex-1 font-sans antialiased">
+      {/* Hero Section (CREAM BG) */}
+      <section className="border-ash border-b bg-[#FAF7F0] px-6 py-16 sm:px-12 sm:py-24">
+        <div className="mx-auto max-w-4xl text-left">
+          <div className="tag border-ash mb-4 inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 shadow-xs">
+            <Lock className="text-brand-yellow-dark h-3.5 w-3.5" />
+            <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
               Legal &amp; Compliance
             </span>
-            <h1 className="font-nantes text-ink-black mb-4 text-4xl leading-[1.05] font-normal tracking-tight sm:text-5xl">
-              Privacy Policy
-            </h1>
-            <p className="font-graphik text-smoke text-xs sm:text-sm">
-              Last updated: July 2026 &bull; Compliant with Indian DPDP Act &amp; Google
-              OAuth Security Standards
-            </p>
           </div>
-        </section>
+          <h1 className="font-nantes text-ink-black mb-4 text-4xl leading-[1.08] font-normal tracking-tight sm:text-6xl">
+            Privacy Policy
+          </h1>
+          <p className="font-graphik text-smoke text-sm">
+            Last updated: July 2026 &bull; Compliant with Indian DPDP Act &amp; Google
+            OAuth Security Standards
+          </p>
+        </div>
+      </section>
 
-        {/* Content Section */}
-        <section className="px-6 py-12 sm:px-12 sm:py-16">
-          <div className="bg-pure-white border-ash mx-auto flex max-w-3xl flex-col gap-10 rounded-none border p-8 shadow-sm sm:p-12">
-            {SECTIONS.map((s) => (
-              <div
-                key={s.title}
-                className="border-ash/30 border-b pb-8 last:border-b-0 last:pb-0"
-              >
-                <h2 className="font-nantes text-ink-black mb-3 text-xl font-normal tracking-tight sm:text-2xl">
-                  {s.title}
-                </h2>
-                <p className="font-graphik text-charcoal text-sm leading-relaxed sm:text-base">
-                  {s.body}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
-    </div>
+      {/* Content Section (WHITE BG) */}
+      <section className="border-ash border-b bg-white px-6 py-12 sm:px-12 sm:py-20">
+        <div className="border-ash mx-auto flex max-w-4xl flex-col gap-10 rounded-2xl border bg-[#FAF7F0] p-8 shadow-xs sm:p-12">
+          {SECTIONS.map((s) => (
+            <div
+              key={s.title}
+              className="border-ash/60 border-b pb-8 last:border-b-0 last:pb-0"
+            >
+              <h2 className="font-nantes text-ink-black mb-3 text-xl font-normal tracking-tight sm:text-2xl">
+                {s.title}
+              </h2>
+              <p className="font-graphik text-smoke text-sm leading-relaxed sm:text-base">
+                {s.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Support CTA (CREAM BG) */}
+      <section className="bg-[#FAF7F0] px-6 py-16 sm:px-12">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="font-graphik text-smoke text-sm">
+            Need to request data deletion or have privacy inquiries?{" "}
+            <Link
+              href="/contact"
+              className="decoration-brand-yellow-dark hover:text-brand-yellow-dark font-semibold text-black underline underline-offset-4"
+            >
+              Contact Data Protection Team
+            </Link>
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }

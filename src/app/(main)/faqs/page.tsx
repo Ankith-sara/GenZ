@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, HelpCircle, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "FAQs — GenZ",
+  title: "FAQs — GenZ Platform",
   description:
-    "Answers to common questions about buying, selling, and verification on GenZ.",
+    "Answers to common questions about buying, selling, and GST verification on GenZ.",
 };
 
 type Faq = { q: string; a: string };
@@ -46,7 +46,7 @@ const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "How long does verification take?",
-        a: "Most applications are reviewed within a few business days. You can check your status anytime from Dashboard → Verification once you've registered.",
+        a: "Most applications are reviewed within 24–48 business hours. You can check your status anytime from Dashboard → Verification once you've registered.",
       },
       {
         q: "Is there a listing fee?",
@@ -59,7 +59,7 @@ const FAQ_GROUPS: FaqGroup[] = [
     ],
   },
   {
-    title: "General",
+    title: "General & Trust",
     items: [
       {
         q: "What's GenZ's mission?",
@@ -67,7 +67,7 @@ const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "How do I contact support?",
-        a: "Use the Contact page for email, LinkedIn, and Instagram channels, or reach out at genz.official.hq@gmail.com directly.",
+        a: "Use the Contact page for email, hotline, and Instagram channels, or reach out at genz.official.hq@gmail.com directly.",
       },
       {
         q: "Where can I read the legal details?",
@@ -98,51 +98,48 @@ export default async function FaqsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      {/* Hero */}
-      <section className="border-ash border-b px-6 py-20 sm:px-12 sm:py-28">
+
+      {/* Hero Section (CREAM BG) */}
+      <section className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12 sm:py-28">
         <div className="mx-auto max-w-4xl text-left">
-          <span className="text-caption font-graphik text-smoke mb-4 block tracking-[0.2em] uppercase">
-            Support
-          </span>
-          <h1 className="font-nantes text-ink-black mb-5 text-4xl leading-[1.1] font-normal tracking-tight sm:text-6xl">
+          <div className="tag border-ash mb-4 inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 shadow-xs">
+            <Sparkles className="text-brand-yellow-dark h-3.5 w-3.5" />
+            <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
+              Help Center &amp; Support
+            </span>
+          </div>
+          <h1 className="font-nantes text-ink-black mb-5 text-4xl leading-[1.08] font-normal tracking-tight sm:text-6xl">
             Frequently Asked Questions
           </h1>
-          <p className="text-charcoal text-body font-graphik max-w-2xl leading-relaxed">
+          <p className="text-smoke font-graphik max-w-2xl text-base leading-relaxed">
             Everything you need to know about buying from verified Indian manufacturers,
-            selling on GenZ, and how the trust network works. Can&apos;t find your
-            answer?{" "}
-            <Link
-              href="/contact"
-              className="decoration-brand-yellow-dark hover:text-brand-yellow font-medium underline decoration-2 underline-offset-4"
-            >
-              Get in touch
-            </Link>
-            .
+            selling on GenZ, and how our trust network operates.
           </p>
         </div>
       </section>
 
-      {/* FAQ Groups */}
-      <section className="px-6 py-16 sm:px-12 sm:py-24">
+      {/* FAQ Groups (WHITE BG) */}
+      <section className="border-ash border-b bg-white px-6 py-16 sm:px-12 sm:py-24">
         <div className="mx-auto flex max-w-4xl flex-col gap-14">
           {FAQ_GROUPS.map((group) => (
             <div key={group.title}>
-              <h2 className="font-nantes text-ink-black mb-6 text-2xl tracking-tight sm:text-3xl">
+              <h2 className="font-nantes text-ink-black mb-6 text-2xl font-normal sm:text-3xl">
                 {group.title}
               </h2>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-4">
                 {group.items.map((item) => (
                   <details
                     key={item.q}
-                    className="group bg-pure-white border-ash open:border-brand-yellow rounded-none border transition-colors"
+                    className="group border-ash rounded-2xl border bg-[#FAF7F0] shadow-xs transition-all open:border-black"
                   >
                     <summary className="text-ink-black flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-left font-medium select-none focus:outline-none sm:p-6">
-                      <span className="font-graphik text-sm font-semibold sm:text-base">
+                      <span className="font-nantes flex items-center gap-3 text-lg font-normal sm:text-xl">
+                        <HelpCircle className="text-brand-yellow-dark h-5 w-5 shrink-0" />
                         {item.q}
                       </span>
-                      <ChevronDown className="text-smoke h-4 w-4 shrink-0 transition-transform duration-200 group-open:rotate-180" />
+                      <ChevronDown className="text-smoke h-5 w-5 shrink-0 transition-transform duration-300 group-open:rotate-180" />
                     </summary>
-                    <p className="text-charcoal font-graphik -mt-1 px-5 pb-5 text-sm leading-relaxed sm:px-6 sm:pb-6">
+                    <p className="font-graphik text-smoke pr-6 pb-6 pl-13 text-sm leading-relaxed">
                       {item.a}
                     </p>
                   </details>
@@ -153,22 +150,29 @@ export default async function FaqsPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-6 pb-24 sm:px-12">
-        <div className="bg-brand-yellow mx-auto flex max-w-4xl flex-col gap-6 rounded-none p-10 text-left sm:flex-row sm:items-center sm:justify-between sm:p-12">
+      {/* CTA Section (CREAM BG) */}
+      <section className="bg-[#FAF7F0] px-6 py-20 sm:px-12 sm:py-28">
+        <div className="border-ash mx-auto flex max-w-4xl flex-col gap-6 rounded-2xl border bg-white p-8 text-left shadow-xs sm:flex-row sm:items-center sm:justify-between sm:p-12">
           <div>
-            <h3 className="font-nantes mb-2 text-2xl font-normal tracking-tight text-white sm:text-3xl">
+            <span className="bg-brand-yellow font-graphik mb-3 inline-block rounded-full px-3 py-1 text-[10px] font-semibold tracking-wider text-black uppercase shadow-xs">
+              24-Hour Support
+            </span>
+            <h3 className="font-nantes text-ink-black mb-2 text-2xl font-normal tracking-tight sm:text-3xl">
               Still have questions?
             </h3>
-            <p className="text-caption font-graphik text-white/70">
-              Our team typically responds within one business day.
+            <p className="font-graphik text-smoke text-sm">
+              Our team typically responds to all inquiries within one business day.
             </p>
           </div>
           <Button
             asChild
-            className="bg-brand-yellow-dark text-ink-black hover:bg-brand-yellow-dark/90 font-graphik h-12 shrink-0 rounded-none border-none px-8 text-xs font-medium tracking-wider uppercase"
+            size="lg"
+            className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik h-12 rounded-full border-none px-8 text-xs font-semibold tracking-wider text-black uppercase shadow-xs transition-all"
           >
-            <Link href="/contact">Contact Us</Link>
+            <Link href="/contact" className="inline-flex items-center gap-2">
+              <span>Contact Team</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </section>
