@@ -674,30 +674,43 @@ export default function HomePage() {
           <span className="font-graphik text-smoke shrink-0 text-xs font-semibold tracking-[0.25em] uppercase">
             Institutional validation
           </span>
-          <div className="flex flex-1 flex-wrap items-center justify-end gap-10 sm:gap-16">
-            {marqueeLogos.map((logo) =>
-              logo === "MAKE IN INDIA" ? (
-                <span
-                  key={logo}
-                  className="font-graphik rounded-lg border border-neutral-800 px-3 py-1.5 text-xs font-medium tracking-widest text-neutral-800 uppercase"
-                >
-                  {logo}
-                </span>
-              ) : (
-                <span
-                  key={logo}
-                  className={`font-graphik text-lg font-semibold tracking-tighter ${
-                    logo === "sidbi"
-                      ? "text-brand-blue"
-                      : logo === "NSIC"
-                        ? "text-red-700"
-                        : "text-base font-medium tracking-wide text-neutral-800 uppercase"
-                  }`}
-                >
-                  {logo}
-                </span>
-              )
-            )}
+          <div className="flex flex-1 flex-wrap items-center justify-center gap-6 sm:justify-end sm:gap-10">
+            <div className="relative h-12 w-28 shrink-0">
+              <Image
+                src="/sidbi_logo.png"
+                alt="SIDBI"
+                fill
+                className="object-contain mix-blend-multiply"
+                sizes="112px"
+              />
+            </div>
+            <div className="relative h-12 w-28 shrink-0">
+              <Image
+                src="/nsic_logo.png"
+                alt="NSIC"
+                fill
+                className="object-contain mix-blend-multiply"
+                sizes="112px"
+              />
+            </div>
+            <div className="relative h-12 w-24 shrink-0">
+              <Image
+                src="/dpiit_logo.png"
+                alt="DPIIT"
+                fill
+                className="object-contain mix-blend-multiply"
+                sizes="96px"
+              />
+            </div>
+            <div className="relative h-14 w-36 shrink-0">
+              <Image
+                src="/make_in_india.png"
+                alt="Make in India"
+                fill
+                className="object-contain mix-blend-multiply"
+                sizes="144px"
+              />
+            </div>
           </div>
         </div>
       </section>

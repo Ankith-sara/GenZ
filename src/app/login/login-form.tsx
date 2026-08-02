@@ -4,15 +4,20 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { verifyPasswordAndSendOtp, verifyOtpLogin } from "./actions";
+import {
+  verifyPasswordAndSendOtp,
+  verifyOtpLogin,
+  directPasswordLogin,
+} from "./actions";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 
 interface LoginFormProps {
   redirectTo: string;
+  disableOtp?: boolean;
 }
 
-export function LoginForm({ redirectTo }: LoginFormProps) {
+export function LoginForm({ redirectTo, disableOtp = true }: LoginFormProps) {
   const [step, setStep] = useState<"credentials" | "otp">("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,21 +26,61 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
+  // Touch tracking for real-time validation
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const emailError = touched.email
+    ? !email.trim()
+      ? "Email address is required."
+      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+        ? "Please enter a valid email address (e.g. user@example.com)."
+        : null
+    : null;
+
+  const passwordError = touched.password
+    ? !password
+      ? "Password is required."
+      : password.length < 6
+        ? "Password must be at least 6 characters."
+        : null
+    : null;
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
   async function handleCredentialsSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setTouched({ email: true, password: true });
+
+    if (emailError || passwordError || !email || !password) {
+      return;
+    }
+
     setError(null);
     setIsPending(true);
 
     try {
-      const res = await verifyPasswordAndSendOtp(email, password);
-      if (res.error) {
-        setError(res.error);
+      if (disableOtp) {
+        const res = await directPasswordLogin(email, password);
+        if (res.error) {
+          setError(res.error);
+          setIsPending(false);
+        } else {
+          window.location.href = redirectTo;
+        }
       } else {
-        setStep("otp");
+        const res = await verifyPasswordAndSendOtp(email, password);
+        if (res.error) {
+          setError(res.error);
+          setIsPending(false);
+        } else {
+          setStep("otp");
+          setIsPending(false);
+        }
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred.");
-    } finally {
       setIsPending(false);
     }
   }
@@ -126,10 +171,21 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           type="email"
           autoComplete="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (!touched.email) setTouched((prev) => ({ ...prev, email: true }));
+          }}
+          onBlur={() => handleBlur("email")}
           required
-          className="border-ash rounded-none focus-visible:ring-black"
+          className={`border-ash rounded-none focus-visible:ring-black ${
+            emailError ? "border-red-500 ring-1 ring-red-500" : ""
+          }`}
         />
+        {emailError && (
+          <p className="animate-fade-in mt-1 text-xs font-medium text-red-600">
+            {emailError}
+          </p>
+        )}
       </div>
 
       <div className="relative mb-2">
@@ -148,9 +204,16 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (!touched.password)
+                setTouched((prev) => ({ ...prev, password: true }));
+            }}
+            onBlur={() => handleBlur("password")}
             required
-            className="border-ash rounded-none pr-10 focus-visible:ring-black"
+            className={`border-ash rounded-none pr-10 focus-visible:ring-black ${
+              passwordError ? "border-red-500 ring-1 ring-red-500" : ""
+            }`}
           />
           <button
             type="button"
@@ -165,6 +228,11 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             )}
           </button>
         </div>
+        {passwordError && (
+          <p className="animate-fade-in mt-1 text-xs font-medium text-red-600">
+            {passwordError}
+          </p>
+        )}
       </div>
 
       {error && (
@@ -176,9 +244,9 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       <Button
         type="submit"
         className="mt-6 h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
-        disabled={isPending}
+        disabled={isPending || !!emailError || !!passwordError}
       >
-        {isPending ? "Sending OTP..." : "Sign In"}
+        {isPending ? "Signing in..." : "Sign In"}
       </Button>
     </form>
   );

@@ -36,8 +36,39 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const nameError =
+    touched.fullName && !fullName.trim() ? "Full name is required." : null;
+
+  const emailError = touched.email
+    ? !email.trim()
+      ? "Email address is required."
+      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+        ? "Please enter a valid email address (e.g. user@example.com)."
+        : null
+    : null;
+
+  const passwordError = touched.password
+    ? !password
+      ? "Password is required."
+      : password.length < 8
+        ? "Password must be at least 8 characters."
+        : null
+    : null;
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
   async function handleDetailsSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setTouched({ fullName: true, email: true, password: true });
+
+    if (nameError || emailError || passwordError || !fullName || !email || !password) {
+      return;
+    }
+
     setError(null);
     setIsPending(true);
 
@@ -68,7 +99,11 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
       } else {
         // Successfully verified! Redirect instantly
         const target =
-          role === "manufacturer" ? "/dashboard/pending-verification" : "/profile";
+          role === "admin"
+            ? "/admin/dashboard"
+            : role === "manufacturer"
+              ? "/dashboard/pending-verification"
+              : "/profile";
         window.location.href = target;
       }
     } catch (err: unknown) {
@@ -180,10 +215,21 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           id="fullName"
           autoComplete="name"
           value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          onChange={(e) => {
+            setFullName(e.target.value);
+            if (!touched.fullName) setTouched((prev) => ({ ...prev, fullName: true }));
+          }}
+          onBlur={() => handleBlur("fullName")}
           required
-          className="border-ash rounded-none focus-visible:ring-black"
+          className={`border-ash rounded-none focus-visible:ring-black ${
+            nameError ? "border-red-500 ring-1 ring-red-500" : ""
+          }`}
         />
+        {nameError && (
+          <p className="animate-fade-in mt-1 text-xs font-medium text-red-600">
+            {nameError}
+          </p>
+        )}
       </div>
 
       <div className="mb-4">
@@ -193,10 +239,21 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           type="email"
           autoComplete="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (!touched.email) setTouched((prev) => ({ ...prev, email: true }));
+          }}
+          onBlur={() => handleBlur("email")}
           required
-          className="border-ash rounded-none focus-visible:ring-black"
+          className={`border-ash rounded-none focus-visible:ring-black ${
+            emailError ? "border-red-500 ring-1 ring-red-500" : ""
+          }`}
         />
+        {emailError && (
+          <p className="animate-fade-in mt-1 text-xs font-medium text-red-600">
+            {emailError}
+          </p>
+        )}
       </div>
 
       <div className="mb-2">
@@ -207,10 +264,17 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (!touched.password)
+                setTouched((prev) => ({ ...prev, password: true }));
+            }}
+            onBlur={() => handleBlur("password")}
             minLength={8}
             required
-            className="border-ash rounded-none pr-10 focus-visible:ring-black"
+            className={`border-ash rounded-none pr-10 focus-visible:ring-black ${
+              passwordError ? "border-red-500 ring-1 ring-red-500" : ""
+            }`}
           />
           <button
             type="button"
@@ -225,7 +289,13 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
             )}
           </button>
         </div>
-        <p className="text-muted-foreground mt-1.5 text-xs">At least 8 characters.</p>
+        {passwordError ? (
+          <p className="animate-fade-in mt-1 text-xs font-medium text-red-600">
+            {passwordError}
+          </p>
+        ) : (
+          <p className="text-muted-foreground mt-1.5 text-xs">At least 8 characters.</p>
+        )}
       </div>
 
       {error && (
@@ -237,7 +307,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
       <Button
         type="submit"
         className="mt-6 h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
-        disabled={isPending}
+        disabled={isPending || !!nameError || !!emailError || !!passwordError}
       >
         {isPending ? "Creating account…" : "Create account"}
       </Button>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
-import { CookieConsent } from "@/components/cookie-consent";
 import { Analytics } from "@vercel/analytics/next";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://genzonline.in";
@@ -115,7 +114,6 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         {children}
-        <CookieConsent />
         <Analytics />
       </body>
     </html>

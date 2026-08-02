@@ -6,9 +6,9 @@ import { GoogleSignInButton } from "@/components/google-signin";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ redirectTo?: string }>;
+  searchParams: Promise<{ redirectTo?: string; error?: string }>;
 }) {
-  const { redirectTo } = await searchParams;
+  const { redirectTo, error } = await searchParams;
 
   return (
     <main className="bg-cream-paper text-ink-black grid min-h-screen grid-cols-1 font-sans antialiased lg:grid-cols-12">
@@ -37,6 +37,12 @@ export default async function LoginPage({
             </p>
 
             <div className="bg-pure-white border-ash rounded-none border p-6 shadow-none sm:p-8">
+              {error && (
+                <div className="mb-6 rounded-none border border-red-200 bg-red-50 p-3.5 text-xs text-red-700">
+                  <p className="font-semibold">Authentication Notice</p>
+                  <p className="mt-0.5 opacity-90">{error}</p>
+                </div>
+              )}
               <LoginForm redirectTo={redirectTo ?? "/dashboard"} />
 
               <div className="relative my-6">

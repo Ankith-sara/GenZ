@@ -41,30 +41,49 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  // 2. If user is already authenticated (or code was already consumed) and has error/code in URL,
-  // redirect them directly to their appropriate dashboard instead of showing error
-  if (user && (code || errorParam)) {
-    const { data: profile } = await supabase
+  // Helper to resolve role from profile + user metadata
+  async function resolveRole(): Promise<string> {
+    if (!user) return "buyer";
+
+    const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", user.id)
       .single();
 
-    const role = profile?.role ?? "buyer";
+    const profileRole = profile?.role;
+    const metaRole = user.user_metadata?.role;
+    const resolved = profileRole ?? metaRole ?? "buyer";
+
+    console.log(
+      `[middleware] path=${path}, user=${user.email}, profile_role=${profileRole ?? "NULL"}, meta_role=${metaRole ?? "NULL"}, resolved=${resolved}, profile_error=${profileError?.message ?? "none"}`
+    );
+
+    return resolved;
+  }
+
+  // 2. If user is already authenticated and has error/code in URL,
+  // redirect them directly to their appropriate dashboard
+  if (user && (code || errorParam)) {
+    const role = await resolveRole();
     const url = request.nextUrl.clone();
     url.search = ""; // clear query params
     url.pathname =
       role === "admin"
         ? "/admin/dashboard"
-        : role === "buyer"
-          ? "/profile"
-          : "/dashboard";
+        : role === "manufacturer"
+          ? "/dashboard"
+          : "/profile";
     return NextResponse.redirect(url);
   }
 
   const isProtected =
-    path.startsWith("/dashboard") || path.startsWith("/admin/dashboard");
-  const isAdminPath = path.startsWith("/admin/dashboard");
+    path.startsWith("/dashboard") ||
+    path.startsWith("/admin/dashboard") ||
+    (path.startsWith("/admin") &&
+      !path.startsWith("/admin/login") &&
+      !path.startsWith("/admin/signup"));
+  const isAdminPath = path.startsWith("/admin/dashboard") || path === "/admin";
   const isAuthOnly =
     path.startsWith("/login") ||
     path.startsWith("/signup") ||
@@ -79,30 +98,23 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (user) {
-    // Fetch profile role to handle proper redirect
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    const role = profile?.role ?? "buyer";
+    const role = await resolveRole();
 
     if (isAuthOnly) {
       const url = request.nextUrl.clone();
       if (role === "admin") {
         url.pathname = "/admin/dashboard";
-      } else if (role === "buyer") {
-        url.pathname = "/profile";
-      } else {
+      } else if (role === "manufacturer") {
         url.pathname = "/dashboard";
+      } else {
+        url.pathname = "/profile";
       }
       return NextResponse.redirect(url);
     }
 
     if (isAdminPath && role !== "admin") {
       const url = request.nextUrl.clone();
-      url.pathname = role === "buyer" ? "/profile" : "/dashboard";
+      url.pathname = role === "manufacturer" ? "/dashboard" : "/profile";
       return NextResponse.redirect(url);
     }
 

@@ -254,7 +254,7 @@ export function AboutClient() {
                     <div className="tag border-ash mb-2 inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 shadow-xs">
                       <Sparkles className="text-brand-yellow-dark h-3.5 w-3.5" />
                       <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-                        About GenZ Platform
+                        About GenZ
                       </span>
                     </div>
                   </ScrollReveal>
@@ -685,15 +685,17 @@ export function AboutClient() {
 
           {/* Long Term Mission Banner */}
           <ScrollReveal>
-            <div className="bg-brand-yellow border-ash grid grid-cols-1 items-center gap-8 rounded-2xl border p-8 text-black shadow-xs transition-transform duration-500 hover:scale-[1.005] sm:p-12 lg:grid-cols-12 lg:gap-12">
+            <div className="border-ash grid grid-cols-1 items-center gap-8 rounded-2xl border bg-white p-8 shadow-xs sm:p-12 lg:grid-cols-12 lg:gap-12">
               <div className="text-left lg:col-span-6">
-                <span className="font-graphik mb-3 block text-xs font-semibold tracking-[0.2em] text-black/80 uppercase">
-                  Our Long-Term Mission
-                </span>
-                <p className="font-nantes mb-0 text-2xl leading-snug font-normal sm:text-3xl">
+                <div className="tag border-ash mb-4 inline-block rounded-full border bg-[#FAF7F0] px-4 py-1 shadow-xs">
+                  <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
+                    Our Long-Term Mission
+                  </span>
+                </div>
+                <h3 className="font-nantes text-ink-black mb-0 text-2xl leading-snug font-normal sm:text-3xl">
                   To become India&apos;s most trusted manufacturing ecosystem —
                   empowering makers, fostering innovation, and building self-reliance.
-                </p>
+                </h3>
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:col-span-6">
@@ -716,13 +718,17 @@ export function AboutClient() {
                 ].map((val, idx) => (
                   <div
                     key={idx}
-                    className="group flex flex-col items-center rounded-xl border border-black/10 bg-black/5 p-4 text-center transition-colors duration-300 hover:bg-black/10"
+                    className="border-ash group flex flex-col justify-between rounded-2xl border bg-[#FAF7F0] p-5 shadow-xs transition-all duration-300 hover:border-black"
                   >
-                    <val.icon className="mb-2.5 h-5 w-5 text-black transition-transform duration-300 group-hover:scale-110" />
-                    <span className="font-graphik mb-1.5 block text-[10px] font-semibold tracking-wider text-black uppercase">
-                      {val.title}
-                    </span>
-                    <p className="text-[10px] leading-normal text-black/70">
+                    <div>
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-xs transition-transform duration-300 group-hover:scale-105">
+                        <val.icon className="text-brand-yellow-dark h-5 w-5" />
+                      </div>
+                      <span className="font-graphik text-ink-black mb-1.5 block text-xs font-semibold tracking-wider uppercase">
+                        {val.title}
+                      </span>
+                    </div>
+                    <p className="font-graphik text-smoke text-xs leading-relaxed">
                       {val.desc}
                     </p>
                   </div>
@@ -733,30 +739,7 @@ export function AboutClient() {
         </div>
       </section>
 
-      {/* 5. Institutional Verification Row */}
-      <section className="border-ash border-b bg-white px-6 py-16 sm:px-12">
-        <ScrollReveal className="mx-auto max-w-[1280px] text-center">
-          <span className="font-graphik text-smoke mb-8 block text-xs font-semibold tracking-[0.25em] uppercase">
-            Institutional Standards &amp; Verification
-          </span>
-          <div className="flex flex-wrap items-center justify-center gap-10 opacity-90 sm:gap-20">
-            <span className="font-graphik text-brand-blue text-lg font-semibold tracking-tighter transition-transform hover:scale-105">
-              sidbi
-            </span>
-            <span className="font-graphik text-lg font-semibold tracking-tighter text-red-700 transition-transform hover:scale-105">
-              NSIC
-            </span>
-            <span className="font-graphik text-base font-medium tracking-wide text-neutral-800 uppercase transition-transform hover:scale-105">
-              DPIIT
-            </span>
-            <span className="font-graphik rounded-lg border border-neutral-800 px-3 py-1.5 text-xs font-medium tracking-widest text-neutral-800 uppercase transition-colors hover:bg-neutral-800 hover:text-white">
-              MAKE IN INDIA
-            </span>
-          </div>
-        </ScrollReveal>
-      </section>
-
-      {/* 6. Call To Action  */}
+      {/* 5. Call To Action & Institutional Verification Banner */}
       <section className="bg-[#FAF7F0] py-20 sm:py-28">
         <ScrollReveal className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 text-center sm:px-12">
           <div className="tag border-ash inline-block rounded-full border bg-white px-4 py-1 shadow-xs">
@@ -789,6 +772,55 @@ export function AboutClient() {
             </Button>
           </div>
         </ScrollReveal>
+
+        {/* Bottom Institutional Standards & Verification Card */}
+        <div className="mx-auto mt-20 max-w-[1280px] px-6 sm:px-12">
+          <ScrollReveal>
+            <div className="border-ash flex flex-wrap items-center justify-between gap-8 rounded-2xl border bg-white px-8 py-6 shadow-xs">
+              <span className="font-graphik text-smoke shrink-0 text-xs font-semibold tracking-[0.25em] uppercase">
+                Institutional Standards &amp; Verification
+              </span>
+              <div className="flex flex-1 flex-wrap items-center justify-center gap-6 sm:justify-end sm:gap-10">
+                <div className="relative h-12 w-28 shrink-0">
+                  <Image
+                    src="/sidbi_logo.png"
+                    alt="SIDBI"
+                    fill
+                    className="object-contain mix-blend-multiply"
+                    sizes="112px"
+                  />
+                </div>
+                <div className="relative h-12 w-28 shrink-0">
+                  <Image
+                    src="/nsic_logo.png"
+                    alt="NSIC"
+                    fill
+                    className="object-contain mix-blend-multiply"
+                    sizes="112px"
+                  />
+                </div>
+                <div className="relative h-12 w-24 shrink-0">
+                  <Image
+                    src="/dpiit_logo.png"
+                    alt="DPIIT"
+                    fill
+                    className="object-contain mix-blend-multiply"
+                    sizes="96px"
+                  />
+                </div>
+                <div className="relative h-14 w-36 shrink-0">
+                  <Image
+                    src="/make_in_india.png"
+                    alt="Make in India"
+                    fill
+                    className="object-contain mix-blend-multiply"
+                    sizes="144px"
+                  />
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
       </section>
     </main>
   );

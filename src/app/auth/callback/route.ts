@@ -65,5 +65,12 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=Could not authenticate user`);
+  const authErrorParam =
+    searchParams.get("error_description") ||
+    searchParams.get("error") ||
+    "Could not authenticate user";
+
+  return NextResponse.redirect(
+    `${origin}/login?error=${encodeURIComponent(authErrorParam)}`
+  );
 }

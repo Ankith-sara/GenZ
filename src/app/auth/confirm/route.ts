@@ -14,29 +14,35 @@ async function ensureProfileCreated(
         (user.user_metadata?.role as "buyer" | "manufacturer" | "admin") || "buyer";
       const fullName = user.user_metadata?.full_name || null;
 
-      const { data: existingProfile } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("id", user.id)
-        .maybeSingle();
+      const { error: profileErr } = await supabase.from("profiles").upsert({
+        id: user.id,
+        role,
+        full_name: fullName,
+      });
 
-      if (!existingProfile) {
-        await supabase.from("profiles").insert({
+      if (profileErr) {
+        console.error("Profile upsert error in confirm route:", profileErr.message);
+      }
+
+      if (role === "manufacturer") {
+        const { error: mfgErr } = await supabase.from("manufacturer_profiles").upsert({
           id: user.id,
-          role,
-          full_name: fullName,
+          business_name:
+            user.user_metadata?.business_name ||
+            user.user_metadata?.full_name ||
+            "Unnamed Business",
+          gst_number: user.user_metadata?.gst_number || "PENDING",
+          factory_address: user.user_metadata?.factory_address || null,
+          state: user.user_metadata?.state || null,
+          pincode: user.user_metadata?.pincode || null,
+          status: "pending",
         });
 
-        if (role === "manufacturer") {
-          await supabase.from("manufacturer_profiles").insert({
-            id: user.id,
-            business_name: user.user_metadata?.business_name || "Unnamed Business",
-            gst_number: user.user_metadata?.gst_number || "PENDING",
-            factory_address: user.user_metadata?.factory_address || null,
-            state: user.user_metadata?.state || null,
-            pincode: user.user_metadata?.pincode || null,
-            status: "pending",
-          });
+        if (mfgErr) {
+          console.error(
+            "Manufacturer profile upsert error in confirm route:",
+            mfgErr.message
+          );
         }
       }
     }

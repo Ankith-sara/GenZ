@@ -7,7 +7,6 @@ import {
   Building2,
   Sparkles,
   HelpCircle,
-  ArrowRight,
 } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 import Link from "next/link";
@@ -52,25 +51,21 @@ const CHANNELS = [
 const DIRECT_DEPARTMENTS = [
   {
     title: "Manufacturer Onboarding",
-    email: "genz.official.hq@gmail.com",
     desc: "Are you an Indian toy or hardware manufacturer? Get verified & list your factory catalog.",
     tag: "Factory Direct",
   },
   {
     title: "B2C Sourcing & Bulk Orders",
-    email: "genz.official.hq@gmail.com",
     desc: "Need direct factory quotes with zero broker markups? Our team connects you directly with makers.",
     tag: "Bulk Sourcing",
   },
   {
     title: "Investor & Ecosystem Partnerships",
-    email: "genz.official.hq@gmail.com",
     desc: "Interested in supporting India's MSME manufacturing ecosystem and B2C supply chain?",
     tag: "Partnerships",
   },
   {
     title: "Press & Media Inquiries",
-    email: "genz.official.hq@gmail.com",
     desc: "For media interviews, platform statistics, or brand asset requests.",
     tag: "Press",
   },
@@ -219,17 +214,10 @@ export default async function ContactPage() {
                   <h3 className="font-nantes text-ink-black mb-2 text-2xl font-normal">
                     {dept.title}
                   </h3>
-                  <p className="font-graphik text-smoke mb-6 text-sm leading-relaxed">
+                  <p className="font-graphik text-smoke text-sm leading-relaxed">
                     {dept.desc}
                   </p>
                 </div>
-                <a
-                  href={`mailto:${dept.email}`}
-                  className="font-graphik text-ink-black inline-flex items-center gap-2 text-sm font-medium transition-all hover:gap-3"
-                >
-                  <span>{dept.email}</span>
-                  <ArrowRight className="text-brand-yellow-dark h-4 w-4" />
-                </a>
               </div>
             ))}
           </div>

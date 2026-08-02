@@ -105,6 +105,81 @@ export async function verifyPasswordAndSendOtp(email: string, password: string) 
   return { success: true };
 }
 
+export async function directPasswordLogin(email: string, password: string) {
+  // 1. Rate limiting check
+  const rateLimit = await checkRateLimit({
+    endpointType: "auth",
+    actionName: "direct_password_login",
+    identifier: email,
+  });
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 2. Schema validation
+  const validation = loginSchema.safeParse({ email, password });
+  if (!validation.success) {
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "direct_password_login",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: validation.error.issues[0].message };
+  }
+
+  const supabase = await createClient();
+
+  const { error } = await withRetry(() =>
+    supabase.auth.signInWithPassword({
+      email: validation.data.email,
+      password: validation.data.password,
+    })
+  );
+
+  if (error) {
+    console.error("Direct password login failed:", error);
+    await logRateLimitAttempt({
+      endpointType: "auth",
+      actionName: "direct_password_login",
+      identifier: email,
+      isFailed: true,
+    });
+    return { error: "Invalid email or password." };
+  }
+
+  await logRateLimitAttempt({
+    endpointType: "auth",
+    actionName: "direct_password_login",
+    identifier: email,
+    isFailed: false,
+  });
+
+  return { success: true };
+}
+
+// Helper to retry transient network socket drops (ECONNRESET / AuthRetryableFetchError)
+async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (err: unknown) {
+    const errorObj = err as {
+      name?: string;
+      message?: string;
+      cause?: { code?: string };
+    };
+    if (
+      errorObj?.name === "AuthRetryableFetchError" ||
+      errorObj?.cause?.code === "ECONNRESET" ||
+      errorObj?.message?.includes("fetch failed")
+    ) {
+      console.warn("Retrying Supabase auth request due to transient ECONNRESET...");
+      return await fn();
+    }
+    throw err;
+  }
+}
+
 export async function verifyOtpLogin(email: string, token: string) {
   // 1. Rate limiting check
   const rateLimit = await checkRateLimit({
@@ -129,11 +204,13 @@ export async function verifyOtpLogin(email: string, token: string) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.verifyOtp({
-    email: validation.data.email,
-    token: validation.data.token,
-    type: "email",
-  });
+  const { error } = await withRetry(() =>
+    supabase.auth.verifyOtp({
+      email: validation.data.email,
+      token: validation.data.token,
+      type: "email",
+    })
+  );
 
   if (error) {
     console.error("OTP verification failed:", error);
@@ -201,28 +278,54 @@ export async function signupUser(formData: {
     },
   };
 
-  const { error } = await supabase.auth.signUp(signUpOptions);
+  try {
+    const { data: authData, error } = await withRetry(() =>
+      supabase.auth.signUp(signUpOptions)
+    );
 
-  if (error) {
-    console.error("Signup failed:", error);
+    if (error) {
+      console.error("Signup failed:", error);
+      await logRateLimitAttempt({
+        endpointType: "auth",
+        actionName: "signup_user",
+        identifier: email,
+        isFailed: true,
+      });
+      return { error: error.message || "Failed to create account. Please try again." };
+    }
+
+    if (authData?.user) {
+      const userId = authData.user.id;
+      await supabase.from("profiles").upsert({
+        id: userId,
+        role: validation.data.role,
+        full_name: validation.data.fullName,
+      });
+
+      if (validation.data.role === "manufacturer") {
+        await supabase.from("manufacturer_profiles").upsert({
+          id: userId,
+          business_name: validation.data.fullName + "'s Business",
+          gst_number: "PENDING",
+          status: "pending",
+        });
+      }
+    }
+
+    // Log successful signup
     await logRateLimitAttempt({
       endpointType: "auth",
       actionName: "signup_user",
       identifier: email,
-      isFailed: true,
+      isFailed: false,
     });
-    return { error: "Failed to create account. Please try again." };
+
+    return { success: true };
+  } catch (err: unknown) {
+    const errMsg = err instanceof Error ? err.message : "An unexpected error occurred.";
+    console.error("Signup exception:", err);
+    return { error: errMsg };
   }
-
-  // Log successful signup
-  await logRateLimitAttempt({
-    endpointType: "auth",
-    actionName: "signup_user",
-    identifier: email,
-    isFailed: false,
-  });
-
-  return { success: true };
 }
 
 export async function verifyOtpSignup(email: string, token: string) {
