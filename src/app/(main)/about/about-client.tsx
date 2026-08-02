@@ -776,45 +776,45 @@ export function AboutClient() {
         {/* Bottom Institutional Standards & Verification Card */}
         <div className="mx-auto mt-20 max-w-[1280px] px-6 sm:px-12">
           <ScrollReveal>
-            <div className="border-ash flex flex-wrap items-center justify-between gap-8 rounded-2xl border bg-white px-8 py-6 shadow-xs">
-              <span className="font-graphik text-smoke shrink-0 text-xs font-semibold tracking-[0.25em] uppercase">
+            <div className="border-ash flex max-w-7xl flex-col items-center justify-between gap-6 rounded-2xl border bg-white p-6 shadow-xs sm:flex-row sm:gap-8 sm:px-8 sm:py-6">
+              <span className="font-graphik text-smoke shrink-0 text-center text-xs font-semibold tracking-[0.25em] uppercase sm:text-left">
                 Institutional Standards &amp; Verification
               </span>
-              <div className="flex flex-1 flex-wrap items-center justify-center gap-6 sm:justify-end sm:gap-10">
-                <div className="relative h-12 w-28 shrink-0">
+              <div className="grid w-full grid-cols-2 items-center justify-center gap-6 sm:flex sm:w-auto sm:flex-1 sm:flex-wrap sm:justify-end sm:gap-8 lg:gap-10">
+                <div className="relative mx-auto h-10 w-24 shrink-0 sm:mx-0 sm:h-12 sm:w-28">
                   <Image
                     src="/sidbi_logo.png"
                     alt="SIDBI"
                     fill
                     className="object-contain mix-blend-multiply"
-                    sizes="112px"
+                    sizes="(max-width: 640px) 96px, 112px"
                   />
                 </div>
-                <div className="relative h-12 w-28 shrink-0">
+                <div className="relative mx-auto h-10 w-24 shrink-0 sm:mx-0 sm:h-12 sm:w-28">
                   <Image
                     src="/nsic_logo.png"
                     alt="NSIC"
                     fill
                     className="object-contain mix-blend-multiply"
-                    sizes="112px"
+                    sizes="(max-width: 640px) 96px, 112px"
                   />
                 </div>
-                <div className="relative h-12 w-24 shrink-0">
+                <div className="relative mx-auto h-10 w-20 shrink-0 sm:mx-0 sm:h-12 sm:w-24">
                   <Image
                     src="/dpiit_logo.png"
                     alt="DPIIT"
                     fill
                     className="object-contain mix-blend-multiply"
-                    sizes="96px"
+                    sizes="(max-width: 640px) 80px, 96px"
                   />
                 </div>
-                <div className="relative h-14 w-36 shrink-0">
+                <div className="relative mx-auto h-12 w-28 shrink-0 sm:mx-0 sm:h-14 sm:w-36">
                   <Image
                     src="/make_in_india.png"
                     alt="Make in India"
                     fill
                     className="object-contain mix-blend-multiply"
-                    sizes="144px"
+                    sizes="(max-width: 640px) 112px, 144px"
                   />
                 </div>
               </div>

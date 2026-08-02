@@ -220,11 +220,48 @@ function FoundationsOfTrustScrollSection() {
   return (
     <section
       ref={sectionRef}
-      className="section_scroll border-ash relative w-full border-b bg-white"
-      style={{ minHeight: "260vh" }}
+      className="section_scroll border-ash relative w-full border-b bg-white md:min-h-[260vh]"
     >
-      <div className="container_scroll sticky top-0 flex h-screen w-full flex-col justify-center overflow-hidden px-6 pt-20 pb-8 sm:px-12">
-        {/* Section Header */}
+      {/* Mobile Grid Layout (< md) */}
+      <div className="block px-6 py-16 md:hidden">
+        <div className="mx-auto mb-8 w-full">
+          <div className="tag border-ash mb-3 inline-block rounded-full border bg-[#FAF7F0] px-4 py-1 shadow-xs">
+            <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
+              Foundations of Trust
+            </span>
+          </div>
+          <h2 className="font-nantes text-ink-black text-2xl font-normal sm:text-3xl">
+            The pillars that build direct commerce.
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {trustPillars.map((item) => (
+            <div
+              key={item.id}
+              className="product-card border-ash relative flex min-h-[240px] flex-col justify-between rounded-2xl border bg-[#FAF7F0] p-5 shadow-xs transition-all duration-300"
+            >
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="font-nantes text-brand-yellow-dark text-2xl font-normal">
+                    {item.number}
+                  </span>
+                  <span className="bg-brand-yellow-dark h-2 w-2 rounded-full" />
+                </div>
+                <h3 className="font-nantes text-ink-black mb-2 text-lg leading-snug font-normal">
+                  {item.title}
+                </h3>
+                <p className="font-graphik text-smoke text-xs leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Sticky Scroll Track (>= md) */}
+      <div className="sticky top-0 hidden h-screen w-full flex-col justify-center overflow-hidden px-8 pt-20 pb-8 md:flex lg:px-12">
         <div className="mx-auto mb-6 w-full max-w-[1280px] sm:mb-8">
           <div className="tag border-ash mb-3 inline-block rounded-full border bg-[#FAF7F0] px-4 py-1 shadow-xs">
             <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
@@ -236,7 +273,6 @@ function FoundationsOfTrustScrollSection() {
           </h2>
         </div>
 
-        {/* Horizontal Scroll Track */}
         <div className="products_wrap mx-auto w-full max-w-[1280px] overflow-hidden py-3">
           <div
             className="products_track flex transition-transform duration-75 ease-out"
@@ -670,45 +706,45 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="border-ash mx-auto mt-14 flex max-w-7xl flex-wrap items-center justify-between gap-8 rounded-2xl border bg-white px-8 py-6 shadow-xs">
-          <span className="font-graphik text-smoke shrink-0 text-xs font-semibold tracking-[0.25em] uppercase">
+        <div className="border-ash mx-auto mt-10 flex max-w-7xl flex-col items-center justify-between gap-6 rounded-2xl border bg-white p-6 shadow-xs sm:mt-14 sm:flex-row sm:gap-8 sm:px-8 sm:py-6">
+          <span className="font-graphik text-smoke shrink-0 text-center text-xs font-semibold tracking-[0.25em] uppercase sm:text-left">
             Institutional validation
           </span>
-          <div className="flex flex-1 flex-wrap items-center justify-center gap-6 sm:justify-end sm:gap-10">
-            <div className="relative h-12 w-28 shrink-0">
+          <div className="grid w-full grid-cols-2 items-center justify-center gap-6 sm:flex sm:w-auto sm:flex-1 sm:flex-wrap sm:justify-end sm:gap-8 lg:gap-10">
+            <div className="relative mx-auto h-10 w-24 shrink-0 sm:mx-0 sm:h-12 sm:w-28">
               <Image
                 src="/sidbi_logo.png"
                 alt="SIDBI"
                 fill
                 className="object-contain mix-blend-multiply"
-                sizes="112px"
+                sizes="(max-width: 640px) 96px, 112px"
               />
             </div>
-            <div className="relative h-12 w-28 shrink-0">
+            <div className="relative mx-auto h-10 w-24 shrink-0 sm:mx-0 sm:h-12 sm:w-28">
               <Image
                 src="/nsic_logo.png"
                 alt="NSIC"
                 fill
                 className="object-contain mix-blend-multiply"
-                sizes="112px"
+                sizes="(max-width: 640px) 96px, 112px"
               />
             </div>
-            <div className="relative h-12 w-24 shrink-0">
+            <div className="relative mx-auto h-10 w-20 shrink-0 sm:mx-0 sm:h-12 sm:w-24">
               <Image
                 src="/dpiit_logo.png"
                 alt="DPIIT"
                 fill
                 className="object-contain mix-blend-multiply"
-                sizes="96px"
+                sizes="(max-width: 640px) 80px, 96px"
               />
             </div>
-            <div className="relative h-14 w-36 shrink-0">
+            <div className="relative mx-auto h-12 w-28 shrink-0 sm:mx-0 sm:h-14 sm:w-36">
               <Image
                 src="/make_in_india.png"
                 alt="Make in India"
                 fill
                 className="object-contain mix-blend-multiply"
-                sizes="144px"
+                sizes="(max-width: 640px) 112px, 144px"
               />
             </div>
           </div>
