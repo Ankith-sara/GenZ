@@ -369,22 +369,11 @@ export default function HomePage() {
           </blockquote>
 
           <div className="flex items-center gap-3">
-            <div className="border-ash relative h-10 w-10 overflow-hidden rounded-full border bg-white shadow-xs">
-              <Image
-                src="/founder.png"
-                alt="Founder"
-                fill
-                className="object-cover"
-                sizes="40px"
-              />
-            </div>
             <div className="text-left">
               <h4 className="font-graphik text-ink-black text-sm font-semibold">
                 Appala Sairam
               </h4>
-              <p className="font-graphik text-smoke text-xs">
-                Founder &amp; Delivery Partner, GenZ
-              </p>
+              <p className="font-graphik text-smoke text-xs">Founder, GenZ</p>
             </div>
           </div>
         </div>
