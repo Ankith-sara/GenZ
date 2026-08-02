@@ -139,6 +139,14 @@ export type Reel = {
   created_at: string;
 };
 
+export type PageView = {
+  id: number;
+  path: string;
+  referrer: string | null;
+  user_agent: string | null;
+  created_at: string;
+};
+
 export type ManufacturerPublicProfile = {
   id: string;
   business_name: string;
@@ -240,6 +248,12 @@ export type Database = {
         Row: NewsletterSubscriber;
         Insert: Omit<NewsletterSubscriber, "id" | "created_at">;
         Update: Partial<NewsletterSubscriber>;
+        Relationships: [];
+      };
+      page_views: {
+        Row: PageView;
+        Insert: Omit<PageView, "id" | "created_at">;
+        Update: Partial<PageView>;
         Relationships: [];
       };
     };

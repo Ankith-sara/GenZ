@@ -119,11 +119,11 @@ export function Header({
 
   const bottomLinks = [
     { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
     { name: "Discover", href: "/discover" },
     { name: "New", href: "/discover?new=true" },
     { name: "Featured", href: "/discover?featured=true" },
     { name: "Wooden Toys", href: "/discover?category=Wooden Toys" },
+    { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
 

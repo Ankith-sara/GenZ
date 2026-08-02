@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { PageViewTracker } from "@/components/page-view-tracker";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://genzonline.in";
 
@@ -114,6 +115,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         {children}
+        <PageViewTracker />
         <Analytics />
       </body>
     </html>
