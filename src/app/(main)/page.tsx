@@ -118,15 +118,8 @@ export default function HomePage() {
                 size="lg"
                 className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik h-12 rounded-none border-none px-6 text-xs font-semibold tracking-[0.05em] text-black uppercase transition-colors"
               >
-                <Link href="/discover">Explore products</Link>
+                <Link href="/discover">Shop Now</Link>
               </Button>
-              <Link
-                href="/signup/manufacturer"
-                className="group text-body font-graphik text-ink-black decoration-ash inline-flex items-center gap-1.5 font-medium underline underline-offset-4 transition-all hover:decoration-current"
-              >
-                For manufacturers
-                <ArrowUpRight className="text-brand-yellow h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
             </div>
           </div>
 
