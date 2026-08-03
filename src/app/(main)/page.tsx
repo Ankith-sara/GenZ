@@ -108,8 +108,9 @@ export default function HomePage() {
             </h1>
 
             <p className="font-graphik text-charcoal max-w-md text-lg leading-relaxed">
-              GenZ connects Indian consumers directly with verified Indian manufacturers
-              — trading imported guesswork for factory-validated trust.
+              Everything Made in India. One Trusted Platform. Discover authentic Indian
+              products, innovative technologies, startups, artisans, and brands—all in
+              one marketplace.
             </p>
 
             <div className="flex flex-wrap items-center gap-6">
