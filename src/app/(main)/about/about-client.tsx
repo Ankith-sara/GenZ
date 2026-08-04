@@ -7,24 +7,12 @@ import { Button } from "@/components/ui/button";
 import {
   CheckCircle2,
   Package,
-  Handshake,
   MapPin,
-  Users,
   ArrowDownLeft,
-  Lightbulb,
-  Rocket,
-  LineChart,
-  Settings,
-  Share2,
-  Trophy,
   ShieldCheck,
   Eye,
   RefreshCw,
-  Sparkles,
   ToyBrick,
-  Check,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 
 // Scroll Reveal Component
@@ -101,9 +89,10 @@ function ProblemSolutionSection() {
     };
   }, []);
 
-  const problemOpacity = Math.min(1, Math.max(0, 1 - progress / 0.4));
-  const solutionOpacity = Math.min(1, Math.max(0, (progress - 0.4) / 0.4));
-  const isSolution = progress > 0.45;
+  // Accelerated transition math for quick line animation and view switching
+  const problemOpacity = Math.min(1, Math.max(0, 1 - progress / 0.25));
+  const solutionOpacity = Math.min(1, Math.max(0, (progress - 0.25) / 0.25));
+  const isSolution = progress > 0.3;
 
   const lineCount = 7;
   const centerY = 175;
@@ -118,7 +107,8 @@ function ProblemSolutionSection() {
   });
 
   const pathLength = 2300;
-  const drawProgress = Math.max(0, Math.min(1, progress));
+  // Quick drawing animation (multiplied speed so lines draw instantly as you scroll)
+  const drawProgress = Math.max(0, Math.min(1, progress * 2.2));
   const dashOffset = pathLength * (1 - drawProgress);
   const lineColor = isSolution ? "#FAE251" : "#1C1C1E";
 
@@ -126,10 +116,10 @@ function ProblemSolutionSection() {
     <section
       ref={wrapperRef}
       className="section_solution border-ash relative w-full border-b"
-      style={{ minHeight: "220vh" }}
+      style={{ minHeight: "110vh" }}
     >
       <div
-        className="solution-inside sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden pt-24 pb-2 transition-colors duration-700 sm:pt-28 lg:pt-32"
+        className="solution-inside sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden pt-24 pb-2 transition-colors duration-200 sm:pt-28 lg:pt-32"
         style={{
           backgroundColor: isSolution ? "#0B0B0B" : "#FAF7F0",
         }}
@@ -138,7 +128,7 @@ function ProblemSolutionSection() {
           <div className="container-medium relative min-h-[160px] max-w-3xl sm:min-h-[190px]">
             {/* Problem View */}
             <div
-              className="solution_component is-problem w-full transition-all duration-700 ease-out"
+              className="solution_component is-problem w-full transition-all duration-200 ease-out"
               style={{
                 opacity: problemOpacity,
                 pointerEvents: problemOpacity > 0.1 ? "auto" : "none",
@@ -165,7 +155,7 @@ function ProblemSolutionSection() {
 
             {/* Solution & Differentiation View */}
             <div
-              className="solution_component is-solution w-full transition-all duration-700 ease-out"
+              className="solution_component is-solution w-full transition-all duration-200 ease-out"
               style={{
                 opacity: solutionOpacity,
                 pointerEvents: solutionOpacity > 0.1 ? "auto" : "none",
@@ -214,7 +204,7 @@ function ProblemSolutionSection() {
                     strokeLinejoin="round"
                     strokeDasharray={pathLength}
                     strokeDashoffset={dashOffset}
-                    className="transition-colors duration-700 ease-in-out"
+                    className="transition-colors duration-200 ease-in-out"
                   />
                 ))}
               </g>
@@ -230,25 +220,6 @@ function ProblemSolutionSection() {
 // Foundations of Trust Component (Original Sticky Track / Responsive Grid)
 // ─────────────────────────────────────────────────────────────────────────────
 function FoundationsOfTrustScrollSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const totalScroll = rect.height - window.innerHeight;
-      if (totalScroll <= 0) return;
-      const currentScroll = -rect.top;
-      const progress = Math.min(1, Math.max(0, currentScroll / totalScroll));
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const trustPillars = [
     {
       id: "trust-layer",
@@ -256,6 +227,9 @@ function FoundationsOfTrustScrollSection() {
       title: "Trust Layer",
       description:
         "GST verification, factory validation and certification checks run on every seller before they ever list a product.",
+      colSpan: "md:col-span-7",
+      isHero: true,
+      tag: "Core Pillar",
     },
     {
       id: "reels",
@@ -263,6 +237,8 @@ function FoundationsOfTrustScrollSection() {
       title: "Reel-Based Discovery",
       description:
         "Real factory reels, not stock photography. You see the process and the people before you see the price.",
+      colSpan: "md:col-span-5",
+      isHero: false,
     },
     {
       id: "import-gap",
@@ -270,6 +246,8 @@ function FoundationsOfTrustScrollSection() {
       title: "Import Gap Intelligence",
       description:
         "We track what India still imports and route that demand toward the manufacturers who can build it here instead.",
+      colSpan: "md:col-span-4",
+      isHero: false,
     },
     {
       id: "innovation",
@@ -277,6 +255,8 @@ function FoundationsOfTrustScrollSection() {
       title: "Innovation & Design",
       description:
         "Encouraging Indian makers to redesign, not just replicate — better materials, better ergonomics, better margins.",
+      colSpan: "md:col-span-4",
+      isHero: false,
     },
     {
       id: "direct-access",
@@ -284,55 +264,15 @@ function FoundationsOfTrustScrollSection() {
       title: "Direct Market Access",
       description:
         "Manufacturers reach consumers without a chain of middlemen. No markup stacking, no anonymous resellers.",
+      colSpan: "md:col-span-4",
+      isHero: false,
     },
   ];
 
   return (
-    <section
-      ref={sectionRef}
-      className="section_scroll border-ash relative w-full border-b bg-white md:min-h-[220vh]"
-    >
-      {/* Mobile Grid Layout (< md) */}
-      <div className="block px-6 py-16 md:hidden">
-        <div className="mx-auto mb-8 w-full">
-          <div className="tag border-ash mb-3 inline-block rounded-full border bg-[#FAF7F0] px-4 py-1 shadow-xs">
-            <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-              Foundations of Trust
-            </span>
-          </div>
-          <h2 className="font-nantes text-ink-black text-2xl font-normal sm:text-3xl">
-            The pillars that build direct commerce.
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {trustPillars.map((item) => (
-            <div
-              key={item.id}
-              className="product-card border-ash relative flex min-h-[240px] flex-col justify-between rounded-2xl border bg-[#FAF7F0] p-5 shadow-xs transition-all duration-300"
-            >
-              <div>
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="font-nantes text-brand-yellow-dark text-2xl font-normal">
-                    {item.number}
-                  </span>
-                  <span className="bg-brand-yellow-dark h-2 w-2 rounded-full" />
-                </div>
-                <h3 className="font-nantes text-ink-black mb-2 text-lg leading-snug font-normal">
-                  {item.title}
-                </h3>
-                <p className="font-graphik text-smoke text-xs leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Desktop Sticky Scroll Track (>= md) */}
-      <div className="sticky top-0 hidden h-screen w-full flex-col justify-center overflow-hidden px-8 pt-20 pb-8 md:flex lg:px-12">
-        <div className="mx-auto mb-6 w-full max-w-[1280px] sm:mb-8">
+    <section className="section_trust border-ash border-b bg-white px-6 py-16 sm:px-12 sm:py-24">
+      <div className="mx-auto w-full max-w-[1280px]">
+        <div className="mb-10">
           <div className="tag border-ash mb-3 inline-block rounded-full border bg-[#FAF7F0] px-4 py-1 shadow-xs">
             <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
               Foundations of Trust
@@ -343,46 +283,59 @@ function FoundationsOfTrustScrollSection() {
           </h2>
         </div>
 
-        <div className="products_wrap mx-auto w-full max-w-[1280px] overflow-hidden py-3">
-          <div
-            className="products_track flex transition-transform duration-75 ease-out"
-            style={{
-              transform: `translateX(-${scrollProgress * 40}%)`,
-              width: "166.666%",
-            }}
-          >
-            {trustPillars.map((item) => (
-              <div key={item.id} className="products_list w-1/5 px-3">
-                <div className="product-card border-ash relative flex min-h-[260px] flex-col justify-between rounded-2xl border bg-[#FAF7F0] p-5 shadow-xs transition-all duration-300 hover:shadow-md sm:min-h-[290px] sm:p-6 lg:p-7">
-                  <div>
-                    <div className="mb-4 flex items-center justify-between">
-                      <span className="font-nantes text-brand-yellow-dark text-2xl font-normal sm:text-3xl">
-                        {item.number}
+        {/* Golden Ratio Bento Grid (7:5 Top Row | 4:4:4 Bottom Row) */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+          {trustPillars.map((item) => (
+            <div
+              key={item.id}
+              className={`product-card relative flex flex-col justify-between rounded-2xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${
+                item.colSpan
+              } ${
+                item.isHero
+                  ? "border-amber-300/80 bg-gradient-to-br from-[#FAF7F0] via-[#FAF7F0] to-amber-50/60 p-7 shadow-xs sm:p-8"
+                  : "border-ash bg-[#FAF7F0] p-6 shadow-xs"
+              }`}
+            >
+              <div>
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="font-nantes text-brand-yellow-dark text-2xl font-normal sm:text-3xl">
+                      {item.number}
+                    </span>
+                    {item.tag && (
+                      <span className="font-graphik rounded-full border border-amber-300 bg-amber-100/70 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 uppercase">
+                        {item.tag}
                       </span>
-                      <span className="bg-brand-yellow-dark h-2 w-2 rounded-full" />
-                    </div>
-
-                    <h3 className="font-nantes text-ink-black mb-2.5 text-lg leading-snug font-normal sm:text-xl">
-                      {item.title}
-                    </h3>
-
-                    <p className="font-graphik text-smoke text-xs leading-relaxed sm:text-sm">
-                      {item.description}
-                    </p>
+                    )}
                   </div>
+                  <span className="bg-brand-yellow-dark h-2 w-2 rounded-full" />
                 </div>
+
+                <h3
+                  className={`font-nantes text-ink-black mb-2.5 leading-snug font-normal ${
+                    item.isHero ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"
+                  }`}
+                >
+                  {item.title}
+                </h3>
+
+                <p
+                  className={`font-graphik text-smoke leading-relaxed ${
+                    item.isHero ? "text-sm sm:text-base" : "text-xs sm:text-sm"
+                  }`}
+                >
+                  {item.description}
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Interactive Strategic Roadmap Component (@shadcnblocks/our-story5 Pattern)
-// ─────────────────────────────────────────────────────────────────────────────
+// Interactive Strategic Roadmap Component
 const roadmapSteps = [
   {
     year: "2026",

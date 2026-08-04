@@ -147,6 +147,23 @@ export type PageView = {
   created_at: string;
 };
 
+export type ApplicationStatus = "pending" | "approved" | "rejected";
+
+export type ManufacturerApplication = {
+  id: string;
+  email: string;
+  full_name: string;
+  phone: string | null;
+  business_name: string;
+  business_type: string;
+  form_data: Record<string, unknown>;
+  status: ApplicationStatus;
+  rejection_reason: string | null;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+  created_at: string;
+};
+
 export type ManufacturerPublicProfile = {
   id: string;
   business_name: string;
@@ -254,6 +271,15 @@ export type Database = {
         Row: PageView;
         Insert: Omit<PageView, "id" | "created_at">;
         Update: Partial<PageView>;
+        Relationships: [];
+      };
+      manufacturer_applications: {
+        Row: ManufacturerApplication;
+        Insert: Omit<
+          ManufacturerApplication,
+          "id" | "created_at" | "reviewed_at" | "reviewed_by" | "rejection_reason"
+        > & { status?: ApplicationStatus; rejection_reason?: string | null };
+        Update: Partial<ManufacturerApplication>;
         Relationships: [];
       };
     };

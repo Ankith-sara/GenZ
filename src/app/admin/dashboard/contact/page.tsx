@@ -12,9 +12,9 @@ export default async function AdminContactPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <div className="border-ash space-y-6 rounded-3xl border bg-white p-6 shadow-xs">
+    <div className="border-ash space-y-6 rounded-3xl border bg-white p-4 shadow-xs sm:p-6">
       <div>
-        <h2 className="font-nantes text-ink-black text-2xl font-bold">
+        <h2 className="font-nantes text-ink-black text-xl font-bold sm:text-2xl">
           General Contact Form Submissions
         </h2>
         <p className="font-graphik text-smoke text-sm">
@@ -29,17 +29,19 @@ export default async function AdminContactPage() {
           {(contactMessages ?? []).map((msg) => (
             <div
               key={msg.id}
-              className="border-ash space-y-3 rounded-2xl border bg-[#FAF7F0] p-5 shadow-xs"
+              className="border-ash space-y-3 rounded-2xl border bg-[#FAF7F0] p-4 shadow-xs sm:p-5"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="font-graphik text-ink-black block text-sm font-bold">
                     {msg.name}
                   </span>
-                  <span className="text-smoke font-mono text-xs">{msg.email}</span>
+                  <span className="text-smoke font-mono text-xs break-all">
+                    {msg.email}
+                  </span>
                 </div>
                 {msg.reason && (
-                  <Badge className="border-blue-200 bg-blue-100 text-blue-900">
+                  <Badge className="w-fit border-blue-200 bg-blue-100 text-blue-900">
                     {msg.reason}
                   </Badge>
                 )}

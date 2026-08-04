@@ -55,69 +55,82 @@ export async function signupManufacturer(
 
   const countryCode = String(formData.get("country_code") ?? "+91");
   const rawPhone = String(formData.get("phone") ?? "").trim();
-  const phone = rawPhone ? `${countryCode} ${rawPhone}` : "";
+  const phone = rawPhone ? `${countryCode} ${rawPhone}` : null;
 
-  // Gather ALL metadata based on business type to save into Auth Metadata
-  const metadata: Record<string, string> = {
-    full_name: fullName,
-    role: "manufacturer",
-    business_type: businessType,
-    phone: phone,
-  };
-
-  // Collect all fields from the form dynamically
+  // Collect ALL form fields into a JSON object for admin review
+  const formDataObj: Record<string, string> = {};
   formData.forEach((value, key) => {
-    if (["password", "role"].includes(key)) return;
-    metadata[key] = String(value);
+    if (key === "password") return; // Never store password
+    formDataObj[key] = String(value);
   });
 
   const supabase = await createClient();
 
   try {
-    const { data: authData, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: metadata,
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/confirm`,
-      },
-    });
+    // Check if application with same email already exists
+    const { data: existing } = await supabase
+      .from("manufacturer_applications")
+      .select("id, status")
+      .eq("email", email)
+      .maybeSingle();
 
-    if (error) {
-      console.error("Manufacturer signup error:", error);
+    if (existing) {
+      if (existing.status === "approved") {
+        return {
+          error:
+            "This email has already been approved. Please check your email for login credentials.",
+        };
+      }
+      if (existing.status === "pending") {
+        return {
+          error:
+            "An application with this email is already under review. Please wait for admin approval.",
+        };
+      }
+      // If rejected, allow re-submission by updating the existing row
+      await supabase
+        .from("manufacturer_applications")
+        .update({
+          full_name: fullName,
+          phone,
+          business_name: String(formData.get("business_name") ?? "Unnamed Business"),
+          business_type: businessType,
+          form_data: formDataObj,
+          status: "pending" as const,
+          rejection_reason: null,
+          reviewed_at: null,
+          reviewed_by: null,
+        })
+        .eq("id", existing.id);
+
       await logRateLimitAttempt({
         endpointType: "auth",
         actionName: "signup_manufacturer",
         identifier: email,
-        isFailed: true,
+        isFailed: false,
       });
-      return {
-        error:
-          error.message || "Failed to register manufacturer account. Please try again.",
-      };
+
+      return { success: true };
     }
 
-    // Immediately create profile rows if session is established (auto-confirm)
-    if (authData?.user) {
-      const userId = authData.user.id;
-      await supabase.from("profiles").upsert({
-        id: userId,
-        role: "manufacturer",
+    // Insert new application
+    const { error: insertError } = await supabase
+      .from("manufacturer_applications")
+      .insert({
+        email,
         full_name: fullName,
-      });
-
-      await supabase.from("manufacturer_profiles").upsert({
-        id: userId,
-        business_name: String(formData.get("business_name") ?? "Unnamed Factory"),
-        gst_number: String(formData.get("gst_number") ?? "PENDING"),
-        factory_address: String(formData.get("factory_address") ?? "") || null,
-        state: String(formData.get("state") ?? "") || null,
-        pincode: String(formData.get("pincode") ?? "") || null,
+        phone,
+        business_name: String(formData.get("business_name") ?? "Unnamed Business"),
+        business_type: businessType,
+        form_data: formDataObj,
         status: "pending",
       });
+
+    if (insertError) {
+      console.error("Manufacturer application insert error:", insertError);
+      return { error: "Failed to submit application. Please try again." };
     }
 
-    // Log successful attempt
     await logRateLimitAttempt({
       endpointType: "auth",
       actionName: "signup_manufacturer",

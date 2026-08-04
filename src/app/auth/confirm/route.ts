@@ -10,14 +10,18 @@ async function ensureProfileCreated(
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
-      const role =
-        (user.user_metadata?.role as "buyer" | "manufacturer" | "admin") || "buyer";
-      const fullName = user.user_metadata?.full_name || null;
+      const meta = user.user_metadata ?? {};
+      const role = (meta.role as "buyer" | "manufacturer" | "admin") || "buyer";
+      const fullName = meta.full_name || meta.fullName || null;
 
       const { error: profileErr } = await supabase.from("profiles").upsert({
         id: user.id,
         role,
         full_name: fullName,
+        phone: meta.phone || null,
+        city: meta.city || null,
+        state: meta.state || null,
+        pincode: meta.pincode || null,
       });
 
       if (profileErr) {
@@ -27,14 +31,11 @@ async function ensureProfileCreated(
       if (role === "manufacturer") {
         const { error: mfgErr } = await supabase.from("manufacturer_profiles").upsert({
           id: user.id,
-          business_name:
-            user.user_metadata?.business_name ||
-            user.user_metadata?.full_name ||
-            "Unnamed Business",
-          gst_number: user.user_metadata?.gst_number || "PENDING",
-          factory_address: user.user_metadata?.factory_address || null,
-          state: user.user_metadata?.state || null,
-          pincode: user.user_metadata?.pincode || null,
+          business_name: meta.business_name || meta.full_name || "Unnamed Business",
+          gst_number: meta.gst_number || "PENDING",
+          factory_address: meta.factory_address || null,
+          state: meta.state || null,
+          pincode: meta.pincode || null,
           status: "pending",
         });
 

@@ -5,14 +5,14 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { approveManufacturer, rejectManufacturer, type ReviewState } from "../actions";
-import type { VerificationStatus } from "@/types/database";
+import type { VerificationStatus, ApplicationStatus } from "@/types/database";
 
 export function ReviewActions({
   manufacturerId,
   status,
 }: {
   manufacturerId: string;
-  status: VerificationStatus;
+  status: VerificationStatus | ApplicationStatus | string;
 }) {
   const [showReject, setShowReject] = useState(false);
   const [state, formAction, isPending] = useActionState<ReviewState, FormData>(
@@ -20,10 +20,10 @@ export function ReviewActions({
     {}
   );
 
-  if (status === "verified") {
+  if (status === "verified" || status === "approved") {
     return (
       <p className="text-muted-foreground mt-8 text-sm">
-        This manufacturer is verified. No action needed.
+        This application has been approved and verified. No action needed.
       </p>
     );
   }

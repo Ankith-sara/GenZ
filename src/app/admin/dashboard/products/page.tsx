@@ -12,9 +12,9 @@ export default async function AdminProductsPage() {
     .order("updated_at", { ascending: false });
 
   return (
-    <div className="border-ash space-y-6 rounded-3xl border bg-white p-6 shadow-xs">
+    <div className="border-ash space-y-6 rounded-3xl border bg-white p-4 shadow-xs sm:p-6">
       <div>
-        <h2 className="font-nantes text-ink-black text-2xl font-bold">
+        <h2 className="font-nantes text-ink-black text-xl font-bold sm:text-2xl">
           Platform Product Catalog
         </h2>
         <p className="font-graphik text-smoke text-sm">

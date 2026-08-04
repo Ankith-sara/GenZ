@@ -12,9 +12,9 @@ export default async function AdminInquiriesPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <div className="border-ash space-y-6 rounded-3xl border bg-white p-6 shadow-xs">
+    <div className="border-ash space-y-6 rounded-3xl border bg-white p-4 shadow-xs sm:p-6">
       <div>
-        <h2 className="font-nantes text-ink-black text-2xl font-bold">
+        <h2 className="font-nantes text-ink-black text-xl font-bold sm:text-2xl">
           Buyer-to-Manufacturer Inquiries Stream
         </h2>
         <p className="font-graphik text-smoke text-sm">
@@ -29,13 +29,13 @@ export default async function AdminInquiriesPage() {
           {(inquiries ?? []).map((inq) => (
             <div
               key={inq.id}
-              className="border-ash space-y-3 rounded-2xl border bg-[#FAF7F0] p-5 shadow-xs"
+              className="border-ash space-y-3 rounded-2xl border bg-[#FAF7F0] p-4 shadow-xs sm:p-5"
             >
-              <div className="flex items-center justify-between">
-                <span className="font-graphik text-ink-black text-sm font-bold">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <span className="font-graphik text-ink-black text-sm font-bold break-all">
                   From: {inq.name} ({inq.email})
                 </span>
-                <Badge className="border-emerald-200 bg-emerald-100 text-emerald-900">
+                <Badge className="w-fit border-emerald-200 bg-emerald-100 text-emerald-900">
                   {inq.status}
                 </Badge>
               </div>

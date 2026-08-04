@@ -13,6 +13,11 @@ vi.mock("@/lib/supabase/server", () => ({
     from: vi.fn(() => ({
       insert: vi.fn().mockResolvedValue({ error: null }),
       upsert: vi.fn().mockResolvedValue({ error: null }),
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+        }),
+      }),
     })),
   })),
 }));

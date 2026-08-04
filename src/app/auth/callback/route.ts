@@ -1,6 +1,45 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+async function ensureProfileCreated(
+  supabase: Awaited<ReturnType<typeof createClient>>
+) {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      const meta = user.user_metadata ?? {};
+      const role = (meta.role as "buyer" | "manufacturer" | "admin") || "buyer";
+      const fullName = meta.full_name || meta.fullName || null;
+
+      await supabase.from("profiles").upsert({
+        id: user.id,
+        role,
+        full_name: fullName,
+        phone: meta.phone || null,
+        city: meta.city || null,
+        state: meta.state || null,
+        pincode: meta.pincode || null,
+      });
+
+      if (role === "manufacturer") {
+        await supabase.from("manufacturer_profiles").upsert({
+          id: user.id,
+          business_name: meta.business_name || meta.full_name || "Unnamed Business",
+          gst_number: meta.gst_number || "PENDING",
+          factory_address: meta.factory_address || null,
+          state: meta.state || null,
+          pincode: meta.pincode || null,
+          status: "pending",
+        });
+      }
+    }
+  } catch (err) {
+    console.error("Error creating profile in callback:", err);
+  }
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
@@ -23,8 +62,9 @@ export async function GET(request: Request) {
     }
   }
 
-  // 3. If user is authenticated, direct them to their target dashboard based on role
+  // 3. Ensure profile rows exist after successful authentication
   if (user) {
+    await ensureProfileCreated(supabase);
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
