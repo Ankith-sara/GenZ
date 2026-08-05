@@ -1,9 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Star, ArrowRight, BadgeCheck, Lock, CheckCircle2 } from "lucide-react";
+import {
+  Star,
+  ArrowRight,
+  BadgeCheck,
+  Lock,
+  CheckCircle2,
+  ShieldCheck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const homepageCategories = [
@@ -128,15 +134,87 @@ const stats = [
   { value: "1K+", label: "Jobs & livelihoods" },
 ];
 
-export default function HomePage() {
-  const [activeStakeholder, setActiveStakeholder] = useState(0);
+interface Stakeholder {
+  index: string;
+  name: string;
+  image: string;
+  copy: string;
+}
+
+interface StakeholderCardProps {
+  s: Stakeholder;
+  tier: "xl" | "lg" | "md" | "sm";
+  className?: string;
+}
+
+function StakeholderCard({ s, tier, className = "" }: StakeholderCardProps) {
+  const paddingMap = {
+    xl: "p-8 sm:p-10",
+    lg: "p-6 sm:p-8",
+    md: "p-5 sm:p-6",
+    sm: "p-4 sm:p-5",
+  };
+
+  const titleMap = {
+    xl: "text-3xl sm:text-4xl lg:text-5xl",
+    lg: "text-2xl sm:text-3xl",
+    md: "text-xl sm:text-2xl",
+    sm: "text-lg sm:text-xl",
+  };
+
+  const copyMap = {
+    xl: "text-sm sm:text-base max-w-md opacity-90",
+    lg: "text-xs sm:text-sm max-w-sm opacity-85",
+    md: "text-xs max-w-xs opacity-80",
+    sm: "hidden",
+  };
 
   return (
+    <div
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 text-white shadow-xs transition-all duration-500 hover:shadow-lg ${paddingMap[tier]} ${className}`}
+    >
+      {/* Background Image with zoom on hover */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={s.image}
+          alt={s.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 1024px) 100vw, 600px"
+        />
+        {/* Soft, high-end editorial gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20 transition-opacity duration-500 group-hover:opacity-95" />
+      </div>
+
+      {/* Card Content */}
+      <div className="relative z-10 flex h-full w-full flex-col justify-between">
+        {/* Bottom Section */}
+        <div className="mt-auto pt-6">
+          <h3
+            className={`font-nantes mb-2 leading-tight font-normal text-white ${titleMap[tier]}`}
+          >
+            For {s.name}
+          </h3>
+          {tier !== "sm" && (
+            <p
+              className={`font-graphik leading-relaxed text-neutral-300 ${copyMap[tier]}`}
+            >
+              {s.copy}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function HomePage() {
+  return (
     <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
-      {/* HERO SECTION */}
-      <section className="border-ash relative w-full overflow-hidden border-b">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-1 lg:grid-cols-12">
-          <div className="relative z-10 flex flex-col justify-center gap-8 px-6 py-16 sm:px-12 sm:py-20 lg:col-span-6 lg:py-0">
+      {/* HERO SECTION — laptop + product collage, white bg */}
+      <section className="border-ash relative w-full overflow-hidden border-b bg-white">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center lg:grid-cols-12">
+          <div className="relative z-10 flex flex-col justify-center gap-7 px-6 py-16 sm:px-12 sm:py-20 lg:col-span-6 lg:py-0">
             <span className="text-caption font-graphik text-smoke tracking-[0.28em] uppercase">
               Made in India
             </span>
@@ -165,13 +243,16 @@ export default function HomePage() {
               one marketplace.
             </p>
 
-            <div className="flex flex-wrap items-center gap-6">
+            <div className="flex flex-wrap items-center gap-4">
               <Button
                 asChild
                 size="lg"
                 className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik h-12 rounded-none border-none px-6 text-xs font-semibold tracking-[0.05em] text-black uppercase transition-colors"
               >
-                <Link href="/discover">Shop Now</Link>
+                <Link href="/discover" className="flex items-center gap-2">
+                  <span>Explore India</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
 
               <Button
@@ -184,8 +265,8 @@ export default function HomePage() {
               </Button>
             </div>
 
-            {/* Quick Trust Badges Strip */}
-            <div className="font-graphik mt-4 flex flex-wrap items-center gap-4 text-xs text-neutral-600">
+            {/* Trust Badges Strip — 4 badges to match reference */}
+            <div className="font-graphik mt-2 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-neutral-600">
               <span className="flex items-center gap-1.5 font-medium">
                 <CheckCircle2 className="h-4 w-4 text-amber-500" /> 100% Made in India
               </span>
@@ -193,35 +274,24 @@ export default function HomePage() {
                 <BadgeCheck className="h-4 w-4 text-blue-600" /> Factory Verified
               </span>
               <span className="flex items-center gap-1.5 font-medium">
+                <ShieldCheck className="h-4 w-4 text-purple-600" /> GST Verified
+              </span>
+              <span className="flex items-center gap-1.5 font-medium">
                 <Lock className="h-4 w-4 text-emerald-600" /> Secure Payments
               </span>
             </div>
           </div>
 
-          {/* Image column */}
-          <div className="relative min-h-[420px] lg:col-span-6 lg:min-h-[720px]">
-            <div
-              className="absolute inset-0 hidden lg:block"
-              style={{ clipPath: "polygon(6% 0, 100% 0, 100% 100%, 0 100%)" }}
-            >
+          {/* Image column — laptop mockup, no crop/dark overlay */}
+          <div className="relative flex min-h-[380px] items-center justify-center px-6 py-10 lg:col-span-6 lg:min-h-[640px] lg:px-8">
+            <div className="relative aspect-[16/10] w-full max-w-2xl">
               <Image
                 src="/hero_background.png"
-                alt="GenZ Toy Manufacturing Workshop"
+                alt="GenZ Made in India laptop showcase"
                 fill
                 priority
-                className="object-cover object-center"
+                className="object-contain"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            </div>
-            <div className="absolute inset-0 lg:hidden">
-              <Image
-                src="/hero_background.png"
-                alt="GenZ Toy Manufacturing Workshop"
-                fill
-                priority
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-black/40" />
             </div>
           </div>
         </div>
@@ -256,7 +326,6 @@ export default function HomePage() {
             </Button>
           </div>
 
-          {/* Category Cards Grid */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {homepageCategories.map((cat) => (
               <Link
@@ -311,7 +380,6 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* 4 Trust Cards Grid */}
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {homepageTrustPillars.map((pillar) => (
               <div
@@ -333,7 +401,6 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Institutional Trust Banner */}
           <div className="mt-14 flex flex-col items-center justify-between gap-6 rounded-2xl border border-neutral-800 bg-[#0B0B0B] p-8 text-white shadow-xl lg:flex-row">
             <div className="max-w-2xl">
               <h3 className="font-nantes text-2xl text-white sm:text-3xl">
@@ -370,133 +437,26 @@ export default function HomePage() {
             </h2>
           </div>
 
-          {/* Interactive Split Grid */}
-          <div className="grid min-h-[500px] grid-cols-1 items-stretch gap-12 lg:grid-cols-12">
-            <div className="divide-ash border-ash flex flex-col justify-center divide-y border-t border-b lg:col-span-7">
-              {stakeholdersList.map((s, idx) => {
-                const isActive = idx === activeStakeholder;
-                return (
-                  <div key={s.name} className="flex flex-col">
-                    <button
-                      onMouseEnter={() => setActiveStakeholder(idx)}
-                      onClick={() => setActiveStakeholder(idx)}
-                      className="group flex w-full cursor-pointer items-center justify-between py-6 text-left transition-colors duration-300 focus:outline-none"
-                    >
-                      <div className="flex items-center gap-6">
-                        <span
-                          className={`font-graphik text-xs transition-colors duration-300 ${
-                            isActive ? "text-brand-yellow-dark font-bold" : "text-smoke"
-                          }`}
-                        >
-                          {s.index}
-                        </span>
-                        <span
-                          className={`font-nantes text-2xl transition-colors duration-300 sm:text-3xl ${
-                            isActive
-                              ? "text-brand-yellow-dark translate-x-1 font-medium italic"
-                              : "text-ink-black"
-                          }`}
-                        >
-                          {s.name}
-                        </span>
-                      </div>
+          {/* Mobile/tablet */}
+          <div className="flex flex-col gap-5 lg:hidden">
+            {stakeholdersList.map((s) => (
+              <StakeholderCard
+                key={s.name}
+                s={s}
+                tier="lg"
+                className="aspect-[16/10]"
+              />
+            ))}
+          </div>
 
-                      <div className="flex items-center gap-4">
-                        <div
-                          className={`bg-brand-yellow-dark hidden h-[1px] transition-all duration-500 md:block ${
-                            isActive ? "w-24 opacity-100" : "w-0 opacity-0"
-                          }`}
-                        />
-                        <div
-                          className={`flex h-8 w-8 items-center justify-center rounded-full border transition-all duration-300 ${
-                            isActive
-                              ? "bg-brand-yellow border-brand-yellow text-ink-black rotate-45"
-                              : "border-ash text-smoke group-hover:text-ink-black group-hover:border-ink-black"
-                          }`}
-                        >
-                          <ArrowRight
-                            className={`h-4 w-4 transition-transform duration-300 ${isActive ? "-rotate-45" : ""}`}
-                          />
-                        </div>
-                      </div>
-                    </button>
+          {/* Desktop */}
+          <div className="hidden lg:grid lg:h-[640px] lg:grid-cols-2 lg:gap-5">
+            <StakeholderCard s={stakeholdersList[0]} tier="xl" className="h-full" />
 
-                    {/* Mobile-only Collapsible Detail Panel */}
-                    <div
-                      className={`overflow-hidden transition-all duration-500 ease-in-out lg:hidden ${
-                        isActive
-                          ? "max-h-[500px] pb-6 opacity-100"
-                          : "max-h-0 opacity-0"
-                      }`}
-                    >
-                      <div className="border-ash flex flex-col gap-4 rounded-2xl border bg-[#FAF7F0] p-5 shadow-xs">
-                        <div className="border-ash bg-cream-paper relative aspect-[4/3] w-full overflow-hidden rounded-xl border">
-                          <Image
-                            src={s.image}
-                            alt={s.name}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 1024px) 100vw, 400px"
-                          />
-                        </div>
-                        <div>
-                          <h4 className="font-nantes text-ink-black mb-2 text-xl">
-                            For {s.name}
-                          </h4>
-                          <p className="font-graphik text-smoke text-sm leading-relaxed">
-                            {s.copy}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Right Column: Image & Details Showcase */}
-            <div className="border-ash relative hidden flex-col justify-between rounded-2xl border bg-[#FAF7F0] p-6 shadow-xs lg:col-span-5 lg:flex">
-              <div className="border-ash bg-cream-paper relative mb-6 aspect-[4/3] w-full overflow-hidden rounded-xl border">
-                {stakeholdersList.map((s, idx) => (
-                  <div
-                    key={s.name}
-                    className={`absolute inset-0 transition-all duration-700 ease-out ${
-                      idx === activeStakeholder
-                        ? "pointer-events-auto scale-100 opacity-100"
-                        : "pointer-events-none scale-95 opacity-0"
-                    }`}
-                  >
-                    <Image
-                      src={s.image}
-                      alt={s.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 400px"
-                    />
-                    <div className="bg-brand-yellow/5 absolute inset-0" />
-                  </div>
-                ))}
-              </div>
-
-              {/* Content description area with fade-in */}
-              <div className="flex min-h-[140px] flex-1 flex-col justify-end">
-                {stakeholdersList.map((s, idx) => {
-                  if (idx !== activeStakeholder) return null;
-                  return (
-                    <div
-                      key={s.name}
-                      className="animate-[fade-in_0.5s_ease-out_forwards]"
-                    >
-                      <h3 className="font-nantes text-ink-black mb-3 text-2xl">
-                        For {s.name}
-                      </h3>
-                      <p className="font-graphik text-smoke text-sm leading-relaxed">
-                        {s.copy}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="grid grid-cols-2 grid-rows-2 gap-5">
+              {stakeholdersList.slice(1).map((s) => (
+                <StakeholderCard key={s.name} s={s} tier="md" className="h-full" />
+              ))}
             </div>
           </div>
         </div>
@@ -521,7 +481,6 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Mission strip */}
           <div className="text-pure-white mt-8 flex flex-col gap-6 rounded-2xl border border-neutral-800 bg-neutral-900/90 p-8 shadow-xs sm:p-10 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-xl">
               <div className="tag border-brand-yellow/30 bg-brand-yellow/10 mb-3 inline-block rounded-full border px-4 py-1 shadow-xs">

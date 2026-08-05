@@ -14,10 +14,6 @@ import {
   ShoppingBag,
   Search,
   Heart,
-  ShieldCheck,
-  Lock,
-  Factory,
-  BadgeCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user-avatar";
@@ -99,15 +95,18 @@ export function Header({
   const [isOpen, setIsOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showCollectionsDropdown, setShowCollectionsDropdown] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
 
   const userMenuRef = useRef<HTMLDivElement>(null);
   const collectionsMenuRef = useRef<HTMLLIElement>(null);
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
 
   // Cart & Wishlist counters
   useEffect(() => {
@@ -153,6 +152,17 @@ export function Header({
     };
   }, []);
 
+  // Collapse the announcement bar once the page is scrolled, so the
+  // sticky header reclaims vertical space instead of staying maximal height.
+  useEffect(() => {
+    function handleScroll() {
+      setScrolled(window.scrollY > 24);
+    }
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -170,18 +180,62 @@ export function Header({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Close every open overlay on Escape — a keyboard user shouldn't have
+  // to hunt for a close button.
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setShowUserMenu(false);
+      setShowCollectionsDropdown(false);
+      setShowMobileSearch(false);
+      setIsOpen(false);
+    }
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowUserMenu(false);
+      setShowCollectionsDropdown(false);
+      setShowMobileSearch(false);
+      setIsOpen(false);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [pathname]);
+
+  // Lock background scroll while the mobile drawer is open.
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  // Autofocus the inline mobile search input when it opens.
+  useEffect(() => {
+    if (showMobileSearch) {
+      mobileSearchInputRef.current?.focus();
+    }
+  }, [showMobileSearch]);
+
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();
     const q = searchQuery.trim();
     if (!q) return;
+    setShowMobileSearch(false);
     router.push(`/discover?q=${encodeURIComponent(q)}`);
   }
 
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-black text-white shadow-xl select-none">
-        {/* TOP ANNOUNCEMENT BAR (Dark Black Accent) */}
-        <div className="border-b border-neutral-800/80 bg-[#050505] text-neutral-300">
+        {/* TOP ANNOUNCEMENT BAR — collapses on scroll to reclaim height */}
+        <div
+          className={`overflow-hidden border-b border-neutral-800/80 bg-[#050505] text-neutral-300 transition-[max-height,opacity] duration-300 ease-out ${
+            scrolled ? "max-h-0 opacity-0" : "max-h-9 opacity-100"
+          }`}
+        >
           <div className="font-graphik mx-auto flex h-9 max-w-[1280px] items-center justify-between px-4 text-[11px] tracking-wide sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
               <span className="inline-flex items-center gap-1.5 font-medium text-white">
@@ -205,7 +259,7 @@ export function Header({
           </div>
         </div>
 
-        {/* MAIN NAVIGATION BAR (Black Luxury Layout) */}
+        {/* MAIN NAVIGATION BAR */}
         <div className="border-b border-neutral-800 bg-black py-3.5">
           <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             {/* Left: Brand Logo */}
@@ -230,10 +284,10 @@ export function Header({
               </span>
             </Link>
 
-            {/* Middle: White Squarish Search Bar with Yellow Box Icon Button */}
+            {/* Middle: Search Bar (desktop) */}
             <form
               onSubmit={handleSearchSubmit}
-              className="hidden h-10 max-w-lg flex-1 items-center overflow-hidden rounded-xl border border-neutral-300 bg-white shadow-xs transition-all focus-within:border-black focus-within:ring-2 focus-within:ring-black/10 md:flex"
+              className="ml-8 ml-auto hidden h-10 w-full items-center overflow-hidden rounded-xl border border-neutral-300 bg-white shadow-xs transition-all focus-within:border-black focus-within:ring-2 focus-within:ring-black/10 md:flex lg:ml-16"
             >
               <input
                 type="search"
@@ -254,6 +308,21 @@ export function Header({
 
             {/* Right: Actions & User Avatar */}
             <div className="flex shrink-0 items-center gap-3.5 sm:gap-4">
+              {/* Mobile search toggle — lets mobile users search without opening the full drawer */}
+              <button
+                onClick={() => setShowMobileSearch((v) => !v)}
+                aria-label="Toggle search"
+                aria-expanded={showMobileSearch}
+                aria-controls="mobile-search-row"
+                className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white md:hidden"
+              >
+                {showMobileSearch ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Search className="h-5 w-5" />
+                )}
+              </button>
+
               {/* Wishlist Icon */}
               <Link
                 href="/wishlist"
@@ -282,12 +351,15 @@ export function Header({
                 )}
               </Link>
 
-              {/* Account Dropdown or Aligned Login Button (Matching h-9 height) */}
+              {/* Account Dropdown or Login Button */}
               {isLoggedIn ? (
                 <div className="relative" ref={userMenuRef}>
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     aria-label="User Account"
+                    aria-expanded={showUserMenu}
+                    aria-haspopup="true"
+                    aria-controls="user-menu"
                     className="flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-neutral-700 px-1.5 transition-colors hover:border-white"
                   >
                     <UserAvatar name={userName} avatarUrl={avatarUrl} size={26} />
@@ -295,7 +367,11 @@ export function Header({
                   </button>
 
                   {showUserMenu && (
-                    <div className="absolute right-0 z-50 mt-2 w-56 rounded-2xl border border-neutral-800 bg-[#121212] py-2 text-white shadow-2xl">
+                    <div
+                      id="user-menu"
+                      role="menu"
+                      className="absolute right-0 z-50 mt-2 w-56 rounded-2xl border border-neutral-800 bg-[#121212] py-2 text-white shadow-2xl"
+                    >
                       <div className="border-b border-neutral-800 px-4 py-2.5">
                         <p className="font-graphik text-[10px] font-semibold tracking-wider text-neutral-400 uppercase">
                           Signed in as
@@ -308,6 +384,7 @@ export function Header({
                       {role === "admin" ? (
                         <Link
                           href="/admin/dashboard"
+                          role="menuitem"
                           className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                           onClick={() => setShowUserMenu(false)}
                         >
@@ -318,6 +395,7 @@ export function Header({
                         <>
                           <Link
                             href="/profile"
+                            role="menuitem"
                             className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                             onClick={() => setShowUserMenu(false)}
                           >
@@ -326,6 +404,7 @@ export function Header({
                           </Link>
                           <Link
                             href="/orders"
+                            role="menuitem"
                             className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                             onClick={() => setShowUserMenu(false)}
                           >
@@ -335,6 +414,7 @@ export function Header({
                       ) : (
                         <Link
                           href="/dashboard"
+                          role="menuitem"
                           className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                           onClick={() => setShowUserMenu(false)}
                         >
@@ -346,6 +426,7 @@ export function Header({
                       <form action={signOutAction} className="w-full">
                         <button
                           type="submit"
+                          role="menuitem"
                           className="font-graphik flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-red-400 hover:bg-neutral-800"
                         >
                           <LogOut className="h-4 w-4" /> Logout
@@ -366,20 +447,43 @@ export function Header({
               {/* Mobile Drawer Toggle */}
               <button
                 onClick={() => setIsOpen(true)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-800 md:hidden"
                 aria-label="Open Menu"
+                aria-expanded={isOpen}
+                aria-controls="mobile-drawer"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-800 md:hidden"
               >
                 <Menu className="h-5 w-5" />
               </button>
             </div>
           </div>
+
+          {/* Inline mobile search row — expands under the main bar instead of
+              forcing users into the full drawer just to search. */}
+          <div
+            id="mobile-search-row"
+            className={`overflow-hidden px-4 transition-[max-height,opacity] duration-300 ease-out sm:px-6 md:hidden ${
+              showMobileSearch ? "mt-3 max-h-14 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <form onSubmit={handleSearchSubmit} className="relative">
+              <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+              <input
+                ref={mobileSearchInputRef}
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products or makers..."
+                className="w-full rounded-full border border-neutral-800 bg-neutral-900 py-2.5 pr-4 pl-10 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
+              />
+            </form>
+          </div>
         </div>
 
-        {/* SECONDARY NAVIGATION BAR (Cream Paper Background) */}
+        {/* SECONDARY NAVIGATION BAR */}
         <div className="hidden border-b border-[#E5E5E0] bg-[#FAF7F0] md:block">
           <div className="mx-auto flex max-w-[1280px] items-center px-4 lg:px-8">
             <nav aria-label="Main navigation" className="w-full">
-              <ul className="font-graphik flex items-center gap-x-8 py-2.5 text-xs font-semibold tracking-wide whitespace-nowrap text-neutral-900">
+              <ul className="font-graphik flex items-center gap-x-8 py-2.5 text-sm font-medium tracking-wide whitespace-nowrap text-neutral-900">
                 {/* Home */}
                 <li className="relative py-0.5">
                   <Link
@@ -392,11 +496,14 @@ export function Header({
                   </Link>
                 </li>
 
-                {/* COLLECTIONS DROPDOWN (Click-Triggered Only - Cream Theme) */}
+                {/* COLLECTIONS DROPDOWN — now shows category thumbnails */}
                 <li ref={collectionsMenuRef} className="relative py-0.5">
                   <button
                     type="button"
                     onClick={() => setShowCollectionsDropdown(!showCollectionsDropdown)}
+                    aria-expanded={showCollectionsDropdown}
+                    aria-haspopup="true"
+                    aria-controls="collections-menu"
                     className={`flex cursor-pointer items-center gap-1 transition-colors hover:text-black ${
                       pathname === "/discover" ? "font-bold text-black" : ""
                     }`}
@@ -409,33 +516,56 @@ export function Header({
                     />
                   </button>
 
-                  {/* Cream Paper Dropdown Menu for Collections */}
                   {showCollectionsDropdown && (
-                    <div className="animate-in fade-in-50 slide-in-from-top-2 absolute left-0 z-50 mt-2 w-[640px] rounded-2xl border border-neutral-300 bg-[#FAF7F0] p-4 shadow-2xl">
+                    <div
+                      id="collections-menu"
+                      role="menu"
+                      className="animate-in fade-in-50 slide-in-from-top-2 absolute left-0 z-50 mt-2 w-[640px] rounded-2xl border border-neutral-300 bg-[#FAF7F0] p-4 shadow-2xl"
+                    >
                       <div className="grid grid-cols-2 gap-2.5">
                         {categoriesList.map((cat) => (
                           <Link
                             key={cat.name}
                             href={cat.href}
+                            role="menuitem"
                             onClick={() => setShowCollectionsDropdown(false)}
-                            className="group flex flex-col justify-center rounded-xl border border-neutral-200/80 bg-white p-3 transition-all hover:border-black hover:bg-white hover:shadow-md"
+                            className="group flex items-center gap-3 rounded-xl border border-neutral-200/80 bg-white p-2.5 transition-all hover:border-black hover:bg-white hover:shadow-md"
                           >
-                            <div className="flex items-center justify-between">
-                              <span className="font-graphik text-xs font-bold text-neutral-900 group-hover:text-black">
-                                {cat.name}
-                              </span>
-                              {cat.badge && (
-                                <span className="font-graphik rounded-full border border-neutral-300 bg-neutral-100 px-2 py-0.5 text-[9px] font-bold text-neutral-800">
-                                  {cat.badge}
-                                </span>
-                              )}
+                            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
+                              <Image
+                                src={cat.image}
+                                alt=""
+                                fill
+                                className="object-cover"
+                                sizes="44px"
+                              />
                             </div>
-                            <span className="font-graphik mt-1 line-clamp-1 text-[11px] text-neutral-500 group-hover:text-neutral-800">
-                              {cat.desc}
-                            </span>
+                            <div className="flex min-w-0 flex-col justify-center">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-graphik truncate text-xs font-bold text-neutral-900 group-hover:text-black">
+                                  {cat.name}
+                                </span>
+                                {cat.badge && (
+                                  <span className="font-graphik shrink-0 rounded-full border border-neutral-300 bg-neutral-100 px-1.5 py-0.5 text-[9px] font-bold text-neutral-800">
+                                    {cat.badge}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="font-graphik mt-0.5 line-clamp-1 text-[11px] text-neutral-500 group-hover:text-neutral-800">
+                                {cat.desc}
+                              </span>
+                            </div>
                           </Link>
                         ))}
                       </div>
+                      <Link
+                        href="/discover"
+                        role="menuitem"
+                        onClick={() => setShowCollectionsDropdown(false)}
+                        className="font-graphik mt-3 flex items-center justify-center rounded-xl border border-neutral-900 bg-neutral-900 py-2 text-xs font-bold text-white transition-colors hover:bg-black"
+                      >
+                        View full catalog
+                      </Link>
                     </div>
                   )}
                 </li>
@@ -481,9 +611,9 @@ export function Header({
         </div>
       </header>
 
-      {/* MOBILE DRAWER (Sleek Dark Theme) */}
+      {/* MOBILE DRAWER */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div id="mobile-drawer" className="fixed inset-0 z-50 md:hidden">
           <div
             className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity"
             onClick={() => setIsOpen(false)}
@@ -512,6 +642,7 @@ export function Header({
                 </Link>
                 <button
                   onClick={() => setIsOpen(false)}
+                  aria-label="Close menu"
                   className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-800 hover:text-white"
                 >
                   <X className="h-6 w-6" />
@@ -540,7 +671,6 @@ export function Header({
                   Home
                 </Link>
 
-                {/* Mobile Collections Section */}
                 <div className="my-1 border-t border-neutral-800 pt-2">
                   <p className="mb-2 px-3 text-[10px] font-bold tracking-wider text-amber-400 uppercase">
                     Collections & Categories
@@ -556,7 +686,7 @@ export function Header({
                         <div className="relative h-6 w-6 overflow-hidden rounded-md border border-neutral-800 bg-neutral-900">
                           <Image
                             src={cat.image}
-                            alt={cat.name}
+                            alt=""
                             fill
                             className="object-cover"
                             sizes="24px"
