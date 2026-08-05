@@ -22,16 +22,22 @@ export default async function AdminVerificationsPage({
 
   const supabase = await createClient();
 
-  let query = supabase
+  // Fetch all applications to compute tab counts efficiently
+  const { data: allApplications } = await supabase
     .from("manufacturer_applications")
-    .select("*")
+    .select("id, status, business_name, full_name, email, phone, created_at")
     .order("created_at", { ascending: false });
 
-  if (activeTab !== "all") {
-    query = query.eq("status", activeTab);
-  }
+  const list = allApplications ?? [];
+  const counts: Record<ApplicationStatus | "all", number> = {
+    pending: list.filter((a) => a.status === "pending").length,
+    approved: list.filter((a) => a.status === "approved").length,
+    rejected: list.filter((a) => a.status === "rejected").length,
+    all: list.length,
+  };
 
-  const { data: applications } = await query;
+  const applications =
+    activeTab === "all" ? list : list.filter((app) => app.status === activeTab);
 
   return (
     <div className="mx-auto max-w-5xl px-1 py-4 sm:px-6 sm:py-8">
@@ -55,19 +61,30 @@ export default async function AdminVerificationsPage({
       </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
-        {TABS.map((tab) => (
-          <Link
-            key={tab.value}
-            href={`/admin/dashboard/verifications?status=${tab.value}`}
-            className={`font-graphik flex h-10 items-center rounded-full border px-5 text-xs font-semibold tracking-wider uppercase transition-colors ${
-              activeTab === tab.value
-                ? "border-black bg-black text-white"
-                : "border-[#E5E5E0] bg-[#FAF7F0] text-[#52524E] hover:border-black hover:text-black"
-            }`}
-          >
-            {tab.label}
-          </Link>
-        ))}
+        {TABS.map((tab) => {
+          const count = counts[tab.value] ?? 0;
+          const isActive = activeTab === tab.value;
+          return (
+            <Link
+              key={tab.value}
+              href={`/admin/dashboard/verifications?status=${tab.value}`}
+              className={`font-graphik flex h-10 items-center gap-2 rounded-full border px-4 text-xs font-semibold tracking-wider uppercase transition-colors ${
+                isActive
+                  ? "border-black bg-black text-white"
+                  : "border-[#E5E5E0] bg-[#FAF7F0] text-[#52524E] hover:border-black hover:text-black"
+              }`}
+            >
+              <span>{tab.label}</span>
+              <span
+                className={`flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
+                  isActive ? "bg-white/20 text-white" : "bg-[#E5E5E0] text-[#52524E]"
+                }`}
+              >
+                {count}
+              </span>
+            </Link>
+          );
+        })}
       </div>
 
       <div className="mt-6 divide-y divide-[#E5E5E0] rounded-2xl border border-[#E5E5E0] bg-white">

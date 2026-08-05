@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { requireRole } from "@/lib/require-role";
 import { parseMaterials } from "@/lib/products";
 import type { ProductStatus } from "@/types/database";
@@ -47,7 +48,31 @@ export async function createProduct(
     return { error: validation.error.issues[0].message };
   }
 
-  const supabase = await createClient();
+  // Cover image server-side validation
+  const coverImage = formData.get("cover_image") as File | null;
+  if (coverImage && coverImage.size > 0) {
+    if (!coverImage.type.startsWith("image/")) {
+      return { error: "Cover file must be an image." };
+    }
+    if (coverImage.size > 5 * 1024 * 1024) {
+      return { error: "Cover file size must be under 5MB." };
+    }
+  }
+
+  // Gallery images server-side validation
+  const galleryImages = formData.getAll("gallery_images") as File[];
+  for (const img of galleryImages) {
+    if (img && img.size > 0) {
+      if (!img.type.startsWith("image/")) {
+        return { error: "All gallery files must be images." };
+      }
+      if (img.size > 5 * 1024 * 1024) {
+        return { error: "All gallery files must be under 5MB." };
+      }
+    }
+  }
+
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("products")
     .insert({
@@ -70,13 +95,67 @@ export async function createProduct(
 
   if (error) {
     console.error("Create product DB error:", error);
-    if (error.code === "42501") {
-      return {
-        error:
-          "Only verified manufacturers can list products. Finish verification first.",
-      };
-    }
     return { error: "Could not create the product. Please try again." };
+  }
+
+  // Upload cover image if provided
+  if (coverImage && coverImage.size > 0) {
+    const safeName = coverImage.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+    const path = `${session.userId}/products/${data.id}/cover-${Date.now()}-${safeName}`;
+
+    try {
+      const buffer = Buffer.from(await coverImage.arrayBuffer());
+      const { error: uploadError } = await supabase.storage
+        .from("product-media")
+        .upload(path, buffer, {
+          contentType: coverImage.type,
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error("Cover image upload error:", uploadError);
+      } else {
+        await supabase
+          .from("products")
+          .update({ cover_image_path: path })
+          .eq("id", data.id);
+      }
+    } catch (uploadErr) {
+      console.error("Exception uploading cover image:", uploadErr);
+    }
+  }
+
+  // Upload gallery images if provided
+  if (galleryImages.length > 0) {
+    let position = 0;
+    for (const img of galleryImages) {
+      if (img && img.size > 0) {
+        const safeName = img.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+        const path = `${session.userId}/products/${data.id}/gallery-${Date.now()}-${safeName}`;
+        try {
+          const buffer = Buffer.from(await img.arrayBuffer());
+          const { error: uploadError } = await supabase.storage
+            .from("product-media")
+            .upload(path, buffer, {
+              contentType: img.type,
+              upsert: false,
+            });
+
+          if (!uploadError) {
+            await supabase.from("product_images").insert({
+              product_id: data.id,
+              manufacturer_id: session.userId,
+              image_path: path,
+              position: position++,
+            });
+          } else {
+            console.error("Gallery image upload error:", uploadError);
+          }
+        } catch (uploadErr) {
+          console.error("Exception uploading gallery image:", uploadErr);
+        }
+      }
+    }
   }
 
   revalidatePath("/dashboard/manufacturer/products");

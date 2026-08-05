@@ -3,8 +3,90 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Star, ArrowRight } from "lucide-react";
+import { Star, ArrowRight, BadgeCheck, Lock, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const homepageCategories = [
+  {
+    name: "Wooden Toys & Crafts",
+    href: "/discover?category=Wooden Toys",
+    image: "/cat_toys.png",
+    count: "150+ Verified Products",
+    desc: "Eco-friendly, non-toxic traditional Indian toys & STEM blocks.",
+  },
+  {
+    name: "Electronics & Tech",
+    href: "/discover?category=Electronics",
+    image: "/cat_electronics.png",
+    count: "220+ Verified Products",
+    desc: "Smart devices, chargers & custom PCB assemblies.",
+  },
+  {
+    name: "Fashion & Apparel",
+    href: "/discover?category=Fashion",
+    image: "/cat_fashion.png",
+    count: "310+ Verified Products",
+    desc: "Organic cotton textiles, handcrafted apparel & accessories.",
+  },
+  {
+    name: "Home & Furniture",
+    href: "/discover?category=Furniture",
+    image: "/cat_furniture.png",
+    count: "180+ Verified Products",
+    desc: "Solid wood furniture, handcrafted decor & living items.",
+  },
+  {
+    name: "Kitchen & Dining",
+    href: "/discover?category=Kitchen",
+    image: "/cat_kitchen.png",
+    count: "200+ Verified Products",
+    desc: "Stainless steel utensils, cast iron cookware & appliances.",
+  },
+  {
+    name: "Beauty & Wellness",
+    href: "/discover?category=Beauty",
+    image: "/cat_beauty.png",
+    count: "140+ Verified Products",
+    desc: "Ayurvedic formulations, natural skincare & herbal wellness.",
+  },
+  {
+    name: "Industrial & Tools",
+    href: "/discover?category=Industrial",
+    image: "/cat_industrial.png",
+    count: "290+ Verified Products",
+    desc: "Precision components, machinery parts & fabrication tools.",
+  },
+  {
+    name: "Sports & Fitness",
+    href: "/discover?category=Sports",
+    image: "/cat_sports.png",
+    count: "110+ Verified Products",
+    desc: "Athletic gear, fitness equipment & outdoor play sets.",
+  },
+];
+
+const homepageTrustPillars = [
+  {
+    title: "100% Made in India Sourcing",
+    subtitle: "Authentic Domestic Craftsmanship",
+    desc: "Every listing on GenZ originates from verified Indian workshops and factories. We eliminate reliance on low-quality imports and connect you directly to Indian makers.",
+  },
+  {
+    title: "Rigorous Factory & GST Audits",
+    subtitle: "3-Tier Supplier Verification",
+    desc: "Before any seller lists a product, our team conducts physical site validation, GST registration verification, and MSME certification checks.",
+  },
+  {
+    title: "Live Production Video Reels",
+    subtitle: "Unfiltered Source Transparency",
+    desc: "Watch real factory production reels showing actual workers, machinery, raw materials, and quality tests before placing your wholesale or retail order.",
+  },
+  {
+    title: "Direct Pricing & Escrow Protection",
+    subtitle: "Zero Middleman Markup",
+    desc: "Buy directly from manufacturers with no price stacking. Payments are securely held in escrow until items are received and inspected.",
+  },
+];
 
 const stakeholdersList = [
   {
@@ -39,35 +121,6 @@ const stakeholdersList = [
   },
 ];
 
-const pillars = [
-  {
-    index: "01",
-    title: "Trust Layer",
-    copy: "GST verification, factory validation and certification checks run on every seller before they ever list a product.",
-    featured: true,
-  },
-  {
-    index: "02",
-    title: "Reel-Based Discovery",
-    copy: "Real factory reels, not stock photography. You see the process and the people before you see the price.",
-  },
-  {
-    index: "03",
-    title: "Import Gap Intelligence",
-    copy: "We track what India still imports and route that demand toward the manufacturers who can build it here instead.",
-  },
-  {
-    index: "04",
-    title: "Innovation & Design",
-    copy: "Encouraging Indian makers to redesign, not just replicate — better materials, better ergonomics, better margins.",
-  },
-  {
-    index: "05",
-    title: "Direct Market Access",
-    copy: "Manufacturers reach consumers without a chain of middlemen. No markup stacking, no anonymous resellers.",
-  },
-];
-
 const stats = [
   { value: "100+", label: "Verified manufacturers" },
   { value: "1,000+", label: "Products & innovations" },
@@ -75,13 +128,12 @@ const stats = [
   { value: "1K+", label: "Jobs & livelihoods" },
 ];
 
-const marqueeLogos = ["sidbi", "NSIC", "DPIIT", "MAKE IN INDIA"];
-
 export default function HomePage() {
   const [activeStakeholder, setActiveStakeholder] = useState(0);
 
   return (
     <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
+      {/* HERO SECTION */}
       <section className="border-ash relative w-full overflow-hidden border-b">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 lg:grid-cols-12">
           <div className="relative z-10 flex flex-col justify-center gap-8 px-6 py-16 sm:px-12 sm:py-20 lg:col-span-6 lg:py-0">
@@ -121,10 +173,32 @@ export default function HomePage() {
               >
                 <Link href="/discover">Shop Now</Link>
               </Button>
+
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="font-graphik h-12 rounded-none border-black px-6 text-xs font-semibold tracking-[0.05em] text-black uppercase transition-colors hover:bg-black hover:text-white"
+              >
+                <Link href="/signup/manufacturer">Sell on GenZ</Link>
+              </Button>
+            </div>
+
+            {/* Quick Trust Badges Strip */}
+            <div className="font-graphik mt-4 flex flex-wrap items-center gap-4 text-xs text-neutral-600">
+              <span className="flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="h-4 w-4 text-amber-500" /> 100% Made in India
+              </span>
+              <span className="flex items-center gap-1.5 font-medium">
+                <BadgeCheck className="h-4 w-4 text-blue-600" /> Factory Verified
+              </span>
+              <span className="flex items-center gap-1.5 font-medium">
+                <Lock className="h-4 w-4 text-emerald-600" /> Secure Payments
+              </span>
             </div>
           </div>
 
-          {/* Image column — full bleed, diagonal cut against the text column, with an overlapping metric card */}
+          {/* Image column */}
           <div className="relative min-h-[420px] lg:col-span-6 lg:min-h-[720px]">
             <div
               className="absolute inset-0 hidden lg:block"
@@ -149,6 +223,135 @@ export default function HomePage() {
               />
               <div className="absolute inset-0 bg-black/40" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DEDICATED SECTION: EXPLORE BY CATEGORIES */}
+      <section
+        id="categories"
+        className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12 md:py-28"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-14 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <div className="tag border-ash mb-3 inline-block rounded-full border bg-white px-4 py-1 shadow-xs">
+                <span className="font-graphik text-xs font-semibold tracking-[0.2em] text-amber-600 uppercase">
+                  Browse Marketplace
+                </span>
+              </div>
+              <h2 className="font-nantes text-ink-black text-4xl sm:text-5xl">
+                Explore by Categories
+              </h2>
+            </div>
+            <Button
+              asChild
+              variant="outline"
+              className="font-graphik rounded-full border-black px-6 text-xs font-bold text-black hover:bg-black hover:text-white"
+            >
+              <Link href="/discover" className="flex items-center gap-2">
+                <span>View Full Catalog</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+
+          {/* Category Cards Grid */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {homepageCategories.map((cat) => (
+              <Link
+                key={cat.name}
+                href={cat.href}
+                className="relative flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4 shadow-xs"
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                  <div className="font-graphik absolute top-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-xs">
+                    {cat.count}
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-1 flex-col justify-between">
+                  <div>
+                    <h3 className="font-nantes text-xl font-bold text-neutral-900">
+                      {cat.name}
+                    </h3>
+                  </div>
+
+                  <div className="font-graphik mt-4 flex items-center gap-1 text-xs font-bold text-amber-600">
+                    <span>Explore Products</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* DEDICATED SECTION: WHY TRUST GENZ */}
+      <section
+        id="why-trust-genz"
+        className="border-ash border-b bg-white px-6 py-20 sm:px-12 md:py-28"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto mb-14 max-w-3xl text-center">
+            <h2 className="font-nantes text-ink-black text-4xl sm:text-5xl">
+              Why Trust GenZ?
+            </h2>
+            <p className="font-graphik text-smoke mt-4 text-base leading-relaxed">
+              We bridge buyers directly to genuine Indian manufacturers with zero
+              middlemen, on-site physical audits, and transparent live video proof.
+            </p>
+          </div>
+
+          {/* 4 Trust Cards Grid */}
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {homepageTrustPillars.map((pillar) => (
+              <div
+                key={pillar.title}
+                className="flex flex-col justify-between rounded-2xl border border-neutral-200 bg-[#FAF7F0]/80 p-7 shadow-xs"
+              >
+                <div>
+                  <h3 className="font-nantes text-2xl font-bold text-neutral-900">
+                    {pillar.title}
+                  </h3>
+                  <p className="font-graphik mt-1.5 text-xs font-semibold text-neutral-400">
+                    {pillar.subtitle}
+                  </p>
+                  <p className="font-graphik mt-4 text-xs leading-relaxed text-neutral-600">
+                    {pillar.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Institutional Trust Banner */}
+          <div className="mt-14 flex flex-col items-center justify-between gap-6 rounded-2xl border border-neutral-800 bg-[#0B0B0B] p-8 text-white shadow-xl lg:flex-row">
+            <div className="max-w-2xl">
+              <h3 className="font-nantes text-2xl text-white sm:text-3xl">
+                Backed by Institutional Trust & Government Initiatives
+              </h3>
+              <p className="font-graphik mt-2 text-xs leading-relaxed text-neutral-400 sm:text-sm">
+                GenZ aligns with national manufacturing initiatives like DPIIT, MSME,
+                and Make in India to empower domestic makers and eliminate import
+                dependencies.
+              </p>
+            </div>
+            <Button
+              asChild
+              size="lg"
+              className="font-graphik shrink-0 rounded-full bg-amber-400 px-8 text-xs font-bold text-black hover:bg-amber-500"
+            >
+              <Link href="/about">Learn Our Story</Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -299,7 +502,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* STATS & MISSION — Dark Slate Theme Switch Accent */}
+      {/* STATS & MISSION */}
       <section className="border-b border-neutral-800 bg-[#0B0B0B] px-6 py-20 text-white sm:px-12 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -345,7 +548,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* TRUST — full-width pull-quote first, marquee logo strip underneath */}
+      {/* TRUST MARQUEE */}
       <section className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12">
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 text-center">
           <div className="text-brand-yellow-dark flex gap-1">

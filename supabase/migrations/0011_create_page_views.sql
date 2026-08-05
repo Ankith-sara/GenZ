@@ -18,6 +18,9 @@ CREATE INDEX IF NOT EXISTS idx_page_views_path ON page_views (path);
 -- Enable RLS but allow inserts from anon (public tracking)
 ALTER TABLE page_views ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow public page view inserts" ON page_views;
+DROP POLICY IF EXISTS "Allow authenticated users to read page views" ON page_views;
+
 -- Allow anyone to INSERT (tracking page views from public visitors)
 CREATE POLICY "Allow public page view inserts"
   ON page_views

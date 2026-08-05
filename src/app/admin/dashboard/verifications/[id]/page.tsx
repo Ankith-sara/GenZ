@@ -1,15 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  MapPin,
-  Award,
-  Shield,
-  FileText,
-  Video,
-  User,
-  Mail,
-  Phone,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/require-role";
 import { ReviewActions } from "./review-actions";
@@ -35,16 +26,9 @@ export default async function AdminVerificationDetailPage({
   const businessType = application.business_type || "manufacturer";
 
   return (
-    <div className="mx-auto max-w-4xl px-1 py-4 sm:px-6 sm:py-8">
-      <Link
-        href="/admin/dashboard/verifications"
-        className="text-smoke flex items-center gap-1 text-xs hover:text-black hover:underline sm:text-sm"
-      >
-        Back to applications
-      </Link>
-
+    <div className="mx-auto max-w-6xl px-1 py-4 sm:px-6 sm:py-8">
       {/* Header */}
-      <div className="mt-4 flex flex-col gap-4 border-b border-[#E5E5E0] pb-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 border-b border-[#E5E5E0] pb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="font-nantes text-2xl font-bold text-black sm:text-3xl">
@@ -70,17 +54,28 @@ export default async function AdminVerificationDetailPage({
             })}
           </p>
         </div>
-        <span
-          className={`rounded-full border px-4 py-1.5 text-xs font-bold tracking-wider uppercase ${
-            application.status === "pending"
-              ? "border-amber-200 bg-amber-50 text-amber-700"
-              : application.status === "approved"
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                : "border-red-200 bg-red-50 text-red-700"
-          }`}
-        >
-          {application.status}
-        </span>
+
+        <div className="flex items-center gap-3">
+          <span
+            className={`rounded-full border px-4 py-1.5 text-xs font-bold tracking-wider uppercase ${
+              application.status === "pending"
+                ? "border-amber-200 bg-amber-50 text-amber-700"
+                : application.status === "approved"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border-red-200 bg-red-50 text-red-700"
+            }`}
+          >
+            {application.status}
+          </span>
+          <Link
+            href="/admin/dashboard/verifications"
+            className="font-graphik flex h-9 shrink-0 items-center justify-center gap-2 rounded-full border border-[#E5E5E0] bg-white px-4 text-xs font-semibold text-black transition-colors hover:border-black hover:bg-[#FAF7F0] sm:h-10"
+            aria-label="Back to applications"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back</span>
+          </Link>
+        </div>
       </div>
 
       {/* Application Details */}
@@ -88,8 +83,8 @@ export default async function AdminVerificationDetailPage({
         {/* Contact & Owner Info */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6">
-            <h3 className="font-graphik mb-4 flex items-center gap-2 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
-              <User className="h-4 w-4" /> Owner & Contact
+            <h3 className="font-graphik mb-4 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
+              Owner &amp; Contact
             </h3>
             <dl className="space-y-3 text-sm">
               <div>
@@ -104,16 +99,15 @@ export default async function AdminVerificationDetailPage({
                 <dt className="font-graphik text-smoke text-xs font-semibold uppercase">
                   Email
                 </dt>
-                <dd className="mt-0.5 flex items-center gap-1.5 font-mono text-xs font-medium text-black">
-                  <Mail className="h-3.5 w-3.5 text-[#8C8C85]" /> {application.email}
+                <dd className="mt-0.5 font-mono text-xs font-medium text-black">
+                  {application.email}
                 </dd>
               </div>
               <div>
                 <dt className="font-graphik text-smoke text-xs font-semibold uppercase">
                   Phone
                 </dt>
-                <dd className="mt-0.5 flex items-center gap-1.5 font-mono text-xs font-medium text-black">
-                  <Phone className="h-3.5 w-3.5 text-[#8C8C85]" />{" "}
+                <dd className="mt-0.5 font-mono text-xs font-medium text-black">
                   {application.phone || "—"}
                 </dd>
               </div>
@@ -131,8 +125,8 @@ export default async function AdminVerificationDetailPage({
           </div>
 
           <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6">
-            <h3 className="font-graphik mb-4 flex items-center gap-2 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
-              <MapPin className="h-4 w-4" /> Location & Facility
+            <h3 className="font-graphik mb-4 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
+              Location &amp; Facility
             </h3>
             <dl className="space-y-3 text-sm">
               <div>
@@ -188,8 +182,8 @@ export default async function AdminVerificationDetailPage({
         {/* Manufacturing Details */}
         {(formData.product_categories || formData.products_manufactured) && (
           <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6">
-            <h3 className="font-graphik mb-4 flex items-center gap-2 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
-              <Award className="h-4 w-4" /> Manufacturing Capabilities
+            <h3 className="font-graphik mb-4 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
+              Manufacturing Capabilities
             </h3>
             <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
               {formData.product_categories && (
@@ -259,8 +253,8 @@ export default async function AdminVerificationDetailPage({
         {/* Documents & Verification */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6">
-            <h3 className="font-graphik mb-4 flex items-center gap-2 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
-              <Shield className="h-4 w-4" /> Documents
+            <h3 className="font-graphik mb-4 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
+              Documents
             </h3>
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between rounded-lg border border-[#E5E5E0] bg-[#FAF7F0] p-3">
@@ -304,8 +298,8 @@ export default async function AdminVerificationDetailPage({
           </div>
 
           <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6">
-            <h3 className="font-graphik mb-4 flex items-center gap-2 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
-              <FileText className="h-4 w-4" /> Uploaded Proofs
+            <h3 className="font-graphik mb-4 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
+              Uploaded Proofs
             </h3>
             <ul className="space-y-2 text-xs">
               {[
@@ -351,12 +345,11 @@ export default async function AdminVerificationDetailPage({
         {/* Walkthrough Video */}
         {formData.walkthrough_video && (
           <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6">
-            <h3 className="font-graphik mb-4 flex items-center gap-2 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
-              <Video className="h-4 w-4" /> Factory Walkthrough Video
+            <h3 className="font-graphik mb-4 border-b border-[#E5E5E0] pb-2 text-xs font-bold tracking-wider text-black uppercase">
+              Factory Walkthrough Video
             </h3>
             <div className="flex h-32 items-center justify-center rounded-xl bg-neutral-900 text-white">
               <div className="text-center">
-                <Video className="mx-auto h-8 w-8 text-[#C8A951]" />
                 <p className="mt-2 text-sm font-medium">Video Submitted</p>
                 <p className="text-xs text-white/50">{formData.walkthrough_video}</p>
               </div>
@@ -375,21 +368,16 @@ export default async function AdminVerificationDetailPage({
             </p>
           </div>
         )}
-
-        {/* All Raw Form Data (for complete transparency) */}
-        <details className="rounded-2xl border border-[#E5E5E0] bg-[#FAF7F0]">
-          <summary className="font-graphik cursor-pointer px-6 py-4 text-xs font-bold tracking-wider text-[#52524E] uppercase">
-            View Raw Application Data
-          </summary>
-          <pre className="overflow-x-auto px-6 pb-6 font-mono text-xs text-[#52524E]">
-            {JSON.stringify(application.form_data, null, 2)}
-          </pre>
-        </details>
       </div>
 
       {/* Review Actions Panel */}
       <div className="mt-8 border-t border-[#E5E5E0] pt-8">
-        <ReviewActions manufacturerId={application.id} status={application.status} />
+        <ReviewActions
+          manufacturerId={application.id}
+          status={application.status}
+          defaultEmail={application.email}
+          businessName={application.business_name}
+        />
       </div>
     </div>
   );

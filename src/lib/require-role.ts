@@ -1,7 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
 import { getUserAndProfile } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
 import type { Role } from "@/types/database";
 
 /**
@@ -17,10 +16,7 @@ export async function requireRole(allowed: Role) {
 
   // Get role from profile row; if that's missing (RLS error, no row),
   // fall back to auth user_metadata which is always available from the JWT
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = session.user;
 
   const role =
     session.profile?.role ??
@@ -36,19 +32,6 @@ export async function requireRole(allowed: Role) {
     if (role === "admin") redirect("/admin/dashboard");
     if (role === "manufacturer") redirect("/dashboard");
     redirect("/profile");
-  }
-
-  // Additional check for manufacturers
-  if (role === "manufacturer") {
-    const { data: manufacturer } = await supabase
-      .from("manufacturer_profiles")
-      .select("status")
-      .eq("id", session.userId)
-      .maybeSingle();
-
-    if (manufacturer && manufacturer.status !== "verified") {
-      redirect("/dashboard/pending-verification");
-    }
   }
 
   return session;

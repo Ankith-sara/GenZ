@@ -1,19 +1,26 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, startTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { createProduct, updateProduct, type ProductFormState } from "./actions";
 import { TOY_CATEGORIES, AGE_GROUPS } from "@/lib/products";
 import type { Product } from "@/types/database";
+import { Upload } from "lucide-react";
 
 type Props =
   { mode: "create"; product?: undefined } | { mode: "edit"; product: Product };
 
+const inputClass =
+  "mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-white px-4 py-3 text-sm text-black placeholder:text-[#8C8C85] focus:border-black focus:ring-1 focus:ring-black focus-visible:outline-none transition-all";
+
 const selectClass =
-  "h-11 w-full rounded-[4px] border border-input bg-card px-3.5 text-base text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground";
+  "mt-1.5 h-12 w-full rounded-xl border border-[#E5E5E0] bg-white px-4 pr-10 py-2.5 text-sm text-black placeholder:text-[#8C8C85] focus:border-black focus:ring-1 focus:ring-black focus-visible:outline-none transition-all appearance-none cursor-pointer";
+
+const textareaClass =
+  "mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-white px-4 py-3 text-sm text-black placeholder:text-[#8C8C85] focus:border-black focus:ring-1 focus:ring-black focus-visible:outline-none transition-all";
+
+const labelClass =
+  "block text-xs font-bold text-[#1A1A18] uppercase tracking-wider font-graphik";
 
 export function ProductForm(props: Props) {
   const action =
@@ -28,89 +35,291 @@ export function ProductForm(props: Props) {
 
   const product = props.mode === "edit" ? props.product : undefined;
 
+  // Cover image states
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+
+  // Gallery image states
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCoverFile(file);
+      setCoverPreview(URL.createObjectURL(file));
+    }
+    if (e.target) e.target.value = "";
+  };
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+
+    const mergedFiles = [...galleryFiles, ...files].slice(0, 8);
+    setGalleryFiles(mergedFiles);
+    setGalleryPreviews(mergedFiles.map((f) => URL.createObjectURL(f)));
+
+    if (e.target) e.target.value = "";
+  };
+
+  const removeGalleryFile = (index: number) => {
+    const newFiles = galleryFiles.filter((_, idx) => idx !== index);
+    setGalleryFiles(newFiles);
+    setGalleryPreviews(newFiles.map((f) => URL.createObjectURL(f)));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    // Clean out native elements to avoid empty placeholder submissions
+    formData.delete("cover_image");
+    formData.delete("gallery_images");
+
+    // Append our state files
+    if (coverFile) {
+      formData.append("cover_image", coverFile);
+    }
+    galleryFiles.forEach((file) => {
+      formData.append("gallery_images", file);
+    });
+
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
+
   return (
-    <form action={formAction} noValidate>
-      <div className="mb-4">
-        <Label htmlFor="name">Product name</Label>
-        <Input id="name" name="name" required defaultValue={product?.name ?? ""} />
+    <form onSubmit={handleSubmit} noValidate className="space-y-6">
+      {/* Product Image Cover Selector */}
+      {props.mode === "create" && (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Cover image uploader */}
+          <div>
+            <label className={labelClass}>Product Cover Image</label>
+            <div className="relative mt-2 flex min-h-[160px] items-center justify-center rounded-2xl border border-dashed border-[#E5E5E0] bg-[#FAF7F0] p-6 transition-colors hover:bg-[#F5F5F0]">
+              {coverPreview ? (
+                <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-xl border border-[#E5E5E0]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={coverPreview}
+                    alt="Cover preview"
+                    className="h-full w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCoverFile(null);
+                      setCoverPreview(null);
+                    }}
+                    className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/80 text-xs font-bold text-white transition-colors hover:bg-black"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2 py-4 text-center">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#E5E5E0] bg-white">
+                    <Upload className="h-5 w-5 text-[#8C8C85]" />
+                  </div>
+                  <div className="text-xs text-[#73736E]">
+                    <label
+                      htmlFor="cover_image"
+                      className="relative cursor-pointer rounded-md font-semibold text-black hover:underline"
+                    >
+                      <span>Upload cover image</span>
+                      <input
+                        id="cover_image"
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={handleCoverChange}
+                      />
+                    </label>
+                    <p className="mt-1 text-[#8C8C85]">PNG, JPG, WEBP up to 5MB</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Gallery images uploader */}
+          <div>
+            <label className={labelClass}>Product Gallery Images</label>
+            <div className="mt-2 space-y-4">
+              {galleryPreviews.length > 0 && (
+                <div className="grid grid-cols-4 gap-2">
+                  {galleryPreviews.map((url, idx) => (
+                    <div
+                      key={idx}
+                      className="group relative aspect-square overflow-hidden rounded-xl border border-[#E5E5E0] bg-white"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt="" className="h-full w-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryFile(idx)}
+                        className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/85 text-[9px] font-bold text-white transition-colors hover:bg-black"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {galleryFiles.length < 8 && (
+                <div className="relative flex min-h-[120px] items-center justify-center rounded-2xl border border-dashed border-[#E5E5E0] bg-[#FAF7F0] p-6 transition-colors hover:bg-[#F5F5F0]">
+                  <div className="space-y-2 py-2 text-center">
+                    <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E5E0] bg-white">
+                      <Upload className="h-4 w-4 text-[#8C8C85]" />
+                    </div>
+                    <div className="text-xs text-[#73736E]">
+                      <label
+                        htmlFor="gallery_images"
+                        className="relative cursor-pointer rounded-md font-semibold text-black hover:underline"
+                      >
+                        <span>Add gallery image</span>
+                        <input
+                          id="gallery_images"
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          className="sr-only"
+                          onChange={handleGalleryChange}
+                        />
+                      </label>
+                      <p className="mt-1 text-[#8C8C85]">
+                        Up to {8 - galleryFiles.length} more (PNG, JPG, WEBP)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div>
+        <label htmlFor="name" className={labelClass}>
+          Product name
+        </label>
+        <input
+          id="name"
+          name="name"
+          required
+          defaultValue={product?.name ?? ""}
+          className={inputClass}
+          placeholder="e.g. Handmade Wooden Train Set"
+        />
       </div>
 
-      <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <Label htmlFor="category">Category</Label>
-          <select
-            id="category"
-            name="category"
-            defaultValue={product?.category ?? TOY_CATEGORIES[0]}
-            className={selectClass}
-          >
-            {TOY_CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <label htmlFor="category" className={labelClass}>
+            Category
+          </label>
+          <div className="relative">
+            <select
+              id="category"
+              name="category"
+              defaultValue={product?.category ?? TOY_CATEGORIES[0]}
+              className={selectClass}
+            >
+              {TOY_CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pt-1.5 pr-4">
+              <span className="text-[10px] text-[#8C8C85]">▼</span>
+            </div>
+          </div>
         </div>
         <div>
-          <Label htmlFor="age_group">Age group</Label>
-          <select
-            id="age_group"
-            name="age_group"
-            defaultValue={product?.age_group ?? ""}
-            className={selectClass}
-          >
-            <option value="">Not specified</option>
-            {AGE_GROUPS.map((a) => (
-              <option key={a} value={a}>
-                {a}
-              </option>
-            ))}
-          </select>
+          <label htmlFor="age_group" className={labelClass}>
+            Age group
+          </label>
+          <div className="relative">
+            <select
+              id="age_group"
+              name="age_group"
+              defaultValue={product?.age_group ?? ""}
+              className={selectClass}
+            >
+              <option value="">Not specified</option>
+              {AGE_GROUPS.map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pt-1.5 pr-4">
+              <span className="text-[10px] text-[#8C8C85]">▼</span>
+            </div>
+          </div>
         </div>
         <div>
-          <Label htmlFor="price_inr">Price (INR)</Label>
-          <Input
+          <label htmlFor="price_inr" className={labelClass}>
+            Price (INR)
+          </label>
+          <input
             id="price_inr"
             name="price_inr"
             type="number"
             min={0}
             step="0.01"
             defaultValue={product?.price_inr ?? ""}
+            className={inputClass}
+            placeholder="e.g. 1499"
           />
         </div>
       </div>
 
-      <div className="mb-4">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
+      <div>
+        <label htmlFor="description" className={labelClass}>
+          Description
+        </label>
+        <textarea
           id="description"
           name="description"
           rows={4}
           defaultValue={product?.description ?? ""}
+          className={textareaClass}
+          placeholder="Describe the craft, design inspiration, and specifications..."
         />
       </div>
 
-      <div className="mb-2">
-        <Label htmlFor="materials">Materials</Label>
-        <Input
+      <div>
+        <label htmlFor="materials" className={labelClass}>
+          Materials
+        </label>
+        <input
           id="materials"
           name="materials"
           placeholder="Beech wood, non-toxic paint, cotton rope"
           defaultValue={product?.materials?.join(", ") ?? ""}
+          className={inputClass}
         />
-        <p className="text-muted-foreground mt-1.5 text-xs">
-          Comma-separated — shown on the product page so buyers know what it&apos;s made
-          of.
+        <p className="font-graphik mt-1.5 text-xs text-[#8C8C85]">
+          Comma-separated list — displayed on the product detail page to inform buyers.
         </p>
       </div>
 
       {state?.error && (
-        <p role="alert" className="text-destructive mt-2 mb-4 text-sm">
+        <p role="alert" className="mt-2 text-sm font-semibold text-rose-600">
           {state.error}
         </p>
       )}
 
-      <Button type="submit" className="mt-4" disabled={isPending}>
+      <Button
+        type="submit"
+        className="w-full rounded-xl bg-black px-6 py-2.5 text-xs font-semibold tracking-wider text-white uppercase transition-all hover:bg-neutral-800 sm:w-auto"
+        disabled={isPending}
+      >
         {isPending
           ? "Saving…"
           : props.mode === "create"

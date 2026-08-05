@@ -3,8 +3,9 @@ import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { PageViewTracker } from "@/components/page-view-tracker";
+import { SITE_URL } from "@/lib/config";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://genzonline.in";
+const siteUrl = SITE_URL;
 
 // Graphik substitute — UI/body workhorse sans
 const graphik = Inter({
@@ -86,6 +87,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -115,6 +118,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         {children}
+        <Toaster position="top-right" richColors closeButton />
         <PageViewTracker />
         <Analytics />
       </body>

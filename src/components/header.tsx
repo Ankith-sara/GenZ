@@ -14,12 +14,13 @@ import {
   ShoppingBag,
   Search,
   Heart,
-  HelpCircle,
-  FileText,
-  PhoneCall,
   ShieldCheck,
+  Lock,
+  Factory,
+  BadgeCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { UserAvatar } from "@/components/user-avatar";
 
 interface HeaderProps {
   isLoggedIn: boolean;
@@ -28,6 +29,65 @@ interface HeaderProps {
   avatarUrl?: string | null;
   signOutAction: () => void;
 }
+
+const categoriesList = [
+  {
+    name: "Wooden Toys & Crafts",
+    href: "/discover?category=Wooden Toys",
+    image: "/cat_toys.png",
+    desc: "Eco-friendly, non-toxic traditional Indian toys & puzzle blocks",
+    badge: "Popular",
+  },
+  {
+    name: "Electronics & Tech",
+    href: "/discover?category=Electronics",
+    image: "/cat_electronics.png",
+    desc: "Smart devices, chargers & custom circuit assemblies",
+    badge: "Trending",
+  },
+  {
+    name: "Fashion & Apparel",
+    href: "/discover?category=Fashion",
+    image: "/cat_fashion.png",
+    desc: "Organic cotton textiles, handcrafted apparel & accessories",
+    badge: "New",
+  },
+  {
+    name: "Home & Furniture",
+    href: "/discover?category=Furniture",
+    image: "/cat_furniture.png",
+    desc: "Solid wood furniture, handcrafted decor & living items",
+    badge: null,
+  },
+  {
+    name: "Kitchen & Dining",
+    href: "/discover?category=Kitchen",
+    image: "/cat_kitchen.png",
+    desc: "Stainless steel utensils, cast iron cookware & appliances",
+    badge: null,
+  },
+  {
+    name: "Beauty & Wellness",
+    href: "/discover?category=Beauty",
+    image: "/cat_beauty.png",
+    desc: "Ayurvedic formulations, natural skincare & herbal wellness",
+    badge: null,
+  },
+  {
+    name: "Industrial & Tools",
+    href: "/discover?category=Industrial",
+    image: "/cat_industrial.png",
+    desc: "Precision components, machinery parts & fabrication tools",
+    badge: "B2B",
+  },
+  {
+    name: "Sports & Fitness",
+    href: "/discover?category=Sports",
+    image: "/cat_sports.png",
+    desc: "Athletic gear, fitness equipment & outdoor play sets",
+    badge: null,
+  },
+];
 
 export function Header({
   isLoggedIn,
@@ -38,12 +98,8 @@ export function Header({
 }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showHelpMenu, setShowHelpMenu] = useState(false);
-  const [showShopDropdown, setShowShopDropdown] = useState(false);
   const [showCollectionsDropdown, setShowCollectionsDropdown] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
 
@@ -51,23 +107,20 @@ export function Header({
   const router = useRouter();
 
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const helpMenuRef = useRef<HTMLDivElement>(null);
-  const shopMenuRef = useRef<HTMLLIElement>(null);
   const collectionsMenuRef = useRef<HTMLLIElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Load and listen to shopping cart count
+  // Cart & Wishlist counters
   useEffect(() => {
-    function updateCount() {
+    function updateCart() {
       const stored = localStorage.getItem("genz-cart");
       if (stored) {
         try {
           const items = JSON.parse(stored);
-          const totalQty = items.reduce(
+          const total = items.reduce(
             (acc: number, item: { quantity: number }) => acc + item.quantity,
             0
           );
-          setCartCount(totalQty);
+          setCartCount(total);
         } catch {
           setCartCount(0);
         }
@@ -76,14 +129,7 @@ export function Header({
       }
     }
 
-    updateCount();
-    window.addEventListener("cart-updated", updateCount);
-    return () => window.removeEventListener("cart-updated", updateCount);
-  }, []);
-
-  // Load and listen to wishlist count
-  useEffect(() => {
-    function updateWishlistCount() {
+    function updateWishlist() {
       const stored = localStorage.getItem("genz-wishlist");
       if (stored) {
         try {
@@ -97,29 +143,21 @@ export function Header({
       }
     }
 
-    updateWishlistCount();
-    window.addEventListener("wishlist-updated", updateWishlistCount);
-    return () => window.removeEventListener("wishlist-updated", updateWishlistCount);
+    updateCart();
+    updateWishlist();
+    window.addEventListener("cart-updated", updateCart);
+    window.addEventListener("wishlist-updated", updateWishlist);
+    return () => {
+      window.removeEventListener("cart-updated", updateCart);
+      window.removeEventListener("wishlist-updated", updateWishlist);
+    };
   }, []);
 
-  // Focus search input when toggled
-  useEffect(() => {
-    if (showSearch && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [showSearch]);
-
-  // Close dropdowns on click outside
+  // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
-      }
-      if (helpMenuRef.current && !helpMenuRef.current.contains(event.target as Node)) {
-        setShowHelpMenu(false);
-      }
-      if (shopMenuRef.current && !shopMenuRef.current.contains(event.target as Node)) {
-        setShowShopDropdown(false);
       }
       if (
         collectionsMenuRef.current &&
@@ -137,75 +175,53 @@ export function Header({
     const q = searchQuery.trim();
     if (!q) return;
     router.push(`/discover?q=${encodeURIComponent(q)}`);
-    setSearchQuery("");
-    setShowSearch(false);
   }
-
-  function handleMobileSearchSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const q = mobileSearchQuery.trim();
-    if (!q) return;
-    router.push(`/discover?q=${encodeURIComponent(q)}`);
-    setIsOpen(false);
-    setMobileSearchQuery("");
-  }
-
-  const shopCategories = [
-    {
-      name: "All Products Catalog",
-      href: "/discover",
-      description: "Explore all verified Indian factory products",
-    },
-    {
-      name: "New Arrivals",
-      href: "/discover?new=true",
-      description: "Latest additions directly from certified makers",
-    },
-    {
-      name: "Factory Process Reels",
-      href: "/discover?reels=true",
-      description: "Watch live manufacturing videos from source",
-    },
-  ];
-
-  const collectionsCategories = [
-    {
-      name: "Wooden Toys & Crafts",
-      href: "/discover?category=Wooden Toys",
-      description: "Traditional & eco-friendly wooden craftsmanship",
-    },
-    {
-      name: "STEM & Educational Toys",
-      href: "/discover?category=STEM Toys",
-      description: "Learning kits, science & puzzle toys",
-    },
-    {
-      name: "Games & Puzzles",
-      href: "/discover?category=Games & Puzzles",
-      description: "Mind games, board games & outdoor play",
-    },
-  ];
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full shadow-sm select-none">
-        {/* TOP BAR (Dark Editorial Header matching Shadcnblocks reference) */}
-        <div className="bg-[#121212] text-white">
-          <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-50 w-full bg-black text-white shadow-xl select-none">
+        {/* TOP ANNOUNCEMENT BAR (Dark Black Accent) */}
+        <div className="border-b border-neutral-800/80 bg-[#050505] text-neutral-300">
+          <div className="font-graphik mx-auto flex h-9 max-w-[1280px] items-center justify-between px-4 text-[11px] tracking-wide sm:px-6 lg:px-8">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-1.5 font-medium text-white">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
+                Made in India Marketplace
+              </span>
+            </div>
+
+            <div className="flex items-center gap-5 text-neutral-300">
+              <Link
+                href="/signup/manufacturer"
+                className="font-semibold text-white transition-colors hover:text-neutral-300 hover:underline"
+              >
+                Sell on GenZ
+              </Link>
+              <span className="text-neutral-700">|</span>
+              <Link href="/contact" className="transition-colors hover:text-white">
+                Support
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* MAIN NAVIGATION BAR (Black Luxury Layout) */}
+        <div className="border-b border-neutral-800 bg-black py-3.5">
+          <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             {/* Left: Brand Logo */}
             <Link
-              id="faire-logo-link"
+              id="genz-logo-link"
               aria-label="Go to GenZ homepage"
-              className="flex shrink-0 items-center gap-2.5 py-2"
+              className="flex shrink-0 items-center gap-2.5"
               href="/"
             >
-              <div className="relative h-9 w-9 overflow-hidden rounded-xl border border-white/20 bg-black shadow-xs">
+              <div className="relative h-10 w-10 overflow-hidden rounded-xl border border-neutral-700 bg-neutral-900 shadow-md">
                 <Image
                   src="/logo.png"
                   alt="GenZ Logo"
                   fill
                   className="object-cover"
-                  sizes="36px"
+                  sizes="40px"
                   priority
                 />
               </div>
@@ -214,96 +230,74 @@ export function Header({
               </span>
             </Link>
 
-            {/* Right: Actions (Help & Support, Wishlist, Account, Search, Cart) */}
-            <div className="flex shrink-0 items-center gap-4 sm:gap-6">
-              {/* Help & Support Dropdown */}
-              <div className="relative hidden md:block" ref={helpMenuRef}>
-                <button
-                  onClick={() => setShowHelpMenu(!showHelpMenu)}
-                  className="font-graphik flex cursor-pointer items-center gap-1.5 text-xs font-medium text-white/90 transition-colors hover:text-white"
-                >
-                  <HelpCircle className="h-4 w-4 text-white/80" />
-                  <span>Help &amp; Support</span>
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 text-white/60 transition-transform ${
-                      showHelpMenu ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
+            {/* Middle: White Squarish Search Bar with Yellow Box Icon Button */}
+            <form
+              onSubmit={handleSearchSubmit}
+              className="hidden h-10 max-w-lg flex-1 items-center overflow-hidden rounded-xl border border-neutral-300 bg-white shadow-xs transition-all focus-within:border-black focus-within:ring-2 focus-within:ring-black/10 md:flex"
+            >
+              <input
+                type="search"
+                placeholder="Search products, verified factories, categories..."
+                value={searchQuery}
+                spellCheck={false}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="font-graphik w-full bg-transparent px-4 text-xs text-neutral-900 placeholder-neutral-500 focus:outline-none [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
+              />
+              <button
+                type="submit"
+                aria-label="Submit Search"
+                className="flex h-full w-12 shrink-0 items-center justify-center bg-amber-400 text-black transition-all hover:bg-amber-300"
+              >
+                <Search className="h-5 w-5 stroke-[2.5]" />
+              </button>
+            </form>
 
-                {showHelpMenu && (
-                  <div className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-neutral-800 bg-[#1A1A1A] p-2 text-white shadow-xl">
-                    <Link
-                      href="/contact"
-                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium hover:bg-neutral-800"
-                      onClick={() => setShowHelpMenu(false)}
-                    >
-                      <PhoneCall className="h-4 w-4 text-amber-400" />
-                      <span>Contact Support</span>
-                    </Link>
-                    <Link
-                      href="/about"
-                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium hover:bg-neutral-800"
-                      onClick={() => setShowHelpMenu(false)}
-                    >
-                      <ShieldCheck className="h-4 w-4 text-amber-400" />
-                      <span>GST Verification Guide</span>
-                    </Link>
-                    <Link
-                      href="/signup/manufacturer"
-                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium hover:bg-neutral-800"
-                      onClick={() => setShowHelpMenu(false)}
-                    >
-                      <FileText className="h-4 w-4 text-amber-400" />
-                      <span>Sell on GenZ</span>
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              {/* Wishlist */}
+            {/* Right: Actions & User Avatar */}
+            <div className="flex shrink-0 items-center gap-3.5 sm:gap-4">
+              {/* Wishlist Icon */}
               <Link
                 href="/wishlist"
                 aria-label="Wishlist"
-                className="relative flex items-center justify-center text-white/90 transition-colors hover:text-white"
+                className="relative flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white"
               >
-                <Heart className="h-5 w-5 text-white" />
+                <Heart className="h-5 w-5" />
                 {wishlistCount > 0 && (
-                  <span className="font-graphik absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] font-bold text-black">
+                  <span className="font-graphik absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black shadow-xs">
                     {wishlistCount}
                   </span>
                 )}
               </Link>
 
-              {/* Account Dropdown */}
+              {/* Cart Icon */}
+              <Link
+                href="/cart"
+                aria-label="Shopping Cart"
+                className="relative flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white"
+              >
+                <ShoppingBag className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="font-graphik absolute top-0 right-0 flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-white px-1 text-[9px] font-bold text-black shadow-xs">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Account Dropdown or Aligned Login Button (Matching h-9 height) */}
               {isLoggedIn ? (
                 <div className="relative" ref={userMenuRef}>
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     aria-label="User Account"
-                    className="flex cursor-pointer items-center gap-1 text-white/90 transition-colors hover:text-white"
+                    className="flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-neutral-700 px-1.5 transition-colors hover:border-white"
                   >
-                    <div className="font-graphik flex h-6 w-6 items-center justify-center overflow-hidden rounded-full border border-white/30 bg-amber-500 text-xs font-bold text-black uppercase">
-                      {avatarUrl ? (
-                        <Image
-                          src={avatarUrl}
-                          alt="Avatar"
-                          width={24}
-                          height={24}
-                          className="h-full w-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        <User className="h-3.5 w-3.5 text-black" />
-                      )}
-                    </div>
-                    <ChevronDown className="h-3.5 w-3.5 text-white/60" />
+                    <UserAvatar name={userName} avatarUrl={avatarUrl} size={26} />
+                    <ChevronDown className="mr-0.5 h-3.5 w-3.5 text-neutral-400" />
                   </button>
 
                   {showUserMenu && (
-                    <div className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-neutral-800 bg-[#1A1A1A] py-1.5 text-white shadow-xl">
-                      <div className="border-b border-neutral-800 px-4 py-2">
-                        <p className="font-graphik text-[10px] font-semibold text-neutral-400 uppercase">
+                    <div className="absolute right-0 z-50 mt-2 w-56 rounded-2xl border border-neutral-800 bg-[#121212] py-2 text-white shadow-2xl">
+                      <div className="border-b border-neutral-800 px-4 py-2.5">
+                        <p className="font-graphik text-[10px] font-semibold tracking-wider text-neutral-400 uppercase">
                           Signed in as
                         </p>
                         <p className="font-graphik truncate text-xs font-bold text-white">
@@ -314,35 +308,37 @@ export function Header({
                       {role === "admin" ? (
                         <Link
                           href="/admin/dashboard"
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium hover:bg-neutral-800"
+                          className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          <Compass className="h-4 w-4 text-amber-400" /> Control Center
+                          <Compass className="h-4 w-4 text-neutral-300" /> Admin Control
+                          Center
                         </Link>
                       ) : role === "buyer" ? (
                         <>
                           <Link
                             href="/profile"
-                            className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium hover:bg-neutral-800"
+                            className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                             onClick={() => setShowUserMenu(false)}
                           >
-                            <User className="h-4 w-4 text-amber-400" /> Profile Settings
+                            <User className="h-4 w-4 text-neutral-300" /> Profile
+                            Settings
                           </Link>
                           <Link
                             href="/orders"
-                            className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium hover:bg-neutral-800"
+                            className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                             onClick={() => setShowUserMenu(false)}
                           >
-                            <Compass className="h-4 w-4 text-amber-400" /> My Orders
+                            <Compass className="h-4 w-4 text-neutral-300" /> My Orders
                           </Link>
                         </>
                       ) : (
                         <Link
                           href="/dashboard"
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium hover:bg-neutral-800"
+                          className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          <Compass className="h-4 w-4 text-amber-400" /> Profile
+                          <Compass className="h-4 w-4 text-neutral-300" /> Dashboard
                         </Link>
                       )}
 
@@ -350,7 +346,7 @@ export function Header({
                       <form action={signOutAction} className="w-full">
                         <button
                           type="submit"
-                          className="flex w-full items-center gap-2.5 px-4 py-2 text-left text-xs font-medium text-red-400 hover:bg-red-950/40"
+                          className="font-graphik flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-xs font-semibold text-red-400 hover:bg-neutral-800"
                         >
                           <LogOut className="h-4 w-4" /> Logout
                         </button>
@@ -361,176 +357,98 @@ export function Header({
               ) : (
                 <Link
                   href="/login"
-                  aria-label="Account Login"
-                  className="flex items-center text-white/90 transition-colors hover:text-white"
+                  className="font-graphik flex h-9 items-center justify-center rounded-full bg-white px-4 text-xs font-bold text-black shadow-xs transition-colors hover:bg-neutral-200"
                 >
-                  <User className="h-5 w-5 text-white" />
+                  Login
                 </Link>
               )}
 
-              {/* Search Toggle Icon */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowSearch(!showSearch)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"
-                  aria-label="Toggle Search"
-                >
-                  <Search className="h-5 w-5" />
-                </button>
-
-                {showSearch && (
-                  <form
-                    onSubmit={handleSearchSubmit}
-                    className="absolute right-0 z-50 mt-2 flex w-72 items-center gap-2 rounded-xl border border-neutral-800 bg-[#1A1A1A] p-2 shadow-2xl"
-                  >
-                    <input
-                      ref={searchInputRef}
-                      type="search"
-                      placeholder="Search products or makers..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="font-graphik w-full rounded-lg bg-neutral-900 px-3 py-1.5 text-xs text-white placeholder-neutral-500 focus:outline-none"
-                    />
-                    <button
-                      type="submit"
-                      className="font-graphik rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-bold text-black"
-                    >
-                      Go
-                    </button>
-                  </form>
-                )}
-              </div>
-
-              {/* Cart Button with Badge Positioned On Top of Icon */}
-              <Link
-                href="/cart"
-                aria-label="Shopping Cart"
-                className="relative flex items-center justify-center text-white transition-opacity hover:opacity-90"
-              >
-                <ShoppingBag className="h-5.5 w-5.5 text-white" />
-                <span className="font-graphik absolute -top-1.5 -right-2 flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-[#F59E0B] px-1 text-[10px] font-bold text-black shadow-xs">
-                  {cartCount}
-                </span>
-              </Link>
-
-              {/* Mobile Drawer Toggle Button */}
+              {/* Mobile Drawer Toggle */}
               <button
                 onClick={() => setIsOpen(true)}
-                className="inline-flex items-center justify-center rounded-lg p-1.5 text-white hover:bg-white/10 md:hidden"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-800 md:hidden"
                 aria-label="Open Menu"
               >
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* BOTTOM BAR (Light Cream Category Navbar matching Shadcnblocks reference) */}
-        <div className="hidden min-h-[44px] w-full border-b border-[#E5E5E0] bg-[#FAF7F0] md:block">
+        {/* SECONDARY NAVIGATION BAR (Cream Paper Background) */}
+        <div className="hidden border-b border-[#E5E5E0] bg-[#FAF7F0] md:block">
           <div className="mx-auto flex max-w-[1280px] items-center px-4 lg:px-8">
             <nav aria-label="Main navigation" className="w-full">
-              <ul className="font-graphik flex items-center gap-x-8 py-2.5 text-xs font-semibold tracking-wide text-[#2B2B28]">
-                {/* Shop Dropdown */}
-                <li
-                  ref={shopMenuRef}
-                  className="relative py-0.5"
-                  onMouseEnter={() => setShowShopDropdown(true)}
-                  onMouseLeave={() => setShowShopDropdown(false)}
-                >
-                  <button
-                    onClick={() => setShowShopDropdown(!showShopDropdown)}
-                    className="flex cursor-pointer items-center gap-1 transition-colors hover:text-black"
-                  >
-                    <span>Shop</span>
-                    <ChevronDown
-                      className={`h-3.5 w-3.5 text-neutral-500 transition-transform ${
-                        showShopDropdown ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {showShopDropdown && (
-                    <div className="absolute left-0 z-50 mt-1.5 w-64 rounded-xl border border-[#E5E5E0] bg-white p-2 shadow-xl">
-                      {shopCategories.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          onClick={() => setShowShopDropdown(false)}
-                          className="block rounded-lg px-3 py-2 transition-all hover:bg-[#FAF7F0]"
-                        >
-                          <span className="font-graphik block text-xs font-bold text-black">
-                            {item.name}
-                          </span>
-                          <span className="font-graphik block text-[11px] text-neutral-500">
-                            {item.description}
-                          </span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </li>
-
-                {/* Collections Dropdown */}
-                <li
-                  ref={collectionsMenuRef}
-                  className="relative py-0.5"
-                  onMouseEnter={() => setShowCollectionsDropdown(true)}
-                  onMouseLeave={() => setShowCollectionsDropdown(false)}
-                >
-                  <button
-                    onClick={() => setShowCollectionsDropdown(!showCollectionsDropdown)}
-                    className="flex cursor-pointer items-center gap-1 transition-colors hover:text-black"
-                  >
-                    <span>Collections</span>
-                    <ChevronDown
-                      className={`h-3.5 w-3.5 text-neutral-500 transition-transform ${
-                        showCollectionsDropdown ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {showCollectionsDropdown && (
-                    <div className="absolute left-0 z-50 mt-1.5 w-64 rounded-xl border border-[#E5E5E0] bg-white p-2 shadow-xl">
-                      {collectionsCategories.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          onClick={() => setShowCollectionsDropdown(false)}
-                          className="block rounded-lg px-3 py-2 transition-all hover:bg-[#FAF7F0]"
-                        >
-                          <span className="font-graphik block text-xs font-bold text-black">
-                            {item.name}
-                          </span>
-                          <span className="font-graphik block text-[11px] text-neutral-500">
-                            {item.description}
-                          </span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </li>
-
-                {/* New Arrivals */}
+              <ul className="font-graphik flex items-center gap-x-8 py-2.5 text-xs font-semibold tracking-wide whitespace-nowrap text-neutral-900">
+                {/* Home */}
                 <li className="relative py-0.5">
                   <Link
-                    href="/discover?new=true"
+                    href="/"
                     className={`transition-colors hover:text-black ${
-                      pathname.includes("new=true") ? "font-bold text-black" : ""
+                      pathname === "/" ? "font-bold text-black" : ""
                     }`}
                   >
-                    New Arrivals
+                    Home
                   </Link>
                 </li>
 
-                {/* Wooden Toys */}
-                <li className="relative py-0.5">
-                  <Link
-                    href="/discover?category=Wooden Toys"
-                    className={`transition-colors hover:text-black ${
-                      pathname.includes("Wooden") ? "font-bold text-black" : ""
+                {/* COLLECTIONS DROPDOWN (Click-Triggered Only - Cream Theme) */}
+                <li ref={collectionsMenuRef} className="relative py-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setShowCollectionsDropdown(!showCollectionsDropdown)}
+                    className={`flex cursor-pointer items-center gap-1 transition-colors hover:text-black ${
+                      pathname === "/discover" ? "font-bold text-black" : ""
                     }`}
                   >
-                    Wooden Toys
+                    <span>Collections</span>
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 text-neutral-700 transition-transform ${
+                        showCollectionsDropdown ? "rotate-180 text-black" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Cream Paper Dropdown Menu for Collections */}
+                  {showCollectionsDropdown && (
+                    <div className="animate-in fade-in-50 slide-in-from-top-2 absolute left-0 z-50 mt-2 w-[640px] rounded-2xl border border-neutral-300 bg-[#FAF7F0] p-4 shadow-2xl">
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {categoriesList.map((cat) => (
+                          <Link
+                            key={cat.name}
+                            href={cat.href}
+                            onClick={() => setShowCollectionsDropdown(false)}
+                            className="group flex flex-col justify-center rounded-xl border border-neutral-200/80 bg-white p-3 transition-all hover:border-black hover:bg-white hover:shadow-md"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-graphik text-xs font-bold text-neutral-900 group-hover:text-black">
+                                {cat.name}
+                              </span>
+                              {cat.badge && (
+                                <span className="font-graphik rounded-full border border-neutral-300 bg-neutral-100 px-2 py-0.5 text-[9px] font-bold text-neutral-800">
+                                  {cat.badge}
+                                </span>
+                              )}
+                            </div>
+                            <span className="font-graphik mt-1 line-clamp-1 text-[11px] text-neutral-500 group-hover:text-neutral-800">
+                              {cat.desc}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </li>
+
+                {/* Factory Reels */}
+                <li className="relative py-0.5">
+                  <Link
+                    href="/discover?reels=true"
+                    className={`transition-colors hover:text-black ${
+                      pathname.includes("reels") ? "font-bold text-black" : ""
+                    }`}
+                  >
+                    Live Factory Reels
                   </Link>
                 </li>
 
@@ -563,23 +481,23 @@ export function Header({
         </div>
       </header>
 
-      {/* MOBILE DRAWER */}
+      {/* MOBILE DRAWER (Sleek Dark Theme) */}
       {isOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity"
             onClick={() => setIsOpen(false)}
           />
 
-          <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col justify-between border-l border-[#E5E5E0] bg-white p-6 shadow-2xl">
+          <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col justify-between overflow-y-auto border-l border-neutral-800 bg-[#0B0B0B] p-6 text-white shadow-2xl">
             <div>
-              <div className="mb-6 flex items-center justify-between border-b border-[#E5E5E0] pb-4">
+              <div className="mb-6 flex items-center justify-between border-b border-neutral-800 pb-4">
                 <Link
                   href="/"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2.5"
                   onClick={() => setIsOpen(false)}
                 >
-                  <div className="relative h-8 w-8 overflow-hidden rounded-xl border border-black/10 bg-black">
+                  <div className="relative h-8 w-8 overflow-hidden rounded-xl border border-neutral-700 bg-neutral-900">
                     <Image
                       src="/logo.png"
                       alt="GenZ Logo"
@@ -588,63 +506,94 @@ export function Header({
                       sizes="32px"
                     />
                   </div>
-                  <span className="font-nantes text-lg font-bold text-black">
-                    Gen<span className="text-amber-500">Z</span>
+                  <span className="font-nantes text-xl font-bold text-white">
+                    Gen<span className="text-amber-400">Z</span>
                   </span>
                 </Link>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="rounded-lg p-1.5 text-neutral-500 hover:bg-[#FAF7F0]"
+                  className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-800 hover:text-white"
                 >
                   <X className="h-6 w-6" />
                 </button>
               </div>
 
-              {/* Mobile Search Input */}
-              <form onSubmit={handleMobileSearchSubmit} className="relative mb-6">
-                <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+              {/* Mobile Search */}
+              <form onSubmit={handleSearchSubmit} className="relative mb-6">
+                <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-500" />
                 <input
                   type="search"
-                  value={mobileSearchQuery}
-                  onChange={(e) => setMobileSearchQuery(e.target.value)}
-                  placeholder="Search products..."
-                  className="w-full rounded-full border border-[#E5E5E0] bg-[#FAF7F0] py-2 pr-4 pl-10 text-xs focus:outline-none"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products or makers..."
+                  className="w-full rounded-full border border-neutral-800 bg-neutral-900 py-2.5 pr-4 pl-10 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
                 />
               </form>
 
-              {/* Mobile Navigation */}
-              <nav className="font-graphik flex flex-col gap-2 text-xs font-semibold text-neutral-800">
+              {/* Mobile Navigation Links */}
+              <nav className="font-graphik flex flex-col gap-1 text-xs font-semibold text-neutral-300">
                 <Link
                   href="/"
-                  className="rounded-lg px-3 py-2 hover:bg-[#FAF7F0]"
+                  className="rounded-xl px-3 py-2.5 hover:bg-neutral-800 hover:text-amber-400"
                   onClick={() => setIsOpen(false)}
                 >
                   Home
                 </Link>
+
+                {/* Mobile Collections Section */}
+                <div className="my-1 border-t border-neutral-800 pt-2">
+                  <p className="mb-2 px-3 text-[10px] font-bold tracking-wider text-amber-400 uppercase">
+                    Collections & Categories
+                  </p>
+                  <div className="grid grid-cols-1 gap-1">
+                    {categoriesList.slice(0, 6).map((cat) => (
+                      <Link
+                        key={cat.name}
+                        href={cat.href}
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                      >
+                        <div className="relative h-6 w-6 overflow-hidden rounded-md border border-neutral-800 bg-neutral-900">
+                          <Image
+                            src={cat.image}
+                            alt={cat.name}
+                            fill
+                            className="object-cover"
+                            sizes="24px"
+                          />
+                        </div>
+                        <span>{cat.name}</span>
+                      </Link>
+                    ))}
+                    <Link
+                      href="/discover"
+                      onClick={() => setIsOpen(false)}
+                      className="px-3 py-1.5 text-[11px] font-bold text-amber-400 hover:underline"
+                    >
+                      + View All Collections →
+                    </Link>
+                  </div>
+                </div>
+
                 <Link
-                  href="/discover"
-                  className="rounded-lg px-3 py-2 hover:bg-[#FAF7F0]"
+                  href="/discover?reels=true"
+                  className="rounded-xl px-3 py-2.5 hover:bg-neutral-800 hover:text-amber-400"
                   onClick={() => setIsOpen(false)}
                 >
-                  Shop Catalog
+                  Live Factory Reels
                 </Link>
-                <Link
-                  href="/discover?category=Wooden Toys"
-                  className="rounded-lg px-3 py-2 hover:bg-[#FAF7F0]"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Wooden Toys
-                </Link>
+
                 <Link
                   href="/about"
-                  className="rounded-lg px-3 py-2 hover:bg-[#FAF7F0]"
+                  className="rounded-xl px-3 py-2.5 hover:bg-neutral-800 hover:text-amber-400"
                   onClick={() => setIsOpen(false)}
                 >
                   About Us
                 </Link>
+
                 <Link
                   href="/contact"
-                  className="rounded-lg px-3 py-2 hover:bg-[#FAF7F0]"
+                  className="rounded-xl px-3 py-2.5 hover:bg-neutral-800 hover:text-amber-400"
                   onClick={() => setIsOpen(false)}
                 >
                   Contact
@@ -653,12 +602,20 @@ export function Header({
             </div>
 
             {/* Mobile Actions */}
-            <div className="border-t border-[#E5E5E0] pt-4">
+            <div className="mt-6 border-t border-neutral-800 pt-4">
+              <Button
+                asChild
+                className="font-graphik mb-2 w-full rounded-xl bg-amber-400 text-xs font-bold text-black hover:bg-amber-300"
+              >
+                <Link href="/signup/manufacturer" onClick={() => setIsOpen(false)}>
+                  Sell on GenZ
+                </Link>
+              </Button>
               {isLoggedIn ? (
                 <Button
                   asChild
                   variant="outline"
-                  className="font-graphik w-full rounded-xl text-xs font-semibold"
+                  className="font-graphik w-full rounded-xl border-neutral-700 bg-neutral-900 text-xs font-semibold text-white hover:bg-neutral-800"
                 >
                   <Link href="/profile" onClick={() => setIsOpen(false)}>
                     My Profile
@@ -667,10 +624,11 @@ export function Header({
               ) : (
                 <Button
                   asChild
-                  className="font-graphik w-full rounded-xl bg-black text-xs font-semibold text-white"
+                  variant="outline"
+                  className="font-graphik w-full rounded-xl border-neutral-700 bg-neutral-900 text-xs font-semibold text-white hover:bg-neutral-800 hover:text-amber-400"
                 >
                   <Link href="/login" onClick={() => setIsOpen(false)}>
-                    Login
+                    Login / Sign Up
                   </Link>
                 </Button>
               )}

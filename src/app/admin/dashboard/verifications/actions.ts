@@ -7,15 +7,26 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireRole } from "@/lib/require-role";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
 import { adminRejectSchema } from "@/lib/validation";
+import { SITE_URL } from "@/lib/config";
 
 export interface ReviewState {
   error?: string;
+  success?: boolean;
+  credentials?: {
+    email: string;
+    password: string;
+    emailSent: boolean;
+  };
 }
 
 /**
  * Generate a secure random password.
  */
-function generatePassword(length = 12): string {
+export async function generatePasswordAction(): Promise<string> {
+  return generatePassword(14);
+}
+
+function generatePassword(length = 14): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
@@ -23,13 +34,17 @@ function generatePassword(length = 12): string {
 }
 
 /**
- * Admin approves a manufacturer application:
- * 1. Creates a Supabase Auth user with a generated password
- * 2. Creates profile + manufacturer_profiles rows
- * 3. Sends credentials email via Supabase Edge Function or logs them
- * 4. Updates the application status to "approved"
+ * Admin approves a manufacturer application and provisions credentials:
+ * 1. Takes application ID, custom/auto-generated email and password
+ * 2. Creates/updates Supabase Auth user & user_metadata
+ * 3. Upserts profile + manufacturer_profiles rows
+ * 4. Sends credential notification email (if Resend key available)
+ * 5. Updates manufacturer_applications table status to "approved"
  */
-export async function approveManufacturer(applicationId: string) {
+export async function approveManufacturer(
+  _prevState: ReviewState,
+  formData: FormData
+): Promise<ReviewState> {
   const session = await requireRole("admin");
 
   const rateLimit = await checkRateLimit({
@@ -37,7 +52,28 @@ export async function approveManufacturer(applicationId: string) {
     actionName: "approve_manufacturer",
     identifier: session.userId,
   });
-  if (rateLimit.blocked) return;
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please try again later." };
+  }
+
+  // 0. Verify required environment variables
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.error(
+      "[approveManufacturer] CRITICAL ERROR: SUPABASE_SERVICE_ROLE_KEY is missing in .env.local"
+    );
+    return {
+      error: "Service role key is not configured. Please check server logs.",
+    };
+  }
+
+  const applicationId = String(formData.get("applicationId") ?? "").trim();
+  const inputEmail = String(formData.get("email") ?? "").trim();
+  const inputPassword = String(formData.get("password") ?? "").trim();
+  const sendEmailOption = formData.get("sendEmail") === "on";
+
+  if (!applicationId) {
+    return { error: "Application ID missing." };
+  }
 
   const supabase = await createClient();
 
@@ -49,85 +85,101 @@ export async function approveManufacturer(applicationId: string) {
     .single();
 
   if (fetchErr || !application) {
-    console.error("Could not find application:", fetchErr);
-    return;
+    console.error("[approveManufacturer] Could not find application:", fetchErr);
+    return { error: "Application not found." };
   }
 
-  if (application.status === "approved") {
-    // Already approved, skip
-    revalidatePath("/admin/dashboard/verifications");
-    redirect(`/admin/dashboard/verifications`);
+  const emailToUse = inputEmail || application.email;
+  const passwordToUse = inputPassword || generatePassword(14);
+
+  // 2. Initialize Supabase Admin Client
+  let adminClient;
+  try {
+    adminClient = createAdminClient();
+  } catch (err: unknown) {
+    console.error("[approveManufacturer] Admin client init failed:", err);
+    return { error: "Failed to initialize administrative service. Please try again." };
   }
 
-  // 2. Generate a temporary password
-  const tempPassword = generatePassword(14);
+  const applicationFormData = (application.form_data ?? {}) as Record<string, string>;
 
-  // 3. Create the Supabase Auth user using the Admin API (service role)
-  const adminClient = createAdminClient();
+  // Check if user account already exists in Supabase Auth
+  const { data: userListData } = await adminClient.auth.admin.listUsers();
+  const existingAuthUser = userListData?.users?.find(
+    (u) => u.email?.toLowerCase() === emailToUse.toLowerCase()
+  );
 
-  const formData = (application.form_data ?? {}) as Record<string, string>;
+  let userId: string;
 
-  const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
-    email: application.email,
-    password: tempPassword,
-    email_confirm: true, // Auto-confirm the email — no OTP needed
-    user_metadata: {
-      full_name: application.full_name,
-      role: "manufacturer",
-      business_type: application.business_type,
-      phone: application.phone,
-      business_name: application.business_name,
-    },
-  });
+  if (existingAuthUser) {
+    userId = existingAuthUser.id;
+    // Update existing user password and metadata
+    const { error: updateErr } = await adminClient.auth.admin.updateUserById(userId, {
+      password: passwordToUse,
+      email_confirm: true,
+      user_metadata: {
+        full_name: application.full_name,
+        role: "manufacturer",
+        business_type: application.business_type,
+        phone: application.phone,
+        business_name: application.business_name,
+      },
+    });
 
-  if (authError || !authData?.user) {
-    console.error("Failed to create auth user:", authError);
-    // If user already exists, try to fetch them
-    if (authError?.message?.includes("already been registered")) {
-      // User exists — just update the application status
-      await supabase
-        .from("manufacturer_applications")
-        .update({
-          status: "approved",
-          reviewed_at: new Date().toISOString(),
-          reviewed_by: session.userId,
-        })
-        .eq("id", applicationId);
-
-      revalidatePath("/admin/dashboard/verifications");
-      redirect(`/admin/dashboard/verifications`);
+    if (updateErr) {
+      console.error("Failed to update user account:", updateErr);
+      return { error: `Failed to update user account: ${updateErr.message}` };
     }
-    return;
+  } else {
+    // Create new Supabase Auth user
+    const { data: authData, error: authError } =
+      await adminClient.auth.admin.createUser({
+        email: emailToUse,
+        password: passwordToUse,
+        email_confirm: true,
+        user_metadata: {
+          full_name: application.full_name,
+          role: "manufacturer",
+          business_type: application.business_type,
+          phone: application.phone,
+          business_name: application.business_name,
+        },
+      });
+
+    if (authError || !authData?.user) {
+      console.error("Failed to create auth user:", authError);
+      return { error: authError?.message || "Failed to create user account." };
+    }
+
+    userId = authData.user.id;
   }
 
-  const userId = authData.user.id;
-
-  // 4. Create profile + manufacturer_profiles rows (using admin client to bypass RLS)
+  // 3. Create profile + manufacturer_profiles rows (using admin client to bypass RLS)
   await adminClient.from("profiles").upsert({
     id: userId,
     role: "manufacturer",
     full_name: application.full_name,
     phone: application.phone,
-    city: formData.city || null,
-    state: formData.state || null,
-    pincode: formData.pincode || null,
+    city: applicationFormData.city || null,
+    state: applicationFormData.state || null,
+    pincode: applicationFormData.pincode || null,
   });
 
   await adminClient.from("manufacturer_profiles").upsert({
     id: userId,
     business_name: application.business_name,
-    gst_number: formData.gst_number || "PENDING",
-    factory_address: formData.factory_address || null,
-    city: formData.city || null,
-    state: formData.state || null,
-    pincode: formData.pincode || null,
+    gst_number: applicationFormData.gst_number || "PENDING",
+    factory_address: applicationFormData.factory_address || null,
+    city: applicationFormData.city || null,
+    state: applicationFormData.state || null,
+    pincode: applicationFormData.pincode || null,
     description: JSON.stringify(application.form_data),
     status: "verified",
     reviewed_at: new Date().toISOString(),
     reviewed_by: session.userId,
   });
 
-  // 5. Update the application status to "approved"
+  // 4. Update the application status to "approved"
   await supabase
     .from("manufacturer_applications")
     .update({
@@ -137,60 +189,63 @@ export async function approveManufacturer(applicationId: string) {
     })
     .eq("id", applicationId);
 
-  // 6. Send credentials email
-  // Using Supabase's built-in invite or a direct email via fetch to Resend/etc.
-  // For now, we'll use Supabase Auth's admin API to send a magic link as fallback,
-  // AND log the credentials for the admin to share manually if email fails.
+  // 5. Dispatch login credentials email if enabled
+  let emailSent = false;
   try {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const siteUrl = SITE_URL;
     const resendApiKey = process.env.RESEND_API_KEY;
+    const fromEmail =
+      process.env.RESEND_FROM_EMAIL || "GenZ Platform <onboarding@resend.dev>";
 
-    if (resendApiKey) {
-      // Send via Resend
-      await fetch("https://api.resend.com/emails", {
+    if (!sendEmailOption) {
+      console.log("[approveManufacturer] Send email option was unchecked by admin.");
+    } else if (!resendApiKey) {
+      console.error(
+        "[approveManufacturer] RESEND_API_KEY is not configured in .env.local. Skipping email dispatch."
+      );
+    } else {
+      const resendRes = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${resendApiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "GenZ Platform <noreply@genzonline.in>",
-          to: application.email,
-          subject: "Your GenZ Manufacturer Account is Approved!",
+          from: fromEmail,
+          to: emailToUse,
+          subject: "Your GenZ Manufacturer Account Approved!",
           html: `
             <div style="font-family: 'Inter', system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px; background: #FAF7F0; border-radius: 16px;">
-              <img src="${siteUrl}/logo.png" alt="GenZ" style="height: 40px; margin-bottom: 24px;" />
               <h1 style="font-size: 24px; color: #1A1A18; margin-bottom: 8px;">Welcome to GenZ, ${application.full_name}!</h1>
               <p style="font-size: 14px; color: #52524E; line-height: 1.6;">
-                Your manufacturer application for <strong>${application.business_name}</strong> has been verified and approved by our administration team.
+                Your manufacturer registration application for <strong>${application.business_name}</strong> has been approved.
               </p>
               <div style="background: white; border: 1px solid #E5E5E0; border-radius: 12px; padding: 20px; margin: 24px 0;">
-                <p style="font-size: 12px; color: #73736E; text-transform: uppercase; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 12px;">Your Login Credentials</p>
-                <p style="font-size: 14px; margin: 4px 0;"><strong>Email:</strong> ${application.email}</p>
-                <p style="font-size: 14px; margin: 4px 0;"><strong>Password:</strong> <code style="background: #F0F0EC; padding: 2px 8px; border-radius: 4px; font-size: 13px;">${tempPassword}</code></p>
+                <p style="font-size: 12px; color: #73736E; text-transform: uppercase; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 12px;">Your Account Login Credentials</p>
+                <p style="font-size: 14px; margin: 4px 0;"><strong>Login URL:</strong> <a href="${siteUrl}/login">${siteUrl}/login</a></p>
+                <p style="font-size: 14px; margin: 4px 0;"><strong>Email:</strong> ${emailToUse}</p>
+                <p style="font-size: 14px; margin: 4px 0;"><strong>Password:</strong> <code style="background: #F0F0EC; padding: 2px 8px; border-radius: 4px; font-size: 13px;">${passwordToUse}</code></p>
               </div>
-              <p style="font-size: 13px; color: #8C8C85;">Please change your password after your first login for security.</p>
-              <a href="${siteUrl}/login/manufacturer" style="display: inline-block; background: #C8A951; color: #1A1A18; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 8px; margin-top: 16px;">Sign In to Your Dashboard →</a>
-              <p style="font-size: 11px; color: #A1A19A; margin-top: 32px;">— The GenZ Platform Team</p>
+              <p style="font-size: 13px; color: #8C8C85;">Please change your password after logging in for security.</p>
+              <a href="${siteUrl}/login" style="display: inline-block; background: #1A1A18; color: #FFFFFF; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 8px; margin-top: 16px;">Sign In to Dashboard →</a>
             </div>
           `,
         }),
       });
-    } else {
-      // Fallback: Log credentials for admin to share manually
-      console.log("=================================================");
-      console.log("MANUFACTURER APPROVED — LOGIN CREDENTIALS");
-      console.log(`Email: ${application.email}`);
-      console.log(`Password: ${tempPassword}`);
-      console.log(`Business: ${application.business_name}`);
-      console.log("=================================================");
+
+      const resendData = await resendRes.json();
+      if (!resendRes.ok) {
+        console.error("[approveManufacturer] Resend API Error:", resendData);
+      } else {
+        console.log(
+          "[approveManufacturer] Resend email dispatched successfully:",
+          resendData
+        );
+        emailSent = true;
+      }
     }
   } catch (emailErr) {
-    console.error("Failed to send credentials email:", emailErr);
-    // Still log the credentials as fallback
-    console.log(
-      `CREDENTIALS — Email: ${application.email} | Password: ${tempPassword}`
-    );
+    console.error("[approveManufacturer] Exception during email dispatch:", emailErr);
   }
 
   await logRateLimitAttempt({
@@ -200,7 +255,16 @@ export async function approveManufacturer(applicationId: string) {
   });
 
   revalidatePath("/admin/dashboard/verifications");
-  redirect(`/admin/dashboard/verifications`);
+  revalidatePath(`/admin/dashboard/verifications/${applicationId}`);
+
+  return {
+    success: true,
+    credentials: {
+      email: emailToUse,
+      password: passwordToUse,
+      emailSent,
+    },
+  };
 }
 
 /**
@@ -253,4 +317,33 @@ export async function rejectManufacturer(
 
   revalidatePath("/admin/dashboard/verifications");
   redirect(`/admin/dashboard/verifications`);
+}
+
+/**
+ * Directly update application status via status dropdown select.
+ */
+export async function updateApplicationStatusDirectly(
+  applicationId: string,
+  newStatus: "pending" | "approved" | "rejected"
+): Promise<{ success?: boolean; error?: string }> {
+  const session = await requireRole("admin");
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("manufacturer_applications")
+    .update({
+      status: newStatus,
+      reviewed_at: new Date().toISOString(),
+      reviewed_by: session.userId,
+    })
+    .eq("id", applicationId);
+
+  if (error) {
+    console.error("[updateApplicationStatusDirectly] DB Error:", error);
+    return { error: "Failed to update status in database." };
+  }
+
+  revalidatePath("/admin/dashboard/verifications");
+  revalidatePath(`/admin/dashboard/verifications/${applicationId}`);
+  return { success: true };
 }

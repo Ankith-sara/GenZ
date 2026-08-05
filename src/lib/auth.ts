@@ -10,18 +10,34 @@ import type { Profile, Role } from "@/types/database";
  * a synthetic profile object is returned using auth user_metadata
  * so that role-based routing still works.
  */
+import type { User } from "@supabase/supabase-js";
+
+/**
+ * Fetches the current authenticated user along with their profile row
+ * (which carries the role). Returns null if there is no session.
+ *
+ * If the profile query fails (e.g. RLS error) or no row exists,
+ * a synthetic profile object is returned using auth user_metadata
+ * so that role-based routing still works.
+ */
 export async function getUserAndProfile(): Promise<{
   userId: string;
   email: string | undefined;
   profile: Profile | null;
   avatarUrl: string | null;
+  user: User;
 } | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return null;
+  let user: User | null = null;
+  let supabase;
+  try {
+    supabase = await createClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) return null;
+    user = data.user;
+  } catch (err) {
+    console.error("[auth] Failed to fetch authenticated user:", err);
+    return null;
+  }
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
@@ -125,5 +141,6 @@ export async function getUserAndProfile(): Promise<{
     email: user.email,
     profile: resolvedProfile ?? null,
     avatarUrl,
+    user,
   };
 }

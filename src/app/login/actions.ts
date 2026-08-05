@@ -12,6 +12,7 @@ import {
   emailSchema,
   passwordSchema,
 } from "@/lib/validation";
+import { SITE_URL } from "@/lib/config";
 
 // Temporary client for password verification that does NOT write cookies
 function getTempClient() {
@@ -274,7 +275,7 @@ export async function signupUser(formData: {
         full_name: validation.data.fullName,
         role: validation.data.role,
       },
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/confirm`,
+      emailRedirectTo: `${SITE_URL}/auth/confirm`,
     },
   };
 
@@ -439,7 +440,7 @@ export async function sendPasswordReset(email: string) {
 
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(validation.data, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/reset-password`,
+    redirectTo: `${SITE_URL}/reset-password`,
   });
 
   if (error) {

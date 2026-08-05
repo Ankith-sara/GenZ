@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
 import { manufacturerSignupSchema } from "@/lib/validation";
 
@@ -64,7 +65,12 @@ export async function signupManufacturer(
     formDataObj[key] = String(value);
   });
 
-  const supabase = await createClient();
+  let supabase;
+  try {
+    supabase = createAdminClient();
+  } catch {
+    supabase = await createClient();
+  }
 
   try {
     // Check if application with same email already exists

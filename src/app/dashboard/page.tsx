@@ -55,7 +55,7 @@ export default async function DashboardPage() {
           pincode: pincode || null,
           established_year: establishedYear,
           description: descriptionJson,
-          status: "pending", // Always starts as pending review
+          status: "verified", // Auto set to verified or allowed
         });
       } else {
         // Fallback placeholder profile
@@ -63,13 +63,11 @@ export default async function DashboardPage() {
           id: session.userId,
           business_name: "Unnamed Factory",
           gst_number: "PENDING",
-          status: "pending",
+          status: "verified",
         });
       }
 
-      redirect("/dashboard/pending-verification");
-    } else if (manufacturer.status !== "verified") {
-      redirect("/dashboard/pending-verification");
+      redirect("/dashboard/manufacturer");
     } else {
       redirect("/dashboard/manufacturer");
     }
