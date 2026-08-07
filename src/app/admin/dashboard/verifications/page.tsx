@@ -22,6 +22,19 @@ export default async function AdminVerificationsPage({
     supabase = await createClient();
   }
 
+  // 0. Fetch real Auth emails
+  const authUserEmails: Record<string, string> = {};
+  try {
+    const { data: userListData } = await supabase.auth.admin.listUsers();
+    (userListData?.users ?? []).forEach((u) => {
+      if (u.id && u.email) {
+        authUserEmails[u.id] = u.email;
+      }
+    });
+  } catch (err) {
+    console.error("[AdminVerificationsPage] Could not list auth users:", err);
+  }
+
   // 1. Fetch from seller_applications
   const { data: rawApplications } = await supabase
     .from("seller_applications")
@@ -38,7 +51,7 @@ export default async function AdminVerificationsPage({
   const sellerIds = (rawSellerProfiles ?? []).map((s) => s.id);
   const profilesMap: Record<
     string,
-    { full_name?: string | null; email?: string | null; phone?: string | null }
+    { full_name?: string | null; phone?: string | null }
   > = {};
 
   if (sellerIds.length > 0) {
@@ -59,11 +72,12 @@ export default async function AdminVerificationsPage({
 
   // Insert seller_applications records
   (rawApplications ?? []).forEach((app) => {
+    const realEmail = app.email || authUserEmails[app.id] || "seller@genz.in";
     applicationsMap.set(app.id, {
       id: app.id,
       business_name: app.business_name || "Factory Seller",
       full_name: app.full_name || "Applicant",
-      email: app.email || "seller@genz.in",
+      email: realEmail,
       phone: app.phone || null,
       status:
         app.status === "approved"
@@ -78,7 +92,7 @@ export default async function AdminVerificationsPage({
     });
   });
 
-  // Insert seller_profiles records (merging / taking precedence if not in seller_applications)
+  // Insert seller_profiles records
   (rawSellerProfiles ?? []).forEach((sp) => {
     if (!applicationsMap.has(sp.id)) {
       const userProf = profilesMap[sp.id] || {};
@@ -89,11 +103,13 @@ export default async function AdminVerificationsPage({
             ? "rejected"
             : "pending";
 
+      const realEmail = authUserEmails[sp.id] || "seller@genz.in";
+
       applicationsMap.set(sp.id, {
         id: sp.id,
         business_name: sp.business_name || "Factory Seller",
         full_name: userProf.full_name || "Factory Owner",
-        email: "seller@genz.in",
+        email: realEmail,
         phone: userProf.phone || null,
         status: statusMapped,
         created_at: sp.created_at || sp.submitted_at || new Date().toISOString(),

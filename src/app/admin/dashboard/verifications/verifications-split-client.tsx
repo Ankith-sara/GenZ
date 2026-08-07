@@ -19,6 +19,11 @@ import {
   AlertCircle,
   Loader2,
   FileCheck,
+  Copy,
+  Check,
+  Eye,
+  EyeOff,
+  Key,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -43,6 +48,7 @@ interface VerificationsSplitClientProps {
 export function VerificationsSplitClient({
   initialList,
 }: VerificationsSplitClientProps) {
+  const [appsList, setAppsList] = useState<SellerAppRecord[]>(initialList);
   const [activeStatusFilter, setActiveStatusFilter] = useState<string>("pending");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(
@@ -53,18 +59,31 @@ export function VerificationsSplitClient({
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
-  // Rejection modal reason text
+  // Rejection form
   const [rejectionReason, setRejectionReason] = useState("");
   const [showRejectForm, setShowRejectForm] = useState(false);
 
+  // Credentials Modal State
+  const [credentialsModal, setCredentialsModal] = useState<{
+    email: string;
+    password: string;
+    businessName: string;
+    emailSent: boolean;
+  } | null>(null);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedPassword, setCopiedPassword] = useState(false);
+  const [copiedAll, setCopiedAll] = useState(false);
+
   const counts = {
-    pending: initialList.filter((a) => a.status === "pending").length,
-    approved: initialList.filter((a) => a.status === "approved").length,
-    rejected: initialList.filter((a) => a.status === "rejected").length,
-    all: initialList.length,
+    pending: appsList.filter((a) => a.status === "pending").length,
+    approved: appsList.filter((a) => a.status === "approved").length,
+    rejected: appsList.filter((a) => a.status === "rejected").length,
+    all: appsList.length,
   };
 
-  const filteredList = initialList.filter((app) => {
+  const filteredList = appsList.filter((app) => {
     const matchesStatus =
       activeStatusFilter === "all" || app.status === activeStatusFilter;
     const matchesSearch =
@@ -75,7 +94,7 @@ export function VerificationsSplitClient({
     return matchesStatus && matchesSearch;
   });
 
-  const selectedApp = initialList.find((a) => a.id === selectedId);
+  const selectedApp = appsList.find((a) => a.id === selectedId);
 
   const handleApprove = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,9 +112,23 @@ export function VerificationsSplitClient({
       const res = await approveSeller({}, formData);
       if (res.error) {
         setActionError(res.error);
-      } else {
+      } else if (res.credentials) {
+        // Update local app list status instantly
+        setAppsList((prev) =>
+          prev.map((item) =>
+            item.id === selectedApp.id ? { ...item, status: "approved" } : item
+          )
+        );
+
+        setCredentialsModal({
+          email: res.credentials.email,
+          password: res.credentials.password,
+          businessName: selectedApp.business_name,
+          emailSent: res.credentials.emailSent,
+        });
+
         setActionSuccess(
-          `Application for "${selectedApp.business_name}" approved successfully! Credentials generated.`
+          `Application for "${selectedApp.business_name}" approved successfully!`
         );
       }
     });
@@ -117,6 +150,12 @@ export function VerificationsSplitClient({
       if (res.error) {
         setActionError(res.error);
       } else {
+        setAppsList((prev) =>
+          prev.map((item) =>
+            item.id === selectedApp.id ? { ...item, status: "rejected" } : item
+          )
+        );
+
         setShowRejectForm(false);
         setRejectionReason("");
         setActionSuccess(
@@ -126,8 +165,22 @@ export function VerificationsSplitClient({
     });
   };
 
+  const copyToClipboard = (text: string, type: "email" | "password" | "all") => {
+    navigator.clipboard.writeText(text);
+    if (type === "email") {
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2000);
+    } else if (type === "password") {
+      setCopiedPassword(true);
+      setTimeout(() => setCopiedPassword(false), 2000);
+    } else {
+      setCopiedAll(true);
+      setTimeout(() => setCopiedAll(false), 2000);
+    }
+  };
+
   return (
-    <div className="space-y-6 select-none">
+    <div className="font-graphik space-y-6 select-none">
       <PageHeader
         title="Seller Audit & Verification Center"
         description="Review manufacturing verification applications, GST certificates, and clearance status."
@@ -139,14 +192,14 @@ export function VerificationsSplitClient({
 
       {/* Action Notification Banners */}
       {actionError && (
-        <div className="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-800">
+        <div className="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-800 shadow-2xs">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{actionError}</span>
         </div>
       )}
       {actionSuccess && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs font-semibold text-emerald-800">
-          <CheckCircle2 className="h-4 w-4 shrink-0" />
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs font-semibold text-emerald-800 shadow-2xs">
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
           <span>{actionSuccess}</span>
         </div>
       )}
@@ -164,7 +217,7 @@ export function VerificationsSplitClient({
                 placeholder="Search business, applicant, email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="font-graphik h-9 w-full rounded-lg border border-[#E5E5E0] bg-[#FAF8F4] pr-3 pl-9 text-xs text-black placeholder:text-[#A3A39D] focus:border-black focus:bg-white focus:outline-none"
+                className="h-9 w-full rounded-lg border border-[#E5E5E0] bg-[#FAF8F4] pr-3 pl-9 text-xs text-black placeholder:text-[#A3A39D] focus:border-black focus:bg-white focus:outline-none"
               />
             </div>
 
@@ -180,9 +233,9 @@ export function VerificationsSplitClient({
                   <button
                     key={tab.value}
                     onClick={() => setActiveStatusFilter(tab.value)}
-                    className={`font-graphik flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold transition-all ${
+                    className={`flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold transition-all ${
                       isActive
-                        ? "bg-black text-white"
+                        ? "bg-black text-white shadow-2xs"
                         : "border border-[#E5E5E0] bg-[#FAF8F4] text-[#52524E] hover:bg-[#EBEBE6] hover:text-black"
                     }`}
                   >
@@ -205,8 +258,8 @@ export function VerificationsSplitClient({
             {filteredList.length === 0 ? (
               <EmptyState
                 icon={<Building2 className="h-6 w-6 text-[#73736E]" />}
-                title="No Applications"
-                description={`No applications found under category "${activeStatusFilter}"`}
+                title="No Applications Found"
+                description={`No seller profiles listed under "${activeStatusFilter}"`}
               />
             ) : (
               filteredList.map((app) => {
@@ -217,24 +270,22 @@ export function VerificationsSplitClient({
                     onClick={() => setSelectedId(app.id)}
                     className={`group cursor-pointer rounded-xl border p-4 transition-all ${
                       isSelected
-                        ? "border-black bg-[#FAF7F0] shadow-xs"
+                        ? "border-black bg-[#FAF7F0] shadow-2xs"
                         : "border-[#E5E5E0] bg-white hover:border-black/30 hover:bg-[#FAF8F4]"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h4 className="font-graphik text-sm font-bold text-[#1A1A18] group-hover:underline">
+                        <h4 className="text-sm font-bold text-[#1A1A18] group-hover:underline">
                           {app.business_name}
                         </h4>
-                        <p className="font-graphik mt-0.5 text-xs text-[#73736E]">
-                          {app.full_name}
-                        </p>
+                        <p className="mt-0.5 text-xs text-[#73736E]">{app.full_name}</p>
                       </div>
                       <StatusBadge status={app.status} />
                     </div>
 
-                    <div className="font-graphik mt-3 flex items-center justify-between border-t border-[#F0F0EC] pt-2 text-[11px] text-[#73736E]">
-                      <span>{app.email}</span>
+                    <div className="mt-3 flex items-center justify-between border-t border-[#F0F0EC] pt-2 text-[11px] text-[#73736E]">
+                      <span className="max-w-[200px] truncate">{app.email}</span>
                       <span className="font-mono">
                         {new Date(app.created_at).toLocaleDateString("en-US", {
                           month: "short",
@@ -263,7 +314,7 @@ export function VerificationsSplitClient({
               <div className="flex flex-col justify-between gap-4 border-b border-[#F0F0EC] pb-5 sm:flex-row sm:items-center">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="font-graphik text-xl font-bold text-[#1A1A18]">
+                    <h2 className="text-xl font-bold text-[#1A1A18]">
                       {selectedApp.business_name}
                     </h2>
                     <StatusBadge status={selectedApp.status} />
@@ -280,7 +331,7 @@ export function VerificationsSplitClient({
                       <Button
                         type="submit"
                         disabled={isPending}
-                        className="font-graphik h-9 rounded-lg bg-emerald-600 px-4 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 disabled:opacity-50"
+                        className="h-9 rounded-lg bg-emerald-600 px-4 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 disabled:opacity-50"
                       >
                         {isPending ? (
                           <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
@@ -295,7 +346,7 @@ export function VerificationsSplitClient({
                       variant="outline"
                       onClick={() => setShowRejectForm(true)}
                       disabled={isPending}
-                      className="font-graphik h-9 rounded-lg border-rose-200 bg-rose-50 px-3 text-xs font-semibold text-rose-700 hover:bg-rose-100"
+                      className="h-9 rounded-lg border-rose-200 bg-rose-50 px-3 text-xs font-semibold text-rose-700 hover:bg-rose-100"
                     >
                       <XCircle className="mr-1.5 h-3.5 w-3.5" />
                       <span>Reject</span>
@@ -310,7 +361,7 @@ export function VerificationsSplitClient({
                   onSubmit={handleRejectSubmit}
                   className="space-y-3 rounded-xl border border-rose-200 bg-rose-50/50 p-4"
                 >
-                  <h4 className="font-graphik text-xs font-bold text-rose-900">
+                  <h4 className="text-xs font-bold text-rose-900">
                     Provide Reason for Application Rejection
                   </h4>
                   <textarea
@@ -319,7 +370,7 @@ export function VerificationsSplitClient({
                     value={rejectionReason}
                     onChange={(e) => setRejectionReason(e.target.value)}
                     required
-                    className="font-graphik w-full rounded-lg border border-rose-200 bg-white p-2.5 text-xs text-black focus:ring-1 focus:ring-rose-500 focus:outline-none"
+                    className="w-full rounded-lg border border-rose-200 bg-white p-2.5 text-xs text-black focus:ring-1 focus:ring-rose-500 focus:outline-none"
                   />
                   <div className="flex items-center justify-end gap-2">
                     <Button
@@ -343,7 +394,7 @@ export function VerificationsSplitClient({
 
               {/* Applicant Metadata Cards */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="font-graphik space-y-2.5 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
+                <div className="space-y-2.5 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
                   <h4 className="border-b border-[#E5E5E0] pb-1.5 text-[10px] font-bold tracking-wider text-[#1A1A18] uppercase">
                     Contact & Key Person
                   </h4>
@@ -353,7 +404,7 @@ export function VerificationsSplitClient({
                   </div>
                   <div className="flex items-center gap-2 text-[#52524E]">
                     <Mail className="h-3.5 w-3.5 text-[#73736E]" />
-                    <span>{selectedApp.email}</span>
+                    <span className="truncate">{selectedApp.email}</span>
                   </div>
                   <div className="flex items-center gap-2 text-[#52524E]">
                     <Phone className="h-3.5 w-3.5 text-[#73736E]" />
@@ -361,7 +412,7 @@ export function VerificationsSplitClient({
                   </div>
                 </div>
 
-                <div className="font-graphik space-y-2.5 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
+                <div className="space-y-2.5 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
                   <h4 className="border-b border-[#E5E5E0] pb-1.5 text-[10px] font-bold tracking-wider text-[#1A1A18] uppercase">
                     Filing Timeline & Origin
                   </h4>
@@ -392,7 +443,7 @@ export function VerificationsSplitClient({
 
               {/* Form Data Metadata Raw View */}
               {selectedApp.form_data && (
-                <div className="font-graphik space-y-2 rounded-xl border border-[#E5E5E0] bg-white p-4 text-xs">
+                <div className="space-y-2 rounded-xl border border-[#E5E5E0] bg-white p-4 text-xs">
                   <h4 className="border-b border-[#F0F0EC] pb-2 text-[10px] font-bold tracking-wider text-[#1A1A18] uppercase">
                     Submitted Application Details
                   </h4>
@@ -414,6 +465,135 @@ export function VerificationsSplitClient({
           )}
         </div>
       </div>
+
+      {/* CREDENTIALS GENERATED MODAL */}
+      {credentialsModal && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="animate-in fade-in-80 zoom-in-95 w-full max-w-md space-y-5 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xl">
+            <div className="flex items-center gap-3 border-b border-[#F0F0EC] pb-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                <Key className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-[#1A1A18]">
+                  Seller Credentials Provisioned
+                </h3>
+                <p className="text-xs text-[#73736E]">
+                  Account generated for{" "}
+                  <strong className="text-black">
+                    {credentialsModal.businessName}
+                  </strong>
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
+              <div>
+                <label className="mb-1 block text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                  Login Email
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={credentialsModal.email}
+                    className="h-9 flex-1 rounded-lg border border-[#E5E5E0] bg-white px-3 font-mono text-xs text-black"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => copyToClipboard(credentialsModal.email, "email")}
+                    className="h-9 px-3 text-xs"
+                  >
+                    {copiedEmail ? (
+                      <Check className="h-3.5 w-3.5 text-emerald-600" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                  Password Credentials
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    readOnly
+                    value={credentialsModal.password}
+                    className="h-9 flex-1 rounded-lg border border-[#E5E5E0] bg-white px-3 font-mono text-xs text-black"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="h-9 px-2.5 text-xs"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-3.5 w-3.5" />
+                    ) : (
+                      <Eye className="h-3.5 w-3.5" />
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() =>
+                      copyToClipboard(credentialsModal.password, "password")
+                    }
+                    className="h-9 px-3 text-xs"
+                  >
+                    {copiedPassword ? (
+                      <Check className="h-3.5 w-3.5 text-emerald-600" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-[#73736E]">
+              <span>Dispatch Status:</span>
+              <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">
+                {credentialsModal.emailSent ? "Email Dispatched" : "Credentials Ready"}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  const allText = `GenZ Seller Account Credentials\nBusiness: ${credentialsModal.businessName}\nLogin Email: ${credentialsModal.email}\nPassword: ${credentialsModal.password}`;
+                  copyToClipboard(allText, "all");
+                }}
+                className="h-9 text-xs font-semibold"
+              >
+                {copiedAll ? (
+                  <Check className="mr-1.5 h-3.5 w-3.5 text-emerald-600" />
+                ) : (
+                  <Copy className="mr-1.5 h-3.5 w-3.5" />
+                )}
+                <span>{copiedAll ? "Copied All!" : "Copy All Details"}</span>
+              </Button>
+
+              <Button
+                type="button"
+                onClick={() => {
+                  setCredentialsModal(null);
+                  setActiveStatusFilter("approved");
+                }}
+                className="h-9 bg-black text-xs font-semibold text-white hover:bg-neutral-800"
+              >
+                View Approved Sellers
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
