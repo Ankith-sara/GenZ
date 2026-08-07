@@ -80,10 +80,13 @@ export async function createProduct(
     supabase = await createClient();
   }
 
+  const customSellerId = String(formData.get("seller_id") ?? "").trim();
+  const targetSellerId = customSellerId || session.userId;
+
   const { data, error } = await supabase
     .from("products")
     .insert({
-      seller_id: session.userId,
+      seller_id: targetSellerId,
       name: validation.data.name,
       category: validation.data.category,
       age_group: validation.data.age_group,
@@ -108,7 +111,7 @@ export async function createProduct(
   // Upload cover image if provided
   if (coverImage && coverImage.size > 0) {
     const safeName = coverImage.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${session.userId}/products/${data.id}/cover-${Date.now()}-${safeName}`;
+    const path = `${targetSellerId}/products/${data.id}/cover-${Date.now()}-${safeName}`;
 
     try {
       const buffer = Buffer.from(await coverImage.arrayBuffer());
@@ -138,7 +141,7 @@ export async function createProduct(
     for (const img of galleryImages) {
       if (img && img.size > 0) {
         const safeName = img.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-        const path = `${session.userId}/products/${data.id}/gallery-${Date.now()}-${safeName}`;
+        const path = `${targetSellerId}/products/${data.id}/gallery-${Date.now()}-${safeName}`;
         try {
           const buffer = Buffer.from(await img.arrayBuffer());
           const { error: uploadError } = await supabase.storage
@@ -151,7 +154,7 @@ export async function createProduct(
           if (!uploadError) {
             await supabase.from("product_images").insert({
               product_id: data.id,
-              seller_id: session.userId,
+              seller_id: targetSellerId,
               image_path: path,
               position: position++,
             });
@@ -166,6 +169,13 @@ export async function createProduct(
   }
 
   revalidatePath("/dashboard/seller/products");
+  revalidatePath("/admin/dashboard/products");
+
+  const isAdminRedirect = String(formData.get("is_admin") ?? "") === "true";
+  if (isAdminRedirect) {
+    redirect("/admin/dashboard/products");
+  }
+
   redirect(`/dashboard/seller/products/${data.id}`);
 }
 

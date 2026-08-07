@@ -6,7 +6,9 @@ import { PageHeader } from "@/components/admin/ui/page-header";
 import { StatusBadge } from "@/components/admin/ui/status-badge";
 import { ActionDropdown } from "@/components/admin/ui/action-dropdown";
 import { EmptyState } from "@/components/admin/ui/empty-state";
-import { Search, Filter, ShoppingBag, Eye, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Search, Filter, ShoppingBag, Eye, ExternalLink, Plus } from "lucide-react";
 
 export interface ProductRecord {
   id: string;
@@ -63,6 +65,14 @@ export function ProductsTableClient({ initialProducts }: ProductsTableClientProp
           { label: "Admin", href: "/admin/dashboard" },
           { label: "Products" },
         ]}
+        actions={
+          <Link href="/admin/dashboard/products/new">
+            <Button className="font-graphik h-9 rounded-lg bg-black px-3.5 text-xs font-semibold text-white shadow-2xs hover:bg-neutral-800">
+              <Plus className="mr-1.5 h-3.5 w-3.5" />
+              <span>Add New Product</span>
+            </Button>
+          </Link>
+        }
       />
 
       {/* TOOLBAR */}

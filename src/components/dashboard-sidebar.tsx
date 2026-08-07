@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { ElementType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -88,7 +88,7 @@ function getNavGroups(role: Role): NavGroup[] {
     },
     {
       groupName: "MANAGEMENT",
-      items: [{ href: "/profile", label: "Account & Settings", icon: User }],
+      items: [{ href: "/dashboard/settings", label: "Account & Settings", icon: User }],
     },
   ];
 }

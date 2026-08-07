@@ -120,7 +120,7 @@ export function AdminSidebar({
     },
     {
       label: "Settings",
-      href: "/admin/dashboard?view=settings",
+      href: "/admin/dashboard/settings",
       icon: Settings,
       badge: null,
     },

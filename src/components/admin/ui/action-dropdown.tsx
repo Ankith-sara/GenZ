@@ -30,6 +30,7 @@ export function ActionDropdown({
     left?: number;
     right?: number;
     openUp: boolean;
+    maxHeight: number;
   } | null>(null);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -41,19 +42,25 @@ export function ActionDropdown({
         if (!buttonRef.current) return;
         const rect = buttonRef.current.getBoundingClientRect();
         const spaceBelow = window.innerHeight - rect.bottom;
-        const openUp = spaceBelow < 180 && rect.top > 180;
+        const spaceAbove = rect.top;
+        const openUp = spaceBelow < 180 && spaceAbove > spaceBelow;
+        const maxHeight = openUp
+          ? Math.max(120, spaceAbove - 16)
+          : Math.max(120, spaceBelow - 16);
 
         if (align === "right") {
           setCoords({
             top: openUp ? rect.top - 4 : rect.bottom + 4,
-            right: window.innerWidth - rect.right,
+            right: Math.max(8, window.innerWidth - rect.right),
             openUp,
+            maxHeight,
           });
         } else {
           setCoords({
             top: openUp ? rect.top - 4 : rect.bottom + 4,
-            left: rect.left,
+            left: Math.max(8, rect.left),
             openUp,
+            maxHeight,
           });
         }
       };
@@ -117,8 +124,9 @@ export function ActionDropdown({
               bottom: coords.openUp ? `${window.innerHeight - coords.top}px` : "auto",
               left: coords.left !== undefined ? `${coords.left}px` : "auto",
               right: coords.right !== undefined ? `${coords.right}px` : "auto",
+              maxHeight: `${coords.maxHeight}px`,
             }}
-            className="animate-in fade-in-80 zoom-in-95 z-[9999] min-w-[175px] overflow-hidden rounded-xl border border-[#E5E5E0] bg-white p-1.5 shadow-xl ring-1 ring-black/5 duration-100"
+            className="animate-in fade-in-80 zoom-in-95 z-[999999] min-w-[175px] overflow-y-auto rounded-xl border border-[#E5E5E0] bg-white p-1.5 shadow-xl ring-1 ring-black/5 duration-100"
           >
             {actions.map((item, idx) => (
               <button
