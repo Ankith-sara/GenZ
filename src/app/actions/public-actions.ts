@@ -55,7 +55,7 @@ export async function submitWaitlist(formData: {
 export async function submitContactMessage(formData: {
   name: string;
   email: string;
-  reason: "General" | "Manufacturer partnership" | "Investor / Incubator" | "Press";
+  reason: "General" | "Seller partnership" | "Investor / Incubator" | "Press";
   message: string;
 }) {
   // 1. Rate limiting check

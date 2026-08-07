@@ -3,12 +3,29 @@
 -- ============================================================
 
 -- 1. Role enum -------------------------------------------------
-create type public.app_role as enum ('buyer', 'manufacturer', 'admin');
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'app_role') then
+    create type public.app_role as enum ('buyer', 'seller', 'admin');
+  end if;
+end $$;
+
+-- Helper function: check if caller is an admin (SECURITY DEFINER to prevent RLS infinite recursion)
+create or replace function public.is_admin()
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'admin'
+  );
+$$;
 
 -- 2. Profiles table --------------------------------------------
--- One row per auth.users row. Created automatically by the trigger
--- below whenever someone signs up.
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   role public.app_role not null default 'buyer',
   full_name text,
@@ -20,32 +37,24 @@ create table public.profiles (
 
 alter table public.profiles enable row level security;
 
--- Users can read and update their own profile only.
+-- Policies (using is_admin() to prevent RLS recursion)
+drop policy if exists "Profiles are viewable by owner" on public.profiles;
 create policy "Profiles are viewable by owner"
   on public.profiles for select
   using (auth.uid() = id);
 
+drop policy if exists "Profiles are updatable by owner" on public.profiles;
 create policy "Profiles are updatable by owner"
   on public.profiles for update
   using (auth.uid() = id);
 
--- Admins can view every profile (used by the verification queue later).
+drop policy if exists "Admins can view all profiles" on public.profiles;
 create policy "Admins can view all profiles"
   on public.profiles for select
-  using (
-    exists (
-      select 1 from public.profiles p
-      where p.id = auth.uid() and p.role = 'admin'
-    )
-  );
+  using (public.is_admin());
 
 -- 3. Auto-create a profile row on signup ------------------------
--- Reads role + full_name out of the auth metadata passed at
--- supabase.auth.signUp({ options: { data: { role, full_name } } }).
--- Public signup only ever sends 'buyer' or 'manufacturer' (enforced
--- in src/app/signup/actions.ts); admin accounts must be created
--- manually, e.g. `update public.profiles set role = 'admin' where id = '...'`.
-create function public.handle_new_user()
+create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
 security definer set search_path = public
@@ -56,18 +65,19 @@ begin
     new.id,
     coalesce((new.raw_user_meta_data ->> 'role')::public.app_role, 'buyer'),
     new.raw_user_meta_data ->> 'full_name'
-  );
+  )
+  on conflict (id) do nothing;
   return new;
 end;
 $$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
 -- 4. Waitlist table ----------------------------------------------
--- Public, anonymous signups from the homepage — not tied to auth.users.
-create table public.waitlist (
+create table if not exists public.waitlist (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   email text not null,
@@ -79,28 +89,24 @@ create table public.waitlist (
 
 alter table public.waitlist enable row level security;
 
--- Anyone (including anon) can join the waitlist.
+drop policy if exists "Anyone can join the waitlist" on public.waitlist;
 create policy "Anyone can join the waitlist"
   on public.waitlist for insert
   with check (true);
 
--- Only admins can read the list.
+drop policy if exists "Admins can view the waitlist" on public.waitlist;
 create policy "Admins can view the waitlist"
   on public.waitlist for select
-  using (
-    exists (
-      select 1 from public.profiles p
-      where p.id = auth.uid() and p.role = 'admin'
-    )
-  );
+  using (public.is_admin());
 
-create unique index waitlist_email_unique on public.waitlist (lower(email));
+create unique index if not exists waitlist_email_unique on public.waitlist (lower(email));
 
 -- 5. Avatars Storage Bucket & Policies ---------------------------
 insert into storage.buckets (id, name, public)
 values ('avatars', 'avatars', true)
 on conflict (id) do nothing;
 
+drop policy if exists "Users upload their own avatar" on storage.objects;
 create policy "Users upload their own avatar"
   on storage.objects for insert
   with check (
@@ -108,6 +114,7 @@ create policy "Users upload their own avatar"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
+drop policy if exists "Users replace their own avatar" on storage.objects;
 create policy "Users replace their own avatar"
   on storage.objects for update
   using (
@@ -115,6 +122,7 @@ create policy "Users replace their own avatar"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
+drop policy if exists "Avatars are publicly readable" on storage.objects;
 create policy "Avatars are publicly readable"
   on storage.objects for select
   using (bucket_id = 'avatars');

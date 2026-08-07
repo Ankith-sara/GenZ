@@ -59,7 +59,7 @@ const defaultSections: FooterSection[] = [
       { name: "Vision 2030", href: "/about#vision" },
       { name: "Founder Story", href: "/about#story" },
       { name: "Contact Us", href: "/contact" },
-      { name: "For Manufacturers", href: "/signup/manufacturer" },
+      { name: "For Sellers", href: "/signup/seller" },
     ],
   },
   {
@@ -74,8 +74,8 @@ const defaultSections: FooterSection[] = [
   {
     title: "Resources",
     links: [
-      { name: "Manufacturer Guide", href: "/signup/manufacturer" },
-      { name: "Verification", href: "/signup/manufacturer" },
+      { name: "Seller Guide", href: "/signup/seller" },
+      { name: "Verification", href: "/signup/seller" },
       { name: "Buyer Inquiries", href: "/discover" },
       { name: "Partnerships", href: "/contact" },
     ],
@@ -134,7 +134,7 @@ export function Footer({ className }: { className?: string }) {
               </span>
             </h2>
             <p className="font-graphik max-w-xl text-sm leading-relaxed text-neutral-400 sm:text-base">
-              Receive monthly updates on verified Indian manufacturers, top import gap
+              Receive monthly updates on verified Indian sellers, top import gap
               analyses, local innovations, and direct factory insights.
             </p>
           </div>

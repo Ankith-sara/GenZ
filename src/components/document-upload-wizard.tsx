@@ -6,13 +6,9 @@ import { Upload, Trash2, Check, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { validateFileContent } from "@/lib/file-validation";
-import type {
-  DocType,
-  ManufacturerDocument,
-  VerificationStatus,
-} from "@/types/database";
+import type { DocType, SellerDocument, VerificationStatus } from "@/types/database";
 import { STATUS_LABEL } from "@/lib/verification";
-import { submitForVerification } from "@/app/dashboard/manufacturer/onboarding/actions";
+import { submitForVerification } from "@/app/dashboard/seller/onboarding/actions";
 
 const ACCEPTED = ".pdf,.jpg,.jpeg,.png,.webp";
 
@@ -47,19 +43,19 @@ const STEPS: WizardStep[] = [
   },
 ];
 
-function docsOfType(documents: ManufacturerDocument[], docType: DocType) {
+function docsOfType(documents: SellerDocument[], docType: DocType) {
   return documents.filter((d) => d.doc_type === docType);
 }
 
 function StepUploader({
-  manufacturerId,
+  sellerId,
   docType,
   documents,
   onChange,
 }: {
-  manufacturerId: string;
+  sellerId: string;
   docType: DocType;
-  documents: ManufacturerDocument[];
+  documents: SellerDocument[];
   onChange: () => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -88,10 +84,10 @@ function StepUploader({
 
     const supabase = createClient();
     const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${manufacturerId}/${docType}/${Date.now()}-${safeName}`;
+    const path = `${sellerId}/${docType}/${Date.now()}-${safeName}`;
 
     const { error: uploadError } = await supabase.storage
-      .from("manufacturer-documents")
+      .from("seller-documents")
       .upload(path, file, { upsert: false });
 
     if (uploadError) {
@@ -100,14 +96,12 @@ function StepUploader({
       return;
     }
 
-    const { error: insertError } = await supabase
-      .from("manufacturer_documents")
-      .insert({
-        manufacturer_id: manufacturerId,
-        doc_type: docType,
-        file_path: path,
-        file_name: file.name,
-      });
+    const { error: insertError } = await supabase.from("seller_documents").insert({
+      seller_id: sellerId,
+      doc_type: docType,
+      file_path: path,
+      file_name: file.name,
+    });
 
     if (insertError) {
       setStatus("error");
@@ -120,11 +114,11 @@ function StepUploader({
     onChange();
   }
 
-  async function handleDelete(doc: ManufacturerDocument) {
+  async function handleDelete(doc: SellerDocument) {
     setPendingDeleteId(doc.id);
     const supabase = createClient();
-    await supabase.storage.from("manufacturer-documents").remove([doc.file_path]);
-    await supabase.from("manufacturer_documents").delete().eq("id", doc.id);
+    await supabase.storage.from("seller-documents").remove([doc.file_path]);
+    await supabase.from("seller_documents").delete().eq("id", doc.id);
     setPendingDeleteId(null);
     onChange();
   }
@@ -186,12 +180,12 @@ function StepUploader({
 }
 
 export function DocumentUploadWizard({
-  manufacturerId,
+  sellerId,
   initialDocuments,
   verificationStatus,
 }: {
-  manufacturerId: string;
-  initialDocuments: ManufacturerDocument[];
+  sellerId: string;
+  initialDocuments: SellerDocument[];
   verificationStatus: VerificationStatus;
 }) {
   const router = useRouter();
@@ -249,7 +243,7 @@ export function DocumentUploadWizard({
           </p>
 
           <StepUploader
-            manufacturerId={manufacturerId}
+            sellerId={sellerId}
             docType={STEPS[stepIndex].docType}
             documents={documents}
             onChange={() => {

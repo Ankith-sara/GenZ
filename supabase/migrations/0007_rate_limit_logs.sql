@@ -15,12 +15,12 @@ CREATE TABLE IF NOT EXISTS public.rate_limit_logs (
 -- Enable RLS
 ALTER TABLE public.rate_limit_logs ENABLE ROW LEVEL SECURITY;
 
--- Allow inserts from any client (public/anon) so rate attempts can be recorded
+DROP POLICY IF EXISTS "Anyone can insert rate limit logs" ON public.rate_limit_logs;
 CREATE POLICY "Anyone can insert rate limit logs"
   ON public.rate_limit_logs FOR INSERT
   WITH CHECK (true);
 
--- Allow reading logs for verification checks
+DROP POLICY IF EXISTS "Anyone can read rate limit logs" ON public.rate_limit_logs;
 CREATE POLICY "Anyone can read rate limit logs"
   ON public.rate_limit_logs FOR SELECT
   USING (true);

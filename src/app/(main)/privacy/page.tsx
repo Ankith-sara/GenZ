@@ -1,4 +1,4 @@
-import { Lock, Sparkles } from "lucide-react";
+import { Lock } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
@@ -9,15 +9,15 @@ export const metadata = {
 const SECTIONS = [
   {
     title: "1. Information We Collect",
-    body: `We collect information you provide directly to us — such as your name, official email address, phone number, shipping address, and (for registered manufacturers) business entity details, GSTIN, and factory verification documents. When you sign in using third-party services like Google OAuth, we receive basic authentication profile data (your name, email address, and profile photo URL) provided by Google.`,
+    body: `We collect information you provide directly to us — such as your name, official email address, phone number, shipping address, and (for registered sellers) business entity details, GSTIN, and factory verification documents. When you sign in using third-party services like Google OAuth, we receive basic authentication profile data (your name, email address, and profile photo URL) provided by Google.`,
   },
   {
     title: "2. How We Use Your Information",
-    body: `We use your information to operate your account, process and route buyer-manufacturer orders, conduct manufacturer verification, send transactional notifications, and ensure platform security. Google OAuth data is strictly used for account authentication and user identity management. We do not sell your personal data or Google user data to third parties.`,
+    body: `We use your information to operate your account, process and route buyer-seller orders, conduct seller verification, send transactional notifications, and ensure platform security. Google OAuth data is strictly used for account authentication and user identity management. We do not sell your personal data or Google user data to third parties.`,
   },
   {
     title: "3. Information Sharing with Buyers & Sellers",
-    body: `To facilitate transactions, necessary contact and fulfillment details are shared between the buyer and the verified manufacturer involved in that specific order. Sellers only receive the information required to manufacture and deliver your order. We do not share your account credentials or full profile data with unrelated sellers.`,
+    body: `To facilitate transactions, necessary contact and fulfillment details are shared between the buyer and the verified seller involved in that specific order. Sellers only receive the information required to manufacture and deliver your order. We do not share your account credentials or full profile data with unrelated sellers.`,
   },
   {
     title: "4. Infrastructure & Third-Party Providers",

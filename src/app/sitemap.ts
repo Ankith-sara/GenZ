@@ -54,15 +54,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const supabase = await createClient();
 
-    // Fetch verified manufacturers
-    const { data: manufacturers } = await supabase
-      .from("manufacturer_profiles")
+    // Fetch verified sellers
+    const { data: sellers } = await supabase
+      .from("seller_profiles")
       .select("id, updated_at")
       .eq("status", "verified")
       .limit(100);
 
-    const manufacturerUrls: MetadataRoute.Sitemap = (manufacturers || []).map((m) => ({
-      url: `${baseUrl}/manufacturers/${m.id}`,
+    const sellerUrls: MetadataRoute.Sitemap = (sellers || []).map((m) => ({
+      url: `${baseUrl}/sellers/${m.id}`,
       lastModified: m.updated_at ? new Date(m.updated_at) : new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
@@ -81,7 +81,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     }));
 
-    return [...staticPages, ...manufacturerUrls, ...productUrls];
+    return [...staticPages, ...sellerUrls, ...productUrls];
   } catch (error) {
     console.error("Failed to generate sitemap URLs:", error);
     return staticPages;

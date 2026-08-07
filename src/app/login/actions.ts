@@ -303,8 +303,8 @@ export async function signupUser(formData: {
         full_name: validation.data.fullName,
       });
 
-      if (validation.data.role === "manufacturer") {
-        await supabase.from("manufacturer_profiles").upsert({
+      if (validation.data.role === "seller") {
+        await supabase.from("seller_profiles").upsert({
           id: userId,
           business_name: validation.data.fullName + "'s Business",
           gst_number: "PENDING",
@@ -373,8 +373,7 @@ export async function verifyOtpSignup(email: string, token: string) {
   // Ensure profile row exists in DB now that user is verified
   if (data?.user) {
     const user = data.user;
-    const role =
-      (user.user_metadata?.role as "buyer" | "manufacturer" | "admin") || "buyer";
+    const role = (user.user_metadata?.role as "buyer" | "seller" | "admin") || "buyer";
     const fullName = user.user_metadata?.full_name || null;
 
     const { data: existingProfile } = await supabase
@@ -390,8 +389,8 @@ export async function verifyOtpSignup(email: string, token: string) {
         full_name: fullName,
       });
 
-      if (role === "manufacturer") {
-        await supabase.from("manufacturer_profiles").insert({
+      if (role === "seller") {
+        await supabase.from("seller_profiles").insert({
           id: user.id,
           business_name: user.user_metadata?.business_name || "Unnamed Business",
           gst_number: user.user_metadata?.gst_number || "PENDING",

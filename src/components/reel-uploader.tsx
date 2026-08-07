@@ -11,10 +11,10 @@ import { validateFileContent } from "@/lib/file-validation";
 
 export function ReelUploader({
   productId,
-  manufacturerId,
+  sellerId,
 }: {
   productId: string;
-  manufacturerId: string;
+  sellerId: string;
 }) {
   const router = useRouter();
   const videoRef = useRef<HTMLInputElement>(null);
@@ -57,7 +57,7 @@ export function ReelUploader({
     const supabase = createClient();
     const stamp = Date.now();
     const safeVideoName = video.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const videoPath = `${manufacturerId}/products/${productId}/reels/${stamp}-${safeVideoName}`;
+    const videoPath = `${sellerId}/products/${productId}/reels/${stamp}-${safeVideoName}`;
 
     const { error: videoError } = await supabase.storage
       .from("product-media")
@@ -72,7 +72,7 @@ export function ReelUploader({
     let thumbnailPath: string | null = null;
     if (thumb) {
       const safeThumbName = thumb.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      thumbnailPath = `${manufacturerId}/products/${productId}/reels/${stamp}-thumb-${safeThumbName}`;
+      thumbnailPath = `${sellerId}/products/${productId}/reels/${stamp}-thumb-${safeThumbName}`;
       const { error: thumbError } = await supabase.storage
         .from("product-media")
         .upload(thumbnailPath, thumb, { upsert: false });
@@ -85,7 +85,7 @@ export function ReelUploader({
 
     const { error: insertError } = await supabase.from("reels").insert({
       product_id: productId,
-      manufacturer_id: manufacturerId,
+      seller_id: sellerId,
       video_path: videoPath,
       thumbnail_path: thumbnailPath,
       caption: captionRef.current?.value.trim() || null,

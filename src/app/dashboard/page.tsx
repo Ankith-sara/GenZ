@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { getUserAndProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { getUserAndProfile } from "@/lib/auth";
 
 export default async function DashboardPage() {
   const session = await getUserAndProfile();
@@ -12,25 +12,26 @@ export default async function DashboardPage() {
 
   if (role === "admin") {
     redirect("/admin/dashboard");
-  } else if (role === "manufacturer") {
+  } else if (role === "seller") {
     const supabase = await createClient();
 
-    // Check if manufacturer profile already exists
-    const { data: manufacturer } = await supabase
-      .from("manufacturer_profiles")
+    // Check if seller profile already exists
+    const { data: seller } = await supabase
+      .from("seller_profiles")
       .select("*")
       .eq("id", session.userId)
       .maybeSingle();
 
-    if (!manufacturer) {
-      // Profile does not exist yet. Let's read it from auth user raw_user_meta_data!
+    if (!seller) {
+      console.log(
+        `[auth] Auto-creating missing seller_profile for ${session.user.email}`
+      );
       const {
         data: { user },
       } = await supabase.auth.getUser();
       const meta = user?.user_metadata;
 
-      if (meta && meta.role === "manufacturer") {
-        // Insert a new profile using the metadata stored during signup
+      if (meta && meta.role === "seller") {
         const businessName =
           meta.business_name || "Factory " + (meta.full_name || user.email);
         const gstNumber = meta.gst_number || meta.pan_number || "PENDING";
@@ -42,10 +43,9 @@ export default async function DashboardPage() {
           ? Number(meta.established_year)
           : null;
 
-        // Save everything else (the entire metadata object) in the description column
         const descriptionJson = JSON.stringify(meta);
 
-        await supabase.from("manufacturer_profiles").insert({
+        await supabase.from("seller_profiles").insert({
           id: session.userId,
           business_name: businessName,
           gst_number: gstNumber,
@@ -55,22 +55,20 @@ export default async function DashboardPage() {
           pincode: pincode || null,
           established_year: establishedYear,
           description: descriptionJson,
-          status: "verified", // Auto set to verified or allowed
+          status: "verified",
         });
       } else {
-        // Fallback placeholder profile
-        await supabase.from("manufacturer_profiles").insert({
+        await supabase.from("seller_profiles").insert({
           id: session.userId,
           business_name: "Unnamed Factory",
           gst_number: "PENDING",
           status: "verified",
         });
       }
-
-      redirect("/dashboard/manufacturer");
-    } else {
-      redirect("/dashboard/manufacturer");
     }
+
+    // Always redirect directly to /dashboard/seller to avoid rewrite loops
+    redirect("/dashboard/seller");
   } else {
     redirect("/profile");
   }

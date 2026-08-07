@@ -90,7 +90,7 @@ export function DiscoverFeed({
         <p className="text-smoke font-graphik mt-3 max-w-md text-sm leading-relaxed">
           {filters.q ? (
             <>
-              We couldn&apos;t find any products or manufacturers matching &ldquo;
+              We couldn&apos;t find any products or sellers matching &ldquo;
               <span className="text-ink-black font-semibold">{filters.q}</span>
               &rdquo;.
             </>

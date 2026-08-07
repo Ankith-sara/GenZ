@@ -1,23 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { signupUser, verifyOtpSignup } from "@/app/login/actions";
 import type { Role } from "@/types/database";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
 
 const SIGNUP_ROLES: { value: Role; label: string; description: string }[] = [
   {
     value: "buyer",
-    label: "User",
-    description: "I want to discover and buy trusted Indian products.",
+    label: "Buyer / Consumer",
+    description: "Discover and purchase directly from verified makers.",
   },
   {
-    value: "manufacturer",
-    label: "Manufacturer",
-    description: "I run a factory or brand and want to get verified.",
+    value: "seller",
+    label: "Seller / Manufacturer",
+    description: "Showcase products and connect with regional buyers.",
   },
 ];
 
@@ -97,11 +94,10 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
         setError(res.error);
         setIsPending(false);
       } else {
-        // Successfully verified! Redirect instantly
         const target =
           role === "admin"
             ? "/admin/dashboard"
-            : role === "manufacturer"
+            : role === "seller"
               ? "/dashboard/pending-verification"
               : "/profile";
         window.location.href = target;
@@ -115,56 +111,73 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
 
   if (step === "otp") {
     return (
-      <form onSubmit={handleOtpSubmit} className="animate-fade-in text-left">
+      <form onSubmit={handleOtpSubmit} className="w-full text-left">
         <div className="mb-6">
-          <h3 className="mb-1.5 font-serif text-xl font-normal text-black">
+          <h3 className="font-graphik mb-1 text-lg font-semibold text-black">
             Verify Your Email
           </h3>
-          <p className="text-smoke text-xs leading-relaxed">
-            We have sent a 6-digit verification code to{" "}
-            <strong className="font-mono font-semibold text-black">{email}</strong>.
-            Please enter it below to activate your account.
+          <p className="font-graphik text-xs text-[#73736E]">
+            We sent a 6-digit code to{" "}
+            <strong className="font-mono text-black">{email}</strong>
           </p>
         </div>
 
         <div className="mb-4">
-          <Label htmlFor="otp">6-Digit Verification Code</Label>
-          <Input
+          <label
+            htmlFor="otp"
+            className="font-graphik mb-1.5 block text-xs font-medium text-[#262626]"
+          >
+            Security Code
+          </label>
+          <input
             id="otp"
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
             maxLength={6}
-            placeholder="e.g. 123456"
+            placeholder="• • • • • •"
             value={otpToken}
             onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ""))}
             required
-            className="border-ash h-12 rounded-none text-center font-mono text-lg tracking-widest focus-visible:ring-black"
+            className="h-12 w-full rounded-[10px] border border-[#E5E5E0] bg-white px-4 text-center font-mono text-lg tracking-widest text-black transition-all focus:border-black focus:ring-1 focus:ring-black focus:outline-none"
           />
         </div>
 
         {error && (
-          <p role="alert" className="text-destructive mt-2 mb-4 text-xs font-semibold">
+          <div
+            role="alert"
+            className="mb-4 rounded-[8px] border border-red-200 bg-red-50/80 p-3 text-xs font-medium text-red-600"
+          >
             {error}
-          </p>
+          </div>
         )}
 
-        <div className="mt-6 flex flex-col gap-3">
-          <Button
-            type="submit"
-            className="h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
-            disabled={isPending || otpToken.length < 6}
-          >
-            {isPending ? "Verifying..." : "Verify & Complete Signup"}
-          </Button>
+        <button
+          type="submit"
+          disabled={isPending || otpToken.length < 6}
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-black text-sm font-medium text-white shadow-2xs transition-all duration-200 hover:bg-neutral-800 hover:shadow-md active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin text-white" />
+              <span>Verifying Code...</span>
+            </>
+          ) : (
+            <>
+              <span>Verify & Activate Account</span>
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
+        </button>
 
+        <div className="mt-4 text-center">
           <button
             type="button"
             onClick={() => setStep("details")}
-            className="text-smoke mt-1 text-center text-xs hover:text-black hover:underline"
+            className="text-xs font-medium text-[#73736E] transition-colors hover:text-black hover:underline"
             disabled={isPending}
           >
-            Back to signup details
+            ← Back to signup details
           </button>
         </div>
       </form>
@@ -172,16 +185,16 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
   }
 
   return (
-    <form onSubmit={handleDetailsSubmit} noValidate className="text-left">
+    <form onSubmit={handleDetailsSubmit} noValidate className="w-full text-left">
       {!defaultRole && (
         <fieldset className="mb-5 border-0 p-0">
-          <legend className="text-muted-foreground mb-2.5 text-xs">
-            I am signing up as a...
+          <legend className="font-graphik mb-2 block text-xs font-medium text-[#262626]">
+            Account Type
           </legend>
           <div
             role="group"
             aria-label="Select account type"
-            className="grid grid-cols-1 gap-2 sm:grid-cols-2"
+            className="grid grid-cols-1 gap-2.5 sm:grid-cols-2"
           >
             {SIGNUP_ROLES.map((r) => (
               <button
@@ -189,16 +202,18 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
                 type="button"
                 aria-pressed={role === r.value}
                 onClick={() => setRole(r.value)}
-                className={`rounded-none border p-3.5 text-left text-sm transition-colors ${
+                className={`rounded-[10px] border p-3 text-left transition-all duration-200 ${
                   role === r.value
-                    ? "border-black bg-black text-white"
-                    : "border-ash bg-background text-foreground hover:border-black"
+                    ? "border-black bg-black text-white shadow-2xs"
+                    : "border-[#E5E5E0] bg-white text-[#262626] hover:border-[#D4D4CE]"
                 }`}
               >
-                <span className="block font-medium">{r.label}</span>
+                <span className="font-graphik block text-xs font-semibold">
+                  {r.label}
+                </span>
                 <span
-                  className={`mt-1 block text-xs ${
-                    role === r.value ? "text-white/70" : "text-muted-foreground"
+                  className={`font-graphik mt-0.5 block text-[11px] ${
+                    role === r.value ? "text-white/70" : "text-[#73736E]"
                   }`}
                 >
                   {r.description}
@@ -209,11 +224,19 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
         </fieldset>
       )}
 
+      {/* Full Name */}
       <div className="mb-4">
-        <Label htmlFor="fullName">Full name</Label>
-        <Input
+        <label
+          htmlFor="fullName"
+          className="font-graphik mb-1.5 block text-xs font-medium text-[#262626]"
+        >
+          Full Name
+        </label>
+        <input
           id="fullName"
+          type="text"
           autoComplete="name"
+          placeholder="e.g. Sara Sharma"
           value={fullName}
           onChange={(e) => {
             setFullName(e.target.value);
@@ -221,23 +244,30 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           }}
           onBlur={() => handleBlur("fullName")}
           required
-          className={`border-ash rounded-none focus-visible:ring-black ${
-            nameError ? "border-red-500 ring-1 ring-red-500" : ""
+          className={`font-graphik h-12 w-full rounded-[10px] border bg-white px-4 text-sm text-black transition-all duration-200 placeholder:text-[#A3A39D] focus:border-black focus:ring-1 focus:ring-black focus:outline-none ${
+            nameError
+              ? "border-red-500 bg-red-50/20"
+              : "border-[#E5E5E0] hover:border-[#D4D4CE]"
           }`}
         />
         {nameError && (
-          <p className="animate-fade-in mt-1 text-xs font-medium text-red-600">
-            {nameError}
-          </p>
+          <p className="mt-1 text-xs font-medium text-red-600">{nameError}</p>
         )}
       </div>
 
+      {/* Email */}
       <div className="mb-4">
-        <Label htmlFor="email">Email</Label>
-        <Input
+        <label
+          htmlFor="email"
+          className="font-graphik mb-1.5 block text-xs font-medium text-[#262626]"
+        >
+          Email Address
+        </label>
+        <input
           id="email"
           type="email"
           autoComplete="email"
+          placeholder="name@company.com"
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -245,24 +275,31 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           }}
           onBlur={() => handleBlur("email")}
           required
-          className={`border-ash rounded-none focus-visible:ring-black ${
-            emailError ? "border-red-500 ring-1 ring-red-500" : ""
+          className={`font-graphik h-12 w-full rounded-[10px] border bg-white px-4 text-sm text-black transition-all duration-200 placeholder:text-[#A3A39D] focus:border-black focus:ring-1 focus:ring-black focus:outline-none ${
+            emailError
+              ? "border-red-500 bg-red-50/20"
+              : "border-[#E5E5E0] hover:border-[#D4D4CE]"
           }`}
         />
         {emailError && (
-          <p className="animate-fade-in mt-1 text-xs font-medium text-red-600">
-            {emailError}
-          </p>
+          <p className="mt-1 text-xs font-medium text-red-600">{emailError}</p>
         )}
       </div>
 
+      {/* Password */}
       <div className="mb-2">
-        <Label htmlFor="password">Password</Label>
+        <label
+          htmlFor="password"
+          className="font-graphik mb-1.5 block text-xs font-medium text-[#262626]"
+        >
+          Password
+        </label>
         <div className="relative">
-          <Input
+          <input
             id="password"
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
+            placeholder="Minimum 8 characters"
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
@@ -272,14 +309,16 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
             onBlur={() => handleBlur("password")}
             minLength={8}
             required
-            className={`border-ash rounded-none pr-10 focus-visible:ring-black ${
-              passwordError ? "border-red-500 ring-1 ring-red-500" : ""
+            className={`font-graphik h-12 w-full rounded-[10px] border bg-white pr-11 pl-4 text-sm text-black transition-all duration-200 placeholder:text-[#A3A39D] focus:border-black focus:ring-1 focus:ring-black focus:outline-none ${
+              passwordError
+                ? "border-red-500 bg-red-50/20"
+                : "border-[#E5E5E0] hover:border-[#D4D4CE]"
             }`}
           />
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
-            className="text-smoke absolute top-1/2 right-3 -translate-y-1/2 hover:text-black focus:outline-none"
+            className="absolute top-1/2 right-3.5 -translate-y-1/2 text-[#A3A39D] transition-colors hover:text-black focus:outline-none"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
@@ -290,27 +329,40 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           </button>
         </div>
         {passwordError ? (
-          <p className="animate-fade-in mt-1 text-xs font-medium text-red-600">
-            {passwordError}
-          </p>
+          <p className="mt-1 text-xs font-medium text-red-600">{passwordError}</p>
         ) : (
-          <p className="text-muted-foreground mt-1.5 text-xs">At least 8 characters.</p>
+          <p className="mt-1 text-[11px] text-[#A3A39D]">
+            At least 8 characters required.
+          </p>
         )}
       </div>
 
       {error && (
-        <p role="alert" className="text-destructive mt-2 mb-4 text-xs font-semibold">
+        <div
+          role="alert"
+          className="mt-3 mb-1 rounded-[8px] border border-red-200 bg-red-50/80 p-3 text-xs font-medium text-red-600"
+        >
           {error}
-        </p>
+        </div>
       )}
 
-      <Button
+      <button
         type="submit"
-        className="mt-6 h-11 w-full rounded-none bg-black font-medium tracking-wider text-white uppercase hover:bg-black/90"
         disabled={isPending || !!nameError || !!emailError || !!passwordError}
+        className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-black text-sm font-medium text-white shadow-2xs transition-all duration-200 hover:bg-neutral-800 hover:shadow-md active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isPending ? "Creating account…" : "Create account"}
-      </Button>
+        {isPending ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin text-white" />
+            <span>Creating account…</span>
+          </>
+        ) : (
+          <>
+            <span>Create Account</span>
+            <ArrowRight className="h-4 w-4" />
+          </>
+        )}
+      </button>
     </form>
   );
 }

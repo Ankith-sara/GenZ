@@ -11,11 +11,11 @@ import { productMediaUrl } from "@/lib/products";
 
 export function ProductCoverUploader({
   productId,
-  manufacturerId,
+  sellerId,
   currentPath,
 }: {
   productId: string;
-  manufacturerId: string;
+  sellerId: string;
   currentPath: string | null;
 }) {
   const router = useRouter();
@@ -40,7 +40,7 @@ export function ProductCoverUploader({
 
     const supabase = createClient();
     const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${manufacturerId}/products/${productId}/cover-${Date.now()}-${safeName}`;
+    const path = `${sellerId}/products/${productId}/cover-${Date.now()}-${safeName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("product-media")

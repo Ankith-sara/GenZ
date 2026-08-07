@@ -10,7 +10,7 @@ async function ensureProfileCreated(
     } = await supabase.auth.getUser();
     if (user) {
       const meta = user.user_metadata ?? {};
-      const role = (meta.role as "buyer" | "manufacturer" | "admin") || "buyer";
+      const role = (meta.role as "buyer" | "seller" | "admin") || "buyer";
       const fullName = meta.full_name || meta.fullName || null;
 
       await supabase.from("profiles").upsert({
@@ -23,8 +23,8 @@ async function ensureProfileCreated(
         pincode: meta.pincode || null,
       });
 
-      if (role === "manufacturer") {
-        await supabase.from("manufacturer_profiles").upsert({
+      if (role === "seller") {
+        await supabase.from("seller_profiles").upsert({
           id: user.id,
           business_name: meta.business_name || meta.full_name || "Unnamed Business",
           gst_number: meta.gst_number || "PENDING",
@@ -85,7 +85,7 @@ export async function GET(request: Request) {
       next = "/admin/dashboard";
     } else if (!next) {
       next =
-        currentRole === "manufacturer"
+        currentRole === "seller"
           ? "/dashboard"
           : currentRole === "buyer"
             ? "/profile"

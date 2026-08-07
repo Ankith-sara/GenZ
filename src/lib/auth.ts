@@ -90,19 +90,21 @@ export async function getUserAndProfile(): Promise<{
     }
   }
 
-  // If user is a manufacturer, ensure a manufacturer_profiles row exists
-  if (resolvedProfile?.role === "manufacturer") {
+  if (resolvedProfile && (resolvedProfile.role as string) === "manufacturer") {
+    resolvedProfile.role = "seller";
+  }
+
+  // If user is a seller, ensure a seller_profiles row exists
+  if (resolvedProfile?.role === "seller") {
     try {
       const { data: mfg } = await supabase
-        .from("manufacturer_profiles")
+        .from("seller_profiles")
         .select("id")
         .eq("id", user.id)
         .maybeSingle();
 
       if (!mfg) {
-        console.log(
-          `[auth] Auto-creating missing manufacturer_profile for ${user.email}`
-        );
+        console.log(`[auth] Auto-creating missing seller_profile for ${user.email}`);
         const bName =
           user.user_metadata?.business_name ||
           user.user_metadata?.full_name ||
@@ -113,7 +115,7 @@ export async function getUserAndProfile(): Promise<{
         const pincode = user.user_metadata?.pincode || null;
         const descriptionStr = JSON.stringify(user.user_metadata || {});
 
-        await supabase.from("manufacturer_profiles").upsert({
+        await supabase.from("seller_profiles").upsert({
           id: user.id,
           business_name: bName,
           gst_number: gst,
@@ -126,7 +128,7 @@ export async function getUserAndProfile(): Promise<{
         });
       }
     } catch (mfgErr) {
-      console.error("[auth] Error auto-creating manufacturer_profile:", mfgErr);
+      console.error("[auth] Error auto-creating seller_profile:", mfgErr);
     }
   }
 

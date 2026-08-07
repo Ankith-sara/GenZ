@@ -9,7 +9,7 @@ import { submitContactMessage } from "@/app/actions/public-actions";
 
 const REASONS = [
   "General",
-  "Manufacturer partnership",
+  "Seller partnership",
   "Investor / Incubator",
   "Press",
 ] as const;

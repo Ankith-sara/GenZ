@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/require-role";
-import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge } from "@/components/admin/ui/status-badge";
+import { EmptyState } from "@/components/admin/ui/empty-state";
+import { Mail } from "lucide-react";
 
 export default async function AdminContactPage() {
   await requireRole("admin");
@@ -11,46 +14,55 @@ export default async function AdminContactPage() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  return (
-    <div className="border-ash space-y-6 rounded-3xl border bg-white p-4 shadow-xs sm:p-6">
-      <div>
-        <h2 className="font-nantes text-ink-black text-xl font-bold sm:text-2xl">
-          General Contact Form Submissions
-        </h2>
-        <p className="font-graphik text-smoke text-sm">
-          Submissions received via the website Contact Us page.
-        </p>
-      </div>
+  const list = contactMessages ?? [];
 
-      {(contactMessages ?? []).length === 0 ? (
-        <p className="font-graphik text-smoke text-sm">No contact messages received.</p>
+  return (
+    <div className="space-y-6 select-none">
+      <PageHeader
+        title="Contact Form Communications"
+        description="Submissions received via the platform Contact Us form."
+        breadcrumbs={[
+          { label: "Admin", href: "/admin/dashboard" },
+          { label: "Contact Messages" },
+        ]}
+      />
+
+      {list.length === 0 ? (
+        <EmptyState
+          icon={<Mail className="h-7 w-7 text-[#73736E]" />}
+          title="No Contact Messages"
+          description="No inquiry form submissions received yet."
+        />
       ) : (
-        <div className="space-y-4">
-          {(contactMessages ?? []).map((msg) => (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {list.map((msg) => (
             <div
               key={msg.id}
-              className="border-ash space-y-3 rounded-2xl border bg-[#FAF7F0] p-4 shadow-xs sm:p-5"
+              className="space-y-3 rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-2xs transition-all hover:border-black/30"
             >
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start justify-between gap-2 border-b border-[#F0F0EC] pb-3">
                 <div>
-                  <span className="font-graphik text-ink-black block text-sm font-bold">
+                  <h4 className="font-graphik text-sm font-bold text-[#1A1A18]">
                     {msg.name}
-                  </span>
-                  <span className="text-smoke font-mono text-xs break-all">
-                    {msg.email}
-                  </span>
+                  </h4>
+                  <p className="font-mono text-xs text-[#73736E]">{msg.email}</p>
                 </div>
-                {msg.reason && (
-                  <Badge className="w-fit border-blue-200 bg-blue-100 text-blue-900">
-                    {msg.reason}
-                  </Badge>
-                )}
+                {msg.reason && <StatusBadge status="processing" label={msg.reason} />}
               </div>
-              <p className="font-graphik text-smoke border-ash rounded-xl border bg-white p-4 text-sm italic">
+
+              <div className="font-graphik rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-3.5 text-xs leading-relaxed text-[#1A1A18]">
                 &ldquo;{msg.message}&rdquo;
-              </p>
-              <div className="text-smoke flex items-center justify-between pt-1 font-mono text-xs">
-                <span>{new Date(msg.created_at).toLocaleDateString()}</span>
+              </div>
+
+              <div className="flex items-center justify-between pt-1 font-mono text-[10px] text-[#8C8C85]">
+                <span>Received ID: #{msg.id.slice(0, 8)}</span>
+                <span>
+                  {new Date(msg.created_at).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "2-digit",
+                    year: "numeric",
+                  })}
+                </span>
               </div>
             </div>
           ))}

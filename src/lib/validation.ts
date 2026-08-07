@@ -12,7 +12,7 @@ export const passwordSchema = z
   .max(72)
   .trim();
 export const fullNameSchema = z.string().min(1, "Name is required").max(100).trim();
-export const roleSchema = z.enum(["buyer", "manufacturer", "admin"]);
+export const roleSchema = z.enum(["buyer", "seller", "admin"]);
 export const tokenSchema = z
   .string()
   .min(6, "Verification code must be at least 6 characters")
@@ -36,11 +36,11 @@ export const signupSchema = z.object({
   role: roleSchema,
 });
 
-export const manufacturerSignupSchema = z.object({
+export const sellerSignupSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   fullName: fullNameSchema,
-  businessType: z.string().max(100).trim().default("manufacturer"),
+  businessType: z.string().max(100).trim().default("seller"),
 });
 
 // --- Public Form Schemas ---
@@ -60,12 +60,7 @@ export const waitlistSchema = z.object({
 export const contactSchema = z.object({
   name: fullNameSchema,
   email: emailSchema,
-  reason: z.enum([
-    "General",
-    "Manufacturer partnership",
-    "Investor / Incubator",
-    "Press",
-  ]),
+  reason: z.enum(["General", "Seller partnership", "Investor / Incubator", "Press"]),
   message: z
     .string()
     .min(1, "Message is required")
@@ -142,7 +137,7 @@ export const addressSchema = z.object({
 
 export const addressesSchema = z.array(addressSchema);
 
-// --- Manufacturer Verification Profile Schemas ---
+// --- Seller Verification Profile Schemas ---
 export const gstSchema = z
   .string()
   .regex(
@@ -151,7 +146,7 @@ export const gstSchema = z
   )
   .trim();
 
-export const manufacturerProfileSchema = z.object({
+export const sellerProfileSchema = z.object({
   business_name: z.string().min(1, "Business name is required").max(200).trim(),
   gst_number: gstSchema,
   factory_address: z.string().max(500).trim().nullable().optional(),

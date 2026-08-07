@@ -1,4 +1,4 @@
-export type Role = "buyer" | "manufacturer" | "admin";
+export type Role = "buyer" | "seller" | "admin";
 
 export type VerificationStatus = "not_submitted" | "pending" | "verified" | "rejected";
 
@@ -38,7 +38,7 @@ export type WaitlistEntry = {
   created_at: string;
 };
 
-export type ManufacturerProfile = {
+export type SellerProfile = {
   id: string;
   business_name: string;
   gst_number: string;
@@ -57,9 +57,9 @@ export type ManufacturerProfile = {
   updated_at: string;
 };
 
-export type ManufacturerDocument = {
+export type SellerDocument = {
   id: string;
-  manufacturer_id: string;
+  seller_id: string;
   doc_type: DocType;
   file_path: string;
   file_name: string;
@@ -68,7 +68,7 @@ export type ManufacturerDocument = {
 
 export type Product = {
   id: string;
-  manufacturer_id: string;
+  seller_id: string;
   name: string;
   category: string;
   age_group: string | null;
@@ -84,7 +84,7 @@ export type Product = {
 export type ProductVariant = {
   id: string;
   product_id: string;
-  manufacturer_id: string;
+  seller_id: string;
   variant_name: string;
   variant_value: string;
   price_inr: number | null;
@@ -95,7 +95,7 @@ export type ProductVariant = {
 export type ProductImage = {
   id: string;
   product_id: string;
-  manufacturer_id: string;
+  seller_id: string;
   image_path: string;
   position: number;
   created_at: string;
@@ -104,7 +104,7 @@ export type ProductImage = {
 export type Inquiry = {
   id: string;
   product_id: string;
-  manufacturer_id: string;
+  seller_id: string;
   buyer_id: string | null;
   name: string;
   email: string;
@@ -132,7 +132,7 @@ export type NewsletterSubscriber = {
 export type Reel = {
   id: string;
   product_id: string;
-  manufacturer_id: string;
+  seller_id: string;
   video_path: string;
   thumbnail_path: string | null;
   caption: string | null;
@@ -149,7 +149,7 @@ export type PageView = {
 
 export type ApplicationStatus = "pending" | "approved" | "rejected";
 
-export type ManufacturerApplication = {
+export type SellerApplication = {
   id: string;
   email: string;
   full_name: string;
@@ -164,7 +164,7 @@ export type ManufacturerApplication = {
   created_at: string;
 };
 
-export type ManufacturerPublicProfile = {
+export type SellerPublicProfile = {
   id: string;
   business_name: string;
   city: string | null;
@@ -199,25 +199,25 @@ export type Database = {
         Update: Partial<WaitlistEntry>;
         Relationships: [];
       };
-      manufacturer_profiles: {
-        Row: ManufacturerProfile;
-        Insert: Partial<ManufacturerProfile> & {
+      seller_profiles: {
+        Row: SellerProfile;
+        Insert: Partial<SellerProfile> & {
           id: string;
           business_name: string;
           gst_number: string;
         };
-        Update: Partial<ManufacturerProfile>;
+        Update: Partial<SellerProfile>;
         Relationships: [];
       };
-      manufacturer_documents: {
-        Row: ManufacturerDocument;
-        Insert: Omit<ManufacturerDocument, "id" | "uploaded_at">;
-        Update: Partial<ManufacturerDocument>;
+      seller_documents: {
+        Row: SellerDocument;
+        Insert: Omit<SellerDocument, "id" | "uploaded_at">;
+        Update: Partial<SellerDocument>;
         Relationships: [];
       };
       products: {
         Row: Product;
-        Insert: Partial<Product> & { manufacturer_id: string; name: string };
+        Insert: Partial<Product> & { seller_id: string; name: string };
         Update: Partial<Product>;
         Relationships: [];
       };
@@ -243,7 +243,7 @@ export type Database = {
         Row: Inquiry;
         Insert: Partial<Inquiry> & {
           product_id: string;
-          manufacturer_id: string;
+          seller_id: string;
           name: string;
           email: string;
           message: string;
@@ -273,19 +273,19 @@ export type Database = {
         Update: Partial<PageView>;
         Relationships: [];
       };
-      manufacturer_applications: {
-        Row: ManufacturerApplication;
+      seller_applications: {
+        Row: SellerApplication;
         Insert: Omit<
-          ManufacturerApplication,
+          SellerApplication,
           "id" | "created_at" | "reviewed_at" | "reviewed_by" | "rejection_reason"
         > & { status?: ApplicationStatus; rejection_reason?: string | null };
-        Update: Partial<ManufacturerApplication>;
+        Update: Partial<SellerApplication>;
         Relationships: [];
       };
     };
     Views: {
-      manufacturer_public_profiles: {
-        Row: ManufacturerPublicProfile;
+      seller_public_profiles: {
+        Row: SellerPublicProfile;
         Relationships: [];
       };
     };

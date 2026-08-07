@@ -5,24 +5,24 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { DOC_TYPE_LABEL } from "@/lib/verification";
-import type { ManufacturerDocument } from "@/types/database";
+import type { SellerDocument } from "@/types/database";
 
 export function DocumentList({
   documents,
   canManage,
 }: {
-  documents: ManufacturerDocument[];
+  documents: SellerDocument[];
   canManage: boolean;
 }) {
   const router = useRouter();
   const [pendingId, setPendingId] = useState<string | null>(null);
 
-  async function handleDelete(doc: ManufacturerDocument) {
+  async function handleDelete(doc: SellerDocument) {
     setPendingId(doc.id);
     const supabase = createClient();
 
-    await supabase.storage.from("manufacturer-documents").remove([doc.file_path]);
-    await supabase.from("manufacturer_documents").delete().eq("id", doc.id);
+    await supabase.storage.from("seller-documents").remove([doc.file_path]);
+    await supabase.from("seller_documents").delete().eq("id", doc.id);
 
     setPendingId(null);
     router.refresh();

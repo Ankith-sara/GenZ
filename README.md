@@ -1,6 +1,6 @@
 # GenZ — Trust Commerce & Manufacturing Platform
 
-A modern B2B & B2C marketplace connecting verified Indian toy manufacturers directly with buyers and retail businesses. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**, **shadcn/ui**, and **Supabase**.
+A modern B2B & B2C marketplace connecting verified Indian toy sellers directly with buyers and retail businesses. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**, **shadcn/ui**, and **Supabase**.
 
 ---
 
@@ -8,29 +8,29 @@ A modern B2B & B2C marketplace connecting verified Indian toy manufacturers dire
 
 ### 🔐 Authentication & Role-Based Access Control (RBAC)
 
-- **Role System**: Built-in support for `buyer`, `manufacturer`, and `admin` roles stored in Postgres enums and enforced via Supabase Row Level Security (RLS).
+- **Role System**: Built-in support for `buyer`, `seller`, and `admin` roles stored in Postgres enums and enforced via Supabase Row Level Security (RLS).
 - **Multi-Method Auth**: Supports both Email + Password and Phone (OTP) authentication flows.
 - **Password Recovery**: Complete `/forgot-password` and `/reset-password` workflow with secure email tokens.
-- **Dedicated Portals**: Role-aware routing with dedicated portals for Buyers, Manufacturers (`/dashboard/manufacturer`), and Admin Teams (`/admin/dashboard`).
+- **Dedicated Portals**: Role-aware routing with dedicated portals for Buyers, Sellers (`/dashboard/seller`), and Admin Teams (`/admin/dashboard`).
 
-### 🏭 Manufacturer Onboarding & Verification Workflow
+### 🏭 Seller Onboarding & Verification Workflow
 
 - **Multi-Step Document Wizard**: Guided document submission for GST certificate, factory photos, and quality certificates.
 - **GSTIN Validation**: Enforces standard 15-character GSTIN formatting and verification checks.
-- **Private Document Vault**: Uploads are stored in a private Supabase Storage bucket (`manufacturer-documents`), accessible to admins via expiring signed URLs.
-- **Postgres Field Protection Trigger**: Database trigger (`protect_manufacturer_verification_fields`) blocks non-admin users from altering `status`, `rejection_reason`, or review timestamps directly.
+- **Private Document Vault**: Uploads are stored in a private Supabase Storage bucket (`seller-documents`), accessible to admins via expiring signed URLs.
+- **Postgres Field Protection Trigger**: Database trigger (`protect_seller_verification_fields`) blocks non-admin users from altering `status`, `rejection_reason`, or review timestamps directly.
 
 ### 🛡️ Admin Management & Verification Dashboard
 
 - **Admin Portal**: Accessible at `/admin/dashboard` (with independent admin auth at `/admin/login`).
-- **Application Review Queue**: Filter manufacturer submissions by verification status (`not_submitted`, `pending`, `verified`, `rejected`).
+- **Application Review Queue**: Filter seller submissions by verification status (`not_submitted`, `pending`, `verified`, `rejected`).
 - **Document Viewer**: Inspect secure factory credentials and certificates.
-- **Approval / Rejection Workflow**: Approve manufacturers to unlock listing capabilities or request changes with detailed rejection reasons.
+- **Approval / Rejection Workflow**: Approve sellers to unlock listing capabilities or request changes with detailed rejection reasons.
 
 ### 📦 Product Catalog, Variants & Video Reels
 
 - **Product Management**: Create, edit, and manage products with `draft`, `published`, or `archived` states.
-- **Verification Gated Publishing**: Postgres RLS policies restrict product creation to verified manufacturers (`manufacturer_profiles.status = 'verified'`).
+- **Verification Gated Publishing**: Postgres RLS policies restrict product creation to verified sellers (`seller_profiles.status = 'verified'`).
 - **Rich Media & Galleries**: Cover image uploader + multi-image gallery grid (up to 8 images per product) stored in the public `product-media` bucket.
 - **Product Variants & Materials**: Custom variants (size, color, style, stock, price overrides) and material tagging.
 - **Video Reels**: Attach vertical video showcases with thumbnails to products for immersive buyer previews.
@@ -40,12 +40,12 @@ A modern B2B & B2C marketplace connecting verified Indian toy manufacturers dire
 - **Faceted Discovery Feed**: `/discover` page featuring category filters, age-group facets, price sliders, and URL parameter sync for easy bookmarking and sharing.
 - **Infinite Scrolling Feed**: Server-renders initial listings for optimal SEO and fast initial paint, with client-side `IntersectionObserver` fetching subsequent pages from `GET /api/products`.
 - **Postgres Full-Text Search**: Powered by GIN-indexed `tsvector` and `websearch_to_tsquery` over product titles and descriptions.
-- **Manufacturer Public Showcase**: `/manufacturers/[id]` public profile displaying verified badges, factory location, established year, and published catalog via safe Postgres views (`manufacturer_public_profiles`).
+- **Seller Public Showcase**: `/sellers/[id]` public profile displaying verified badges, factory location, established year, and published catalog via safe Postgres views (`seller_public_profiles`).
 
-### 💬 Buyer-Manufacturer Inquiries & Support
+### 💬 Buyer-Seller Inquiries & Support
 
 - **Product Inquiries**: Public inquiry form on product detail pages (`/products/[id]`) supporting both logged-in buyers and guest visitors.
-- **Manufacturer Workspace**: Dedicated inquiry inbox (`/dashboard/manufacturer/inquiries`) to manage leads and update inquiry statuses (`new`, `responded`, `closed`).
+- **Seller Workspace**: Dedicated inquiry inbox (`/dashboard/seller/inquiries`) to manage leads and update inquiry statuses (`new`, `responded`, `closed`).
 - **Contact & Waitlist Systems**: Public support message form (`/contact`) and newsletter waitlist form (`/`) backed by dedicated database tables and rate limiters.
 
 ### 🔒 Security, Performance & Rate Limiting
@@ -75,10 +75,10 @@ A modern B2B & B2C marketplace connecting verified Indian toy manufacturers dire
 
 All database schemas, RLS policies, triggers, and storage buckets are managed via Supabase SQL migrations located in `supabase/migrations/`:
 
-1. **`0001_core_profiles.sql`**: Defines `app_role` enum (`buyer`, `manufacturer`, `admin`), `profiles` table, auto-profile creation trigger, and base RLS policies.
-2. **`0002_manufacturer_onboarding.sql`**: Defines `verification_status` enum, `manufacturer_profiles` table, GSTIN protection trigger, and private `manufacturer-documents` storage bucket + RLS.
-3. **`0003_products_reels.sql`**: Defines `product_status` enum, `products` table (RLS gated to verified manufacturers), `reels` table, and public `product-media` storage bucket.
-4. **`0004_inquiries.sql`**: Defines `inquiry_status` enum and `inquiries` table connecting buyers with manufacturers.
+1. **`0001_core_profiles.sql`**: Defines `app_role` enum (`buyer`, `seller`, `admin`), `profiles` table, auto-profile creation trigger, and base RLS policies.
+2. **`0002_seller_onboarding.sql`**: Defines `verification_status` enum, `seller_profiles` table, GSTIN protection trigger, and private `seller-documents` storage bucket + RLS.
+3. **`0003_products_reels.sql`**: Defines `product_status` enum, `products` table (RLS gated to verified sellers), `reels` table, and public `product-media` storage bucket.
+4. **`0004_inquiries.sql`**: Defines `inquiry_status` enum and `inquiries` table connecting buyers with sellers.
 5. **`0005_contact_messages.sql`**: Defines `contact_messages` table for general site support inquiries.
 6. **`0006_newsletter.sql`**: Defines `newsletter_subscribers` table for waitlist/newsletter signups.
 7. **`0007_rate_limit_logs.sql`**: Defines `rate_limit_logs` table for database-backed rate limiting.
@@ -96,20 +96,20 @@ genz-app/
 │   │   │   ├── page.tsx                 # Home page (Hero, featured products, waitlist)
 │   │   │   ├── discover/                # Discovery feed with infinite scroll & search
 │   │   │   ├── products/[id]/           # Product detail page, video reels & inquiry form
-│   │   │   ├── manufacturers/[id]/      # Public manufacturer profile & catalog
+│   │   │   ├── sellers/[id]/      # Public seller profile & catalog
 │   │   │   ├── about/, contact/, faqs/  # Informational & support pages
 │   │   │   ├── privacy/, terms/         # Legal pages
 │   │   │   └── cart/, wishlist/, profile/ # Buyer management views
 │   │   ├── admin/                       # Admin portal routes
 │   │   │   ├── login/, signup/          # Admin authentication
-│   │   │   └── dashboard/               # Verification queue & manufacturer detail reviews
-│   │   ├── dashboard/                   # Manufacturer dashboard routes
-│   │   │   ├── manufacturer/            # Onboarding, products, reels, inquiries
+│   │   │   └── dashboard/               # Verification queue & seller detail reviews
+│   │   ├── dashboard/                   # Seller dashboard routes
+│   │   │   ├── seller/            # Onboarding, products, reels, inquiries
 │   │   │   ├── pending-verification/    # Awaiting review status page
 │   │   │   └── account/                 # User profile & avatar management
 │   │   ├── api/                         # API endpoints (e.g. GET /api/products)
 │   │   ├── auth/                        # Confirmation & magic link handlers
-│   │   ├── login/, signup/              # Buyer & manufacturer auth routes
+│   │   ├── login/, signup/              # Buyer & seller auth routes
 │   │   ├── forgot-password/, reset-password/ # Password recovery routes
 │   │   ├── layout.tsx, globals.css      # Root layout & design tokens
 │   │   ├── sitemap.ts, robots.ts        # Dynamic SEO files
@@ -118,7 +118,7 @@ genz-app/
 │   │   ├── ui/                          # Radix / shadcn UI primitives (Button, Input, Card, etc.)
 │   │   ├── header.tsx, footer.tsx       # Navigation components
 │   │   ├── dashboard-sidebar.tsx        # Role-aware sidebar layout
-│   │   ├── document-upload-wizard.tsx   # Step-by-step manufacturer verification uploader
+│   │   ├── document-upload-wizard.tsx   # Step-by-step seller verification uploader
 │   │   ├── product-image-uploader.tsx   # Gallery & cover image uploaders
 │   │   ├── reel-uploader.tsx            # Video reel uploader
 │   │   ├── verified-badge.tsx           # Trust badge component
@@ -188,7 +188,7 @@ Under **Authentication → URL Configuration** in your Supabase dashboard:
 
 ### 5. Create an Admin Account
 
-Public registration creates `buyer` or `manufacturer` accounts. To promote a user to `admin`, execute the following in the Supabase SQL Editor:
+Public registration creates `buyer` or `seller` accounts. To promote a user to `admin`, execute the following in the Supabase SQL Editor:
 
 ```sql
 UPDATE public.profiles

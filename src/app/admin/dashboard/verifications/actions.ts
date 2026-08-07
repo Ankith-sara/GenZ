@@ -34,14 +34,14 @@ function generatePassword(length = 14): string {
 }
 
 /**
- * Admin approves a manufacturer application and provisions credentials:
+ * Admin approves a seller application and provisions credentials:
  * 1. Takes application ID, custom/auto-generated email and password
  * 2. Creates/updates Supabase Auth user & user_metadata
- * 3. Upserts profile + manufacturer_profiles rows
+ * 3. Upserts profile + seller_profiles rows
  * 4. Sends credential notification email (if Resend key available)
- * 5. Updates manufacturer_applications table status to "approved"
+ * 5. Updates seller_applications table status to "approved"
  */
-export async function approveManufacturer(
+export async function approveSeller(
   _prevState: ReviewState,
   formData: FormData
 ): Promise<ReviewState> {
@@ -49,7 +49,7 @@ export async function approveManufacturer(
 
   const rateLimit = await checkRateLimit({
     endpointType: "user",
-    actionName: "approve_manufacturer",
+    actionName: "approve_seller",
     identifier: session.userId,
   });
   if (rateLimit.blocked) {
@@ -59,7 +59,7 @@ export async function approveManufacturer(
   // 0. Verify required environment variables
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     console.error(
-      "[approveManufacturer] CRITICAL ERROR: SUPABASE_SERVICE_ROLE_KEY is missing in .env.local"
+      "[approveSeller] CRITICAL ERROR: SUPABASE_SERVICE_ROLE_KEY is missing in .env.local"
     );
     return {
       error: "Service role key is not configured. Please check server logs.",
@@ -79,13 +79,13 @@ export async function approveManufacturer(
 
   // 1. Fetch the application
   const { data: application, error: fetchErr } = await supabase
-    .from("manufacturer_applications")
+    .from("seller_applications")
     .select("*")
     .eq("id", applicationId)
     .single();
 
   if (fetchErr || !application) {
-    console.error("[approveManufacturer] Could not find application:", fetchErr);
+    console.error("[approveSeller] Could not find application:", fetchErr);
     return { error: "Application not found." };
   }
 
@@ -97,7 +97,7 @@ export async function approveManufacturer(
   try {
     adminClient = createAdminClient();
   } catch (err: unknown) {
-    console.error("[approveManufacturer] Admin client init failed:", err);
+    console.error("[approveSeller] Admin client init failed:", err);
     return { error: "Failed to initialize administrative service. Please try again." };
   }
 
@@ -119,7 +119,7 @@ export async function approveManufacturer(
       email_confirm: true,
       user_metadata: {
         full_name: application.full_name,
-        role: "manufacturer",
+        role: "seller",
         business_type: application.business_type,
         phone: application.phone,
         business_name: application.business_name,
@@ -139,7 +139,7 @@ export async function approveManufacturer(
         email_confirm: true,
         user_metadata: {
           full_name: application.full_name,
-          role: "manufacturer",
+          role: "seller",
           business_type: application.business_type,
           phone: application.phone,
           business_name: application.business_name,
@@ -154,10 +154,10 @@ export async function approveManufacturer(
     userId = authData.user.id;
   }
 
-  // 3. Create profile + manufacturer_profiles rows (using admin client to bypass RLS)
+  // 3. Create profile + seller_profiles rows (using admin client to bypass RLS)
   await adminClient.from("profiles").upsert({
     id: userId,
-    role: "manufacturer",
+    role: "seller",
     full_name: application.full_name,
     phone: application.phone,
     city: applicationFormData.city || null,
@@ -165,7 +165,7 @@ export async function approveManufacturer(
     pincode: applicationFormData.pincode || null,
   });
 
-  await adminClient.from("manufacturer_profiles").upsert({
+  await adminClient.from("seller_profiles").upsert({
     id: userId,
     business_name: application.business_name,
     gst_number: applicationFormData.gst_number || "PENDING",
@@ -181,7 +181,7 @@ export async function approveManufacturer(
 
   // 4. Update the application status to "approved"
   await supabase
-    .from("manufacturer_applications")
+    .from("seller_applications")
     .update({
       status: "approved",
       reviewed_at: new Date().toISOString(),
@@ -198,10 +198,10 @@ export async function approveManufacturer(
       process.env.RESEND_FROM_EMAIL || "GenZ Platform <onboarding@resend.dev>";
 
     if (!sendEmailOption) {
-      console.log("[approveManufacturer] Send email option was unchecked by admin.");
+      console.log("[approveSeller] Send email option was unchecked by admin.");
     } else if (!resendApiKey) {
       console.error(
-        "[approveManufacturer] RESEND_API_KEY is not configured in .env.local. Skipping email dispatch."
+        "[approveSeller] RESEND_API_KEY is not configured in .env.local. Skipping email dispatch."
       );
     } else {
       const resendRes = await fetch("https://api.resend.com/emails", {
@@ -213,12 +213,12 @@ export async function approveManufacturer(
         body: JSON.stringify({
           from: fromEmail,
           to: emailToUse,
-          subject: "Your GenZ Manufacturer Account Approved!",
+          subject: "Your GenZ Seller Account Approved!",
           html: `
             <div style="font-family: 'Inter', system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px; background: #FAF7F0; border-radius: 16px;">
               <h1 style="font-size: 24px; color: #1A1A18; margin-bottom: 8px;">Welcome to GenZ, ${application.full_name}!</h1>
               <p style="font-size: 14px; color: #52524E; line-height: 1.6;">
-                Your manufacturer registration application for <strong>${application.business_name}</strong> has been approved.
+                Your seller registration application for <strong>${application.business_name}</strong> has been approved.
               </p>
               <div style="background: white; border: 1px solid #E5E5E0; border-radius: 12px; padding: 20px; margin: 24px 0;">
                 <p style="font-size: 12px; color: #73736E; text-transform: uppercase; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 12px;">Your Account Login Credentials</p>
@@ -227,7 +227,7 @@ export async function approveManufacturer(
                 <p style="font-size: 14px; margin: 4px 0;"><strong>Password:</strong> <code style="background: #F0F0EC; padding: 2px 8px; border-radius: 4px; font-size: 13px;">${passwordToUse}</code></p>
               </div>
               <p style="font-size: 13px; color: #8C8C85;">Please change your password after logging in for security.</p>
-              <a href="${siteUrl}/login" style="display: inline-block; background: #1A1A18; color: #FFFFFF; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 8px; margin-top: 16px;">Sign In to Dashboard →</a>
+              <a href="${siteUrl}/login" style="display: inline-block; background: #1A1A18; color: #FFFFFF; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 8px; margin-top: 16px;">Sign In to Dashboard</a>
             </div>
           `,
         }),
@@ -235,22 +235,22 @@ export async function approveManufacturer(
 
       const resendData = await resendRes.json();
       if (!resendRes.ok) {
-        console.error("[approveManufacturer] Resend API Error:", resendData);
+        console.error("[approveSeller] Resend API Error:", resendData);
       } else {
         console.log(
-          "[approveManufacturer] Resend email dispatched successfully:",
+          "[approveSeller] Resend email dispatched successfully:",
           resendData
         );
         emailSent = true;
       }
     }
   } catch (emailErr) {
-    console.error("[approveManufacturer] Exception during email dispatch:", emailErr);
+    console.error("[approveSeller] Exception during email dispatch:", emailErr);
   }
 
   await logRateLimitAttempt({
     endpointType: "user",
-    actionName: "approve_manufacturer",
+    actionName: "approve_seller",
     identifier: session.userId,
   });
 
@@ -268,9 +268,9 @@ export async function approveManufacturer(
 }
 
 /**
- * Admin rejects a manufacturer application with a reason.
+ * Admin rejects a seller application with a reason.
  */
-export async function rejectManufacturer(
+export async function rejectSeller(
   _prevState: ReviewState,
   formData: FormData
 ): Promise<ReviewState> {
@@ -278,14 +278,14 @@ export async function rejectManufacturer(
 
   const rateLimit = await checkRateLimit({
     endpointType: "user",
-    actionName: "reject_manufacturer",
+    actionName: "reject_seller",
     identifier: session.userId,
   });
   if (rateLimit.blocked) {
     return { error: rateLimit.error || "Too many requests. Please try again later." };
   }
 
-  const applicationId = String(formData.get("manufacturerId") ?? "");
+  const applicationId = String(formData.get("sellerId") ?? "");
   const reason = String(formData.get("reason") ?? "").trim();
 
   const validation = adminRejectSchema.safeParse({ reason });
@@ -295,7 +295,7 @@ export async function rejectManufacturer(
 
   const supabase = await createClient();
   const { error } = await supabase
-    .from("manufacturer_applications")
+    .from("seller_applications")
     .update({
       status: "rejected",
       rejection_reason: validation.data.reason,
@@ -306,12 +306,12 @@ export async function rejectManufacturer(
 
   await logRateLimitAttempt({
     endpointType: "user",
-    actionName: "reject_manufacturer",
+    actionName: "reject_seller",
     identifier: session.userId,
   });
 
   if (error) {
-    console.error("Reject manufacturer DB error:", error);
+    console.error("Reject seller DB error:", error);
     return { error: "Could not save the review. Please try again." };
   }
 
@@ -330,7 +330,7 @@ export async function updateApplicationStatusDirectly(
   const supabase = await createClient();
 
   const { error } = await supabase
-    .from("manufacturer_applications")
+    .from("seller_applications")
     .update({
       status: newStatus,
       reviewed_at: new Date().toISOString(),

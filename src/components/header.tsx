@@ -246,7 +246,7 @@ export function Header({
 
             <div className="flex items-center gap-5 text-neutral-300">
               <Link
-                href="/signup/manufacturer"
+                href="/signup/seller"
                 className="font-semibold text-white transition-colors hover:text-neutral-300 hover:underline"
               >
                 Sell on GenZ
@@ -700,7 +700,7 @@ export function Header({
                       onClick={() => setIsOpen(false)}
                       className="px-3 py-1.5 text-[11px] font-bold text-amber-400 hover:underline"
                     >
-                      + View All Collections →
+                      + View All Collections
                     </Link>
                   </div>
                 </div>
@@ -737,7 +737,7 @@ export function Header({
                 asChild
                 className="font-graphik mb-2 w-full rounded-xl bg-amber-400 text-xs font-bold text-black hover:bg-amber-300"
               >
-                <Link href="/signup/manufacturer" onClick={() => setIsOpen(false)}>
+                <Link href="/signup/seller" onClick={() => setIsOpen(false)}>
                   Sell on GenZ
                 </Link>
               </Button>

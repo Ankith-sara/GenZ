@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     template: "%s | GenZ",
   },
   description:
-    "Discover and buy directly from verified Indian manufacturers, artisans, and innovators. Transparent pricing, direct sourcing, zero middleman markups.",
+    "Discover and buy directly from verified Indian sellers, artisans, and innovators. Transparent pricing, direct sourcing, zero middleman markups.",
   keywords: [
-    "Indian Manufacturers",
+    "Indian Sellers",
     "Made in India",
     "Direct Factory Sourcing",
     "B2C Manufacturing",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: "GenZ — Direct Made-in-India Manufacturing & Sourcing",
     description:
-      "Empowering verified Indian manufacturers and innovators. Connect directly with makers and source quality Indian products.",
+      "Empowering verified Indian sellers and innovators. Connect directly with makers and source quality Indian products.",
     siteName: "GenZ Platform",
     images: [
       {
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "GenZ — Direct Made-in-India Manufacturing Platform",
     description:
-      "Connect directly with verified Indian manufacturers and source quality products with zero middleman markups.",
+      "Connect directly with verified Indian sellers and source quality products with zero middleman markups.",
     images: ["/logo.png"],
   },
   robots: {

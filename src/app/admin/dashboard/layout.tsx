@@ -19,7 +19,7 @@ export default async function AdminDashboardLayout({
     { data: allProfiles },
   ] = await Promise.all([
     supabase
-      .from("manufacturer_profiles")
+      .from("seller_profiles")
       .select("*", { count: "exact", head: true })
       .eq("status", "pending"),
     supabase.from("products").select("*", { count: "exact", head: true }),

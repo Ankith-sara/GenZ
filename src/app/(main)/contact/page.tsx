@@ -14,7 +14,7 @@ import Link from "next/link";
 export const metadata = {
   title: "Contact — GenZ Platform",
   description:
-    "Connect with GenZ — direct manufacturer partnerships, investor relations, buyer sourcing inquiries, or support.",
+    "Connect with GenZ — direct seller partnerships, investor relations, buyer sourcing inquiries, or support.",
 };
 
 const CHANNELS = [
@@ -50,8 +50,8 @@ const CHANNELS = [
 
 const DIRECT_DEPARTMENTS = [
   {
-    title: "Manufacturer Onboarding",
-    desc: "Are you an Indian toy or hardware manufacturer? Get verified & list your factory catalog.",
+    title: "Seller Onboarding",
+    desc: "Are you an Indian toy or hardware seller? Get verified & list your factory catalog.",
     tag: "Factory Direct",
   },
   {
@@ -74,11 +74,11 @@ const DIRECT_DEPARTMENTS = [
 const FAQS = [
   {
     q: "How fast does the GenZ team respond to inquiries?",
-    a: "We review all messages within 24 business hours. For urgent manufacturer verification or active bulk orders, our hotline is active Mon-Sat.",
+    a: "We review all messages within 24 business hours. For urgent seller verification or active bulk orders, our hotline is active Mon-Sat.",
   },
   {
-    q: "How can Indian manufacturers register on GenZ?",
-    a: "Manufacturers can fill out the contact form selecting 'Manufacturer partnership'. Our verification team conducts GST and factory unit checks before listing.",
+    q: "How can Indian sellers register on GenZ?",
+    a: "Sellers can fill out the contact form selecting 'Seller partnership'. Our verification team conducts GST and factory unit checks before listing.",
   },
   {
     q: "Are there middleman commission fees for buyers on GenZ?",
@@ -86,7 +86,7 @@ const FAQS = [
   },
   {
     q: "Which manufacturing categories are currently supported?",
-    a: "We specialize in verified Toy Manufacturers, STEM products, Plastic Molds, Educational Kits, and Precision Craft manufacturing across India.",
+    a: "We specialize in verified Toy Sellers, STEM products, Plastic Molds, Educational Kits, and Precision Craft manufacturing across India.",
   },
 ];
 
@@ -107,8 +107,8 @@ export default async function ContactPage() {
               Let&apos;s talk about building together.
             </h1>
             <p className="text-smoke font-graphik mt-6 max-w-md text-base leading-relaxed">
-              Manufacturer partnership, investment, buyer sourcing, press, or just a
-              question — we&apos;d love to connect.
+              Seller partnership, investment, buyer sourcing, press, or just a question
+              — we&apos;d love to connect.
             </p>
 
             {/* Channels list */}
@@ -273,7 +273,7 @@ export default async function ContactPage() {
           </h2>
           <p className="font-graphik text-smoke mx-auto mt-4 mb-8 max-w-xl text-base">
             Explore our curated catalog of toys, products, and verified industrial
-            manufacturers.
+            sellers.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

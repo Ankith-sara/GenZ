@@ -4,33 +4,33 @@ import Link from "next/link";
 export const metadata = {
   title: "Terms & Conditions — GenZ Platform",
   description:
-    "The legal terms governing platform usage, buyer protections, and manufacturer verification on GenZ.",
+    "The legal terms governing platform usage, buyer protections, and seller verification on GenZ.",
 };
 
 const SECTIONS = [
   {
     title: "1. Who We Are",
-    body: `GenZ ("we", "us", "the platform") operates a direct commerce marketplace connecting Indian consumers with verified Indian manufacturers, MSMEs, startups, and artisan businesses. By creating an account or using any part of the platform, you agree to these Terms & Conditions.`,
+    body: `GenZ ("we", "us", "the platform") operates a direct commerce marketplace connecting Indian consumers with verified Indian sellers, MSMEs, startups, and artisan businesses. By creating an account or using any part of the platform, you agree to these Terms & Conditions.`,
   },
   {
     title: "2. Eligibility & Accounts",
-    body: `You must be at least 18 years old to create an account. You are responsible for the accuracy of the information you provide and for maintaining the confidentiality of your login credentials. Manufacturer accounts require valid GST registration and pass our verification review before a storefront is activated.`,
+    body: `You must be at least 18 years old to create an account. You are responsible for the accuracy of the information you provide and for maintaining the confidentiality of your login credentials. Seller accounts require valid GST registration and pass our verification review before a storefront is activated.`,
   },
   {
-    title: "3. Verified Manufacturer Listings",
-    body: `We verify manufacturer identity, GST status, and production capabilities before listings are published. Verification confirms business legitimacy; it does not constitute a explicit guarantee of individual product performance or fitness for a specific purpose. Buyers are encouraged to review product specifications carefully.`,
+    title: "3. Verified Seller Listings",
+    body: `We verify seller identity, GST status, and production capabilities before listings are published. Verification confirms business legitimacy; it does not constitute a explicit guarantee of individual product performance or fitness for a specific purpose. Buyers are encouraged to review product specifications carefully.`,
   },
   {
     title: "4. Orders, Pricing & Payments",
-    body: `Product pricing, availability, and accepted payment methods are set by manufacturers and displayed on each listing. GenZ facilitates secure order processing between buyers and manufacturers. Order fulfillment and shipping are handled in accordance with platform delivery standards.`,
+    body: `Product pricing, availability, and accepted payment methods are set by sellers and displayed on each listing. GenZ facilitates secure order processing between buyers and sellers. Order fulfillment and shipping are handled in accordance with platform delivery standards.`,
   },
   {
     title: "5. Cancellations, Returns & Refunds",
     body: `Cancellation and return terms are governed by platform policies and specified on listing pages. For disputed orders, our customer support team mediates resolutions in accordance with buyer protection guidelines.`,
   },
   {
-    title: "6. Manufacturer Obligations",
-    body: `Manufacturers agree to list only products they are legally authorized to sell, represent product specifications accurately, and fulfill confirmed orders in good faith. Misrepresentation or failure to honor orders may result in storefront suspension.`,
+    title: "6. Seller Obligations",
+    body: `Sellers agree to list only products they are legally authorized to sell, represent product specifications accurately, and fulfill confirmed orders in good faith. Misrepresentation or failure to honor orders may result in storefront suspension.`,
   },
   {
     title: "7. Prohibited Uses",
@@ -38,7 +38,7 @@ const SECTIONS = [
   },
   {
     title: "8. Intellectual Property",
-    body: `Product media uploaded by manufacturers remains their intellectual property, licensed to GenZ for display and marketing on the platform. The GenZ name, logo, software, and brand assets are the exclusive property of GenZ.`,
+    body: `Product media uploaded by sellers remains their intellectual property, licensed to GenZ for display and marketing on the platform. The GenZ name, logo, software, and brand assets are the exclusive property of GenZ.`,
   },
   {
     title: "9. Limitation of Liability",

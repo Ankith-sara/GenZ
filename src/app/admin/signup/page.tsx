@@ -59,10 +59,7 @@ export default async function AdminSignupPage() {
         {/* Footer info */}
         <p className="text-smoke font-graphik mt-6 text-center text-sm">
           Already have an admin account?{" "}
-          <Link
-            href="/admin/login"
-            className="text-ink-black font-semibold hover:underline"
-          >
+          <Link href="/login" className="text-ink-black font-semibold hover:underline">
             Sign in
           </Link>
         </p>

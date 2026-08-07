@@ -1,7 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
+import { AuthLogo } from "@/components/auth/logo";
+import { SupportLink } from "@/components/auth/support-link";
 import { SignupForm } from "./signup-form";
-import { GoogleSignInButton } from "@/components/google-signin";
+import { SocialLogin } from "@/components/auth/google-button";
+import { FooterLinks } from "@/components/auth/footer-links";
+import { AuthHero } from "@/components/auth/auth-hero";
 
 export default async function SignupPage({
   searchParams,
@@ -11,110 +14,76 @@ export default async function SignupPage({
   const { redirectTo } = await searchParams;
 
   return (
-    <main className="bg-cream-paper text-ink-black grid min-h-screen grid-cols-1 font-sans antialiased lg:grid-cols-12">
-      {/* Left side: Auth Form */}
-      <div className="bg-cream-paper flex min-h-screen flex-col justify-between p-8 sm:p-12 md:p-16 lg:col-span-5">
-        <div>
-          <Link href="/" className="mb-12 inline-flex items-center gap-3">
-            <Image
-              src="/logo.png"
-              alt="GenZ Logo"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-            <span className="font-graphik text-ink-black text-xl tracking-tight uppercase">
-              GenZ
-            </span>
-          </Link>
+    <main className="text-ink-black grid min-h-screen grid-cols-1 overflow-x-hidden bg-[#FAF8F4] font-sans antialiased lg:grid-cols-2">
+      {/* Left Panel: Scrollable Registration Form Area */}
+      <div className="flex h-screen [scrollbar-width:none] flex-col justify-between overflow-y-auto bg-[#FAF8F4] p-6 [-ms-overflow-style:none] sm:p-10 lg:p-12 [&::-webkit-scrollbar]:hidden">
+        {/* Top Header Bar (Constrained Width) */}
+        <header className="mx-auto flex w-full max-w-[460px] items-center justify-between">
+          <AuthLogo />
+          <SupportLink />
+        </header>
 
-          <div className="mx-auto max-w-md lg:mx-0">
-            <h2 className="font-nantes text-ink-black mb-2 text-3xl font-normal">
-              Create your account.
-            </h2>
-            <p className="font-graphik text-charcoal mb-8 text-sm">
-              Discover and buy trusted, high-quality Indian products directly from the
-              makers.
-            </p>
+        {/* Form Container Card Box */}
+        <div className="my-auto py-8">
+          <div className="mx-auto w-full max-w-[460px] rounded-[16px] border border-[#E5E5E0] bg-white p-7 shadow-xs sm:p-9">
+            {/* Title & Description */}
+            <div className="mb-6 text-left">
+              <h2 className="font-graphik text-ink-black text-2xl font-bold tracking-tight sm:text-3xl">
+                Create Account
+              </h2>
+              <p className="font-graphik mt-1.5 text-xs text-[#73736E] sm:text-sm">
+                Join GenZ to connect directly with verified Indian manufacturers.
+              </p>
+            </div>
 
-            <div className="bg-pure-white border-ash rounded-none border p-6 shadow-none sm:p-8">
-              <SignupForm defaultRole="buyer" />
+            {/* Registration Form */}
+            <SignupForm defaultRole="buyer" />
 
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="border-ash w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-pure-white text-smoke px-2">
-                    Or continue with
-                  </span>
-                </div>
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-[#E5E5E0]" />
               </div>
-
-              <GoogleSignInButton
-                redirectTo={redirectTo ?? "/dashboard"}
-                text="Sign up with Google"
-              />
-
-              <div className="border-ash mt-6 border-t pt-4 text-center">
-                <Link
-                  href="/signup/manufacturer"
-                  className="font-graphik text-primary text-xs font-semibold tracking-wider uppercase transition-colors hover:text-black"
-                >
-                  Are you a manufacturer? Register business
-                </Link>
+              <div className="relative flex justify-center text-[11px] font-medium tracking-wider uppercase">
+                <span className="bg-white px-3 text-[#73736E]">Or continue with</span>
               </div>
             </div>
 
-            <p className="font-graphik text-charcoal mt-6 text-center text-sm">
+            {/* Google OAuth Button */}
+            <SocialLogin redirectTo={redirectTo ?? "/dashboard"} />
+
+            {/* Seller Link */}
+            <div className="mt-6 text-center">
+              <Link
+                href="/signup/seller"
+                className="font-graphik text-xs font-semibold tracking-wider text-black uppercase transition-colors hover:underline"
+              >
+                Are you a seller? Register business
+              </Link>
+            </div>
+
+            {/* Sign In Link */}
+            <p className="font-graphik mt-6 text-center text-xs text-[#73736E] sm:text-sm">
               Already have an account?{" "}
-              <Link href="/login" className="font-semibold text-black hover:underline">
+              <Link
+                href="/login"
+                className="font-semibold text-black transition-colors hover:underline"
+              >
                 Sign in
               </Link>
             </p>
           </div>
         </div>
 
-        <div className="font-graphik text-smoke mt-12 flex justify-center gap-4 text-xs lg:justify-start">
-          <Link href="/terms" className="hover:underline">
-            Terms of Service
-          </Link>
-          <Link href="/privacy" className="hover:underline">
-            Privacy Policy
-          </Link>
+        {/* Bottom Footer (Constrained Width) */}
+        <div className="mx-auto w-full max-w-[460px]">
+          <FooterLinks />
         </div>
       </div>
 
-      {/* Right side: Visual Panel */}
-      <div className="bg-charcoal relative hidden overflow-hidden lg:col-span-7 lg:block">
-        <Image
-          src="/signup_hero.png"
-          alt="GenZ Sourcing Community"
-          fill
-          priority
-          className="object-cover opacity-40"
-        />
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-        {/* Brand visual text overlay */}
-        <div className="absolute inset-0 z-20 flex flex-col justify-between p-16">
-          <div className="font-graphik text-xs tracking-[0.3em] text-white/60 uppercase">
-            GenZ Community
-          </div>
-          <div className="max-w-xl">
-            <p className="font-nantes mb-6 text-4xl leading-tight text-white italic">
-              &quot;Discover and buy trusted, high-quality Indian products directly from
-              the makers.&quot;
-            </p>
-            <p className="font-graphik text-sm leading-relaxed text-white/80">
-              Gain transparent pricing, direct communication with factories, and peace
-              of mind with 100% verified GST and physical inspection checks.
-            </p>
-          </div>
-          <div className="font-graphik text-xs text-white/40">
-            © 2026 GenZ. All rights reserved.
-          </div>
-        </div>
+      {/* Right Panel: Fixed 100vh Visual Hero */}
+      <div className="sticky top-0 hidden h-screen w-full overflow-hidden lg:block">
+        <AuthHero />
       </div>
     </main>
   );

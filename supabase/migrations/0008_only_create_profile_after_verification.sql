@@ -22,10 +22,10 @@ begin
       phone = excluded.phone,
       city = excluded.city;
 
-    -- If registered as manufacturer with initial onboarding data in metadata, populate manufacturer_profiles
-    if (new.raw_user_meta_data ->> 'role') = 'manufacturer' then
+    -- If registered as seller with initial onboarding data in metadata, populate seller_profiles
+    if (new.raw_user_meta_data ->> 'role') = 'seller' then
       if (new.raw_user_meta_data ->> 'business_name') is not null and (new.raw_user_meta_data ->> 'gst_number') is not null then
-        insert into public.manufacturer_profiles (
+        insert into public.seller_profiles (
           id,
           business_name,
           gst_number,

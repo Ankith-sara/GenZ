@@ -9,14 +9,14 @@ import { submitInquiry, type InquiryFormState } from "./inquiry-actions";
 
 export function InquiryForm({
   productId,
-  manufacturerId,
+  sellerId,
   productName,
 }: {
   productId: string;
-  manufacturerId: string;
+  sellerId: string;
   productName: string;
 }) {
-  const action = submitInquiry.bind(null, productId, manufacturerId);
+  const action = submitInquiry.bind(null, productId, sellerId);
   const [state, formAction, isPending] = useActionState<InquiryFormState, FormData>(
     action,
     {}
@@ -27,7 +27,7 @@ export function InquiryForm({
       <div className="border-border bg-card rounded-[4px] border p-6">
         <p className="font-medium">Message sent</p>
         <p className="text-muted-foreground mt-1 text-sm">
-          The manufacturer will get back to you directly at the email you provided.
+          The seller will get back to you directly at the email you provided.
         </p>
       </div>
     );
@@ -40,8 +40,8 @@ export function InquiryForm({
     >
       <p className="font-medium">Ask about this product</p>
       <p className="text-muted-foreground mt-1 mb-4 text-sm">
-        Send {productName}&apos;s manufacturer a question — bulk orders, customization,
-        lead times, anything.
+        Send {productName}&apos;s seller a question — bulk orders, customization, lead
+        times, anything.
       </p>
 
       <div className="mb-3">

@@ -123,16 +123,16 @@ export async function getAnalyticsData(): Promise<AnalyticsSummary> {
   };
 }
 
-export async function getManufacturerAnalyticsData(
-  manufacturerId: string
+export async function getSellerAnalyticsData(
+  sellerId: string
 ): Promise<AnalyticsSummary> {
   const supabase = await createClient();
 
-  // Get manufacturer's product IDs
+  // Get seller's product IDs
   const { data: products } = await supabase
     .from("products")
     .select("id")
-    .eq("manufacturer_id", manufacturerId);
+    .eq("seller_id", sellerId);
 
   const productIds = products?.map((p) => p.id) || [];
   const productPaths = productIds.map((id) => `/products/${id}`);

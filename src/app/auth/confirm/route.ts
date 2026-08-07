@@ -11,7 +11,7 @@ async function ensureProfileCreated(
     } = await supabase.auth.getUser();
     if (user) {
       const meta = user.user_metadata ?? {};
-      const role = (meta.role as "buyer" | "manufacturer" | "admin") || "buyer";
+      const role = (meta.role as "buyer" | "seller" | "admin") || "buyer";
       const fullName = meta.full_name || meta.fullName || null;
 
       const { error: profileErr } = await supabase.from("profiles").upsert({
@@ -28,8 +28,8 @@ async function ensureProfileCreated(
         console.error("Profile upsert error in confirm route:", profileErr.message);
       }
 
-      if (role === "manufacturer") {
-        const { error: mfgErr } = await supabase.from("manufacturer_profiles").upsert({
+      if (role === "seller") {
+        const { error: mfgErr } = await supabase.from("seller_profiles").upsert({
           id: user.id,
           business_name: meta.business_name || meta.full_name || "Unnamed Business",
           gst_number: meta.gst_number || "PENDING",
@@ -41,7 +41,7 @@ async function ensureProfileCreated(
 
         if (mfgErr) {
           console.error(
-            "Manufacturer profile upsert error in confirm route:",
+            "Seller profile upsert error in confirm route:",
             mfgErr.message
           );
         }

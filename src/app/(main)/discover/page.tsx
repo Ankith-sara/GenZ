@@ -58,7 +58,7 @@ export default async function DiscoverPage({
             B2C DISCOVERY HUB
           </span>
           <h1 className="font-nantes mb-4 max-w-3xl text-3xl leading-[1.15] font-normal tracking-tight sm:text-5xl">
-            Discover Verified Indian Manufacturers &amp; Products
+            Discover Verified Indian Sellers &amp; Products
           </h1>
           <p className="text-body font-graphik max-w-2xl leading-relaxed text-white/70">
             Source high-quality toys, educational games, puzzles, and custom crafts

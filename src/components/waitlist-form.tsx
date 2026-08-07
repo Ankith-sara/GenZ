@@ -8,7 +8,7 @@ import { submitWaitlist } from "@/app/actions/public-actions";
 
 const ROLES = [
   "Consumer",
-  "Manufacturer",
+  "Seller",
   "Startup / MSME",
   "Investor",
   "Incubator",

@@ -90,7 +90,7 @@ const homepageTrustPillars = [
   {
     title: "Direct Pricing & Escrow Protection",
     subtitle: "Zero Middleman Markup",
-    desc: "Buy directly from manufacturers with no price stacking. Payments are securely held in escrow until items are received and inspected.",
+    desc: "Buy directly from sellers with no price stacking. Payments are securely held in escrow until items are received and inspected.",
   },
 ];
 
@@ -103,8 +103,8 @@ const stakeholdersList = [
   },
   {
     index: "02",
-    name: "Manufacturers",
-    image: "/manufacturers.png",
+    name: "Sellers",
+    image: "/sellers.png",
     copy: "Visibility, market demand insights, and a direct line to national buyers. We help you digitize your profile, showcase catalogs, and build lasting business relationships.",
   },
   {
@@ -123,12 +123,12 @@ const stakeholdersList = [
     index: "05",
     name: "Investors",
     image: "/investors.png",
-    copy: "Verified manufacturer listings and regional innovation clusters worth backing. Gain access to transparent manufacturing metrics, production capacity data, and growth indicators.",
+    copy: "Verified seller listings and regional innovation clusters worth backing. Gain access to transparent manufacturing metrics, production capacity data, and growth indicators.",
   },
 ];
 
 const stats = [
-  { value: "100+", label: "Verified manufacturers" },
+  { value: "100+", label: "Verified sellers" },
   { value: "1,000+", label: "Products & innovations" },
   { value: "500+", label: "Import gaps identified" },
   { value: "1K+", label: "Jobs & livelihoods" },
@@ -261,7 +261,7 @@ export default function HomePage() {
                 size="lg"
                 className="font-graphik h-12 rounded-none border-black px-6 text-xs font-semibold tracking-[0.05em] text-black uppercase transition-colors hover:bg-black hover:text-white"
               >
-                <Link href="/signup/manufacturer">Sell on GenZ</Link>
+                <Link href="/signup/seller">Sell on GenZ</Link>
               </Button>
             </div>
 
@@ -375,8 +375,8 @@ export default function HomePage() {
               Why Trust GenZ?
             </h2>
             <p className="font-graphik text-smoke mt-4 text-base leading-relaxed">
-              We bridge buyers directly to genuine Indian manufacturers with zero
-              middlemen, on-site physical audits, and transparent live video proof.
+              We bridge buyers directly to genuine Indian sellers with zero middlemen,
+              on-site physical audits, and transparent live video proof.
             </p>
           </div>
 

@@ -176,8 +176,7 @@ function ProblemSolutionSection() {
               </h3>
               <p className="font-graphik mt-3 max-w-2xl text-sm leading-relaxed text-neutral-300 sm:text-base">
                 Complete process transparency builds commercial trust — connecting
-                buyers directly to verified Indian manufacturers without markup
-                stacking.
+                buyers directly to verified Indian sellers without markup stacking.
               </p>
             </div>
           </div>
@@ -245,7 +244,7 @@ function FoundationsOfTrustScrollSection() {
       number: "03",
       title: "Import Gap Intelligence",
       description:
-        "We track what India still imports and route that demand toward the manufacturers who can build it here instead.",
+        "We track what India still imports and route that demand toward the sellers who can build it here instead.",
       colSpan: "md:col-span-4",
       isHero: false,
     },
@@ -263,7 +262,7 @@ function FoundationsOfTrustScrollSection() {
       number: "05",
       title: "Direct Market Access",
       description:
-        "Manufacturers reach consumers without a chain of middlemen. No markup stacking, no anonymous resellers.",
+        "Sellers reach consumers without a chain of middlemen. No markup stacking, no anonymous resellers.",
       colSpan: "md:col-span-4",
       isHero: false,
     },
@@ -548,7 +547,7 @@ export function AboutClient() {
                     lack talent.
                   </p>
                   <p>
-                    We have skilled manufacturers, innovators, artisans, entrepreneurs,
+                    We have skilled sellers, innovators, artisans, entrepreneurs,
                     students, and millions of people with brilliant ideas. Yet many of
                     them struggle to gain trust, visibility, opportunities, and access
                     to markets. Consumers often do not know who actually manufactures
@@ -588,7 +587,7 @@ export function AboutClient() {
                   <p>
                     I believe India&apos;s future will not be built by one person, one
                     company, or one government alone. It will be built when innovators,
-                    manufacturers, entrepreneurs, and consumers come together to create
+                    sellers, entrepreneurs, and consumers come together to create
                     opportunities for one another.
                   </p>
                   <div className="border-ash/60 border-t pt-6 text-center sm:text-left">
@@ -636,14 +635,14 @@ export function AboutClient() {
                   <p className="font-graphik text-smoke text-base leading-relaxed">
                     Why toys? Because they represent creativity, learning, innovation,
                     and India&apos;s growing manufacturing potential. Starting with one
-                    category allows us to build trust, verify manufacturers, and deliver
-                    the best experience from day one.
+                    category allows us to build trust, verify sellers, and deliver the
+                    best experience from day one.
                   </p>
 
                   <div className="border-ash/60 border-t pt-6">
                     <p className="font-nantes text-ink-black text-lg leading-relaxed italic sm:text-xl">
                       &ldquo;Our mission is to build one trusted platform where
-                      consumers, manufacturers, startups, creators, and businesses can
+                      consumers, sellers, startups, creators, and businesses can
                       discover and grow with verified products made through innovation
                       and quality.&rdquo;
                     </p>
@@ -717,7 +716,7 @@ export function AboutClient() {
               {
                 icon: CheckCircle2,
                 value: "1,000+",
-                label: "Verified Manufacturers",
+                label: "Verified Sellers",
                 desc: "Digitally audited with GST profiles & factory reels.",
               },
               {
@@ -833,8 +832,8 @@ export function AboutClient() {
             Be part of the founding cohort.
           </h2>
           <p className="font-graphik text-smoke max-w-xl text-base">
-            Whether you are an Indian toy manufacturer, hardware innovator, or buyer
-            looking for factory-direct products, join GenZ today.
+            Whether you are an Indian toy seller, hardware innovator, or buyer looking
+            for factory-direct products, join GenZ today.
           </p>
           <div className="mt-2 flex flex-wrap justify-center gap-4">
             <Button

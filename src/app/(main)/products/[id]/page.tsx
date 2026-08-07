@@ -26,15 +26,15 @@ export async function generateMetadata({
   const coverUrl = productMediaUrl(product.cover_image_path);
 
   return {
-    title: `${product.name} — Direct Indian Manufacturer`,
+    title: `${product.name} — Direct Indian Seller`,
     description:
       product.description ||
-      `Buy ${product.name} directly from verified Indian manufacturers on GenZ.`,
+      `Buy ${product.name} directly from verified Indian sellers on GenZ.`,
     openGraph: {
       title: product.name,
       description:
         product.description ||
-        `Buy ${product.name} directly from verified Indian manufacturers on GenZ.`,
+        `Buy ${product.name} directly from verified Indian sellers on GenZ.`,
       images: coverUrl ? [{ url: coverUrl }] : [],
     },
   };
@@ -57,10 +57,10 @@ export default async function PublicProductPage({
 
   if (!product) notFound();
 
-  const { data: manufacturer } = await supabase
-    .from("manufacturer_public_profiles")
+  const { data: seller } = await supabase
+    .from("seller_public_profiles")
     .select("business_name, city, state, established_year")
-    .eq("id", product.manufacturer_id)
+    .eq("id", product.seller_id)
     .maybeSingle();
 
   const { data: reels } = await supabase
@@ -96,11 +96,11 @@ export default async function PublicProductPage({
       price: product.price_inr,
       availability: "https://schema.org/InStock",
     },
-    ...(manufacturer
+    ...(seller
       ? {
           brand: {
             "@type": "Brand",
-            name: manufacturer.business_name,
+            name: seller.business_name,
           },
         }
       : {}),
@@ -202,23 +202,23 @@ export default async function PublicProductPage({
                 </div>
               )}
 
-              {manufacturer && (
+              {seller && (
                 <div className="border-border mt-8 rounded-[4px] border p-5">
                   <p className="text-muted-foreground text-xs tracking-[0.12em] uppercase">
                     Who made this
                   </p>
                   <p className="mt-2">
                     <Link
-                      href={`/manufacturers/${product.manufacturer_id}`}
+                      href={`/sellers/${product.seller_id}`}
                       className="text-foreground font-medium underline underline-offset-2"
                     >
-                      {manufacturer.business_name}
+                      {seller.business_name}
                     </Link>
                   </p>
                   <p className="text-muted-foreground mt-1 text-sm">
-                    {[manufacturer.city, manufacturer.state].filter(Boolean).join(", ")}
-                    {manufacturer.established_year
-                      ? ` · Est. ${manufacturer.established_year}`
+                    {[seller.city, seller.state].filter(Boolean).join(", ")}
+                    {seller.established_year
+                      ? ` · Est. ${seller.established_year}`
                       : ""}
                   </p>
                   <div className="mt-3">
@@ -230,7 +230,7 @@ export default async function PublicProductPage({
               <div className="mt-8">
                 <InquiryForm
                   productId={product.id}
-                  manufacturerId={product.manufacturer_id}
+                  sellerId={product.seller_id}
                   productName={product.name}
                 />
               </div>

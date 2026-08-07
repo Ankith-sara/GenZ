@@ -14,11 +14,11 @@ const MAX_IMAGES = 8;
 
 export function ProductImageUploader({
   productId,
-  manufacturerId,
+  sellerId,
   images,
 }: {
   productId: string;
-  manufacturerId: string;
+  sellerId: string;
   images: ProductImage[];
 }) {
   const router = useRouter();
@@ -52,7 +52,7 @@ export function ProductImageUploader({
 
     for (const file of files) {
       const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      const path = `${manufacturerId}/products/${productId}/gallery-${Date.now()}-${safeName}`;
+      const path = `${sellerId}/products/${productId}/gallery-${Date.now()}-${safeName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("product-media")
@@ -66,7 +66,7 @@ export function ProductImageUploader({
 
       const { error: insertError } = await supabase.from("product_images").insert({
         product_id: productId,
-        manufacturer_id: manufacturerId,
+        seller_id: sellerId,
         image_path: path,
         position: nextPosition,
       });

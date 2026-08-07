@@ -16,33 +16,33 @@ const FAQ_GROUPS: FaqGroup[] = [
     title: "For Buyers",
     items: [
       {
-        q: "How do I know a manufacturer is actually verified?",
-        a: "Every seller on GenZ goes through GST verification and factory/document validation before their profile goes live. Look for the verified badge on any product or manufacturer page — it means their business identity and manufacturing claims have been checked, not just self-reported.",
+        q: "How do I know a seller is actually verified?",
+        a: "Every seller on GenZ goes through GST verification and factory/document validation before their profile goes live. Look for the verified badge on any product or seller page — it means their business identity and manufacturing claims have been checked, not just self-reported.",
       },
       {
         q: "Is GenZ a reseller or marketplace for imported goods?",
-        a: "No. GenZ only lists products made by verified Indian manufacturers, MSMEs, startups, and local artisans. There are no imports and no unverified resellers on the platform.",
+        a: "No. GenZ only lists products made by verified Indian sellers, MSMEs, startups, and local artisans. There are no imports and no unverified resellers on the platform.",
       },
       {
         q: "What payment methods are supported?",
-        a: "Supported payment methods are shown at checkout and vary by seller. We're rolling out payment options gradually as we onboard more manufacturers — check the product page for what's available for a specific order.",
+        a: "Supported payment methods are shown at checkout and vary by seller. We're rolling out payment options gradually as we onboard more sellers — check the product page for what's available for a specific order.",
       },
       {
         q: "Can I track my order?",
-        a: "Once a manufacturer confirms an order, you'll get updates through your buyer account under Dashboard → Orders. For direct questions about a specific shipment, reach out through the contact details on that manufacturer's profile.",
+        a: "Once a seller confirms an order, you'll get updates through your buyer account under Dashboard → Orders. For direct questions about a specific shipment, reach out through the contact details on that seller's profile.",
       },
       {
         q: "What if a product doesn't match its description?",
-        a: "Contact the manufacturer directly first — most issues are resolved quickly at that level. If you're not getting a response, reach our support team via the Contact page and we'll step in.",
+        a: "Contact the seller directly first — most issues are resolved quickly at that level. If you're not getting a response, reach our support team via the Contact page and we'll step in.",
       },
     ],
   },
   {
-    title: "For Manufacturers",
+    title: "For Sellers",
     items: [
       {
-        q: "Who can register as a manufacturer on GenZ?",
-        a: "Any GST-registered Indian manufacturer, MSME, startup, or artisan business producing goods locally. During signup you'll submit basic business and GST details for verification before your storefront goes live.",
+        q: "Who can register as a seller on GenZ?",
+        a: "Any GST-registered Indian seller, MSME, startup, or artisan business producing goods locally. During signup you'll submit basic business and GST details for verification before your storefront goes live.",
       },
       {
         q: "How long does verification take?",
@@ -54,7 +54,7 @@ const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "Can I manage products, orders, and reels from one place?",
-        a: "Yes — the manufacturer dashboard covers product and variant management, order tracking, and short-form product reels in one workspace.",
+        a: "Yes — the seller dashboard covers product and variant management, order tracking, and short-form product reels in one workspace.",
       },
     ],
   },
@@ -112,7 +112,7 @@ export default async function FaqsPage() {
             Frequently Asked Questions
           </h1>
           <p className="text-smoke font-graphik max-w-2xl text-base leading-relaxed">
-            Everything you need to know about buying from verified Indian manufacturers,
+            Everything you need to know about buying from verified Indian sellers,
             selling on GenZ, and how our trust network operates.
           </p>
         </div>

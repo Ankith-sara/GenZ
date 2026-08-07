@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Profile {
   id: string;
-  role: "buyer" | "manufacturer" | "admin";
+  role: "buyer" | "seller" | "admin";
   full_name: string | null;
   city: string | null;
   last_active_at: string | null;

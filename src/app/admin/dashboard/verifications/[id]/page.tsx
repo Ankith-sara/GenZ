@@ -15,7 +15,7 @@ export default async function AdminVerificationDetailPage({
   const supabase = await createClient();
 
   const { data: application } = await supabase
-    .from("manufacturer_applications")
+    .from("seller_applications")
     .select("*")
     .eq("id", id)
     .maybeSingle();
@@ -23,7 +23,7 @@ export default async function AdminVerificationDetailPage({
   if (!application) notFound();
 
   const formData = (application.form_data ?? {}) as Record<string, string>;
-  const businessType = application.business_type || "manufacturer";
+  const businessType = application.business_type || "seller";
 
   return (
     <div className="mx-auto max-w-6xl px-1 py-4 sm:px-6 sm:py-8">
@@ -373,7 +373,7 @@ export default async function AdminVerificationDetailPage({
       {/* Review Actions Panel */}
       <div className="mt-8 border-t border-[#E5E5E0] pt-8">
         <ReviewActions
-          manufacturerId={application.id}
+          sellerId={application.id}
           status={application.status}
           defaultEmail={application.email}
           businessName={application.business_name}

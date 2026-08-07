@@ -17,20 +17,20 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import {
-  approveManufacturer,
-  rejectManufacturer,
+  approveSeller,
+  rejectSeller,
   generatePasswordAction,
   type ReviewState,
 } from "../actions";
 import type { VerificationStatus, ApplicationStatus } from "@/types/database";
 
 export function ReviewActions({
-  manufacturerId,
+  sellerId,
   status,
   defaultEmail,
   businessName,
 }: {
-  manufacturerId: string;
+  sellerId: string;
   status: VerificationStatus | ApplicationStatus | string;
   defaultEmail?: string;
   businessName?: string;
@@ -46,12 +46,12 @@ export function ReviewActions({
   const [rejectState, rejectAction, isRejectPending] = useActionState<
     ReviewState,
     FormData
-  >(rejectManufacturer, {});
+  >(rejectSeller, {});
 
   const [approveState, approveAction, isApprovePending] = useActionState<
     ReviewState,
     FormData
-  >(approveManufacturer, {});
+  >(approveSeller, {});
 
   useEffect(() => {
     if (approveState?.error) {
@@ -61,7 +61,7 @@ export function ReviewActions({
 
   useEffect(() => {
     if (approveState?.success) {
-      toast.success("Manufacturer application approved successfully!");
+      toast.success("Seller application approved successfully!");
     }
   }, [approveState?.success]);
 
@@ -87,7 +87,7 @@ export function ReviewActions({
 
   const handleCopyCredentials = () => {
     if (!approveState?.credentials) return;
-    const text = `GenZ Manufacturer Account Approved\nEmail: ${approveState.credentials.email}\nPassword: ${approveState.credentials.password}\nLogin URL: ${window.location.origin}/login`;
+    const text = `GenZ Seller Account Approved\nEmail: ${approveState.credentials.email}\nPassword: ${approveState.credentials.password}\nLogin URL: ${window.location.origin}/login`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     toast.success("Credentials copied to clipboard!");
@@ -101,7 +101,7 @@ export function ReviewActions({
           <CheckCircle2 className="h-6 w-6 shrink-0 text-emerald-600" />
           <div>
             <h3 className="font-nantes text-lg font-bold">
-              Manufacturer Application Approved!
+              Seller Application Approved!
             </h3>
             <p className="font-graphik text-xs text-emerald-700">
               Account created & profile verified for{" "}
@@ -152,8 +152,8 @@ export function ReviewActions({
 
           <p className="mt-3 text-[11px] text-[#73736E]">
             {approveState.credentials.emailSent
-              ? "✅ Email notification with login credentials sent to manufacturer."
-              : "ℹ️ Credentials generated. Use the copy button above to share them with the manufacturer."}
+              ? "✅ Email notification with login credentials sent to seller."
+              : "ℹ️ Credentials generated. Use the copy button above to share them with the seller."}
           </p>
         </div>
 
@@ -211,12 +211,12 @@ export function ReviewActions({
           action={approveAction}
           className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-sm"
         >
-          <input type="hidden" name="applicationId" value={manufacturerId} />
+          <input type="hidden" name="applicationId" value={sellerId} />
 
           <div className="mb-4 flex items-center gap-2 border-b border-[#E5E5E0] pb-3">
             <Key className="h-4 w-4 text-[#C8A951]" />
             <h3 className="font-nantes text-base font-bold text-black">
-              Provision Manufacturer Credentials
+              Provision Seller Credentials
             </h3>
           </div>
 
@@ -228,7 +228,7 @@ export function ReviewActions({
           <div className="max-w-md space-y-4">
             <div>
               <label className="font-graphik mb-1 block text-xs font-semibold tracking-wider text-black uppercase">
-                Manufacturer Login Email
+                Seller Login Email
               </label>
               <Input
                 type="email"
@@ -310,7 +310,7 @@ export function ReviewActions({
           action={rejectAction}
           className="max-w-md rounded-2xl border border-red-200 bg-red-50/50 p-6"
         >
-          <input type="hidden" name="manufacturerId" value={manufacturerId} />
+          <input type="hidden" name="sellerId" value={sellerId} />
           <h4 className="font-graphik mb-2 text-xs font-bold tracking-wider text-red-800 uppercase">
             Rejection Reason
           </h4>

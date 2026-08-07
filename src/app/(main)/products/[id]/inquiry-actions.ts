@@ -11,7 +11,7 @@ export interface InquiryFormState {
 
 export async function submitInquiry(
   productId: string,
-  manufacturerId: string,
+  sellerId: string,
   _prevState: InquiryFormState,
   formData: FormData
 ): Promise<InquiryFormState> {
@@ -45,7 +45,7 @@ export async function submitInquiry(
   // 3. Database Operation
   const { error } = await supabase.from("inquiries").insert({
     product_id: productId,
-    manufacturer_id: manufacturerId,
+    seller_id: sellerId,
     buyer_id: user?.id ?? null,
     name: validation.data.name,
     email: validation.data.email,

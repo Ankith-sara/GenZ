@@ -13,10 +13,10 @@ import type { DocType } from "@/types/database";
 const ACCEPTED = ".pdf,.jpg,.jpeg,.png,.webp";
 
 export function DocumentUploader({
-  manufacturerId,
+  sellerId,
   docTypeOptions = DOC_TYPES,
 }: {
-  manufacturerId: string;
+  sellerId: string;
   docTypeOptions?: DocType[];
 }) {
   const router = useRouter();
@@ -45,10 +45,10 @@ export function DocumentUploader({
 
     const supabase = createClient();
     const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${manufacturerId}/${docType}/${Date.now()}-${safeName}`;
+    const path = `${sellerId}/${docType}/${Date.now()}-${safeName}`;
 
     const { error: uploadError } = await supabase.storage
-      .from("manufacturer-documents")
+      .from("seller-documents")
       .upload(path, file, { upsert: false });
 
     if (uploadError) {
@@ -57,14 +57,12 @@ export function DocumentUploader({
       return;
     }
 
-    const { error: insertError } = await supabase
-      .from("manufacturer_documents")
-      .insert({
-        manufacturer_id: manufacturerId,
-        doc_type: docType,
-        file_path: path,
-        file_name: file.name,
-      });
+    const { error: insertError } = await supabase.from("seller_documents").insert({
+      seller_id: sellerId,
+      doc_type: docType,
+      file_path: path,
+      file_name: file.name,
+    });
 
     if (insertError) {
       setStatus("error");

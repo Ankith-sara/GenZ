@@ -8,7 +8,7 @@ import {
   addVariant,
   deleteVariant,
   type VariantFormState,
-} from "@/app/dashboard/manufacturer/products/actions";
+} from "@/app/dashboard/seller/products/actions";
 import type { ProductVariant } from "@/types/database";
 
 const inputClass =

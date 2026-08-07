@@ -2,7 +2,7 @@
 -- Newsletter Subscribers
 -- ============================================================
 
-create table public.newsletter_subscribers (
+create table if not exists public.newsletter_subscribers (
   id uuid primary key default gen_random_uuid(),
   email text not null,
   created_at timestamptz not null default now()
@@ -10,19 +10,14 @@ create table public.newsletter_subscribers (
 
 alter table public.newsletter_subscribers enable row level security;
 
--- Anyone (including anon) can subscribe to the newsletter
+drop policy if exists "Anyone can subscribe to the newsletter" on public.newsletter_subscribers;
 create policy "Anyone can subscribe to the newsletter"
   on public.newsletter_subscribers for insert
   with check (true);
 
--- Only admins can read subscribers
+drop policy if exists "Admins can view newsletter subscribers" on public.newsletter_subscribers;
 create policy "Admins can view newsletter subscribers"
   on public.newsletter_subscribers for select
-  using (
-    exists (
-      select 1 from public.profiles p
-      where p.id = auth.uid() and p.role = 'admin'
-    )
-  );
+  using (public.is_admin());
 
-create unique index newsletter_email_unique on public.newsletter_subscribers (lower(email));
+create unique index if not exists newsletter_email_unique on public.newsletter_subscribers (lower(email));

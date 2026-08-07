@@ -6,14 +6,14 @@ import {
   gstSchema,
   loginSchema,
   signupSchema,
-  manufacturerSignupSchema,
+  sellerSignupSchema,
   waitlistSchema,
   contactSchema,
   newsletterSchema,
   productSchema,
   variantSchema,
   inquirySchema,
-  manufacturerProfileSchema,
+  sellerProfileSchema,
   adminRejectSchema,
   addressSchema,
 } from "@/lib/validation";
@@ -74,6 +74,14 @@ describe("Domain Validation Schemas (src/lib/validation.ts)", () => {
   });
 
   describe("Auth & Registration Schemas", () => {
+    it("validates login schema", () => {
+      const validLogin = {
+        email: "user@example.com",
+        password: "securePassword123",
+      };
+      expect(loginSchema.safeParse(validLogin).success).toBe(true);
+    });
+
     it("validates buyer signup schema", () => {
       const validSignup = {
         email: "buyer@example.com",
@@ -84,14 +92,14 @@ describe("Domain Validation Schemas (src/lib/validation.ts)", () => {
       expect(signupSchema.safeParse(validSignup).success).toBe(true);
     });
 
-    it("validates manufacturer signup schema", () => {
-      const validManufacturerSignup = {
+    it("validates seller signup schema", () => {
+      const validSellerSignup = {
         email: "factory@example.com",
         password: "factoryPassword123",
         fullName: "Rajesh Kumar",
         businessType: "Toys & Handicrafts",
       };
-      const result = manufacturerSignupSchema.safeParse(validManufacturerSignup);
+      const result = sellerSignupSchema.safeParse(validSellerSignup);
       expect(result.success).toBe(true);
     });
 
@@ -122,7 +130,7 @@ describe("Domain Validation Schemas (src/lib/validation.ts)", () => {
       const validContact = {
         name: "Bob Jones",
         email: "bob@example.com",
-        reason: "Manufacturer partnership",
+        reason: "Seller partnership",
         message: "We want to sell wooden toys on your platform.",
       };
       expect(contactSchema.safeParse(validContact).success).toBe(true);
@@ -187,8 +195,8 @@ describe("Domain Validation Schemas (src/lib/validation.ts)", () => {
     });
   });
 
-  describe("Manufacturer Profile & Admin Action Schemas", () => {
-    it("validates complete manufacturer profile input", () => {
+  describe("Seller Profile & Admin Action Schemas", () => {
+    it("validates complete seller profile input", () => {
       const validProfile = {
         business_name: "Channapatna Craft Works",
         gst_number: "29ABCDE1234F2Z9",
@@ -196,10 +204,10 @@ describe("Domain Validation Schemas (src/lib/validation.ts)", () => {
         city: "Ramanagara",
         state: "Karnataka",
         pincode: "571511",
-        description: "Traditional wooden toy manufacturers since 1985.",
+        description: "Traditional wooden toy sellers since 1985.",
         established_year: 1985,
       };
-      expect(manufacturerProfileSchema.safeParse(validProfile).success).toBe(true);
+      expect(sellerProfileSchema.safeParse(validProfile).success).toBe(true);
     });
 
     it("validates admin rejection reason schema", () => {
