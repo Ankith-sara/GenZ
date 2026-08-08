@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/lib/products";
+import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/features/products/lib/products";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
 import { z } from "zod";
 

@@ -1,9 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
-import { DocumentUploadWizard } from "@/components/document-upload-wizard";
-import { DocumentUploader } from "@/components/document-uploader";
-import { DocumentList } from "@/components/document-list";
-import { PageHeader } from "@/components/admin/ui/page-header";
+import { requireRole } from "@/features/auth/lib/require-role";
+import { DocumentUploadWizard } from "@/features/documents/components/document-upload-wizard";
+import { DocumentUploader } from "@/features/documents/components/document-uploader";
+import { DocumentList } from "@/features/documents/components/document-list";
+import { PageHeader } from "@/components/ui/organisms/page-header";
 
 export default async function SellerDocumentsPage() {
   const session = await requireRole("seller");

@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/lib/products";
+import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/features/products/lib/products";
 import { DiscoverFilters } from "./discover-filters";
 import { DiscoverFeed } from "./discover-feed";
 import type { ProductFilters } from "./types";

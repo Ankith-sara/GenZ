@@ -1,6 +1,6 @@
-import { getUserAndProfile } from "@/lib/auth";
+import { getUserAndProfile } from "@/features/auth/lib/auth";
 import { redirect } from "next/navigation";
-import { AvatarUploader } from "@/components/avatar-uploader";
+import { AvatarUploader } from "@/features/user/components/avatar-uploader";
 
 export default async function AccountPage() {
   const session = await getUserAndProfile();

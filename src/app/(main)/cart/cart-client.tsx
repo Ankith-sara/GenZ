@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/atoms/button";
+import { Label } from "@/components/ui/atoms/label";
 import { Trash2, Plus, Minus, ShoppingBag, MapPin, CreditCard } from "lucide-react";
 import Link from "next/link";
 

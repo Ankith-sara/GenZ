@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Heart, ArrowLeft } from "lucide-react";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/features/products/components/product-card";
 import type { Product } from "@/types/database";
 
 export default function WishlistPage() {

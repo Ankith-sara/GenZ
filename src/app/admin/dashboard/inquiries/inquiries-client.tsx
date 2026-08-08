@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { PageHeader } from "@/components/admin/ui/page-header";
-import { StatusBadge } from "@/components/admin/ui/status-badge";
-import { EmptyState } from "@/components/admin/ui/empty-state";
+import { PageHeader } from "@/components/ui/organisms/page-header";
+import { StatusBadge } from "@/components/ui/atoms/status-badge";
+import { EmptyState } from "@/components/ui/organisms/empty-state";
 import { MessageSquare, Search, User, Mail, ShoppingBag, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/atoms/button";
 
 export interface InquiryRecord {
   id: string;

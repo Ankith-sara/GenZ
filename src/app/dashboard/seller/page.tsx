@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
+import { requireRole } from "@/features/auth/lib/require-role";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -13,11 +13,11 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from "lucide-react";
-import { PRODUCT_STATUS_LABEL, formatInr } from "@/lib/products";
-import { MetricCard } from "@/components/admin/ui/metric-card";
-import { StatusBadge } from "@/components/admin/ui/status-badge";
-import { VercelAnalyticsChart } from "@/components/admin/vercel-analytics-chart";
-import { getSellerAnalyticsData } from "@/lib/vercel-analytics";
+import { PRODUCT_STATUS_LABEL, formatInr } from "@/features/products/lib/products";
+import { MetricCard } from "@/components/ui/organisms/metric-card";
+import { StatusBadge } from "@/components/ui/atoms/status-badge";
+import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
+import { getSellerAnalyticsData } from "@/features/admin/lib/vercel-analytics";
 
 export default async function SellerDashboardPage() {
   const session = await requireRole("seller");

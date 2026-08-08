@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { PageHeader } from "@/components/admin/ui/page-header";
-import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/organisms/page-header";
+import { Button } from "@/components/ui/atoms/button";
 import {
   Building2,
   User,
@@ -13,7 +13,7 @@ import {
   Save,
   CheckCircle2,
 } from "lucide-react";
-import { AvatarUploader } from "@/components/avatar-uploader";
+import { AvatarUploader } from "@/features/user/components/avatar-uploader";
 
 interface SellerSettingsClientProps {
   userId: string;

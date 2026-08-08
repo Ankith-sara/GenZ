@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getUserAndProfile } from "@/lib/auth";
+import { getUserAndProfile } from "@/features/auth/lib/auth";
 
 export default async function PendingVerificationPage() {
   const session = await getUserAndProfile();

@@ -40,7 +40,7 @@ export async function signupSeller(
   // 2. Schema Validation
   const validation = sellerSignupSchema.safeParse({
     email,
-    password,
+    password: password || undefined,
     fullName,
     businessType,
   });

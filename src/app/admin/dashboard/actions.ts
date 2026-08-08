@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
+import { requireRole } from "@/features/auth/lib/require-role";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
 
 export async function deleteWaitlistEntry(id: string) {

@@ -1,4 +1,4 @@
-import { AuthLayout } from "@/components/auth/auth-layout";
+import { AuthLayout } from "@/features/auth/components/auth-layout";
 
 export default async function LoginPage({
   searchParams,

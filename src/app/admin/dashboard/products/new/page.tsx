@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { requireRole } from "@/lib/require-role";
-import { PageHeader } from "@/components/admin/ui/page-header";
+import { requireRole } from "@/features/auth/lib/require-role";
+import { PageHeader } from "@/components/ui/organisms/page-header";
 import { AdminProductForm, type SellerOption } from "./admin-product-form";
 
 export default async function AdminNewProductPage() {

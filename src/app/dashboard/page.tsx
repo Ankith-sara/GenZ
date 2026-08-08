@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getUserAndProfile } from "@/lib/auth";
+import { getUserAndProfile } from "@/features/auth/lib/auth";
 
 export default async function DashboardPage() {
   const session = await getUserAndProfile();

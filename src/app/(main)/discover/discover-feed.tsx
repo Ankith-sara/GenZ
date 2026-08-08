@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/features/products/components/product-card";
 import { Search } from "lucide-react";
 import type { Product } from "@/types/database";
 import type { ProductFilters } from "./types";

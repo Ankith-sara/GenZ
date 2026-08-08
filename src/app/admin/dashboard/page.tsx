@@ -1,10 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
+import { requireRole } from "@/features/auth/lib/require-role";
 import Link from "next/link";
-import { VercelAnalyticsChart } from "@/components/admin/vercel-analytics-chart";
-import { getAnalyticsData } from "@/lib/vercel-analytics";
-import { MetricCard } from "@/components/admin/ui/metric-card";
-import { StatusBadge } from "@/components/admin/ui/status-badge";
+import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
+import { getAnalyticsData } from "@/features/admin/lib/vercel-analytics";
+import { MetricCard } from "@/components/ui/organisms/metric-card";
+import { StatusBadge } from "@/components/ui/atoms/status-badge";
 import {
   Users,
   Building2,
@@ -306,7 +306,7 @@ export default async function AdminDashboardOverviewPage() {
               href="/admin/dashboard/users"
               className="font-graphik text-xs font-semibold text-black hover:underline"
             >
-              View All →
+              View All
             </Link>
           </div>
 
@@ -329,8 +329,16 @@ export default async function AdminDashboardOverviewPage() {
                       <p className="font-semibold text-black">
                         {user.full_name || "Anonymous User"}
                       </p>
-                      <p className="max-w-[160px] truncate font-mono text-[10px] text-[#73736E] sm:max-w-[200px]">
-                        {user.id}
+                      <p className="font-mono text-[10px] text-[#73736E]">
+                        {user.created_at
+                          ? new Date(user.created_at).toLocaleString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })
+                          : "Recently registered"}
                       </p>
                     </div>
                   </div>
@@ -359,7 +367,7 @@ export default async function AdminDashboardOverviewPage() {
               href="/admin/dashboard/verifications"
               className="font-graphik text-xs font-semibold text-black hover:underline"
             >
-              Inspect Queue →
+              Inspect Queue
             </Link>
           </div>
 

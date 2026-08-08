@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
+import { requireRole } from "@/features/auth/lib/require-role";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
 import { sellerProfileSchema } from "@/lib/validation";
 

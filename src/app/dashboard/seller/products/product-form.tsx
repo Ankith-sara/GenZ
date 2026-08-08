@@ -1,9 +1,9 @@
 "use client";
 
 import { useActionState, useState, startTransition } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/atoms/button";
 import { createProduct, updateProduct, type ProductFormState } from "./actions";
-import { TOY_CATEGORIES, AGE_GROUPS } from "@/lib/products";
+import { TOY_CATEGORIES, AGE_GROUPS } from "@/features/products/lib/products";
 import type { Product } from "@/types/database";
 import { Upload } from "lucide-react";
 

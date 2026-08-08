@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { PageHeader } from "@/components/admin/ui/page-header";
-import { StatusBadge } from "@/components/admin/ui/status-badge";
-import { ActionDropdown } from "@/components/admin/ui/action-dropdown";
-import { SlideOverDrawer } from "@/components/admin/ui/slide-over-drawer";
-import { EmptyState } from "@/components/admin/ui/empty-state";
+import { PageHeader } from "@/components/ui/organisms/page-header";
+import { StatusBadge } from "@/components/ui/atoms/status-badge";
+import { ActionDropdown } from "@/components/ui/molecules/action-dropdown";
+import { SlideOverDrawer } from "@/components/ui/organisms/slide-over-drawer";
+import { EmptyState } from "@/components/ui/organisms/empty-state";
 import {
   Search,
   Download,
@@ -17,7 +17,7 @@ import {
   Calendar,
   MapPin,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/atoms/button";
 
 export interface ProfileRecord {
   id: string;

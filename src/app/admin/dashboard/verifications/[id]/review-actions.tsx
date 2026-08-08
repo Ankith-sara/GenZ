@@ -13,9 +13,9 @@ import {
   Send,
   ArrowRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/atoms/button";
+import { Textarea } from "@/components/ui/atoms/textarea";
+import { Input } from "@/components/ui/atoms/input";
 import {
   approveSeller,
   rejectSeller,

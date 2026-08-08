@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { ProductCard } from "@/components/product-card";
-import { VerifiedBadge } from "@/components/verified-badge";
+import { ProductCard } from "@/features/products/components/product-card";
+import { VerifiedBadge } from "@/components/ui/atoms/verified-badge";
 
 export async function generateMetadata({
   params,

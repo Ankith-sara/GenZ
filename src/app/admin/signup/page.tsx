@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SignupForm } from "@/app/signup/signup-form";
-import { GoogleSignInButton } from "@/components/google-signin";
+import { GoogleSignInButton } from "@/features/auth/components/google-signin";
 
 export default async function AdminSignupPage() {
   return (

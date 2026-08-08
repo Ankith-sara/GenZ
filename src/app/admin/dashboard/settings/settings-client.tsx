@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { PageHeader } from "@/components/admin/ui/page-header";
-import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/organisms/page-header";
+import { Button } from "@/components/ui/atoms/button";
 import {
   ShieldCheck,
   Bell,
@@ -36,7 +36,7 @@ const DEFAULT_SETTINGS = {
   requireGstVerification: true,
   requireFactoryAddress: true,
 
-  // Security & RLS
+  // Security & Protection
   forceAdmin2FA: true,
   maintenanceMode: false,
   rlsGuardActive: true,
@@ -48,6 +48,42 @@ const DEFAULT_SETTINGS = {
   notifyDocumentUpload: true,
   dailySummaryDigest: false,
 };
+
+interface ToggleSwitchProps {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  disabled?: boolean;
+  accentColor?: "black" | "rose";
+}
+
+function ToggleSwitch({
+  checked,
+  onChange,
+  disabled = false,
+  accentColor = "black",
+}: ToggleSwitchProps) {
+  const activeBg = accentColor === "rose" ? "bg-rose-600" : "bg-black";
+
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => !disabled && onChange(!checked)}
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-black focus:ring-offset-2 focus:outline-none ${
+        disabled ? "cursor-not-allowed opacity-50" : ""
+      } ${checked ? activeBg : "bg-neutral-200"}`}
+    >
+      <span
+        aria-hidden="true"
+        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
+          checked ? "translate-x-5" : "translate-x-0"
+        }`}
+      />
+    </button>
+  );
+}
 
 export function SettingsClient({ adminUser }: SettingsClientProps) {
   const [activeTab, setActiveTab] = useState<
@@ -92,7 +128,7 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
   };
 
   const handleReset = () => {
-    if (confirm("Reset all platform settings to enterprise defaults?")) {
+    if (confirm("Reset all platform settings to default values?")) {
       setSettings(DEFAULT_SETTINGS);
       localStorage.removeItem("genz_admin_system_settings");
       setSavedSuccess(true);
@@ -103,33 +139,32 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
   return (
     <div className="font-graphik space-y-6 select-none">
       <PageHeader
-        title="Platform Administration Settings"
-        description="Configure systemic rules, seller verification policies, security enforcement, and dispatch preferences."
+        title="Platform Settings"
+        description="Manage storefront details, seller registration rules, platform security, and notification preferences."
         breadcrumbs={[
           { label: "Admin", href: "/admin/dashboard" },
           { label: "Settings" },
         ]}
         actions={
           <div className="flex items-center gap-2">
-            <Button
+            <button
               type="button"
-              variant="outline"
               onClick={handleReset}
-              className="font-graphik h-9 border-[#E5E5E0] bg-white text-xs font-semibold text-[#52524E] hover:bg-[#FAF8F4]"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3.5 text-xs font-semibold text-neutral-800 shadow-2xs transition-colors hover:border-neutral-400 hover:bg-neutral-100 focus:ring-2 focus:ring-black focus:ring-offset-1 focus:outline-none"
             >
-              <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
+              <RotateCcw className="h-3.5 w-3.5 text-neutral-700" />
               <span>Reset Defaults</span>
-            </Button>
+            </button>
 
-            <Button
+            <button
               type="button"
               onClick={handleSave}
               disabled={isSaving}
-              className="font-graphik h-9 rounded-lg bg-black px-4 text-xs font-semibold text-white shadow-2xs hover:bg-neutral-800"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-black px-4 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-neutral-800 focus:ring-2 focus:ring-black focus:ring-offset-1 focus:outline-none disabled:opacity-50"
             >
-              <Save className="mr-1.5 h-3.5 w-3.5" />
+              <Save className="h-3.5 w-3.5 text-white" />
               <span>{isSaving ? "Saving..." : "Save Settings"}</span>
-            </Button>
+            </button>
           </div>
         }
       />
@@ -137,9 +172,7 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
       {savedSuccess && (
         <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-xs text-emerald-900 shadow-2xs">
           <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-          <span className="font-semibold">
-            System settings successfully updated and persisted across platform services.
-          </span>
+          <span className="font-semibold">System settings updated successfully.</span>
         </div>
       )}
 
@@ -182,7 +215,7 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
           <div className="mt-6 rounded-2xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
             <div className="mb-1 flex items-center gap-2 font-bold text-black">
               <ShieldCheck className="h-4 w-4 text-amber-600" />
-              <span>Active Superadmin</span>
+              <span>Active Admin</span>
             </div>
             <p className="truncate font-semibold text-[#1A1A18]">
               {adminUser.fullName}
@@ -198,10 +231,11 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
             <div className="space-y-6">
               <div>
                 <h3 className="text-base font-bold text-[#1A1A18]">
-                  General Platform Identity
+                  General Platform Details
                 </h3>
                 <p className="text-xs text-[#73736E]">
-                  Core platform naming, contact routing, and regional currency settings.
+                  Manage your platform name, customer support contact email, and default
+                  tax rates.
                 </p>
               </div>
 
@@ -255,7 +289,7 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
                     className="h-10 w-full cursor-not-allowed rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] px-3 text-xs text-[#73736E]"
                   />
                   <p className="mt-1 text-[11px] text-[#8C8C85]">
-                    Locked to Indian Rupee (INR) for compliance with Indian GST & DPDP
+                    Locked to Indian Rupee (INR) for compliance with Indian tax & trade
                     standards.
                   </p>
                 </div>
@@ -268,11 +302,11 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
             <div className="space-y-6">
               <div>
                 <h3 className="text-base font-bold text-[#1A1A18]">
-                  Seller Onboarding & Verification Policies
+                  Seller Verification Rules
                 </h3>
                 <p className="text-xs text-[#73736E]">
-                  Control requirements for manufacturer registrations and document
-                  validation.
+                  Set verification rules and document requirements for sellers
+                  registering on the platform.
                 </p>
               </div>
 
@@ -280,60 +314,52 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
                 <div className="flex items-center justify-between pt-2">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      Require GSTIN Verification
+                      Require GST Verification
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Enforce 15-character Indian GSTIN number validation during seller
-                      application.
+                      Verify 15-character GSTIN details for all new seller
+                      registrations.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.requireGstVerification}
-                    onChange={(e) =>
-                      handleChange("requireGstVerification", e.target.checked)
+                    onChange={(checked) =>
+                      handleChange("requireGstVerification", checked)
                     }
-                    className="h-4 w-4 cursor-pointer rounded accent-black"
                   />
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      Require Mandatory Factory Address
+                      Require Physical Factory Address
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Sellers must submit physical manufacturing facility address and
-                      pincode.
+                      Mandate registered factory location details and pincode from
+                      manufacturers.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.requireFactoryAddress}
-                    onChange={(e) =>
-                      handleChange("requireFactoryAddress", e.target.checked)
+                    onChange={(checked) =>
+                      handleChange("requireFactoryAddress", checked)
                     }
-                    className="h-4 w-4 cursor-pointer rounded accent-black"
                   />
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      Auto-Approve Seller Applications
+                      Auto-Approve Seller Registrations
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Automatically mark incoming seller profiles as verified without
-                      manual admin review.
+                      Automatically grant verified status to new sellers without manual
+                      admin review.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.autoApproveSellers}
-                    onChange={(e) =>
-                      handleChange("autoApproveSellers", e.target.checked)
-                    }
-                    className="h-4 w-4 cursor-pointer rounded accent-black"
+                    onChange={(checked) => handleChange("autoApproveSellers", checked)}
                   />
                 </div>
               </div>
@@ -345,11 +371,11 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
             <div className="space-y-6">
               <div>
                 <h3 className="text-base font-bold text-[#1A1A18]">
-                  Security & Database Governance
+                  Security & Platform Protection
                 </h3>
                 <p className="text-xs text-[#73736E]">
-                  Row Level Security enforcement, rate limit defenses, and
-                  administrative access controls.
+                  Manage platform security settings, access controls, and protection
+                  rules.
                 </p>
               </div>
 
@@ -357,71 +383,64 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
                 <div className="flex items-center justify-between pt-2">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      SECURITY DEFINER RLS Guard (`is_admin`)
+                      Core Database Data Shield
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Standardized helper function to prevent infinite recursion in
-                      PostgreSQL RLS policies.
+                      Automated isolation guard protecting user profiles and preventing
+                      unauthorized database access.
                     </p>
                   </div>
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-1 font-mono text-[10px] font-bold text-emerald-800">
-                    ACTIVE (IMMUTABLE)
+                  <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-bold text-emerald-800">
+                    ACTIVE (PROTECTED)
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      Rate Limiting Defense Engine
+                      Spam & Abuse Protection
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Restrict rapid API calls, login attempts, and catalog creations
-                      per user ID.
+                      Automatically block rapid requests, repeated login attempts, and
+                      automated spam.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.rateLimitingEnabled}
-                    onChange={(e) =>
-                      handleChange("rateLimitingEnabled", e.target.checked)
-                    }
-                    className="h-4 w-4 cursor-pointer rounded accent-black"
+                    onChange={(checked) => handleChange("rateLimitingEnabled", checked)}
                   />
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      Force 2FA for Admin Portal Access
+                      Require Two-Factor Authentication (2FA) for Admins
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Require secondary verification code for all accounts accessing
-                      `/admin/*`.
+                      Require a secondary verification code for all admin team members
+                      signing into the portal.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.forceAdmin2FA}
-                    onChange={(e) => handleChange("forceAdmin2FA", e.target.checked)}
-                    className="h-4 w-4 cursor-pointer rounded accent-black"
+                    onChange={(checked) => handleChange("forceAdmin2FA", checked)}
                   />
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
                   <div>
                     <h4 className="text-xs font-bold text-rose-600">
-                      Platform Maintenance Mode
+                      Storefront Maintenance Mode
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Display maintenance notice to non-admin visitors across
-                      storefront.
+                      Temporarily pause public buyer browsing and display a friendly
+                      maintenance notice on the storefront.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.maintenanceMode}
-                    onChange={(e) => handleChange("maintenanceMode", e.target.checked)}
-                    className="h-4 w-4 cursor-pointer rounded accent-rose-600"
+                    onChange={(checked) => handleChange("maintenanceMode", checked)}
+                    accentColor="rose"
                   />
                 </div>
               </div>
@@ -433,10 +452,11 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
             <div className="space-y-6">
               <div>
                 <h3 className="text-base font-bold text-[#1A1A18]">
-                  Alerts & Notification Dispatch
+                  Notification & Email Preferences
                 </h3>
                 <p className="text-xs text-[#73736E]">
-                  Manage automated email dispatches for platform events and lead alerts.
+                  Choose which platform updates and buyer inquiries trigger instant
+                  email alerts.
                 </p>
               </div>
 
@@ -444,58 +464,50 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
                 <div className="flex items-center justify-between pt-2">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      New Buyer Inquiry Dispatches
+                      New Buyer Inquiry Alerts
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Send instant email notification when a buyer submits a product
-                      sourcing inquiry.
+                      Receive immediate email notifications whenever a buyer submits a
+                      product inquiry.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.notifyNewInquiry}
-                    onChange={(e) => handleChange("notifyNewInquiry", e.target.checked)}
-                    className="h-4 w-4 cursor-pointer rounded accent-black"
+                    onChange={(checked) => handleChange("notifyNewInquiry", checked)}
                   />
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      Seller Application Alerts
+                      New Seller Application Alerts
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Notify superadmin when a new seller submits verification
-                      documents.
+                      Notify the admin team when a seller submits their verification
+                      documents for review.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.notifyNewSellerSignup}
-                    onChange={(e) =>
-                      handleChange("notifyNewSellerSignup", e.target.checked)
+                    onChange={(checked) =>
+                      handleChange("notifyNewSellerSignup", checked)
                     }
-                    className="h-4 w-4 cursor-pointer rounded accent-black"
                   />
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      Daily Administrative Summary
+                      Daily Performance Digest
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Receive daily digest of catalog counts, new users, and pending
-                      verification queues.
+                      Receive a daily summary email with seller applications, catalog
+                      updates, and key metrics.
                     </p>
                   </div>
-                  <input
-                    type="checkbox"
+                  <ToggleSwitch
                     checked={settings.dailySummaryDigest}
-                    onChange={(e) =>
-                      handleChange("dailySummaryDigest", e.target.checked)
-                    }
-                    className="h-4 w-4 cursor-pointer rounded accent-black"
+                    onChange={(checked) => handleChange("dailySummaryDigest", checked)}
                   />
                 </div>
               </div>

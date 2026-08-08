@@ -1,6 +1,6 @@
 # GenZ — Trust Commerce & Manufacturing Platform
 
-A modern B2B & B2C marketplace connecting verified Indian toy sellers directly with buyers and retail businesses. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**, **shadcn/ui**, and **Supabase**.
+A modern B2B & B2C marketplace connecting verified Indian toy sellers directly with buyers and retail businesses. Built with **Next.js 15 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**, **Atomic Design UI**, and **Supabase**.
 
 ---
 
@@ -56,11 +56,37 @@ A modern B2B & B2C marketplace connecting verified Indian toy sellers directly w
 
 ---
 
+## 🏗️ Architecture Standards
+
+The codebase strictly follows a three-pillar modular architecture:
+
+1. **Atomic Design UI (`src/components/ui/`)**:
+   - **`atoms/`**: Pure design tokens & single-element primitives (`Button`, `Input`, `Badge`, `Label`, `Textarea`, `Card`, `StatusBadge`, `UserAvatar`, `VerifiedBadge`).
+   - **`molecules/`**: Multi-atom composite controls (`ActionDropdown`, `LocationSelectGroup`, `PhoneInputWithCountryCode`, `SearchTriggerButton`, `CookieConsent`).
+   - **`organisms/`**: Complex layout sections (`Header`, `Footer`, `PageHeader`, `MetricCard`, `CommandMenu`, `EmptyState`, `SkeletonLoaders`, `SlideOverDrawer`, `DashboardSidebar`, `PageViewTracker`).
+
+2. **Feature Domain Modules (`src/features/`)**:
+   - Business logic, server actions, hooks, and domain UI encapsulated within dedicated folders:
+     - `admin/` — Verification reviews, workspace analytics, admin layout shell
+     - `auth/` — Login/signup forms, RBAC guards (`require-role.ts`), session logic (`auth.ts`)
+     - `seller/` — Seller verification actions and workflow
+     - `products/` — Product forms, variant editor, cover/image uploaders
+     - `documents/` — Document list & verification wizard
+     - `reels/` — Video reel uploaders & management list
+     - `marketing/` — Contact, newsletter, waitlist forms
+     - `user/` — User profile & avatar uploader
+
+3. **Logic-Only Spec Files (`*.spec.ts`)**:
+   - Co-located **exclusively** with business logic, validators, services, and domain utilities (e.g. `src/features/products/lib/products.spec.ts`, `src/lib/validation.spec.ts`), keeping pure UI components completely clean.
+
+---
+
 ## 🛠️ Tech Stack
 
 | Domain                 | Tech / Library                                                                                                |
 | :--------------------- | :------------------------------------------------------------------------------------------------------------ |
 | **Framework**          | Next.js 15 (App Router, Server Actions, Dynamic API Routes)                                                   |
+| **UI Architecture**    | Atomic Design (`atoms/`, `molecules/`, `organisms/`), Feature Modules (`src/features/`)                       |
 | **UI & Core**          | React 19, TypeScript 5, Lucide React icons                                                                    |
 | **Styling**            | Tailwind CSS v4, PostCSS, Radix UI Primitives (`Dialog`, `Select`, `Label`, `Slot`), `clsx`, `tailwind-merge` |
 | **Database & Backend** | Supabase SSR (`@supabase/ssr`), PostgreSQL (RLS, Triggers, Views, Functions, Storage Buckets)                 |
@@ -91,22 +117,21 @@ All database schemas, RLS policies, triggers, and storage buckets are managed vi
 ```
 genz-app/
 ├── src/
-│   ├── app/
+│   ├── app/                             # Next.js App Router routes
 │   │   ├── (main)/                      # Public routes (Header + Footer layout)
 │   │   │   ├── page.tsx                 # Home page (Hero, featured products, waitlist)
 │   │   │   ├── discover/                # Discovery feed with infinite scroll & search
 │   │   │   ├── products/[id]/           # Product detail page, video reels & inquiry form
-│   │   │   ├── sellers/[id]/      # Public seller profile & catalog
+│   │   │   ├── sellers/[id]/            # Public seller profile & catalog
 │   │   │   ├── about/, contact/, faqs/  # Informational & support pages
-│   │   │   ├── privacy/, terms/         # Legal pages
-│   │   │   └── cart/, wishlist/, profile/ # Buyer management views
+│   │   │   └── privacy/, terms/         # Legal pages
 │   │   ├── admin/                       # Admin portal routes
 │   │   │   ├── login/, signup/          # Admin authentication
-│   │   │   └── dashboard/               # Verification queue & seller detail reviews
+│   │   │   └── dashboard/               # Verification queue & seller reviews
 │   │   ├── dashboard/                   # Seller dashboard routes
-│   │   │   ├── seller/            # Onboarding, products, reels, inquiries
+│   │   │   ├── seller/                  # Products, reels, inquiries workspace
 │   │   │   ├── pending-verification/    # Awaiting review status page
-│   │   │   └── account/                 # User profile & avatar management
+│   │   │   └── account/                 # User profile & settings
 │   │   ├── api/                         # API endpoints (e.g. GET /api/products)
 │   │   ├── auth/                        # Confirmation & magic link handlers
 │   │   ├── login/, signup/              # Buyer & seller auth routes
@@ -115,24 +140,32 @@ genz-app/
 │   │   ├── sitemap.ts, robots.ts        # Dynamic SEO files
 │   │   └── not-found.tsx                # Custom 404 page
 │   ├── components/
-│   │   ├── ui/                          # Radix / shadcn UI primitives (Button, Input, Card, etc.)
-│   │   ├── header.tsx, footer.tsx       # Navigation components
-│   │   ├── dashboard-sidebar.tsx        # Role-aware sidebar layout
-│   │   ├── document-upload-wizard.tsx   # Step-by-step seller verification uploader
-│   │   ├── product-image-uploader.tsx   # Gallery & cover image uploaders
-│   │   ├── reel-uploader.tsx            # Video reel uploader
-│   │   ├── verified-badge.tsx           # Trust badge component
-│   │   └── newsletter-form.tsx, waitlist-form.tsx # Conversion forms
-│   ├── lib/
-│   │   ├── supabase/                    # Supabase SSR client, server, & middleware utilities
-│   │   ├── auth.ts, require-role.ts     # Server-side auth & RBAC guards
+│   │   └── ui/                          # Atomic UI Components
+│   │       ├── atoms/                   # Button, Input, Badge, Label, Textarea, Card, StatusBadge, UserAvatar, VerifiedBadge
+│   │       ├── molecules/               # ActionDropdown, LocationSelectGroup, PhoneInput, SearchTriggerButton, CookieConsent
+│   │       └── organisms/               # Header, Footer, PageHeader, MetricCard, CommandMenu, EmptyState, SkeletonLoaders, SlideOverDrawer, DashboardSidebar, PageViewTracker
+│   ├── features/                        # Feature Domain Modules
+│   │   ├── admin/                       # Admin sidebar, layout shell, analytics
+│   │   ├── auth/                        # Login/signup forms, RBAC guards, auth.ts
+│   │   ├── seller/                      # Seller actions & logic
+│   │   ├── products/                    # Product forms, variant editor, uploaders
+│   │   ├── documents/                   # Verification wizard & document list
+│   │   ├── reels/                       # Reel uploaders & management list
+│   │   ├── marketing/                   # Contact, newsletter, waitlist forms
+│   │   └── user/                        # User settings & avatar uploader
+│   ├── lib/                             # Core Infrastructure & Cross-Cutting Utilities
+│   │   ├── supabase/                    # Supabase SSR client, server, & middleware
 │   │   ├── rate-limiter.ts              # Database rate limiting utility
 │   │   └── validation.ts, file-validation.ts # Form & upload validators
 │   ├── types/
-│   │   └── database.ts                  # TypeScript definitions generated from Supabase schema
-│   └── __tests__/                       # Vitest unit & component test suite
+│   │   └── database.ts                  # Generated Supabase TypeScript definitions
+│   └── __tests__/                       # Vitest integration & component test suite
+│       ├── atomic/                      # Atomic component rendering tests
+│       ├── features/                    # Feature & domain integration tests
+│       └── utils/                       # Utility & rate limit tests
 ├── supabase/
 │   └── migrations/                      # Postgres migration files (0001 to 0008)
+├── TEST_GUIDELINES.md                   # Test architecture & developer rules
 └── package.json
 ```
 
@@ -144,7 +177,7 @@ genz-app/
 
 - **Node.js**: `v20.x` or later
 - **npm**: `v10.x` or later
-- **Supabase Account**: A active project on [supabase.com](https://supabase.com) (or a local Supabase CLI setup).
+- **Supabase Account**: An active project on [supabase.com](https://supabase.com) (or local Supabase CLI setup).
 
 ### 2. Install Dependencies
 

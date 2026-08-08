@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
+import { requireRole } from "@/features/auth/lib/require-role";
 import { OnboardingForm } from "./onboarding-form";
-import { PageHeader } from "@/components/admin/ui/page-header";
+import { PageHeader } from "@/components/ui/organisms/page-header";
 
 export default async function SellerOnboardingPage() {
   const session = await requireRole("seller");

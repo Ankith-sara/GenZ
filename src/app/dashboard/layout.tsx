@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getUserAndProfile } from "@/lib/auth";
+import { getUserAndProfile } from "@/features/auth/lib/auth";
 import { signOut } from "@/app/login/actions";
-import { Button } from "@/components/ui/button";
-import { UserAvatar } from "@/components/user-avatar";
-import { DashboardSidebar } from "@/components/dashboard-sidebar";
+import { Button } from "@/components/ui/atoms/button";
+import { UserAvatar } from "@/components/ui/atoms/user-avatar";
+import { DashboardSidebar } from "@/components/ui/organisms/dashboard-sidebar";
 import { Calendar, LogOut, CheckCircle2, ShieldAlert } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { SearchTriggerButton } from "@/components/search-trigger-button";
+import { SearchTriggerButton } from "@/components/ui/molecules/search-trigger-button";
 
 export default async function DashboardLayout({
   children,

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { requireRole } from "@/lib/require-role";
+import { requireRole } from "@/features/auth/lib/require-role";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
 import { adminRejectSchema } from "@/lib/validation";
 import { SITE_URL } from "@/lib/config";
@@ -205,6 +205,13 @@ export async function approveSeller(
     pincode: applicationFormData.pincode || null,
   });
 
+  if (applicationId && applicationId !== userId) {
+    await adminClient
+      .from("profiles")
+      .update({ role: "seller" })
+      .eq("id", applicationId);
+  }
+
   await adminClient.from("seller_profiles").upsert({
     id: userId,
     business_name: application.business_name,
@@ -222,6 +229,17 @@ export async function approveSeller(
     reviewed_by: session.userId,
   });
 
+  if (applicationId && applicationId !== userId) {
+    await adminClient
+      .from("seller_profiles")
+      .update({
+        status: "verified",
+        reviewed_at: new Date().toISOString(),
+        reviewed_by: session.userId,
+      })
+      .eq("id", applicationId);
+  }
+
   // 5. Update seller_applications if present
   await adminClient
     .from("seller_applications")
@@ -230,7 +248,7 @@ export async function approveSeller(
       reviewed_at: new Date().toISOString(),
       reviewed_by: session.userId,
     })
-    .eq("id", applicationId);
+    .or(`id.eq.${applicationId},id.eq.${userId}`);
 
   // 6. Dispatch login credentials email if enabled
   let emailSent = false;
@@ -285,6 +303,8 @@ export async function approveSeller(
   });
 
   revalidatePath("/admin/dashboard/verifications");
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/dashboard/seller");
 
   return {
     success: true,

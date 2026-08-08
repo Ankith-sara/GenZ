@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { TOY_CATEGORIES, AGE_GROUPS } from "@/lib/products";
+import { Button } from "@/components/ui/atoms/button";
+import { Input } from "@/components/ui/atoms/input";
+import { TOY_CATEGORIES, AGE_GROUPS } from "@/features/products/lib/products";
 import type { ProductFilters } from "./types";
 
 const selectClass =

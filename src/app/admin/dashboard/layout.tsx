@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
-import { AdminLayoutShell } from "@/components/admin/admin-layout-shell";
+import { requireRole } from "@/features/auth/lib/require-role";
+import { AdminLayoutShell } from "@/features/admin/components/admin-layout-shell";
 
 export default async function AdminDashboardLayout({
   children,

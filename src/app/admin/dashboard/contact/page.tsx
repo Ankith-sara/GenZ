@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
-import { PageHeader } from "@/components/admin/ui/page-header";
-import { StatusBadge } from "@/components/admin/ui/status-badge";
-import { EmptyState } from "@/components/admin/ui/empty-state";
+import { requireRole } from "@/features/auth/lib/require-role";
+import { PageHeader } from "@/components/ui/organisms/page-header";
+import { StatusBadge } from "@/components/ui/atoms/status-badge";
+import { EmptyState } from "@/components/ui/organisms/empty-state";
 import { Mail } from "lucide-react";
 
 export default async function AdminContactPage() {

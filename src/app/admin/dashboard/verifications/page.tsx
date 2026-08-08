@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { requireRole } from "@/lib/require-role";
+import { requireRole } from "@/features/auth/lib/require-role";
 import {
   VerificationsSplitClient,
   type SellerAppRecord,
@@ -94,17 +94,22 @@ export default async function AdminVerificationsPage({
 
   // Insert seller_profiles records
   (rawSellerProfiles ?? []).forEach((sp) => {
-    if (!applicationsMap.has(sp.id)) {
-      const userProf = profilesMap[sp.id] || {};
-      const statusMapped: "pending" | "approved" | "rejected" =
-        sp.status === "verified"
-          ? "approved"
-          : sp.status === "rejected"
-            ? "rejected"
-            : "pending";
+    const existing = applicationsMap.get(sp.id);
+    const userProf = profilesMap[sp.id] || {};
+    const statusMapped: "pending" | "approved" | "rejected" =
+      sp.status === "verified" || (sp.status as string) === "approved"
+        ? "approved"
+        : sp.status === "rejected"
+          ? "rejected"
+          : "pending";
 
-      const realEmail = authUserEmails[sp.id] || "seller@genz.in";
+    const realEmail = authUserEmails[sp.id] || existing?.email || "seller@genz.in";
 
+    if (existing) {
+      if (sp.status === "verified" || (sp.status as string) === "approved") {
+        existing.status = "approved";
+      }
+    } else {
       applicationsMap.set(sp.id, {
         id: sp.id,
         business_name: sp.business_name || "Factory Seller",

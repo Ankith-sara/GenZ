@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { PageHeader } from "@/components/admin/ui/page-header";
-import { StatusBadge } from "@/components/admin/ui/status-badge";
-import { EmptyState } from "@/components/admin/ui/empty-state";
+import { PageHeader } from "@/components/ui/organisms/page-header";
+import { StatusBadge } from "@/components/ui/atoms/status-badge";
+import { EmptyState } from "@/components/ui/organisms/empty-state";
 import { updateInquiryStatus } from "./actions";
 import {
   MessageSquare,
@@ -15,7 +15,7 @@ import {
   Send,
   Loader2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/atoms/button";
 import type { InquiryStatus } from "@/types/database";
 
 export interface SellerInquiryRecord {

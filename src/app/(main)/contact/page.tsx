@@ -8,7 +8,7 @@ import {
   Sparkles,
   HelpCircle,
 } from "lucide-react";
-import { ContactForm } from "@/components/contact-form";
+import { ContactForm } from "@/features/marketing/components/contact-form";
 import Link from "next/link";
 
 export const metadata = {

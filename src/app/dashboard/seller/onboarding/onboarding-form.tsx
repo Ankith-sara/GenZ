@@ -2,10 +2,10 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/atoms/button";
+import { Input } from "@/components/ui/atoms/input";
+import { Label } from "@/components/ui/atoms/label";
+import { Textarea } from "@/components/ui/atoms/textarea";
 import {
   saveSellerProfile,
   submitForVerification,

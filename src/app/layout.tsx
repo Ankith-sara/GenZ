@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
-import { PageViewTracker } from "@/components/page-view-tracker";
+import { PageViewTracker } from "@/components/ui/organisms/page-view-tracker";
 import { SITE_URL } from "@/lib/config";
 
 const siteUrl = SITE_URL;

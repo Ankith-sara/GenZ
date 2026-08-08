@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { AuthLogo } from "@/components/auth/logo";
-import { SupportLink } from "@/components/auth/support-link";
+import { AuthLogo } from "@/features/auth/components/logo";
+import { SupportLink } from "@/features/auth/components/support-link";
 import { SignupForm } from "./signup-form";
-import { SocialLogin } from "@/components/auth/google-button";
-import { FooterLinks } from "@/components/auth/footer-links";
-import { AuthHero } from "@/components/auth/auth-hero";
+import { SocialLogin } from "@/features/auth/components/google-button";
+import { FooterLinks } from "@/features/auth/components/footer-links";
+import { AuthHero } from "@/features/auth/components/auth-hero";
 
 export default async function SignupPage({
   searchParams,

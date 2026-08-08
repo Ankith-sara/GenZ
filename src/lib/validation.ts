@@ -38,7 +38,7 @@ export const signupSchema = z.object({
 
 export const sellerSignupSchema = z.object({
   email: emailSchema,
-  password: passwordSchema,
+  password: passwordSchema.optional().or(z.literal("")),
   fullName: fullNameSchema,
   businessType: z.string().max(100).trim().default("seller"),
 });

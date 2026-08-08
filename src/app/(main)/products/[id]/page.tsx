@@ -3,9 +3,9 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { productMediaUrl, formatInr } from "@/lib/products";
-import { VerifiedBadge } from "@/components/verified-badge";
-import { ProductWishlistButton } from "@/components/product-wishlist-button";
+import { productMediaUrl, formatInr } from "@/features/products/lib/products";
+import { VerifiedBadge } from "@/components/ui/atoms/verified-badge";
+import { ProductWishlistButton } from "@/features/products/components/product-wishlist-button";
 import { InquiryForm } from "./inquiry-form";
 
 export async function generateMetadata({

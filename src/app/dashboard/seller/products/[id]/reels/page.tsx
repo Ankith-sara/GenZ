@@ -2,9 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
-import { ReelUploader } from "@/components/reel-uploader";
-import { ReelManageList } from "@/components/reel-manage-list";
+import { requireRole } from "@/features/auth/lib/require-role";
+import { ReelUploader } from "@/features/reels/components/reel-uploader";
+import { ReelManageList } from "@/features/reels/components/reel-manage-list";
 
 export default async function SellerProductReelsPage({
   params,

@@ -2,16 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, Film } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
-import { Button } from "@/components/ui/button";
-import { ProductCoverUploader } from "@/components/product-cover-uploader";
-import { ProductImageUploader } from "@/components/product-image-uploader";
-import { ProductVariantEditor } from "@/components/product-variant-editor";
-import { PRODUCT_STATUS_LABEL } from "@/lib/products";
+import { requireRole } from "@/features/auth/lib/require-role";
+import { Button } from "@/components/ui/atoms/button";
+import { ProductCoverUploader } from "@/features/products/components/product-cover-uploader";
+import { ProductImageUploader } from "@/features/products/components/product-image-uploader";
+import { ProductVariantEditor } from "@/features/products/components/product-variant-editor";
+import { PRODUCT_STATUS_LABEL } from "@/features/products/lib/products";
 import { ProductForm } from "../product-form";
 import { PublishControls } from "./publish-controls";
-import { PageHeader } from "@/components/admin/ui/page-header";
-import { StatusBadge } from "@/components/admin/ui/status-badge";
+import { PageHeader } from "@/components/ui/organisms/page-header";
+import { StatusBadge } from "@/components/ui/atoms/status-badge";
 
 export default async function SellerProductDetailPage({
   params,

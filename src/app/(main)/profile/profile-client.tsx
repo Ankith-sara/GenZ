@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AvatarUploader } from "@/components/avatar-uploader";
+import { Button } from "@/components/ui/atoms/button";
+import { Input } from "@/components/ui/atoms/input";
+import { Label } from "@/components/ui/atoms/label";
+import { AvatarUploader } from "@/features/user/components/avatar-uploader";
 import { updateProfile, saveAddresses } from "./actions";
 import { updatePassword } from "@/app/login/actions";
 import { User, MapPin, ShieldAlert, Plus, Trash2, Eye, EyeOff } from "lucide-react";

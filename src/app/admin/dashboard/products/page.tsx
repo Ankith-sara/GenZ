@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/require-role";
+import { requireRole } from "@/features/auth/lib/require-role";
 import { ProductsTableClient } from "./products-table-client";
 
 export default async function AdminProductsPage() {
