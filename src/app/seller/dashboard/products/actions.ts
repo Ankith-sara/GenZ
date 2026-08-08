@@ -168,7 +168,7 @@ export async function createProduct(
     }
   }
 
-  revalidatePath("/dashboard/seller/products");
+  revalidatePath("/seller/dashboard/products");
   revalidatePath("/admin/dashboard/products");
 
   const isAdminRedirect = String(formData.get("is_admin") ?? "") === "true";
@@ -176,7 +176,7 @@ export async function createProduct(
     redirect("/admin/dashboard/products");
   }
 
-  redirect(`/dashboard/seller/products/${data.id}`);
+  redirect(`/seller/dashboard/products/${data.id}`);
 }
 
 export async function updateProduct(
@@ -228,8 +228,8 @@ export async function updateProduct(
     return { error: "Could not save changes. Please try again." };
   }
 
-  revalidatePath(`/dashboard/seller/products/${productId}`);
-  revalidatePath("/dashboard/seller/products");
+  revalidatePath(`/seller/dashboard/products/${productId}`);
+  revalidatePath("/seller/dashboard/products");
   return {};
 }
 
@@ -257,8 +257,8 @@ export async function setProductStatus(productId: string, status: ProductStatus)
     identifier: session.userId,
   });
 
-  revalidatePath(`/dashboard/seller/products/${productId}`);
-  revalidatePath("/dashboard/seller/products");
+  revalidatePath(`/seller/dashboard/products/${productId}`);
+  revalidatePath("/seller/dashboard/products");
 }
 
 export async function deleteProduct(productId: string) {
@@ -306,8 +306,8 @@ export async function deleteProduct(productId: string) {
     identifier: session.userId,
   });
 
-  revalidatePath("/dashboard/seller/products");
-  redirect("/dashboard/seller/products");
+  revalidatePath("/seller/dashboard/products");
+  redirect("/seller/dashboard/products");
 }
 
 export interface VariantFormState {
@@ -370,7 +370,7 @@ export async function addVariant(
     return { error: "Could not add the variant. Please try again." };
   }
 
-  revalidatePath(`/dashboard/seller/products/${productId}`);
+  revalidatePath(`/seller/dashboard/products/${productId}`);
   return {};
 }
 
@@ -399,5 +399,5 @@ export async function deleteVariant(productId: string, variantId: string) {
     identifier: session.userId,
   });
 
-  revalidatePath(`/dashboard/seller/products/${productId}`);
+  revalidatePath(`/seller/dashboard/products/${productId}`);
 }

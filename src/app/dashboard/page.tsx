@@ -67,8 +67,8 @@ export default async function DashboardPage() {
       }
     }
 
-    // Always redirect directly to /dashboard/seller to avoid rewrite loops
-    redirect("/dashboard/seller");
+    // Always redirect directly to /seller/dashboard to avoid rewrite loops
+    redirect("/seller/dashboard");
   } else {
     redirect("/profile");
   }

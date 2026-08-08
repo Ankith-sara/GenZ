@@ -30,7 +30,7 @@ export default async function SellerDocumentsPage() {
         title="Document Vault & Compliance Credentials"
         description="Upload your GST certificate, factory photographs, and compliance clearances."
         breadcrumbs={[
-          { label: "Seller Desk", href: "/dashboard/seller" },
+          { label: "Seller Desk", href: "/seller/dashboard" },
           { label: "Document Vault" },
         ]}
       />

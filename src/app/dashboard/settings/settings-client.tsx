@@ -51,7 +51,7 @@ export function SellerSettingsClient({
         title="Seller Account & Preferences"
         description="Manage your factory profile, personal account details, security, and notification settings."
         breadcrumbs={[
-          { label: "Seller Desk", href: "/dashboard/seller" },
+          { label: "Seller Desk", href: "/seller/dashboard" },
           { label: "Settings" },
         ]}
       />
@@ -75,7 +75,7 @@ export function SellerSettingsClient({
                 Factory Business Profile
               </h3>
             </div>
-            <Link href="/dashboard/seller/onboarding">
+            <Link href="/seller/dashboard/onboarding">
               <Button
                 variant="outline"
                 className="h-8 border-[#E5E5E0] text-xs font-semibold hover:bg-[#FAF8F4]"

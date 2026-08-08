@@ -80,8 +80,8 @@ export async function saveSellerProfile(
     return { error: "Could not save your profile. Please try again." };
   }
 
-  revalidatePath("/dashboard/seller");
-  revalidatePath("/dashboard/seller/onboarding");
+  revalidatePath("/seller/dashboard");
+  revalidatePath("/seller/dashboard/onboarding");
   return { success: true };
 }
 
@@ -114,6 +114,6 @@ export async function submitForVerification() {
     return;
   }
 
-  revalidatePath("/dashboard/seller");
-  redirect("/dashboard/seller");
+  revalidatePath("/seller/dashboard");
+  redirect("/seller/dashboard");
 }

@@ -11,8 +11,8 @@ export default async function NewProductPage() {
         title="Add New Catalog Listing"
         description="Starts as a draft. You can add image assets, variants, and reels once created."
         breadcrumbs={[
-          { label: "Seller Desk", href: "/dashboard/seller" },
-          { label: "Products", href: "/dashboard/seller/products" },
+          { label: "Seller Desk", href: "/seller/dashboard" },
+          { label: "Products", href: "/seller/dashboard/products" },
           { label: "New Listing" },
         ]}
       />

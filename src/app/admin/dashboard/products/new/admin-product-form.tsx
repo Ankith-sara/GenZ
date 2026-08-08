@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/atoms/button";
 import {
   createProduct,
   type ProductFormState,
-} from "@/app/dashboard/seller/products/actions";
+} from "@/app/seller/dashboard/products/actions";
 import { TOY_CATEGORIES, AGE_GROUPS } from "@/features/products/lib/products";
 import { Upload, Building2 } from "lucide-react";
 

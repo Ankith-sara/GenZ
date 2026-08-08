@@ -45,11 +45,11 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
         title="Factory Product Catalog"
         description="Manage your manufacturing catalog listings, prices, variants, and draft publications."
         breadcrumbs={[
-          { label: "Seller Desk", href: "/dashboard/seller" },
+          { label: "Seller Desk", href: "/seller/dashboard" },
           { label: "Products" },
         ]}
         actions={
-          <Link href="/dashboard/seller/products/new">
+          <Link href="/seller/dashboard/products/new">
             <Button className="font-graphik h-9 rounded-lg bg-black px-3.5 text-xs font-semibold text-white shadow-2xs hover:bg-neutral-800">
               <Plus className="mr-1.5 h-3.5 w-3.5" />
               <span>Add New Product</span>
@@ -97,7 +97,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
           description={`No product listing matches "${searchQuery || statusFilter}"`}
           primaryAction={{
             label: "Create New Product",
-            onClick: () => (window.location.href = "/dashboard/seller/products/new"),
+            onClick: () => (window.location.href = "/seller/dashboard/products/new"),
           }}
         />
       ) : (
@@ -122,7 +122,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
                   >
                     <td className="p-3.5 pl-4 font-bold text-[#1A1A18]">
                       <Link
-                        href={`/dashboard/seller/products/${product.id}`}
+                        href={`/seller/dashboard/products/${product.id}`}
                         className="hover:underline"
                       >
                         {product.name}
@@ -156,7 +156,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
                             label: "Edit Listing Details",
                             icon: <Edit className="h-3.5 w-3.5" />,
                             onClick: () =>
-                              (window.location.href = `/dashboard/seller/products/${product.id}`),
+                              (window.location.href = `/seller/dashboard/products/${product.id}`),
                           },
                           {
                             label: "Preview Storefront Link",

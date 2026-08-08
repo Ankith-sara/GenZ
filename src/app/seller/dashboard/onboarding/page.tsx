@@ -19,7 +19,7 @@ export default async function SellerOnboardingPage() {
         title="Business & Manufacturing Profile"
         description="Specify your legal registration, manufacturing capacities, factory location, and GSTIN details."
         breadcrumbs={[
-          { label: "Seller Desk", href: "/dashboard/seller" },
+          { label: "Seller Desk", href: "/seller/dashboard" },
           { label: "Business Profile" },
         ]}
       />

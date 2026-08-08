@@ -135,7 +135,7 @@ function SellerNotFound() {
       {/* Seller Top Bar */}
       <header className="border-b border-[#E5E5E0] bg-white px-6 py-4">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link href="/dashboard/seller" className="flex items-center gap-2.5">
+          <Link href="/seller/dashboard" className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600 text-xs font-bold text-white shadow-2xs">
               SH
             </div>
@@ -174,7 +174,7 @@ function SellerNotFound() {
         {/* Quick Seller Shortcuts */}
         <div className="mt-8 grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
           <Link
-            href="/dashboard/seller"
+            href="/seller/dashboard"
             className="flex flex-col items-center gap-2 rounded-xl border border-[#E5E5E0] bg-white p-4 text-center shadow-2xs transition-all hover:border-black hover:bg-[#FAF8F4]"
           >
             <LayoutGrid className="h-5 w-5 text-amber-600" />
@@ -183,7 +183,7 @@ function SellerNotFound() {
           </Link>
 
           <Link
-            href="/dashboard/seller/products"
+            href="/seller/dashboard/products"
             className="flex flex-col items-center gap-2 rounded-xl border border-[#E5E5E0] bg-white p-4 text-center shadow-2xs transition-all hover:border-black hover:bg-[#FAF8F4]"
           >
             <ShoppingBag className="h-5 w-5 text-amber-600" />
@@ -192,7 +192,7 @@ function SellerNotFound() {
           </Link>
 
           <Link
-            href="/dashboard/seller/inquiries"
+            href="/seller/dashboard/inquiries"
             className="flex flex-col items-center gap-2 rounded-xl border border-[#E5E5E0] bg-white p-4 text-center shadow-2xs transition-all hover:border-black hover:bg-[#FAF8F4]"
           >
             <MessageSquare className="h-5 w-5 text-amber-600" />
@@ -203,7 +203,7 @@ function SellerNotFound() {
 
         <div className="mt-8">
           <Link
-            href="/dashboard/seller"
+            href="/seller/dashboard"
             className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-black px-6 text-xs font-bold text-white shadow-2xs transition-colors hover:bg-neutral-800"
           >
             <span>Return to Seller Workspace</span>

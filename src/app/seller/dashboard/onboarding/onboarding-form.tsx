@@ -115,7 +115,7 @@ export function OnboardingForm({ profile }: { profile: SellerProfile | null }) {
           {isPending ? "Saving…" : "Save details"}
         </Button>
         <Button asChild variant="outline">
-          <Link href="/dashboard/seller/documents">Upload documents</Link>
+          <Link href="/seller/dashboard/documents">Upload documents</Link>
         </Button>
       </div>
 

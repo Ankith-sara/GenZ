@@ -304,7 +304,7 @@ export async function approveSeller(
 
   revalidatePath("/admin/dashboard/verifications");
   revalidatePath("/admin/dashboard");
-  revalidatePath("/dashboard/seller");
+  revalidatePath("/seller/dashboard");
 
   return {
     success: true,

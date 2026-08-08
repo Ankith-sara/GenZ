@@ -67,7 +67,7 @@ export function SellerInquiriesClient({
         title="Buyer Procurement Inquiries"
         description="Direct sourcing requirements, RFQs, and product inquiries from buyers."
         breadcrumbs={[
-          { label: "Seller Desk", href: "/dashboard/seller" },
+          { label: "Seller Desk", href: "/seller/dashboard" },
           { label: "Inquiries" },
         ]}
       />

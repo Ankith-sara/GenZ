@@ -58,9 +58,9 @@ function getNavGroups(role: Role): NavGroup[] {
     {
       groupName: "FACTORY DESK",
       items: [
-        { href: "/dashboard/seller", label: "Seller Overview", icon: LayoutDashboard },
+        { href: "/seller/dashboard", label: "Seller Overview", icon: LayoutDashboard },
         {
-          href: "/dashboard/seller/onboarding",
+          href: "/seller/dashboard/onboarding",
           label: "Business Profile",
           icon: Building2,
         },
@@ -70,17 +70,17 @@ function getNavGroups(role: Role): NavGroup[] {
       groupName: "CATALOG & RFQS",
       items: [
         {
-          href: "/dashboard/seller/products",
+          href: "/seller/dashboard/products",
           label: "Product Portfolio",
           icon: Package,
         },
         {
-          href: "/dashboard/seller/inquiries",
+          href: "/seller/dashboard/inquiries",
           label: "Buyer Inquiries",
           icon: MessageSquare,
         },
         {
-          href: "/dashboard/seller/documents",
+          href: "/seller/dashboard/documents",
           label: "Document Vault",
           icon: FileText,
         },
@@ -159,7 +159,7 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
           {/* Header Brand */}
           <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
             <Link
-              href="/dashboard/seller"
+              href="/seller/dashboard"
               className={`flex items-center gap-2.5 ${
                 isCollapsed ? "lg:w-full lg:justify-center" : ""
               }`}
@@ -207,7 +207,7 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
                   {group.items.map((item) => {
                     const isActive =
                       pathname === item.href ||
-                      (item.href !== "/dashboard/seller" &&
+                      (item.href !== "/seller/dashboard" &&
                         pathname.startsWith(item.href));
                     const Icon = item.icon;
 

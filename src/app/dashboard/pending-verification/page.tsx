@@ -9,7 +9,7 @@ export default async function PendingVerificationPage() {
 
   const role = session.profile?.role ?? "buyer";
   if (role === "seller") {
-    redirect("/dashboard/seller");
+    redirect("/seller/dashboard");
   } else {
     redirect("/dashboard");
   }

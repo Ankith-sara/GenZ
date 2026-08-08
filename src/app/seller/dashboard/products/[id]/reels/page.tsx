@@ -44,7 +44,7 @@ export default async function SellerProductReelsPage({
           </p>
         </div>
         <Link
-          href={`/dashboard/seller/products/${id}`}
+          href={`/seller/dashboard/products/${id}`}
           className="font-graphik flex items-center gap-1.5 text-xs font-semibold text-[#52524E] hover:text-black sm:order-first"
         >
           <ArrowLeft className="h-3.5 w-3.5" />

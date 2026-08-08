@@ -486,7 +486,7 @@ export function ProductsTableClient({ initialProducts }: ProductsTableClientProp
                 <button
                   type="button"
                   onClick={() =>
-                    (window.location.href = `/dashboard/seller/products/${selectedProduct.id}`)
+                    (window.location.href = `/seller/dashboard/products/${selectedProduct.id}`)
                   }
                   className="flex w-full items-center justify-between rounded-xl border border-[#E5E5E0] bg-white px-4 py-3 text-xs font-bold text-[#1A1A18] shadow-2xs transition-all hover:border-black hover:bg-[#FAF8F4]"
                 >

@@ -54,8 +54,8 @@ export default async function SellerProductDetailPage({
         title={product.name}
         description={`Catalog Item ID: ${product.id}`}
         breadcrumbs={[
-          { label: "Seller Desk", href: "/dashboard/seller" },
-          { label: "Products", href: "/dashboard/seller/products" },
+          { label: "Seller Desk", href: "/seller/dashboard" },
+          { label: "Products", href: "/seller/dashboard/products" },
           { label: product.name },
         ]}
         actions={
@@ -145,7 +145,7 @@ export default async function SellerProductDetailPage({
               <Film className="h-4 w-4 text-[#8C8C85]" />
             </div>
             <Button asChild variant="outline" size="sm" className="w-full rounded-xl">
-              <Link href={`/dashboard/seller/products/${product.id}/reels`}>
+              <Link href={`/seller/dashboard/products/${product.id}/reels`}>
                 Manage Reels
               </Link>
             </Button>

@@ -31,5 +31,5 @@ export async function updateInquiryStatus(inquiryId: string, status: InquiryStat
     identifier: session.userId,
   });
 
-  revalidatePath("/dashboard/seller/inquiries");
+  revalidatePath("/seller/dashboard/inquiries");
 }

@@ -103,10 +103,10 @@ export async function updateSession(request: NextRequest) {
 
   if (subdomain === "seller" && path === "/") {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard/seller";
+    url.pathname = "/seller/dashboard";
     if (!user) {
       url.pathname = "/login";
-      url.searchParams.set("redirectTo", "/dashboard/seller");
+      url.searchParams.set("redirectTo", "/seller/dashboard");
       return NextResponse.redirect(url);
     }
     return NextResponse.rewrite(url);
@@ -120,19 +120,27 @@ export async function updateSession(request: NextRequest) {
     !isAuthCallback &&
     (path.startsWith("/dashboard") ||
       path.startsWith("/admin") ||
+      path.startsWith("/seller/dashboard") ||
       subdomain === "admin" ||
       subdomain === "seller");
 
   const isAdminPath =
     subdomain === "admin" || path.startsWith("/admin/dashboard") || path === "/admin";
-  const isSellerPath = subdomain === "seller" || path.startsWith("/dashboard");
+  const isSellerPath =
+    subdomain === "seller" ||
+    path.startsWith("/seller/dashboard") ||
+    path.startsWith("/dashboard");
 
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set(
       "redirectTo",
-      path === "/" ? (subdomain === "admin" ? "/admin/dashboard" : "/dashboard") : path
+      path === "/"
+        ? subdomain === "admin"
+          ? "/admin/dashboard"
+          : "/seller/dashboard"
+        : path
     );
     return NextResponse.redirect(url);
   }
@@ -148,7 +156,7 @@ export async function updateSession(request: NextRequest) {
       } else if (role === "admin") {
         url.pathname = subdomain === "admin" ? "/admin/dashboard" : "/admin/dashboard";
       } else if (role === "seller") {
-        url.pathname = "/dashboard";
+        url.pathname = "/seller/dashboard";
       } else {
         url.pathname = "/profile";
       }
@@ -158,7 +166,7 @@ export async function updateSession(request: NextRequest) {
     // 1. Admin paths: strictly admin only. Sellers and buyers restricted.
     if (isAdminPath && role !== "admin") {
       const url = request.nextUrl.clone();
-      url.pathname = role === "seller" ? "/dashboard" : "/profile";
+      url.pathname = role === "seller" ? "/seller/dashboard" : "/profile";
       return NextResponse.redirect(url);
     }
 

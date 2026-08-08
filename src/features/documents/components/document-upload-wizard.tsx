@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { validateFileContent } from "@/lib/file-validation";
 import type { DocType, SellerDocument, VerificationStatus } from "@/types/database";
 import { STATUS_LABEL } from "@/features/documents/lib/verification";
-import { submitForVerification } from "@/app/dashboard/seller/onboarding/actions";
+import { submitForVerification } from "@/app/seller/dashboard/onboarding/actions";
 
 const ACCEPTED = ".pdf,.jpg,.jpeg,.png,.webp";
 
