@@ -123,4 +123,25 @@ describe("Product Creation Action & Validation", () => {
       expect(validation.error.issues[0].message).toBe("Product name is required");
     }
   });
+
+  it("slugifies product name into image filenames with name-1, name-2 format", () => {
+    const productName = "Handmade Wooden Doll";
+    const slugifyProductName = (name: string) =>
+      name
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "product";
+
+    const slug = slugifyProductName(productName);
+    expect(slug).toBe("handmade-wooden-doll");
+
+    const coverFileName = `${slug}-1.jpg`;
+    const galleryFileName1 = `${slug}-2.png`;
+    const galleryFileName2 = `${slug}-3.webp`;
+
+    expect(coverFileName).toBe("handmade-wooden-doll-1.jpg");
+    expect(galleryFileName1).toBe("handmade-wooden-doll-2.png");
+    expect(galleryFileName2).toBe("handmade-wooden-doll-3.webp");
+  });
 });

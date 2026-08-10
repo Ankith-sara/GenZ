@@ -701,7 +701,7 @@ export function Header({
                       onClick={() => setIsOpen(false)}
                       className="px-3 py-1.5 text-[11px] font-bold text-amber-400 hover:underline"
                     >
-                      + View All Collections
+                      View All Collections
                     </Link>
                   </div>
                 </div>
@@ -748,8 +748,21 @@ export function Header({
                   variant="outline"
                   className="font-graphik w-full rounded-xl border-neutral-700 bg-neutral-900 text-xs font-semibold text-white hover:bg-neutral-800"
                 >
-                  <Link href="/profile" onClick={() => setIsOpen(false)}>
-                    My Profile
+                  <Link
+                    href={
+                      role === "admin"
+                        ? "/admin/dashboard"
+                        : role === "seller"
+                          ? "/seller/dashboard"
+                          : "/profile"
+                    }
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {role === "admin"
+                      ? "Admin Dashboard"
+                      : role === "seller"
+                        ? "Seller Dashboard"
+                        : "My Profile"}
                   </Link>
                 </Button>
               ) : (

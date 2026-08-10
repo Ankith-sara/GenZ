@@ -80,7 +80,7 @@ export default async function SellerDashboardLayout({
   })}`;
 
   return (
-    <div className="font-graphik flex min-h-screen bg-[#FAF8F4] text-[#1A1A18] antialiased">
+    <div className="font-graphik flex min-h-screen flex-col bg-[#FAF8F4] text-[#1A1A18] antialiased sm:flex-row">
       {/* 1. SELLER SIDEBAR */}
       <DashboardSidebar
         role="seller"
@@ -93,14 +93,14 @@ export default async function SellerDashboardLayout({
       {/* 2. MAIN CONTENT AREA */}
       <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         {/* Sticky Header Topbar */}
-        <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4]/85 px-4 backdrop-blur-md select-none sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4]/90 px-3 backdrop-blur-md select-none sm:px-6">
           {/* Workspace Title & Verification Pill */}
-          <div className="flex items-center gap-3">
-            <h1 className="font-graphik max-w-[200px] truncate text-sm font-bold text-[#1A1A18] sm:max-w-xs">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <h1 className="font-graphik xs:max-w-[160px] max-w-[120px] truncate text-xs font-bold text-[#1A1A18] sm:max-w-xs sm:text-sm">
               {businessName}
             </h1>
             <span
-              className={`hidden items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase sm:flex ${
+              className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold tracking-wider uppercase sm:px-2.5 sm:text-[10px] ${
                 isVerified
                   ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                   : "border-amber-200 bg-amber-50 text-amber-700"
@@ -109,20 +109,22 @@ export default async function SellerDashboardLayout({
               {isVerified ? (
                 <>
                   <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                  Verified Factory
+                  <span className="xs:inline hidden">Verified Factory</span>
+                  <span className="xs:hidden">Verified</span>
                 </>
               ) : (
                 <>
                   <ShieldAlert className="h-3 w-3 text-amber-600" />
-                  Pending Clearance
+                  <span className="xs:inline hidden">Pending Clearance</span>
+                  <span className="xs:hidden">Pending</span>
                 </>
               )}
             </span>
           </div>
 
           {/* Controls: Search, Notifications, date badge, exit */}
-          <div className="flex items-center gap-2">
-            <SearchTriggerButton placeholder="Search factory portal..." />
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <SearchTriggerButton placeholder="Search factory..." />
 
             <SellerHeaderNotifications pendingSteps={pendingSteps} />
 
@@ -134,7 +136,7 @@ export default async function SellerDashboardLayout({
             <form action={signOut}>
               <button
                 type="submit"
-                className="flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-[#E5E5E0] bg-white px-2.5 text-xs font-semibold text-[#52524E] shadow-2xs transition-colors hover:bg-rose-50 hover:text-rose-700"
+                className="flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[#E5E5E0] bg-white px-2 text-xs font-semibold text-[#52524E] shadow-2xs transition-colors hover:bg-rose-50 hover:text-rose-700 sm:px-2.5"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Exit</span>
@@ -144,7 +146,7 @@ export default async function SellerDashboardLayout({
         </header>
 
         {/* Content Body Container */}
-        <main className="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="mx-auto w-full max-w-7xl flex-1 p-3.5 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>

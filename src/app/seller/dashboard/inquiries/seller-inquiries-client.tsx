@@ -157,8 +157,16 @@ export function SellerInquiriesClient({
               description="Click any buyer message thread on the left to read specs and reply."
             />
           ) : (
-            <div className="flex min-h-[500px] flex-col justify-between space-y-6 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
+            <div className="flex min-h-[500px] flex-col justify-between space-y-6 rounded-2xl border border-[#E5E5E0] bg-white p-4 shadow-2xs sm:p-6">
               <div>
+                {/* Mobile Back Button */}
+                <button
+                  onClick={() => setSelectedId(null)}
+                  className="font-graphik mb-3 text-xs font-semibold text-[#73736E] hover:text-black lg:hidden"
+                >
+                  Back to Inquiries List
+                </button>
+
                 {/* Header Thread */}
                 <div className="flex flex-col justify-between gap-4 border-b border-[#F0F0EC] pb-4 sm:flex-row sm:items-center">
                   <div>

@@ -5,7 +5,7 @@ import type { Role, VerificationStatus } from "@/types/database";
  * RLS & Trigger Security Boundary Test Suite
  * Validates Row Level Security policies and defense-in-depth triggers across high-risk tables:
  * 1. profiles: Role and account_status self-elevation protection via protect_profile_role_trigger
- * 2. seller_profiles: Verification status and rejection reason protection via protect_seller_verification_fields_trigger
+ * 2. seller_profiles: Verification status protection via protect_seller_verification_fields_trigger (INSERT + UPDATE)
  * 3. products: Unverified seller restriction, ownership controls, public visibility
  * 4. seller_documents: Document privacy controls
  */
@@ -73,6 +73,32 @@ function simulateTriggerProtectProfileRole(
   }
 
   return updatedRow;
+}
+
+/**
+ * Simulates Postgres protect_seller_verification_fields() trigger execution logic on BEFORE INSERT.
+ */
+function simulateTriggerProtectSellerVerificationInsert(
+  actorRole: Role,
+  newRow: {
+    id: string;
+    status: VerificationStatus;
+    rejection_reason?: string | null;
+    reviewed_by?: string | null;
+  }
+) {
+  const isCallerAdmin = actorRole === "admin";
+  const insertedRow = { ...newRow };
+
+  if (!isCallerAdmin) {
+    if (insertedRow.status !== "not_submitted" && insertedRow.status !== "pending") {
+      insertedRow.status = "pending";
+    }
+    insertedRow.rejection_reason = null;
+    insertedRow.reviewed_by = null;
+  }
+
+  return insertedRow;
 }
 
 function simulateProfileUpdate(
@@ -251,8 +277,32 @@ describe("Postgres RLS Policy & Boundary Tests", () => {
     });
   });
 
-  describe("2. Seller Profiles Table Security", () => {
-    it("prevents seller from self-setting status to 'verified'", () => {
+  describe("2. Seller Profiles Security & protect_seller_verification_fields_trigger", () => {
+    it("forces status to 'pending' and strips rejection_reason/reviewed_by when non-admin attempts to insert seller profile with status: 'verified'", () => {
+      const result = simulateTriggerProtectSellerVerificationInsert("seller", {
+        id: "user_seller_202",
+        status: "verified",
+        rejection_reason: "Self approved",
+        reviewed_by: "user_seller_202",
+      });
+
+      expect(result.status).toBe("pending");
+      expect(result.rejection_reason).toBeNull();
+      expect(result.reviewed_by).toBeNull();
+    });
+
+    it("allows admin to insert a pre-verified seller profile", () => {
+      const result = simulateTriggerProtectSellerVerificationInsert("admin", {
+        id: "user_seller_202",
+        status: "verified",
+        reviewed_by: mockAdmin.id,
+      });
+
+      expect(result.status).toBe("verified");
+      expect(result.reviewed_by).toBe(mockAdmin.id);
+    });
+
+    it("prevents seller from self-setting status to 'verified' via UPDATE", () => {
       const result = simulateSellerProfileUpdate(
         mockUnverifiedSeller,
         mockUnverifiedSeller.id,
@@ -261,7 +311,7 @@ describe("Postgres RLS Policy & Boundary Tests", () => {
       expect(result.error).toMatch(/cannot self-approve/i);
     });
 
-    it("prevents seller from altering rejection_reason", () => {
+    it("prevents seller from altering rejection_reason via UPDATE", () => {
       const result = simulateSellerProfileUpdate(
         mockUnverifiedSeller,
         mockUnverifiedSeller.id,
@@ -270,7 +320,7 @@ describe("Postgres RLS Policy & Boundary Tests", () => {
       expect(result.error).toMatch(/cannot alter rejection reason/i);
     });
 
-    it("allows admin to verify seller profiles", () => {
+    it("allows admin to verify seller profiles via UPDATE", () => {
       const result = simulateSellerProfileUpdate(mockAdmin, mockUnverifiedSeller.id, {
         status: "verified",
       });

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { PageViewTracker } from "@/components/ui/organisms/page-view-tracker";
@@ -7,18 +7,18 @@ import { SITE_URL } from "@/lib/config";
 
 const siteUrl = SITE_URL;
 
-// Graphik substitute — UI/body workhorse sans
-const graphik = Inter({
+// Plus Jakarta Sans — distinct, modern, high-end sans-serif font
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-graphik",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 
-// Grenette substitute — editorial display serif, tight tracking at 36px+
+// Grenette substitute — editorial display serif
 const grenette = Fraunces({
   subsets: ["latin"],
   variable: "--font-grenette",
-  weight: ["400"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -114,7 +114,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${graphik.variable} ${grenette.variable} flex min-h-screen flex-col antialiased`}
+        className={`${plusJakarta.variable} ${grenette.variable} flex min-h-screen flex-col antialiased`}
         suppressHydrationWarning
       >
         {children}

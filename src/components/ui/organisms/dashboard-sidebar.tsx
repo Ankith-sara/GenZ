@@ -126,38 +126,60 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
     <>
       {/* Mobile Header Bar */}
       <div className="flex h-14 items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4] px-4 sm:hidden">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-black text-xs font-bold text-white">
-            G
-          </div>
-          <span className="font-nantes text-sm font-bold text-[#1A1A18]">
-            GenZ Partner
-          </span>
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => setMobileOpen((prev) => !prev)}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E5E5E0] bg-white text-black shadow-2xs active:scale-95"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileOpen ? (
+              <X className="h-4.5 w-4.5" />
+            ) : (
+              <Menu className="h-4.5 w-4.5" />
+            )}
+          </button>
+
+          <Link href="/seller/dashboard" className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-black text-xs font-bold text-white shadow-2xs">
+              <ShoppingBag className="h-3.5 w-3.5" />
+            </div>
+            <span className="font-nantes text-sm font-bold text-[#1A1A18]">
+              GenZ Partner
+            </span>
+          </Link>
         </div>
 
-        <button
-          onClick={() => setMobileOpen((prev) => !prev)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E5E5E0] bg-white text-black"
-        >
-          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black text-xs font-bold text-white">
+            {userInitial}
+          </div>
+        </div>
       </div>
+
+      {/* Mobile Backdrop Overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs transition-opacity duration-300 sm:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
 
       {/* Desktop / Responsive Sidebar Drawer */}
       <aside
-        className={`sticky top-0 z-30 flex h-screen shrink-0 flex-col justify-between overflow-y-auto border-r border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] transition-all duration-300 select-none ${
+        className={`sticky top-0 z-30 h-screen shrink-0 flex-col justify-between overflow-y-auto border-r border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] transition-all duration-300 select-none ${
           isCollapsed ? "w-[72px]" : "w-[260px]"
         } ${
           mobileOpen
-            ? "fixed inset-y-0 left-0 z-50 w-[260px] translate-x-0 shadow-2xl"
-            : "-translate-x-full sm:translate-x-0"
-        } hidden sm:flex`}
+            ? "fixed inset-y-0 left-0 z-50 flex w-[280px] translate-x-0 shadow-2xl"
+            : "hidden sm:flex"
+        }`}
       >
         <div className="space-y-6 p-4">
           {/* Header Brand */}
           <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
             <Link
               href="/seller/dashboard"
+              onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-2.5 ${
                 isCollapsed ? "lg:w-full lg:justify-center" : ""
               }`}
@@ -176,17 +198,25 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
               </div>
             </Link>
 
-            <button
-              onClick={toggleCollapse}
-              className="hidden rounded-lg p-1.5 text-[#73736E] transition-colors hover:bg-[#EBEBE6] hover:text-black lg:block"
-              aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {isCollapsed ? (
-                <PanelLeftOpen className="h-4 w-4" />
-              ) : (
-                <PanelLeftClose className="h-4 w-4" />
-              )}
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="rounded-lg p-1.5 text-[#73736E] hover:bg-[#EBEBE6] sm:hidden"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <button
+                onClick={toggleCollapse}
+                className="hidden rounded-lg p-1.5 text-[#73736E] transition-colors hover:bg-[#EBEBE6] hover:text-black lg:block"
+                aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              >
+                {isCollapsed ? (
+                  <PanelLeftOpen className="h-4 w-4" />
+                ) : (
+                  <PanelLeftClose className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Navigation Groups */}
@@ -246,7 +276,10 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
             <div className="font-graphik absolute right-3 bottom-16 left-3 z-50 space-y-1 rounded-xl border border-[#E5E5E0] bg-white p-2 text-xs shadow-xl">
               <Link
                 href="/profile"
-                onClick={() => setUserMenuOpen(false)}
+                onClick={() => {
+                  setUserMenuOpen(false);
+                  setMobileOpen(false);
+                }}
                 className="flex items-center gap-2 rounded-lg p-2 font-medium text-black hover:bg-[#FAF8F4]"
               >
                 <User className="h-3.5 w-3.5" />

@@ -27,6 +27,37 @@ function parseProductFields(formData: FormData) {
   return { name, category, age_group, description, price_inr, materials };
 }
 
+/**
+ * Utility to convert product name to URL/filename safe slug.
+ * e.g., "Handmade Wooden Car" -> "handmade-wooden-car"
+ */
+function slugifyProductName(name: string): string {
+  return (
+    name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "product"
+  );
+}
+
+/**
+ * Extracts file extension safely.
+ */
+function getFileExtension(file: File): string {
+  const parts = file.name.split(".");
+  if (parts.length > 1) {
+    const ext = parts.pop()!.toLowerCase();
+    if (ext && ext.length <= 5) return ext;
+  }
+  if (file.type && file.type.startsWith("image/")) {
+    const sub = file.type.split("/")[1]?.toLowerCase();
+    if (sub === "jpeg") return "jpg";
+    if (sub) return sub;
+  }
+  return "jpg";
+}
+
 export async function createProduct(
   _prevState: ProductFormState,
   formData: FormData
@@ -88,6 +119,19 @@ export async function createProduct(
     };
   }
 
+  // Check product name uniqueness requirement
+  const { data: existingProduct } = await supabase
+    .from("products")
+    .select("id")
+    .ilike("name", validation.data.name)
+    .maybeSingle();
+
+  if (existingProduct) {
+    return {
+      error: `A product with the name "${validation.data.name}" already exists. Product names must be unique.`,
+    };
+  }
+
   const customSellerId = String(formData.get("seller_id") ?? "").trim();
   const targetSellerId = customSellerId || session.userId;
 
@@ -120,7 +164,15 @@ export async function createProduct(
     console.warn("seller_profiles provision warning:", err);
   }
 
-  // 2. Insert product using seller_id
+  // 3. Check seller verification status & insert product using seller_id
+  const { data: sellerProfile } = await supabase
+    .from("seller_profiles")
+    .select("status")
+    .eq("id", targetSellerId)
+    .maybeSingle();
+
+  const isSellerVerified = sellerProfile?.status === "verified";
+
   const { data, error } = await supabase
     .from("products")
     .insert({
@@ -131,6 +183,7 @@ export async function createProduct(
       description: validation.data.description || null,
       price_inr: validation.data.price_inr,
       materials: validation.data.materials,
+      seller_verified: isSellerVerified,
     })
     .select("id")
     .single();
@@ -148,10 +201,13 @@ export async function createProduct(
     };
   }
 
-  // Upload cover image if provided
+  const productSlug = slugifyProductName(validation.data.name);
+
+  // Upload cover image if provided (named <productSlug>-1.<ext>)
   if (coverImage && coverImage.size > 0) {
-    const safeName = coverImage.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${targetSellerId}/products/${data.id}/cover-${Date.now()}-${safeName}`;
+    const ext = getFileExtension(coverImage);
+    const fileName = `${productSlug}-1.${ext}`;
+    const path = `${targetSellerId}/products/${data.id}/${fileName}`;
 
     try {
       const buffer = Buffer.from(await coverImage.arrayBuffer());
@@ -159,7 +215,7 @@ export async function createProduct(
         .from("product-media")
         .upload(path, buffer, {
           contentType: coverImage.type,
-          upsert: false,
+          upsert: true,
         });
 
       if (uploadError) {
@@ -175,20 +231,22 @@ export async function createProduct(
     }
   }
 
-  // Upload gallery images if provided
+  // Upload gallery images if provided (named <productSlug>-2.<ext>, <productSlug>-3.<ext>, etc.)
   if (galleryImages.length > 0) {
     let position = 0;
+    let imageIndex = 2;
     for (const img of galleryImages) {
       if (img && img.size > 0) {
-        const safeName = img.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-        const path = `${targetSellerId}/products/${data.id}/gallery-${Date.now()}-${safeName}`;
+        const ext = getFileExtension(img);
+        const fileName = `${productSlug}-${imageIndex}.${ext}`;
+        const path = `${targetSellerId}/products/${data.id}/${fileName}`;
         try {
           const buffer = Buffer.from(await img.arrayBuffer());
           const { error: uploadError } = await supabase.storage
             .from("product-media")
             .upload(path, buffer, {
               contentType: img.type,
-              upsert: false,
+              upsert: true,
             });
 
           if (!uploadError) {
@@ -204,6 +262,7 @@ export async function createProduct(
         } catch (uploadErr) {
           console.error("Exception uploading gallery image:", uploadErr);
         }
+        imageIndex++;
       }
     }
   }
@@ -244,6 +303,20 @@ export async function updateProduct(
   }
 
   const supabase = await createClient();
+
+  const { data: existingProduct } = await supabase
+    .from("products")
+    .select("id")
+    .ilike("name", validation.data.name)
+    .neq("id", productId)
+    .maybeSingle();
+
+  if (existingProduct) {
+    return {
+      error: `A product with the name "${validation.data.name}" already exists. Product names must be unique.`,
+    };
+  }
+
   const { error } = await supabase
     .from("products")
     .update({
@@ -483,7 +556,7 @@ export async function uploadProductCoverAction(
       // Verify product ownership or admin
       const { data: product } = await supabase
         .from("products")
-        .select("seller_id, cover_image_path")
+        .select("name, seller_id, cover_image_path")
         .eq("id", productId)
         .single();
 
@@ -494,13 +567,15 @@ export async function uploadProductCoverAction(
         return { error: "Permission denied: Product not found or unauthorized." };
       }
 
-      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      const path = `${product.seller_id}/products/${productId}/cover-${Date.now()}-${safeName}`;
+      const productSlug = slugifyProductName(product.name || "product");
+      const ext = getFileExtension(file);
+      const fileName = `${productSlug}-1.${ext}`;
+      const path = `${product.seller_id}/products/${productId}/${fileName}`;
 
       const buffer = Buffer.from(await file.arrayBuffer());
       const { error: uploadError } = await supabase.storage
         .from("product-media")
-        .upload(path, buffer, { contentType: file.type, upsert: false });
+        .upload(path, buffer, { contentType: file.type, upsert: true });
 
       if (uploadError) {
         return { error: uploadError.message || "Failed to upload cover image." };
@@ -569,7 +644,7 @@ export async function uploadProductImagesAction(
 
       const { data: product } = await supabase
         .from("products")
-        .select("seller_id")
+        .select("name, seller_id")
         .eq("id", productId)
         .single();
 
@@ -580,21 +655,24 @@ export async function uploadProductImagesAction(
         return { error: "Permission denied: Product not found or unauthorized." };
       }
 
+      const productSlug = slugifyProductName(product.name || "product");
       const { data: existingImages } = await supabase
         .from("product_images")
         .select("position")
         .eq("product_id", productId);
 
       let nextPosition = existingImages?.length ?? 0;
+      let imageIndex = nextPosition + 2;
 
       for (const file of files) {
-        const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-        const path = `${product.seller_id}/products/${productId}/gallery-${Date.now()}-${safeName}`;
+        const ext = getFileExtension(file);
+        const fileName = `${productSlug}-${imageIndex}.${ext}`;
+        const path = `${product.seller_id}/products/${productId}/${fileName}`;
 
         const buffer = Buffer.from(await file.arrayBuffer());
         const { error: uploadError } = await supabase.storage
           .from("product-media")
-          .upload(path, buffer, { contentType: file.type, upsert: false });
+          .upload(path, buffer, { contentType: file.type, upsert: true });
 
         if (uploadError) {
           return { error: uploadError.message || "Failed to upload gallery image." };
@@ -613,6 +691,7 @@ export async function uploadProductImagesAction(
         }
 
         nextPosition++;
+        imageIndex++;
       }
 
       revalidatePath(`/seller/dashboard/products/${productId}`);

@@ -42,12 +42,14 @@ describe("Admin SettingsClient Component", () => {
     expect(screen.getByText("Alerts & Notifications")).toBeInTheDocument();
   });
 
-  it("switches active tab content when tab is clicked", () => {
+  it("switches active tab content when tab is clicked", async () => {
     render(<SettingsClient adminUser={mockAdminUser} />);
     const onboardingTab = screen.getByRole("button", { name: /Seller Onboarding/i });
 
     fireEvent.click(onboardingTab);
-    expect(screen.getByText("Auto-Approve Seller Registrations")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Auto-Approve Seller Registrations")
+    ).toBeInTheDocument();
   });
 
   it("updates input fields and persists settings when Save Changes is clicked", async () => {
@@ -60,10 +62,8 @@ describe("Admin SettingsClient Component", () => {
     const saveBtn = screen.getByText("Save Settings");
     fireEvent.click(saveBtn);
 
-    await new Promise((r) => setTimeout(r, 500));
-
     expect(
-      screen.getByText("System settings updated successfully.")
+      await screen.findByText("System settings updated successfully.")
     ).toBeInTheDocument();
   });
 });

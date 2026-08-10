@@ -2,38 +2,38 @@
 
 :root {
   --radius: 0px;
-  --background: #ffffff;
-  --foreground: #000000;
+  --background: #faf9f6;
+  --foreground: #111110;
 
   --card: #ffffff;
-  --card-foreground: #000000;
+  --card-foreground: #111110;
 
-  --primary: #454040;
+  --primary: #27272a;
   --primary-foreground: #ffffff;
 
-  --secondary: #605b51;
+  --secondary: #52525b;
   --secondary-foreground: #ffffff;
 
-  --muted: #ffffff;
-  --muted-foreground: #605b51;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
 
-  --accent: #fae251;
+  --accent: #f59e0b;
   --accent-foreground: #000000;
 
-  --destructive: #d32f2f;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
 
-  --border: #605b51;
-  --input: #000000;
-  --ring: #fae251;
+  --border: #e4e4e7;
+  --input: #18181b;
+  --ring: #f59e0b;
 
-  --brand-yellow: #fae251;
-  --brand-yellow-hover: #e5cd30;
-  --brand-yellow-dark: #d4bd2c;
-  --brand-blue: #605b51;
-  --dark-band: #000000;
-  --dark-band-foreground: #ffffff;
-  --light-gray-bg: #ffffff;
+  --brand-yellow: #facc15;
+  --brand-yellow-hover: #eab308;
+  --brand-yellow-dark: #ca8a04;
+  --brand-blue: #3f3f46;
+  --dark-band: #09090b;
+  --dark-band-foreground: #f4f4f5;
+  --light-gray-bg: #f4f4f5;
 }
 
 @theme inline {
@@ -68,64 +68,114 @@
   --color-light-gray-bg: var(--light-gray-bg);
 
   /* ── Slate semantic tokens ── */
-  --color-slate-text-primary: #000000;
-  --color-slate-text-subdued: #605b51;
+  --color-slate-text-primary: var(--foreground);
+  --color-slate-text-subdued: var(--muted-foreground);
   --color-slate-text-inverse: #ffffff;
   --color-slate-surface-primary: #ffffff;
-  --color-slate-surface-secondary: #ffffff;
-  --color-slate-surface-inverse: #000000;
-  --color-slate-border-muted: #605b51;
-  --color-slate-action-hover: #fae251;
+  --color-slate-surface-secondary: #f4f4f5;
+  --color-slate-surface-inverse: #09090b;
+  --color-slate-border-muted: #e4e4e7;
+  --color-slate-action-hover: var(--brand-yellow);
 
-  /* Legacy aliases the components still reference */
-  --color-ink-black: #000000;
-  --color-charcoal: #454040;
-  --color-deep-forest: #fae251;
-  --color-smoke: #605b51;
-  --color-ash: #605b51;
-  --color-cream-paper: #ffffff;
+  /* Legacy aliases */
+  --color-ink-black: #111110;
+  --color-charcoal: #27272a;
+  --color-deep-forest: #facc15;
+  --color-smoke: #71717a;
+  --color-ash: #e4e4e7;
+  --color-cream-paper: #faf9f6;
   --color-pure-white: #ffffff;
-  --color-paper-white: #ffffff;
-  --color-butter-highlight: #fae251;
-  --color-pale-sage: #e5cd30;
-  --color-chartreuse-lime: #fae251;
-  --color-vivid-green: #fae251;
+  --color-paper-white: #faf9f6;
+  --color-butter-highlight: #fef08a;
+  --color-pale-sage: #eab308;
+  --color-chartreuse-lime: #facc15;
+  --color-vivid-green: #facc15;
 
   --font-sans: var(--font-graphik);
   --font-serif: var(--font-grenette);
   --font-graphik: var(--font-graphik);
   --font-nantes: var(--font-grenette);
 
-  /* Faire uses radius 0 everywhere */
   --radius-sm: 0px;
   --radius-pill: 40px;
   --radius-card: 0px;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  font-weight: 200;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.15px;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   font-family: var(--font-serif), ui-serif, Georgia, serif;
   font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1.1;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Tabular figures for numerical data, statistics & prices */
+.tabular-nums,
+.num-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Refined Glassmorphism Card Surfaces */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 4px 20px -2px rgba(0, 0, 0, 0.04),
+    0 2px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.glass-card-dark {
+  background: rgba(18, 18, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px -4px rgba(0, 0, 0, 0.37),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Micro noise texture overlays */
+.bg-noise {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.bg-noise-dark {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
+  background-size: 24px 24px;
 }
 
 .eyebrow {
   font-family: var(--font-sans), ui-sans-serif, sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 

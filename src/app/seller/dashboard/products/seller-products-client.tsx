@@ -89,7 +89,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
         </div>
       </div>
 
-      {/* TABLE */}
+      {/* TABLE / MOBILE CARDS */}
       {filteredProducts.length === 0 ? (
         <EmptyState
           icon={<Package className="h-7 w-7 text-[#73736E]" />}
@@ -101,77 +101,136 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
           }}
         />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-[#E5E5E0] bg-white shadow-2xs">
-          <div className="overflow-x-auto">
-            <table className="font-graphik w-full text-left text-xs">
-              <thead className="sticky top-0 z-10 border-b border-[#E5E5E0] bg-[#FAF8F4] text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
-                <tr>
-                  <th className="p-3.5 pl-4">Product Name</th>
-                  <th className="p-3.5">Category</th>
-                  <th className="p-3.5">Price (INR)</th>
-                  <th className="p-3.5">Target Demographic</th>
-                  <th className="p-3.5">Status</th>
-                  <th className="p-3.5 pr-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#F0F0EC] bg-white">
-                {filteredProducts.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="group h-14 transition-colors hover:bg-[#FAF7F0]/80"
-                  >
-                    <td className="p-3.5 pl-4 font-bold text-[#1A1A18]">
-                      <Link
-                        href={`/seller/dashboard/products/${product.id}`}
-                        className="hover:underline"
-                      >
-                        {product.name}
-                      </Link>
-                      <span className="block font-mono text-[10px] font-normal text-[#73736E]">
-                        ID: {product.id.slice(0, 10)}...
-                      </span>
-                    </td>
+        <>
+          {/* MOBILE CARDS VIEW (< sm) */}
+          <div className="space-y-3 sm:hidden">
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="font-graphik space-y-3 rounded-xl border border-[#E5E5E0] bg-white p-4 shadow-2xs"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <Link
+                      href={`/seller/dashboard/products/${product.id}`}
+                      className="text-sm font-bold text-[#1A1A18] hover:underline"
+                    >
+                      {product.name}
+                    </Link>
+                    <span className="block font-mono text-[10px] text-[#73736E]">
+                      {product.category} · ID: {product.id.slice(0, 8)}...
+                    </span>
+                  </div>
 
-                    <td className="p-3.5 text-[#52524E]">{product.category}</td>
+                  <StatusBadge
+                    status={product.status === "published" ? "active" : "draft"}
+                    label={product.status}
+                  />
+                </div>
 
-                    <td className="p-3.5 font-mono text-xs font-bold text-[#1A1A18]">
+                <div className="flex items-center justify-between border-t border-[#F0F0EC] pt-2.5 text-xs">
+                  <div>
+                    <span className="block text-[10px] font-semibold text-[#8C8C85]">
+                      Price
+                    </span>
+                    <span className="font-mono text-xs font-bold text-[#1A1A18]">
                       ₹{product.price_inr ? product.price_inr.toLocaleString() : "—"}
-                    </td>
+                    </span>
+                  </div>
 
-                    <td className="p-3.5 text-[#52524E]">
-                      {product.age_group || "All demographics"}
-                    </td>
-
-                    <td className="p-3.5">
-                      <StatusBadge
-                        status={product.status === "published" ? "active" : "draft"}
-                        label={product.status}
-                      />
-                    </td>
-
-                    <td className="p-3.5 pr-4 text-right">
-                      <ActionDropdown
-                        actions={[
-                          {
-                            label: "Edit Listing Details",
-                            icon: <Edit className="h-3.5 w-3.5" />,
-                            onClick: () =>
-                              (window.location.href = `/seller/dashboard/products/${product.id}`),
-                          },
-                          {
-                            label: "Preview Storefront Link",
-                            icon: <ExternalLink className="h-3.5 w-3.5" />,
-                            onClick: () => window.open(`/discover`, "_blank"),
-                          },
-                        ]}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  <ActionDropdown
+                    actions={[
+                      {
+                        label: "Edit Listing Details",
+                        icon: <Edit className="h-3.5 w-3.5" />,
+                        onClick: () =>
+                          (window.location.href = `/seller/dashboard/products/${product.id}`),
+                      },
+                      {
+                        label: "Preview Storefront Link",
+                        icon: <ExternalLink className="h-3.5 w-3.5" />,
+                        onClick: () => window.open(`/discover`, "_blank"),
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+
+          {/* DESKTOP TABLE VIEW (>= sm) */}
+          <div className="hidden overflow-hidden rounded-xl border border-[#E5E5E0] bg-white shadow-2xs sm:block">
+            <div className="overflow-x-auto">
+              <table className="font-graphik w-full text-left text-xs">
+                <thead className="sticky top-0 z-10 border-b border-[#E5E5E0] bg-[#FAF8F4] text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                  <tr>
+                    <th className="p-3.5 pl-4">Product Name</th>
+                    <th className="p-3.5">Category</th>
+                    <th className="p-3.5">Price (INR)</th>
+                    <th className="p-3.5">Target Demographic</th>
+                    <th className="p-3.5">Status</th>
+                    <th className="p-3.5 pr-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#F0F0EC] bg-white">
+                  {filteredProducts.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="group h-14 transition-colors hover:bg-[#FAF7F0]/80"
+                    >
+                      <td className="p-3.5 pl-4 font-bold text-[#1A1A18]">
+                        <Link
+                          href={`/seller/dashboard/products/${product.id}`}
+                          className="hover:underline"
+                        >
+                          {product.name}
+                        </Link>
+                        <span className="block font-mono text-[10px] font-normal text-[#73736E]">
+                          ID: {product.id.slice(0, 10)}...
+                        </span>
+                      </td>
+
+                      <td className="p-3.5 text-[#52524E]">{product.category}</td>
+
+                      <td className="p-3.5 font-mono text-xs font-bold text-[#1A1A18]">
+                        ₹{product.price_inr ? product.price_inr.toLocaleString() : "—"}
+                      </td>
+
+                      <td className="p-3.5 text-[#52524E]">
+                        {product.age_group || "All demographics"}
+                      </td>
+
+                      <td className="p-3.5">
+                        <StatusBadge
+                          status={product.status === "published" ? "active" : "draft"}
+                          label={product.status}
+                        />
+                      </td>
+
+                      <td className="p-3.5 pr-4 text-right">
+                        <ActionDropdown
+                          actions={[
+                            {
+                              label: "Edit Listing Details",
+                              icon: <Edit className="h-3.5 w-3.5" />,
+                              onClick: () =>
+                                (window.location.href = `/seller/dashboard/products/${product.id}`),
+                            },
+                            {
+                              label: "Preview Storefront Link",
+                              icon: <ExternalLink className="h-3.5 w-3.5" />,
+                              onClick: () => window.open(`/discover`, "_blank"),
+                            },
+                          ]}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

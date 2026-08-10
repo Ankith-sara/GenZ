@@ -58,23 +58,22 @@ export function validateGstOrTradeId(val: string): {
 } {
   const trimmed = val.trim().toUpperCase();
   if (!trimmed) {
-    return { isValid: false, type: "empty", message: "GSTIN / Trade ID is required" };
+    return { isValid: false, type: "empty", message: "GSTIN is required" };
   }
   if (GSTIN_REGEX.test(trimmed)) {
-    return { isValid: true, type: "GSTIN", message: "Valid 15-character Indian GSTIN" };
+    return { isValid: true, type: "GSTIN", message: "Valid 15-character GSTIN" };
   }
   if (TRADE_ID_REGEX.test(trimmed)) {
     return {
       isValid: true,
       type: "Trade ID",
-      message: "Valid Trade / Business License ID",
+      message: "Valid Business Registration ID",
     };
   }
   return {
     isValid: false,
     type: "invalid",
-    message:
-      "Invalid format. Expected 15-character GSTIN (e.g. 22AAAAA0000A1Z5) or Trade ID",
+    message: "Invalid format. Expected 15-character GSTIN (e.g. 22AAAAA0000A1Z5)",
   };
 }
 

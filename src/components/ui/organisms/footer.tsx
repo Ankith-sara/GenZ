@@ -114,16 +114,16 @@ export function Footer({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        "relative overflow-hidden border-t border-neutral-800 bg-[#0B0B0B] py-16 font-sans text-white antialiased sm:py-24",
+        "relative overflow-hidden border-t border-neutral-800 bg-black py-16 font-sans text-white antialiased sm:py-24",
         className
       )}
     >
       <div className="mx-auto max-w-7xl px-6 sm:px-12">
         {/* Dominant Integrated Newsletter Section */}
-        <div className="mb-16 grid grid-cols-1 items-center gap-10 border-b border-neutral-800 pb-16 lg:grid-cols-12">
+        <div className="mb-16 grid grid-cols-1 items-center gap-10 border-b border-neutral-800/80 pb-16 lg:grid-cols-12">
           <div className="flex flex-col justify-center text-left lg:col-span-7">
-            <div className="tag border-brand-yellow/30 bg-brand-yellow/10 mb-3 inline-block self-start rounded-full border px-4 py-1 shadow-xs">
-              <span className="font-graphik text-brand-yellow text-xs font-semibold tracking-[0.2em] uppercase">
+            <div className="tag mb-3 inline-block self-start rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1 shadow-2xs">
+              <span className="font-graphik text-xs font-semibold tracking-[0.2em] text-amber-400 uppercase">
                 Stay Updated
               </span>
             </div>

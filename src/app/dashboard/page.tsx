@@ -23,9 +23,11 @@ export default async function DashboardPage() {
       .maybeSingle();
 
     if (!seller) {
-      console.log(
-        `[auth] Auto-creating missing seller_profile for ${session.user.email}`
-      );
+      if (process.env.NODE_ENV !== "production") {
+        console.log(
+          `[auth] Auto-creating missing seller_profile for user ${session.userId}`
+        );
+      }
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -55,14 +57,14 @@ export default async function DashboardPage() {
           pincode: pincode || null,
           established_year: establishedYear,
           description: descriptionJson,
-          status: "verified",
+          status: "pending",
         });
       } else {
         await supabase.from("seller_profiles").insert({
           id: session.userId,
           business_name: "Unnamed Factory",
           gst_number: "PENDING",
-          status: "verified",
+          status: "pending",
         });
       }
     }

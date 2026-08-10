@@ -11,7 +11,9 @@ async function ensureProfileCreated(
     } = await supabase.auth.getUser();
     if (user) {
       const meta = user.user_metadata ?? {};
-      const role = (meta.role as Role) || "buyer";
+      const rawRole = (meta.role as Role) || "buyer";
+      // Never allow "admin" role from raw metadata
+      const role: Role = rawRole === "admin" ? "buyer" : rawRole;
       const fullName = meta.full_name || meta.fullName || null;
 
       await supabase.from("profiles").upsert({
@@ -37,7 +39,9 @@ async function ensureProfileCreated(
       }
     }
   } catch (err) {
-    console.error("Error creating profile in callback:", err);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error creating profile in callback:", err);
+    }
   }
 }
 
@@ -72,25 +76,13 @@ export async function GET(request: Request) {
       .eq("id", user.id)
       .single();
 
-    const roleParam = searchParams.get("role");
-    const currentRole = profile?.role ?? user.user_metadata?.role;
+    const currentRole = profile?.role ?? "buyer";
 
-    if (
-      roleParam === "admin" ||
-      currentRole === "admin" ||
-      (next && next.startsWith("/admin"))
-    ) {
-      if (profile?.role !== "admin") {
-        await supabase.from("profiles").upsert({ id: user.id, role: "admin" });
-      }
+    if (currentRole === "admin") {
       next = "/admin/dashboard";
-    } else if (!next) {
-      next =
-        currentRole === "seller"
-          ? "/seller/dashboard"
-          : currentRole === "buyer"
-            ? "/profile"
-            : "/seller/dashboard";
+    } else if (!next || next.startsWith("/admin")) {
+      // Non-admins cannot be redirected to /admin
+      next = currentRole === "seller" ? "/seller/dashboard" : "/profile";
     }
 
     const redirectPath = next ?? "/profile";

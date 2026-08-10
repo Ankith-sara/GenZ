@@ -54,6 +54,7 @@ vi.mock("@/lib/supabase/admin", () => ({
           data: { user: { id: "user_new_seller_01", email: "seller@genz.in" } },
           error: null,
         }),
+        updateUserById: vi.fn().mockResolvedValue({ data: { user: {} }, error: null }),
       },
     },
     from: vi.fn().mockReturnValue({

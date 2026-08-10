@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { withRateLimit } from "@/lib/rate-limiter";
@@ -43,15 +42,13 @@ async function getOrCreateAuthUser(
   password: string,
   metadata: Record<string, unknown>
 ): Promise<{ id: string; email: string }> {
-  let existingUser: {
-    id: string;
-    email?: string;
-    user_metadata?: Record<string, unknown>;
-  } | null = null;
-  let page = 1;
+  const normalizedEmail = email.trim().toLowerCase();
+  let existingId: string | null = null;
+  let existingMeta: Record<string, unknown> = {};
 
-  // Search through all pages of auth users to reliably match by email
-  while (page <= 20) {
+  // Search through Supabase auth listUsers API to match user account by email
+  let page = 1;
+  while (page <= 10) {
     const { data: pageData, error: listError } = await adminClient.auth.admin.listUsers(
       {
         page,
@@ -61,27 +58,27 @@ async function getOrCreateAuthUser(
     if (listError || !pageData?.users || pageData.users.length === 0) break;
 
     const found = pageData.users.find(
-      (u: { email?: string }) => u.email?.toLowerCase() === email.toLowerCase()
+      (u: { email?: string }) => u.email?.toLowerCase() === normalizedEmail
     );
     if (found) {
-      existingUser = found;
+      existingId = found.id;
+      existingMeta = (found.user_metadata as Record<string, unknown>) || {};
       break;
     }
     if (pageData.users.length < 1000) break;
     page++;
   }
 
-  if (existingUser) {
+  // If user already exists, update credentials and metadata
+  if (existingId) {
     if (process.env.NODE_ENV !== "production") {
-      console.log(
-        `[getOrCreateAuthUser] Updating existing auth user ${existingUser.id}`
-      );
+      console.log(`[getOrCreateAuthUser] Updating existing auth user ${existingId}`);
     }
     const { data: updatedData, error: updateError } =
-      await adminClient.auth.admin.updateUserById(existingUser.id, {
+      await adminClient.auth.admin.updateUserById(existingId, {
         password,
         user_metadata: {
-          ...(existingUser.user_metadata || {}),
+          ...existingMeta,
           ...metadata,
         },
       });
@@ -92,30 +89,138 @@ async function getOrCreateAuthUser(
         updateError?.message && updateError.message !== "{}"
           ? updateError.message
           : "Auth update request failed";
-      throw new Error(`Failed to update password for user (${email}): ${errMsg}`);
+      throw new Error(`Failed to update password for user: ${errMsg}`);
     }
 
-    return { id: updatedData.user.id, email: updatedData.user.email || email };
-  } else {
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`[getOrCreateAuthUser] Creating new auth user`);
-    }
-    const { data: createdData, error: createError } =
+    return {
+      id: updatedData.user.id,
+      email: updatedData.user.email || normalizedEmail,
+    };
+  }
+
+  // User does not exist, create new auth account with fallback exception handling
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`[getOrCreateAuthUser] Creating new auth user: ${normalizedEmail}`);
+  }
+
+  try {
+    let { data: createdData, error: createError } =
       await adminClient.auth.admin.createUser({
-        email,
+        email: normalizedEmail,
         password,
         email_confirm: true,
         user_metadata: metadata,
       });
 
-    if (createError || !createdData?.user) {
-      console.error(`[getOrCreateAuthUser] Create user error:`, createError);
-      throw new Error(
-        `Failed to create authentication credentials: ${createError?.message || "Unknown auth error"}`
+    // If createUser failed (e.g. 500 DB trigger error on app_role enum cast), retry without raw role in metadata
+    if (createError) {
+      console.warn(
+        `[getOrCreateAuthUser] Initial createUser failed (${createError.message}), retrying with safe metadata...`
       );
+
+      const { role, ...safeMetadata } = metadata;
+      const retryResult = await adminClient.auth.admin.createUser({
+        email: normalizedEmail,
+        password,
+        email_confirm: true,
+        user_metadata: safeMetadata,
+      });
+
+      if (!retryResult.error && retryResult.data?.user) {
+        createdData = retryResult.data;
+        createError = null;
+      }
     }
 
-    return { id: createdData.user.id, email: createdData.user.email || email };
+    if (createError) {
+      // Fallback: check listUsers in case user was just inserted
+      const { data: retryList } = await adminClient.auth.admin.listUsers({
+        page: 1,
+        perPage: 1000,
+      });
+      const retryUser = retryList?.users?.find(
+        (u: { email?: string }) => u.email?.toLowerCase() === normalizedEmail
+      );
+
+      if (retryUser) {
+        const { data: updatedData } = await adminClient.auth.admin.updateUserById(
+          retryUser.id,
+          { password, user_metadata: metadata }
+        );
+        if (updatedData?.user) {
+          return {
+            id: updatedData.user.id,
+            email: updatedData.user.email || normalizedEmail,
+          };
+        }
+      }
+
+      const errMsg =
+        createError.message && createError.message !== "{}"
+          ? createError.message
+          : "Supabase Auth rejected creation request";
+      throw new Error(`Failed to create authentication credentials: ${errMsg}`);
+    }
+
+    if (!createdData?.user) {
+      throw new Error("No user returned from createUser");
+    }
+
+    return {
+      id: createdData.user.id,
+      email: createdData.user.email || normalizedEmail,
+    };
+  } catch (err: unknown) {
+    console.error(`[getOrCreateAuthUser] Exception caught during createUser:`, err);
+
+    // Fallback 1: Retry createUser with safe metadata (omitting role field to avoid PL/pgSQL trigger crashes)
+    try {
+      const { role, ...safeMetadata } = metadata;
+      const retryResult = await adminClient.auth.admin.createUser({
+        email: normalizedEmail,
+        password,
+        email_confirm: true,
+        user_metadata: safeMetadata,
+      });
+
+      if (!retryResult.error && retryResult.data?.user) {
+        return {
+          id: retryResult.data.user.id,
+          email: retryResult.data.user.email || normalizedEmail,
+        };
+      }
+    } catch {
+      // Fall through to listUsers check
+    }
+
+    // Fallback 2: search listUsers in case createUser created account before throwing exception
+    const { data: retryList } = await adminClient.auth.admin.listUsers({
+      page: 1,
+      perPage: 1000,
+    });
+    const retryUser = retryList?.users?.find(
+      (u: { email?: string }) => u.email?.toLowerCase() === normalizedEmail
+    );
+
+    if (retryUser) {
+      const { data: updatedData, error: updateErr } =
+        await adminClient.auth.admin.updateUserById(retryUser.id, {
+          password,
+          user_metadata: metadata,
+        });
+      if (!updateErr && updatedData?.user) {
+        return {
+          id: updatedData.user.id,
+          email: updatedData.user.email || normalizedEmail,
+        };
+      }
+    }
+
+    const msg =
+      err instanceof Error && err.message && err.message !== "{}"
+        ? err.message
+        : "Failed to create authentication account on auth server";
+    throw new Error(msg);
   }
 }
 
@@ -259,16 +364,33 @@ export async function approveSeller(
 
       const userId = authUser.id;
 
-      // 4. Update profile + seller_profiles rows to "verified"
-      await adminClient.from("profiles").upsert({
-        id: userId,
-        role: "seller",
-        full_name: application.full_name,
-        phone: application.phone,
-        city: applicationFormData.city || null,
-        state: applicationFormData.state || null,
-        pincode: applicationFormData.pincode || null,
-      });
+      // 4. Update auth user metadata to ensure role is seller
+      if (adminClient.auth?.admin?.updateUserById) {
+        await adminClient.auth.admin.updateUserById(userId, {
+          user_metadata: {
+            role: "seller",
+            full_name: application.full_name,
+            business_name: application.business_name,
+          },
+        });
+      }
+
+      // 5. Update profile + seller_profiles rows to "seller" and "verified"
+      await adminClient.from("profiles").upsert(
+        {
+          id: userId,
+          role: "seller",
+          full_name: application.full_name,
+          phone: application.phone,
+          city: applicationFormData.city || null,
+          state: applicationFormData.state || null,
+          pincode: applicationFormData.pincode || null,
+        },
+        { onConflict: "id" }
+      );
+
+      // Force explicit update on profiles table to guarantee role = seller
+      await adminClient.from("profiles").update({ role: "seller" }).eq("id", userId);
 
       if (applicationId && applicationId !== userId) {
         await adminClient
@@ -376,8 +498,15 @@ export async function rejectSeller(
       let adminClient;
       try {
         adminClient = createAdminClient();
-      } catch {
-        adminClient = await createClient();
+      } catch (err: unknown) {
+        console.error(
+          "[CONFIG_ERROR] [rejectSeller] Failed to initialize admin client:",
+          err
+        );
+        return {
+          error:
+            "Server misconfiguration: admin credentials are not set up. Contact an engineer.",
+        };
       }
 
       // Fetch record to get email if available
@@ -446,13 +575,14 @@ export async function updateApplicationStatusDirectly(
 
   const { data: appRow } = await adminClient
     .from("seller_applications")
-    .select("email")
+    .select("email, full_name, business_name, form_data")
     .eq("id", applicationId)
     .maybeSingle();
 
   const targetEmail = appRow?.email || "";
   const targetStatusSellerProfile = newStatus === "approved" ? "verified" : newStatus;
 
+  // 1. Update seller_applications table
   await adminClient
     .from("seller_applications")
     .update({
@@ -466,15 +596,69 @@ export async function updateApplicationStatusDirectly(
         : `id.eq.${applicationId}`
     );
 
-  await adminClient
-    .from("seller_profiles")
-    .update({
-      status: targetStatusSellerProfile,
+  // 2. If approved, sync role = 'seller' to auth.users, profiles, and seller_profiles
+  if (newStatus === "approved") {
+    let matchedUserId: string | null = null;
+
+    if (targetEmail) {
+      try {
+        const authUser = await getOrCreateAuthUser(
+          adminClient,
+          targetEmail,
+          generatePassword(14),
+          {
+            full_name: appRow?.full_name || "Factory Seller",
+            role: "seller",
+            business_name: appRow?.business_name || "Factory Seller",
+          }
+        );
+        matchedUserId = authUser.id;
+      } catch (authErr) {
+        console.error(
+          "[updateApplicationStatusDirectly] Error provisioning auth user:",
+          authErr
+        );
+      }
+    }
+
+    if (!matchedUserId) {
+      matchedUserId = applicationId;
+    }
+
+    // Upsert public.profiles with valid auth user ID
+    await adminClient.from("profiles").upsert({
+      id: matchedUserId,
+      role: "seller",
+      full_name: appRow?.full_name || "Factory Seller",
+    });
+
+    // Upsert public.seller_profiles
+    const formDataObj = (appRow?.form_data ?? {}) as Record<string, string>;
+    await adminClient.from("seller_profiles").upsert({
+      id: matchedUserId,
+      business_name: appRow?.business_name || "Factory Seller",
+      gst_number: formDataObj.gst_number || "PENDING",
+      factory_address: formDataObj.factory_address || null,
+      city: formDataObj.city || null,
+      state: formDataObj.state || null,
+      pincode: formDataObj.pincode || null,
+      status: "verified",
       reviewed_at: new Date().toISOString(),
       reviewed_by: session.userId,
-    })
-    .eq("id", applicationId);
+    });
+  } else {
+    await adminClient
+      .from("seller_profiles")
+      .update({
+        status: targetStatusSellerProfile,
+        reviewed_at: new Date().toISOString(),
+        reviewed_by: session.userId,
+      })
+      .eq("id", applicationId);
+  }
 
   revalidatePath("/admin/dashboard/verifications");
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/seller/dashboard");
   return { success: true };
 }

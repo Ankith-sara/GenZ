@@ -68,7 +68,7 @@ export default async function SellerDashboardPage() {
   if (isVerified) completedSteps++;
 
   return (
-    <div className="space-y-8 select-none">
+    <div className="space-y-8">
       {/* 0. FIRST-TIME SELLER ONBOARDING CHECKLIST NOTIFICATION */}
       <div className="rounded-2xl border border-[#E5E5E0] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-6 shadow-2xs">
         <div className="flex flex-col justify-between gap-4 border-b border-[#E5E5E0]/60 pb-4 sm:flex-row sm:items-center">
@@ -78,19 +78,19 @@ export default async function SellerDashboardPage() {
                 <h2 className="font-graphik text-sm font-bold text-[#1A1A18]">
                   Welcome to GenZ Seller Portal!
                 </h2>
-                <span className="rounded-full border border-amber-300 bg-amber-100 px-2.5 py-0.5 font-mono text-[10px] font-bold text-amber-900 uppercase">
-                  Required Steps
+                <span className="rounded-full border border-emerald-300 bg-emerald-100 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-900 uppercase">
+                  Instant Catalog Active
                 </span>
               </div>
               <p className="font-graphik text-xs text-[#52524E]">
-                Complete your required factory onboarding steps to start receiving
-                direct buyer procurement RFQs.
+                You can add and publish product listings right away. Optional document
+                uploads help boost your factory trust score.
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs font-bold text-[#1A1A18]">
-              {completedSteps}/4 Steps Complete
+              {completedSteps}/4 Milestones Reached
             </span>
           </div>
         </div>
@@ -127,27 +127,6 @@ export default async function SellerDashboardPage() {
           </Link>
 
           <Link
-            href="/seller/dashboard/documents"
-            className={`flex items-start gap-3 rounded-xl border p-3.5 transition-all ${
-              hasDocuments
-                ? "border-emerald-200 bg-emerald-50/60 text-emerald-900"
-                : "border-[#E5E5E0] bg-white hover:border-black"
-            }`}
-          >
-            {hasDocuments ? (
-              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-            ) : (
-              <FileText className="h-5 w-5 shrink-0 text-amber-600" />
-            )}
-            <div>
-              <span className="block text-xs font-bold">2. Document Vault</span>
-              <span className="block text-[11px] opacity-80">
-                {hasDocuments ? "Documents Uploaded" : "Upload GST License"}
-              </span>
-            </div>
-          </Link>
-
-          <Link
             href="/seller/dashboard/products/new"
             className={`flex items-start gap-3 rounded-xl border p-3.5 transition-all ${
               hasProducts
@@ -161,9 +140,30 @@ export default async function SellerDashboardPage() {
               <Package className="h-5 w-5 shrink-0 text-amber-600" />
             )}
             <div>
-              <span className="block text-xs font-bold">3. Add Products</span>
+              <span className="block text-xs font-bold">2. Add Products</span>
               <span className="block text-[11px] opacity-80">
                 {hasProducts ? `${productCount} Listed` : "Publish First Listing"}
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/seller/dashboard/documents"
+            className={`flex items-start gap-3 rounded-xl border p-3.5 transition-all ${
+              hasDocuments
+                ? "border-emerald-200 bg-emerald-50/60 text-emerald-900"
+                : "border-[#E5E5E0] bg-white hover:border-black"
+            }`}
+          >
+            {hasDocuments ? (
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+            ) : (
+              <FileText className="h-5 w-5 shrink-0 text-amber-600" />
+            )}
+            <div>
+              <span className="block text-xs font-bold">3. Optional Documents</span>
+              <span className="block text-[11px] opacity-80">
+                {hasDocuments ? "Documents Uploaded" : "Optional Verification Vault"}
               </span>
             </div>
           </Link>
@@ -420,9 +420,9 @@ export default async function SellerDashboardPage() {
         </div>
       </div>
 
-      {/* 3. RECENT PRODUCT LISTINGS TABLE */}
-      <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-        <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-4">
+      {/* 3. RECENT PRODUCT LISTINGS TABLE / MOBILE CARDS */}
+      <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-4 shadow-2xs sm:p-6">
+        <div className="flex flex-col gap-2 border-b border-[#F0F0EC] pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="font-graphik text-base font-bold text-[#1A1A18]">
               Recent Catalog Portfolio
@@ -435,7 +435,7 @@ export default async function SellerDashboardPage() {
             href="/seller/dashboard/products"
             className="font-graphik text-xs font-semibold text-black hover:underline"
           >
-            View Full Portfolio →
+            View Full Portfolio
           </Link>
         </div>
 
@@ -451,26 +451,26 @@ export default async function SellerDashboardPage() {
             recentProducts.map((product) => (
               <div
                 key={product.id}
-                className="font-graphik flex items-center justify-between py-3.5 text-xs first:pt-0 last:pb-0"
+                className="font-graphik flex flex-col gap-3 py-3.5 text-xs first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E5E5E0] bg-[#FAF8F4] font-bold text-black">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E5E0] bg-[#FAF8F4] font-bold text-black">
                     <Package className="h-4 w-4 text-[#73736E]" />
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <Link
                       href={`/seller/dashboard/products/${product.id}`}
-                      className="block font-semibold text-[#1A1A18] hover:underline"
+                      className="block truncate font-semibold text-[#1A1A18] hover:underline"
                     >
                       {product.name}
                     </Link>
-                    <span className="font-mono text-[10px] text-[#73736E]">
+                    <span className="block truncate font-mono text-[10px] text-[#73736E]">
                       {product.category} · {formatInr(product.price_inr)}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-3 sm:justify-end">
                   <StatusBadge
                     status={product.status === "published" ? "active" : "draft"}
                     label={PRODUCT_STATUS_LABEL[product.status] || product.status}

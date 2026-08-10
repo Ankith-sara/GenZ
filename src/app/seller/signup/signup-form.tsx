@@ -12,10 +12,10 @@ import { LocationSelectGroup } from "@/components/ui/molecules/location-select";
 import { PhoneInputWithCountryCode } from "@/components/ui/molecules/phone-input";
 import { validateGstOrTradeId } from "@/lib/validation";
 
-type BusinessType = "seller" | "startup" | "artisan";
+type BusinessType = "manufacturer" | "startup" | "artisan";
 
 export function SellerSignupForm() {
-  const [businessType, setBusinessType] = useState<BusinessType>("seller");
+  const [businessType, setBusinessType] = useState<BusinessType>("manufacturer");
   const [formValues, setFormValues] = useState<Record<string, string>>({});
 
   // Form action state
@@ -39,11 +39,8 @@ export function SellerSignupForm() {
   if (state?.success) {
     return (
       <div className="animate-fade-in py-8 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white">
-          <Check className="h-7 w-7" />
-        </div>
         <h3 className="font-nantes mb-2 text-2xl font-normal text-black">
-          Application Received!
+          Application Submitted!
         </h3>
         <p className="mx-auto max-w-md text-sm leading-relaxed text-neutral-600">
           Our Admin team will review your business details.
@@ -80,7 +77,7 @@ export function SellerSignupForm() {
             }}
             className="flex h-10 w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-1 focus:ring-black focus:outline-none"
           >
-            <option value="seller">Manufacturer / Factory</option>
+            <option value="manufacturer">Manufacturer / Factory</option>
             <option value="startup">Startup / Brand</option>
             <option value="artisan">Artisan / MSME</option>
           </select>
@@ -149,7 +146,7 @@ export function SellerSignupForm() {
         {/* Required GSTIN & Optional Categories */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <Label htmlFor="gst_number">GSTIN / Trade ID *</Label>
+            <Label htmlFor="gst_number">GSTIN / Business Registration ID *</Label>
             <div className="relative">
               <Input
                 id="gst_number"
@@ -160,30 +157,16 @@ export function SellerSignupForm() {
                 placeholder="22AAAAA0000A1Z5"
                 maxLength={20}
                 className={`border-neutral-200 font-mono tracking-wider uppercase ${
-                  gstVal && gstCheck.isValid
-                    ? "border-emerald-500 focus:ring-emerald-500"
-                    : gstVal && !gstCheck.isValid
-                      ? "border-amber-500 focus:ring-amber-500"
-                      : ""
+                  gstVal && !gstCheck.isValid
+                    ? "border-amber-500 focus:ring-amber-500"
+                    : ""
                 }`}
               />
-              {gstVal && gstCheck.isValid && (
-                <ShieldCheck className="absolute top-2.5 right-3 h-5 w-5 text-emerald-600" />
-              )}
             </div>
-            {gstVal ? (
-              <p
-                className={`mt-1.5 flex items-center gap-1 text-xs ${
-                  gstCheck.isValid ? "font-medium text-emerald-700" : "text-amber-700"
-                }`}
-              >
-                {!gstCheck.isValid && <AlertCircle className="h-3.5 w-3.5 shrink-0" />}
+            {gstVal && !gstCheck.isValid && (
+              <p className="mt-1.5 flex items-center gap-1 text-xs text-amber-700">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                 <span>{gstCheck.message}</span>
-              </p>
-            ) : (
-              <p className="mt-1 text-[11px] text-neutral-500">
-                Enter 15-character GSTIN (e.g. 22AAAAA0000A1Z5) or official Trade
-                License ID.
               </p>
             )}
           </div>

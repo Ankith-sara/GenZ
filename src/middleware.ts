@@ -1,6 +1,28 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+function getRoleHost(
+  currentHost: string,
+  targetRole: "admin" | "seller" | "buyer"
+): string {
+  const hostLower = currentHost.toLowerCase();
+  const isSubdomainAdmin =
+    hostLower.startsWith("admin.") || hostLower.startsWith("admin-");
+  const isSubdomainSeller =
+    hostLower.startsWith("seller.") || hostLower.startsWith("seller-");
+
+  if (targetRole === "admin" && isSubdomainSeller) {
+    return currentHost.replace(/^seller([-.])/i, "admin$1");
+  }
+  if (targetRole === "seller" && isSubdomainAdmin) {
+    return currentHost.replace(/^admin([-.])/i, "seller$1");
+  }
+  if (targetRole === "buyer" && (isSubdomainAdmin || isSubdomainSeller)) {
+    return currentHost.replace(/^(admin|seller)[-.]/i, "");
+  }
+  return currentHost;
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -55,7 +77,9 @@ export async function updateSession(request: NextRequest) {
     const metaRole = user.user_metadata?.role;
     const validRoles = ["buyer", "seller", "admin"];
     const safeMetaRole =
-      typeof metaRole === "string" && validRoles.includes(metaRole)
+      typeof metaRole === "string" &&
+      validRoles.includes(metaRole) &&
+      metaRole !== "admin"
         ? metaRole
         : undefined;
     const resolved = profileRole ?? safeMetaRole ?? "buyer";
@@ -69,28 +93,34 @@ export async function updateSession(request: NextRequest) {
     return resolved;
   }
 
-  // 2. If user is already authenticated and has error/code in URL,
-  // redirect them directly to their appropriate dashboard
-  if (user && (code || errorParam)) {
-    const role = await resolveRole();
-    const url = request.nextUrl.clone();
-    url.search = ""; // clear query params
-    url.pathname =
-      role === "admin"
-        ? "/admin/dashboard"
-        : role === "seller"
-          ? "/seller/dashboard"
-          : "/profile";
-    return NextResponse.redirect(url);
-  }
-
-  // 3. Subdomain Detection (e.g., admin.genzonline.in, seller.genzonline.in, admin.localhost:3000)
+  // 2. Subdomain Detection (e.g., admin.genzonline.in, seller.genzonline.in, admin.localhost:3000)
   const host = (request.headers.get("host") || "").toLowerCase();
   let subdomain: "admin" | "seller" | null = null;
   if (host.startsWith("admin.") || host.startsWith("admin-")) {
     subdomain = "admin";
   } else if (host.startsWith("seller.") || host.startsWith("seller-")) {
     subdomain = "seller";
+  }
+
+  // 3. If user is already authenticated and has error/code in URL,
+  // redirect them directly to their appropriate dashboard
+  if (user && (code || errorParam)) {
+    const role = await resolveRole();
+    const targetHost = getRoleHost(host, role as "admin" | "seller" | "buyer");
+    const targetPath =
+      role === "admin"
+        ? "/admin/dashboard"
+        : role === "seller"
+          ? "/seller/dashboard"
+          : "/profile";
+    const protocol = request.nextUrl.protocol;
+    if (targetHost !== host) {
+      return NextResponse.redirect(`${protocol}//${targetHost}${targetPath}`);
+    }
+    const url = request.nextUrl.clone();
+    url.search = "";
+    url.pathname = targetPath;
+    return NextResponse.redirect(url);
   }
 
   // 4. Subdomain Root & Path Rewrites
@@ -156,30 +186,88 @@ export async function updateSession(request: NextRequest) {
   if (user) {
     const role = await resolveRole();
 
+    // Redirection on Login / Signup pages
     if (isAuthOnly) {
-      const url = request.nextUrl.clone();
       const redirectTo = request.nextUrl.searchParams.get("redirectTo");
-      if (redirectTo && redirectTo.startsWith("/")) {
-        url.pathname = redirectTo;
-      } else if (role === "admin") {
-        url.pathname = subdomain === "admin" ? "/admin/dashboard" : "/admin/dashboard";
-      } else if (role === "seller") {
-        url.pathname = "/seller/dashboard";
-      } else {
-        url.pathname = "/profile";
+      const protocol = request.nextUrl.protocol;
+
+      if (role === "admin") {
+        const targetHost = getRoleHost(host, "admin");
+        const targetPath =
+          redirectTo && redirectTo.startsWith("/admin")
+            ? redirectTo
+            : "/admin/dashboard";
+        if (targetHost !== host) {
+          return NextResponse.redirect(`${protocol}//${targetHost}${targetPath}`);
+        }
+        const url = request.nextUrl.clone();
+        url.pathname = targetPath;
+        url.search = "";
+        return NextResponse.redirect(url);
       }
-      return NextResponse.redirect(url);
-    }
 
-    // 1. Admin paths: strictly admin only. Sellers and buyers restricted.
-    if (isAdminPath && role !== "admin") {
+      if (role === "seller") {
+        const targetHost = getRoleHost(host, "seller");
+        const targetPath =
+          redirectTo && redirectTo.startsWith("/seller")
+            ? redirectTo
+            : "/seller/dashboard";
+        if (targetHost !== host) {
+          return NextResponse.redirect(`${protocol}//${targetHost}${targetPath}`);
+        }
+        const url = request.nextUrl.clone();
+        url.pathname = targetPath;
+        url.search = "";
+        return NextResponse.redirect(url);
+      }
+
+      // Buyer
+      const targetHost = getRoleHost(host, "buyer");
+      const targetPath =
+        redirectTo &&
+        redirectTo.startsWith("/") &&
+        !redirectTo.startsWith("/admin") &&
+        !redirectTo.startsWith("/seller")
+          ? redirectTo
+          : "/profile";
+      if (targetHost !== host) {
+        return NextResponse.redirect(`${protocol}//${targetHost}${targetPath}`);
+      }
       const url = request.nextUrl.clone();
-      url.pathname = role === "seller" ? "/seller/dashboard" : "/profile";
+      url.pathname = targetPath;
+      url.search = "";
       return NextResponse.redirect(url);
     }
 
-    // 2. Seller paths: admin and seller can access. Buyers restricted.
+    // 1. Admin paths / admin subdomain: strictly admin only.
+    if (isAdminPath && role !== "admin") {
+      const protocol = request.nextUrl.protocol;
+      if (role === "seller") {
+        const targetHost = getRoleHost(host, "seller");
+        if (targetHost !== host) {
+          return NextResponse.redirect(`${protocol}//${targetHost}/seller/dashboard`);
+        }
+        const url = request.nextUrl.clone();
+        url.pathname = "/seller/dashboard";
+        return NextResponse.redirect(url);
+      } else {
+        const targetHost = getRoleHost(host, "buyer");
+        if (targetHost !== host) {
+          return NextResponse.redirect(`${protocol}//${targetHost}/profile`);
+        }
+        const url = request.nextUrl.clone();
+        url.pathname = "/profile";
+        return NextResponse.redirect(url);
+      }
+    }
+
+    // 2. Seller paths / seller subdomain: admin and seller can access. Buyers restricted.
     if (isSellerPath && role === "buyer") {
+      const protocol = request.nextUrl.protocol;
+      const targetHost = getRoleHost(host, "buyer");
+      if (targetHost !== host) {
+        return NextResponse.redirect(`${protocol}//${targetHost}/profile`);
+      }
       const url = request.nextUrl.clone();
       url.pathname = "/profile";
       return NextResponse.redirect(url);

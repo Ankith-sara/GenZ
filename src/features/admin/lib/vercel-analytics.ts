@@ -158,7 +158,7 @@ export async function getSellerAnalyticsData(
     rows = pageViews ?? [];
   }
 
-  // If no page views, populate with sample data for preview
+  // If no page views recorded yet, return real zero metrics
   if (rows.length === 0) {
     const dailyData: DailyDataPoint[] = [];
     const today = new Date();
@@ -178,9 +178,6 @@ export async function getSellerAnalyticsData(
       "Dec",
     ];
 
-    // Sample view counts
-    const sampleViews = [12, 19, 15, 24, 32, 28, 45, 38];
-
     for (let i = 7; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
@@ -188,32 +185,21 @@ export async function getSellerAnalyticsData(
       const dayNum = d.getDate();
       const dayName = dayNames[d.getDay()];
 
-      const val = sampleViews[7 - i];
-
       dailyData.push({
         date: `${monthName} ${dayNum}`,
         fullDate: `${monthName} ${String(dayNum).padStart(2, "0")} · ${dayName}`,
-        pageViews: val,
-        uniqueVisitors: Math.max(1, Math.round(val * 0.7)),
+        pageViews: 0,
+        uniqueVisitors: 0,
         isDashed: i === 0,
       });
     }
 
-    const defaultPaths =
-      productPaths.length > 0
-        ? productPaths.slice(0, 3)
-        : ["/products/sample-1", "/products/sample-2"];
-
     return {
       dailyData,
-      totalPageViews: 215,
-      totalVisitors: 150,
-      topPages: defaultPaths.map((p, idx) => ({ path: p, views: 110 - idx * 30 })),
-      topReferrers: [
-        { source: "Google Search", count: 98 },
-        { source: "Direct Traffic", count: 72 },
-        { source: "LinkedIn", count: 45 },
-      ],
+      totalPageViews: 0,
+      totalVisitors: 0,
+      topPages: [],
+      topReferrers: [],
     };
   }
 

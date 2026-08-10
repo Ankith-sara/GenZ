@@ -1,5 +1,6 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { Profile, Role } from "@/types/database";
 import type { User } from "@supabase/supabase-js";
 
@@ -55,7 +56,14 @@ export async function getUserAndProfile(): Promise<{
 
     authDebug(`No profile row for user ${user.id}. Creating with role="${metaRole}".`);
 
-    const { data: newProfile, error: insertError } = await supabase
+    let adminClient;
+    try {
+      adminClient = createAdminClient();
+    } catch {
+      adminClient = supabase;
+    }
+
+    const { data: newProfile, error: insertError } = await adminClient
       .from("profiles")
       .upsert({
         id: user.id,
@@ -87,7 +95,14 @@ export async function getUserAndProfile(): Promise<{
   // If user is a seller, ensure a seller_profiles row exists
   if (resolvedProfile?.role === "seller") {
     try {
-      const { data: sellerProfile } = await supabase
+      let adminClient;
+      try {
+        adminClient = createAdminClient();
+      } catch {
+        adminClient = supabase;
+      }
+
+      const { data: sellerProfile } = await adminClient
         .from("seller_profiles")
         .select("id, status")
         .eq("id", user.id)
@@ -106,7 +121,7 @@ export async function getUserAndProfile(): Promise<{
         const descriptionStr = JSON.stringify(user.user_metadata || {});
 
         // Default auto-created seller_profiles to 'pending' verification status
-        await supabase.from("seller_profiles").upsert({
+        await adminClient.from("seller_profiles").upsert({
           id: user.id,
           business_name: bName,
           gst_number: gst,
