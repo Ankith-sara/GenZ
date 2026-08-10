@@ -246,7 +246,7 @@ export function Header({
 
             <div className="flex items-center gap-5 text-neutral-300">
               <Link
-                href="/signup/seller"
+                href="/seller/signup"
                 className="font-semibold text-white transition-colors hover:text-neutral-300 hover:underline"
               >
                 Sell on GenZ
@@ -737,7 +737,7 @@ export function Header({
                 asChild
                 className="font-graphik mb-2 w-full rounded-xl bg-amber-400 text-xs font-bold text-black hover:bg-amber-300"
               >
-                <Link href="/signup/seller" onClick={() => setIsOpen(false)}>
+                <Link href="/seller/signup" onClick={() => setIsOpen(false)}>
                   Sell on GenZ
                 </Link>
               </Button>

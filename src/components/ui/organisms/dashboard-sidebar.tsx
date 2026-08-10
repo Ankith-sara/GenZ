@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  Building2,
   FileText,
   Package,
   ShieldCheck,
@@ -19,6 +18,7 @@ import {
   PanelLeftOpen,
   LogOut,
   ShoppingBag,
+  Settings,
 } from "lucide-react";
 import type { Role } from "@/types/database";
 import { signOut } from "@/app/login/actions";
@@ -59,11 +59,6 @@ function getNavGroups(role: Role): NavGroup[] {
       groupName: "FACTORY DESK",
       items: [
         { href: "/seller/dashboard", label: "Seller Overview", icon: LayoutDashboard },
-        {
-          href: "/seller/dashboard/onboarding",
-          label: "Business Profile",
-          icon: Building2,
-        },
       ],
     },
     {
@@ -71,7 +66,7 @@ function getNavGroups(role: Role): NavGroup[] {
       items: [
         {
           href: "/seller/dashboard/products",
-          label: "Product Portfolio",
+          label: "Products",
           icon: Package,
         },
         {
@@ -88,7 +83,10 @@ function getNavGroups(role: Role): NavGroup[] {
     },
     {
       groupName: "MANAGEMENT",
-      items: [{ href: "/dashboard/settings", label: "Account & Settings", icon: User }],
+      items: [
+        { href: "/seller/dashboard/account", label: "Account", icon: User },
+        { href: "/seller/dashboard/settings", label: "Settings", icon: Settings },
+      ],
     },
   ];
 }
@@ -147,11 +145,11 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
 
       {/* Desktop / Responsive Sidebar Drawer */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between border-r border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] transition-all duration-300 select-none lg:static lg:z-auto ${
-          isCollapsed ? "lg:w-[72px]" : "lg:w-[260px]"
+        className={`sticky top-0 z-30 flex h-screen shrink-0 flex-col justify-between overflow-y-auto border-r border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] transition-all duration-300 select-none ${
+          isCollapsed ? "w-[72px]" : "w-[260px]"
         } ${
           mobileOpen
-            ? "w-[260px] translate-x-0 shadow-2xl"
+            ? "fixed inset-y-0 left-0 z-50 w-[260px] translate-x-0 shadow-2xl"
             : "-translate-x-full sm:translate-x-0"
         } hidden sm:flex`}
       >

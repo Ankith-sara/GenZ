@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, ShieldCheck, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
 import { Input } from "@/components/ui/atoms/input";
 import { Label } from "@/components/ui/atoms/label";
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/atoms/textarea";
 import { signupSeller, type SellerSignupState } from "./actions";
 import { LocationSelectGroup } from "@/components/ui/molecules/location-select";
 import { PhoneInputWithCountryCode } from "@/components/ui/molecules/phone-input";
+import { validateGstOrTradeId } from "@/lib/validation";
 
 type BusinessType = "seller" | "startup" | "artisan";
 
@@ -27,8 +28,12 @@ export function SellerSignupForm() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
+    const finalValue = name === "gst_number" ? value.toUpperCase() : value;
+    setFormValues((prev) => ({ ...prev, [name]: finalValue }));
   };
+
+  const gstVal = formValues["gst_number"] || "";
+  const gstCheck = validateGstOrTradeId(gstVal);
 
   // SUCCESS SCREEN: Shows ONLY the requested message
   if (state?.success) {
@@ -91,7 +96,7 @@ export function SellerSignupForm() {
               required
               value={formValues["business_name"] || ""}
               onChange={handleInputChange}
-              placeholder="e.g. Apex Industrial Polymers"
+              placeholder="e.g. Bharat Industries"
               className="border-neutral-200"
             />
           </div>
@@ -133,6 +138,7 @@ export function SellerSignupForm() {
 
         {/* Location Select Group */}
         <LocationSelectGroup
+          addressValue={formValues["address"] || ""}
           countryValue={formValues["country"] || "India"}
           stateValue={formValues["state"] || "Tamil Nadu"}
           cityValue={formValues["city"] || "Coimbatore"}
@@ -144,15 +150,42 @@ export function SellerSignupForm() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="gst_number">GSTIN / Trade ID *</Label>
-            <Input
-              id="gst_number"
-              name="gst_number"
-              required
-              value={formValues["gst_number"] || ""}
-              onChange={handleInputChange}
-              placeholder="22AAAAA0000A1Z5"
-              className="border-neutral-200 font-mono"
-            />
+            <div className="relative">
+              <Input
+                id="gst_number"
+                name="gst_number"
+                required
+                value={gstVal}
+                onChange={handleInputChange}
+                placeholder="22AAAAA0000A1Z5"
+                maxLength={20}
+                className={`border-neutral-200 font-mono tracking-wider uppercase ${
+                  gstVal && gstCheck.isValid
+                    ? "border-emerald-500 focus:ring-emerald-500"
+                    : gstVal && !gstCheck.isValid
+                      ? "border-amber-500 focus:ring-amber-500"
+                      : ""
+                }`}
+              />
+              {gstVal && gstCheck.isValid && (
+                <ShieldCheck className="absolute top-2.5 right-3 h-5 w-5 text-emerald-600" />
+              )}
+            </div>
+            {gstVal ? (
+              <p
+                className={`mt-1.5 flex items-center gap-1 text-xs ${
+                  gstCheck.isValid ? "font-medium text-emerald-700" : "text-amber-700"
+                }`}
+              >
+                {!gstCheck.isValid && <AlertCircle className="h-3.5 w-3.5 shrink-0" />}
+                <span>{gstCheck.message}</span>
+              </p>
+            ) : (
+              <p className="mt-1 text-[11px] text-neutral-500">
+                Enter 15-character GSTIN (e.g. 22AAAAA0000A1Z5) or official Trade
+                License ID.
+              </p>
+            )}
           </div>
           <div>
             <Label htmlFor="product_categories">Product Categories (Optional)</Label>

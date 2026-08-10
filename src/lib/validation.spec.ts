@@ -3,7 +3,6 @@ import {
   emailSchema,
   passwordSchema,
   loginSchema,
-  signupSchema,
   gstSchema,
   sellerProfileSchema,
 } from "./validation";
@@ -35,8 +34,13 @@ describe("Business & Input Validation Specs", () => {
       expect(gstSchema.parse(validGst)).toBe(validGst);
     });
 
-    it("rejects invalid GSTIN strings", () => {
-      expect(() => gstSchema.parse("INVALID_GST")).toThrow();
+    it("accepts valid Trade ID format", () => {
+      const validTradeId = "TRD-99887766";
+      expect(gstSchema.parse(validTradeId)).toBe(validTradeId);
+    });
+
+    it("rejects invalid GSTIN / Trade ID strings", () => {
+      expect(() => gstSchema.parse("A")).toThrow();
     });
   });
 

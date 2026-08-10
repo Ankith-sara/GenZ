@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
@@ -16,6 +15,7 @@ export interface ReviewState {
     email: string;
     password: string;
     emailSent: boolean;
+    emailError?: string;
   };
 }
 
@@ -31,6 +31,93 @@ function generatePassword(length = 14): string {
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
   return Array.from(array, (byte) => chars[byte % chars.length]).join("");
+}
+
+/**
+ * Safely find existing auth user or create a new user with pagination.
+ */
+async function getOrCreateAuthUser(
+  adminClient: ReturnType<typeof createAdminClient>,
+  email: string,
+  password: string,
+  metadata: Record<string, unknown>
+): Promise<{ id: string; email: string }> {
+  let existingUser: {
+    id: string;
+    email?: string;
+    user_metadata?: Record<string, unknown>;
+  } | null = null;
+  let page = 1;
+
+  // Search through all pages of auth users to reliably match by email
+  while (page <= 20) {
+    const { data: pageData, error: listError } = await adminClient.auth.admin.listUsers(
+      {
+        page,
+        perPage: 1000,
+      }
+    );
+    if (listError || !pageData?.users || pageData.users.length === 0) break;
+
+    const found = pageData.users.find(
+      (u: { email?: string }) => u.email?.toLowerCase() === email.toLowerCase()
+    );
+    if (found) {
+      existingUser = found;
+      break;
+    }
+    if (pageData.users.length < 1000) break;
+    page++;
+  }
+
+  if (existingUser) {
+    console.log(
+      `[getOrCreateAuthUser] Updating existing auth user ${existingUser.id} (${email})`
+    );
+    const { data: updatedData, error: updateError } =
+      await adminClient.auth.admin.updateUserById(existingUser.id, {
+        password,
+        user_metadata: {
+          ...(existingUser.user_metadata || {}),
+          ...metadata,
+        },
+      });
+
+    if (updateError || !updatedData?.user) {
+      console.error(
+        `[getOrCreateAuthUser] Update user error for ${email}:`,
+        updateError
+      );
+      const errMsg =
+        updateError?.message && updateError.message !== "{}"
+          ? updateError.message
+          : "Auth update request failed";
+      throw new Error(`Failed to update password for user (${email}): ${errMsg}`);
+    }
+
+    return { id: updatedData.user.id, email: updatedData.user.email || email };
+  } else {
+    console.log(`[getOrCreateAuthUser] Creating new auth user for ${email}`);
+    const { data: createdData, error: createError } =
+      await adminClient.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: metadata,
+      });
+
+    if (createError || !createdData?.user) {
+      console.error(
+        `[getOrCreateAuthUser] Create user error for ${email}:`,
+        createError
+      );
+      throw new Error(
+        `Failed to create authentication credentials: ${createError?.message || "Unknown auth error"}`
+      );
+    }
+
+    return { id: createdData.user.id, email: createdData.user.email || email };
+  }
 }
 
 /**
@@ -146,53 +233,26 @@ export async function approveSeller(
   const passwordToUse = inputPassword || generatePassword(14);
   const applicationFormData = (application.form_data ?? {}) as Record<string, string>;
 
-  // 3. Check if user account already exists in Supabase Auth
-  let userId: string = application.id;
-
+  // 3. Provision or Update Supabase Auth User
+  let authUser: { id: string; email: string };
   try {
-    const { data: userListData } = await adminClient.auth.admin.listUsers();
-    const existingAuthUser = userListData?.users?.find(
-      (u) =>
-        u.id === application.id || u.email?.toLowerCase() === emailToUse.toLowerCase()
-    );
-
-    if (existingAuthUser) {
-      userId = existingAuthUser.id;
-      await adminClient.auth.admin.updateUserById(userId, {
-        password: passwordToUse,
-        email_confirm: true,
-        user_metadata: {
-          full_name: application.full_name,
-          role: "seller",
-          business_type: application.business_type || "Manufacturer",
-          phone: application.phone,
-          business_name: application.business_name,
-        },
-      });
-    } else {
-      const { data: authData, error: authError } =
-        await adminClient.auth.admin.createUser({
-          email: emailToUse,
-          password: passwordToUse,
-          email_confirm: true,
-          user_metadata: {
-            full_name: application.full_name,
-            role: "seller",
-            business_type: application.business_type || "Manufacturer",
-            phone: application.phone,
-            business_name: application.business_name,
-          },
-        });
-
-      if (authError || !authData?.user) {
-        console.error("Failed to create auth user:", authError);
-      } else {
-        userId = authData.user.id;
-      }
-    }
-  } catch (authErr) {
-    console.error("[approveSeller] Auth admin call notice:", authErr);
+    authUser = await getOrCreateAuthUser(adminClient, emailToUse, passwordToUse, {
+      full_name: application.full_name,
+      role: "seller",
+      business_type: application.business_type || "Manufacturer",
+      phone: application.phone,
+      business_name: application.business_name,
+    });
+  } catch (authErr: unknown) {
+    const errorMsg =
+      authErr instanceof Error
+        ? authErr.message
+        : "Failed to create/update seller credentials.";
+    console.error("[approveSeller] Auth provisioning error:", authErr);
+    return { error: errorMsg };
   }
+
+  const userId = authUser.id;
 
   // 4. Update profile + seller_profiles rows to "verified"
   await adminClient.from("profiles").upsert({
@@ -240,7 +300,7 @@ export async function approveSeller(
       .eq("id", applicationId);
   }
 
-  // 5. Update seller_applications if present
+  // 5. Update seller_applications by ID and by Email
   await adminClient
     .from("seller_applications")
     .update({
@@ -248,51 +308,69 @@ export async function approveSeller(
       reviewed_at: new Date().toISOString(),
       reviewed_by: session.userId,
     })
-    .or(`id.eq.${applicationId},id.eq.${userId}`);
+    .or(`id.eq.${applicationId},id.eq.${userId},email.ilike.${emailToUse}`);
 
   // 6. Dispatch login credentials email if enabled
   let emailSent = false;
+  let emailError: string | undefined;
   try {
     const siteUrl = SITE_URL;
     const resendApiKey = process.env.RESEND_API_KEY;
     const fromEmail =
-      process.env.RESEND_FROM_EMAIL || "GenZ Platform <onboarding@resend.dev>";
+      process.env.RESEND_FROM_EMAIL || "GenZ Online <onboarding@genzonline.in>";
 
-    if (sendEmailOption && resendApiKey) {
-      const resendRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${resendApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: fromEmail,
-          to: emailToUse,
-          subject: "Your GenZ Seller Account Approved!",
-          html: `
-            <div style="font-family: 'Inter', system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px; background: #FAF7F0; border-radius: 16px;">
-              <h1 style="font-size: 24px; color: #1A1A18; margin-bottom: 8px;">Welcome to GenZ, ${application.full_name}!</h1>
-              <p style="font-size: 14px; color: #52524E; line-height: 1.6;">
-                Your seller registration application for <strong>${application.business_name}</strong> has been approved.
-              </p>
-              <div style="background: white; border: 1px solid #E5E5E0; border-radius: 12px; padding: 20px; margin: 24px 0;">
-                <p style="font-size: 12px; color: #73736E; text-transform: uppercase; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 12px;">Your Account Login Credentials</p>
-                <p style="font-size: 14px; margin: 4px 0;"><strong>Login URL:</strong> <a href="${siteUrl}/login">${siteUrl}/login</a></p>
-                <p style="font-size: 14px; margin: 4px 0;"><strong>Email:</strong> ${emailToUse}</p>
-                <p style="font-size: 14px; margin: 4px 0;"><strong>Password:</strong> <code style="background: #F0F0EC; padding: 2px 8px; border-radius: 4px; font-size: 13px;">${passwordToUse}</code></p>
+    if (sendEmailOption) {
+      if (!resendApiKey) {
+        emailError = "RESEND_API_KEY is not configured in environment variables.";
+        console.warn("[approveSeller] Resend API key missing.");
+      } else {
+        const resendRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: fromEmail,
+            to: emailToUse,
+            subject: "Your GenZ Seller Account Approved!",
+            html: `
+              <div style="font-family: 'Inter', system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px; background: #FAF7F0; border-radius: 16px;">
+                <h1 style="font-size: 24px; color: #1A1A18; margin-bottom: 8px;">Welcome to GenZ, ${application.full_name}!</h1>
+                <p style="font-size: 14px; color: #52524E; line-height: 1.6;">
+                  Your seller registration application for <strong>${application.business_name}</strong> has been approved.
+                </p>
+                <div style="background: white; border: 1px solid #E5E5E0; border-radius: 12px; padding: 20px; margin: 24px 0;">
+                  <p style="font-size: 12px; color: #73736E; text-transform: uppercase; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 12px;">Your Account Login Credentials</p>
+                  <p style="font-size: 14px; margin: 4px 0;"><strong>Login URL:</strong> <a href="${siteUrl}/login">${siteUrl}/login</a></p>
+                  <p style="font-size: 14px; margin: 4px 0;"><strong>Email:</strong> ${emailToUse}</p>
+                  <p style="font-size: 14px; margin: 4px 0;"><strong>Password:</strong> <code style="background: #F0F0EC; padding: 2px 8px; border-radius: 4px; font-size: 13px;">${passwordToUse}</code></p>
+                </div>
+                <p style="font-size: 13px; color: #8C8C85;">Please change your password after logging in for security.</p>
+                <a href="${siteUrl}/login" style="display: inline-block; background: #1A1A18; color: #FFFFFF; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 8px; margin-top: 16px;">Sign In to Dashboard</a>
               </div>
-              <p style="font-size: 13px; color: #8C8C85;">Please change your password after logging in for security.</p>
-              <a href="${siteUrl}/login" style="display: inline-block; background: #1A1A18; color: #FFFFFF; padding: 12px 24px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 8px; margin-top: 16px;">Sign In to Dashboard</a>
-            </div>
-          `,
-        }),
-      });
+            `,
+          }),
+        });
 
-      if (resendRes.ok) {
-        emailSent = true;
+        if (resendRes.ok) {
+          emailSent = true;
+          console.log(
+            `[approveSeller] Resend email successfully dispatched to ${emailToUse}`
+          );
+        } else {
+          const resendErrJson = await resendRes.json().catch(() => null);
+          emailError =
+            resendErrJson?.message || `Resend returned HTTP ${resendRes.status}`;
+          console.error(
+            "[approveSeller] Resend API error details:",
+            resendErrJson || resendRes.statusText
+          );
+        }
       }
     }
-  } catch (emailErr) {
+  } catch (emailErr: unknown) {
+    emailError = emailErr instanceof Error ? emailErr.message : "Email send exception";
     console.error("[approveSeller] Exception during email dispatch:", emailErr);
   }
 
@@ -312,6 +390,7 @@ export async function approveSeller(
       email: emailToUse,
       password: passwordToUse,
       emailSent,
+      emailError,
     },
   };
 }
@@ -349,6 +428,15 @@ export async function rejectSeller(
     adminClient = await createClient();
   }
 
+  // Fetch record to get email if available
+  const { data: appRow } = await adminClient
+    .from("seller_applications")
+    .select("email")
+    .eq("id", applicationId)
+    .maybeSingle();
+
+  const targetEmail = appRow?.email || "";
+
   // Update seller_applications
   await adminClient
     .from("seller_applications")
@@ -358,7 +446,11 @@ export async function rejectSeller(
       reviewed_at: new Date().toISOString(),
       reviewed_by: session.userId,
     })
-    .eq("id", applicationId);
+    .or(
+      targetEmail
+        ? `id.eq.${applicationId},email.ilike.${targetEmail}`
+        : `id.eq.${applicationId}`
+    );
 
   // Update seller_profiles
   await adminClient
@@ -397,6 +489,13 @@ export async function updateApplicationStatusDirectly(
     adminClient = await createClient();
   }
 
+  const { data: appRow } = await adminClient
+    .from("seller_applications")
+    .select("email")
+    .eq("id", applicationId)
+    .maybeSingle();
+
+  const targetEmail = appRow?.email || "";
   const targetStatusSellerProfile = newStatus === "approved" ? "verified" : newStatus;
 
   await adminClient
@@ -406,7 +505,11 @@ export async function updateApplicationStatusDirectly(
       reviewed_at: new Date().toISOString(),
       reviewed_by: session.userId,
     })
-    .eq("id", applicationId);
+    .or(
+      targetEmail
+        ? `id.eq.${applicationId},email.ilike.${targetEmail}`
+        : `id.eq.${applicationId}`
+    );
 
   await adminClient
     .from("seller_profiles")

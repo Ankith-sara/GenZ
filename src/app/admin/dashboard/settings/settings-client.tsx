@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { PageHeader } from "@/components/ui/organisms/page-header";
-import { Button } from "@/components/ui/atoms/button";
 import {
   ShieldCheck,
   Bell,
@@ -137,7 +136,7 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
   };
 
   return (
-    <div className="font-graphik space-y-6 select-none">
+    <div className="font-graphik space-y-6">
       <PageHeader
         title="Platform Settings"
         description="Manage storefront details, seller registration rules, platform security, and notification preferences."

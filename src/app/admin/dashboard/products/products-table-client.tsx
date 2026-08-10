@@ -144,7 +144,7 @@ export function ProductsTableClient({ initialProducts }: ProductsTableClientProp
   };
 
   return (
-    <div className="space-y-6 select-none">
+    <div className="space-y-6">
       <PageHeader
         title="Platform Product Portfolio"
         description="Catalog directory of seller listings, pricing specs, and publication statuses."

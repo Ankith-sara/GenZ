@@ -55,7 +55,7 @@ export default async function SignupPage({
             {/* Seller Link */}
             <div className="mt-6 text-center">
               <Link
-                href="/signup/seller"
+                href="/seller/signup"
                 className="font-graphik text-xs font-semibold tracking-wider text-black uppercase transition-colors hover:underline"
               >
                 Are you a seller? Register business

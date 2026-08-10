@@ -22,15 +22,27 @@ export default async function AdminVerificationsPage({
     supabase = await createClient();
   }
 
-  // 0. Fetch real Auth emails
+  // 0. Fetch real Auth emails with pagination
   const authUserEmails: Record<string, string> = {};
   try {
-    const { data: userListData } = await supabase.auth.admin.listUsers();
-    (userListData?.users ?? []).forEach((u) => {
-      if (u.id && u.email) {
-        authUserEmails[u.id] = u.email;
-      }
-    });
+    let page = 1;
+    while (page <= 20) {
+      const { data: userListData, error: listErr } =
+        await supabase.auth.admin.listUsers({
+          page,
+          perPage: 1000,
+        });
+      if (listErr || !userListData?.users || userListData.users.length === 0) break;
+
+      userListData.users.forEach((u) => {
+        if (u.id && u.email) {
+          authUserEmails[u.id] = u.email;
+        }
+      });
+
+      if (userListData.users.length < 1000) break;
+      page++;
+    }
   } catch (err) {
     console.error("[AdminVerificationsPage] Could not list auth users:", err);
   }
@@ -69,11 +81,12 @@ export default async function AdminVerificationsPage({
   }
 
   const applicationsMap = new Map<string, SellerAppRecord>();
+  const emailToIdMap = new Map<string, string>();
 
   // Insert seller_applications records
   (rawApplications ?? []).forEach((app) => {
-    const realEmail = app.email || authUserEmails[app.id] || "seller@genz.in";
-    applicationsMap.set(app.id, {
+    const realEmail = (app.email || authUserEmails[app.id] || "seller@genz.in").trim();
+    const appRecord: SellerAppRecord = {
       id: app.id,
       business_name: app.business_name || "Factory Seller",
       full_name: app.full_name || "Applicant",
@@ -89,28 +102,46 @@ export default async function AdminVerificationsPage({
       form_data: app.form_data as Record<string, unknown> | null,
       business_type: app.business_type || "Manufacturer",
       rejection_reason: app.rejection_reason || null,
-    });
+    };
+    applicationsMap.set(app.id, appRecord);
+    if (realEmail) {
+      emailToIdMap.set(realEmail.toLowerCase(), app.id);
+    }
   });
 
-  // Insert seller_profiles records
+  // Insert & merge seller_profiles records
   (rawSellerProfiles ?? []).forEach((sp) => {
-    const existing = applicationsMap.get(sp.id);
     const userProf = profilesMap[sp.id] || {};
-    const statusMapped: "pending" | "approved" | "rejected" =
-      sp.status === "verified" || (sp.status as string) === "approved"
-        ? "approved"
-        : sp.status === "rejected"
-          ? "rejected"
-          : "pending";
+    const realEmail = (authUserEmails[sp.id] || "seller@genz.in").trim();
+    const emailKey = realEmail.toLowerCase();
 
-    const realEmail = authUserEmails[sp.id] || existing?.email || "seller@genz.in";
+    // Look up existing by ID or by Email
+    let existingKey = sp.id;
+    let existing = applicationsMap.get(sp.id);
+    if (!existing && emailToIdMap.has(emailKey)) {
+      existingKey = emailToIdMap.get(emailKey)!;
+      existing = applicationsMap.get(existingKey);
+    }
+
+    const isApprovedInProfile =
+      sp.status === "verified" || (sp.status as string) === "approved";
+    const statusMapped: "pending" | "approved" | "rejected" = isApprovedInProfile
+      ? "approved"
+      : sp.status === "rejected"
+        ? "rejected"
+        : "pending";
 
     if (existing) {
-      if (sp.status === "verified" || (sp.status as string) === "approved") {
+      if (isApprovedInProfile) {
         existing.status = "approved";
+      } else if (sp.status === "rejected" && existing.status !== "approved") {
+        existing.status = "rejected";
+      }
+      if (sp.gst_number && existing.form_data) {
+        existing.form_data.gst_number = sp.gst_number;
       }
     } else {
-      applicationsMap.set(sp.id, {
+      const record: SellerAppRecord = {
         id: sp.id,
         business_name: sp.business_name || "Factory Seller",
         full_name: userProf.full_name || "Factory Owner",
@@ -129,7 +160,11 @@ export default async function AdminVerificationsPage({
         },
         business_type: "Manufacturer",
         rejection_reason: sp.rejection_reason || null,
-      });
+      };
+      applicationsMap.set(sp.id, record);
+      if (realEmail) {
+        emailToIdMap.set(emailKey, sp.id);
+      }
     }
   });
 

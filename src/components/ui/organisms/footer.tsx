@@ -59,7 +59,7 @@ const defaultSections: FooterSection[] = [
       { name: "Vision 2030", href: "/about#vision" },
       { name: "Founder Story", href: "/about#story" },
       { name: "Contact Us", href: "/contact" },
-      { name: "For Sellers", href: "/signup/seller" },
+      { name: "For Sellers", href: "/seller/signup" },
     ],
   },
   {
@@ -74,8 +74,8 @@ const defaultSections: FooterSection[] = [
   {
     title: "Resources",
     links: [
-      { name: "Seller Guide", href: "/signup/seller" },
-      { name: "Verification", href: "/signup/seller" },
+      { name: "Seller Guide", href: "/seller/signup" },
+      { name: "Verification", href: "/seller/signup" },
       { name: "Buyer Inquiries", href: "/discover" },
       { name: "Partnerships", href: "/contact" },
     ],

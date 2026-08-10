@@ -80,8 +80,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 3. Subdomain Detection (e.g., admin.domain.com, seller.domain.com, admin.localhost:3000)
-  const host = request.headers.get("host") || "";
+  // 3. Subdomain Detection (e.g., admin.genzonline.in, seller.genzonline.in, admin.localhost:3000)
+  const host = (request.headers.get("host") || "").toLowerCase();
   let subdomain: "admin" | "seller" | null = null;
   if (host.startsWith("admin.") || host.startsWith("admin-")) {
     subdomain = "admin";
@@ -89,27 +89,31 @@ export async function updateSession(request: NextRequest) {
     subdomain = "seller";
   }
 
-  // 4. Subdomain Root Rewrites
-  if (subdomain === "admin" && path === "/") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/admin/dashboard";
-    if (!user) {
-      url.pathname = "/login";
-      url.searchParams.set("redirectTo", "/admin/dashboard");
-      return NextResponse.redirect(url);
+  // 4. Subdomain Root & Path Rewrites
+  if (subdomain === "admin") {
+    if (path === "/") {
+      const url = request.nextUrl.clone();
+      if (!user) {
+        url.pathname = "/login";
+        url.searchParams.set("redirectTo", "/admin/dashboard");
+        return NextResponse.redirect(url);
+      }
+      url.pathname = "/admin/dashboard";
+      return NextResponse.rewrite(url);
     }
-    return NextResponse.rewrite(url);
   }
 
-  if (subdomain === "seller" && path === "/") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/seller/dashboard";
-    if (!user) {
-      url.pathname = "/login";
-      url.searchParams.set("redirectTo", "/seller/dashboard");
-      return NextResponse.redirect(url);
+  if (subdomain === "seller") {
+    if (path === "/") {
+      const url = request.nextUrl.clone();
+      if (!user) {
+        url.pathname = "/login";
+        url.searchParams.set("redirectTo", "/seller/dashboard");
+        return NextResponse.redirect(url);
+      }
+      url.pathname = "/seller/dashboard";
+      return NextResponse.rewrite(url);
     }
-    return NextResponse.rewrite(url);
   }
 
   const isAuthOnly = path.startsWith("/login") || path.startsWith("/signup");

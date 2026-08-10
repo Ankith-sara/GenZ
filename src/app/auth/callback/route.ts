@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import type { Role } from "@/types/database";
 
 async function ensureProfileCreated(
   supabase: Awaited<ReturnType<typeof createClient>>
@@ -11,11 +12,12 @@ async function ensureProfileCreated(
     if (user) {
       const meta = user.user_metadata ?? {};
       const role = (meta.role as "buyer" | "seller" | "admin") || "buyer";
+      const dbRole = role === "seller" ? "manufacturer" : role;
       const fullName = meta.full_name || meta.fullName || null;
 
       await supabase.from("profiles").upsert({
         id: user.id,
-        role,
+        role: dbRole as Role,
         full_name: fullName,
         phone: meta.phone || null,
         city: meta.city || null,

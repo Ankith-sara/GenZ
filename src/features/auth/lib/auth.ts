@@ -61,11 +61,14 @@ export async function getUserAndProfile(): Promise<{
       `[auth] No profile row for ${user.email} (${user.id}). Creating with role="${metaRole}".`
     );
 
+    // DB enum app_role uses 'manufacturer' for seller role
+    const dbRole = (metaRole as string) === "seller" ? "manufacturer" : metaRole;
+
     const { data: newProfile, error: insertError } = await supabase
       .from("profiles")
       .upsert({
         id: user.id,
-        role: metaRole,
+        role: dbRole as Role,
         full_name: fullName,
       })
       .select("*")
@@ -99,7 +102,7 @@ export async function getUserAndProfile(): Promise<{
     try {
       const { data: mfg } = await supabase
         .from("seller_profiles")
-        .select("id")
+        .select("id, status")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -115,6 +118,7 @@ export async function getUserAndProfile(): Promise<{
         const pincode = user.user_metadata?.pincode || null;
         const descriptionStr = JSON.stringify(user.user_metadata || {});
 
+        // Default to 'verified' since profile role has been set to seller by admin
         await supabase.from("seller_profiles").upsert({
           id: user.id,
           business_name: bName,
@@ -123,7 +127,7 @@ export async function getUserAndProfile(): Promise<{
           state: state,
           pincode: pincode,
           description: descriptionStr,
-          status: "pending",
+          status: "verified",
           submitted_at: new Date().toISOString(),
         });
       }

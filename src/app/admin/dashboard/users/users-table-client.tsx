@@ -83,7 +83,7 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
   };
 
   return (
-    <div className="space-y-6 select-none">
+    <div className="space-y-6">
       {/* 1. PAGE HEADER */}
       <PageHeader
         title="User Profiles & Access Directory"
@@ -270,7 +270,7 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
         maxWidth="lg"
       >
         {selectedUser && (
-          <div className="space-y-6 select-none">
+          <div className="space-y-6">
             {/* Identity Card */}
             <div className="flex items-center gap-4 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-black text-lg font-bold text-white shadow-2xs">

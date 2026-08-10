@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { parseMaterials } from "@/features/products/lib/products";
-import type { ProductStatus } from "@/types/database";
+import type { ProductStatus, Role } from "@/types/database";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
 import { productSchema, variantSchema } from "@/lib/validation";
 
@@ -83,6 +83,36 @@ export async function createProduct(
   const customSellerId = String(formData.get("seller_id") ?? "").trim();
   const targetSellerId = customSellerId || session.userId;
 
+  // 1. Ensure user profile exists in profiles table
+  try {
+    await supabase.from("profiles").upsert(
+      {
+        id: targetSellerId,
+        full_name: session.profile?.full_name || session.email || "Factory Seller",
+        role: "manufacturer" as Role,
+      },
+      { onConflict: "id" }
+    );
+  } catch (profileErr) {
+    console.warn("profiles provision warning:", profileErr);
+  }
+
+  // 2. Ensure seller_profiles entry exists to satisfy products table FK constraint
+  try {
+    await supabase.from("seller_profiles").upsert(
+      {
+        id: targetSellerId,
+        business_name: session.profile?.full_name || "Factory Seller",
+        gst_number: "PENDING",
+        status: "pending",
+      },
+      { onConflict: "id" }
+    );
+  } catch (err) {
+    console.warn("seller_profiles provision warning:", err);
+  }
+
+  // 2. Insert product using seller_id
   const { data, error } = await supabase
     .from("products")
     .insert({
@@ -105,7 +135,9 @@ export async function createProduct(
 
   if (error) {
     console.error("Create product DB error:", error);
-    return { error: "Could not create the product. Please try again." };
+    return {
+      error: error.message || "Could not create the product. Please try again.",
+    };
   }
 
   // Upload cover image if provided

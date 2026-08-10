@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function SellerOnboardingRedirect() {
+export default function LegacyProfileRedirectPage() {
   redirect("/seller/dashboard/account");
 }

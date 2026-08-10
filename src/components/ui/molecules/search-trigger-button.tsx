@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Search } from "lucide-react";
 
 export function SearchTriggerButton({
@@ -8,10 +8,24 @@ export function SearchTriggerButton({
 }: {
   placeholder?: string;
 }) {
+  const [shortcutText] = useState(() => {
+    if (
+      typeof window !== "undefined" &&
+      /Mac|iPod|iPhone|iPad/i.test(navigator.userAgent)
+    ) {
+      return "⌘K";
+    }
+    return "Ctrl+K";
+  });
+
   const handleClick = () => {
+    const isMac =
+      typeof window !== "undefined" &&
+      /Mac|iPod|iPhone|iPad/i.test(navigator.userAgent);
     const event = new KeyboardEvent("keydown", {
       key: "k",
-      metaKey: true,
+      metaKey: isMac,
+      ctrlKey: !isMac,
       bubbles: true,
     });
     window.dispatchEvent(event);
@@ -26,7 +40,7 @@ export function SearchTriggerButton({
       <Search className="h-3.5 w-3.5" />
       <span className="hidden font-semibold md:inline">{placeholder}</span>
       <kbd className="hidden rounded border border-[#E5E5E0] bg-[#FAF8F4] px-1.5 py-0.5 font-mono text-[10px] font-bold sm:inline">
-        ⌘K
+        {shortcutText}
       </kbd>
     </button>
   );

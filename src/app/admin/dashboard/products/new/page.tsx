@@ -40,7 +40,7 @@ export default async function AdminNewProductPage() {
   }));
 
   return (
-    <div className="space-y-6 select-none">
+    <div className="space-y-6">
       <PageHeader
         title="Admin Product Dispatch & Creation"
         description="Add a new catalog listing on behalf of a verified seller or directly to the platform portfolio."

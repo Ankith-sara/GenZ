@@ -7,7 +7,7 @@ import {
   type ProductFormState,
 } from "@/app/seller/dashboard/products/actions";
 import { TOY_CATEGORIES, AGE_GROUPS } from "@/features/products/lib/products";
-import { Upload, Building2 } from "lucide-react";
+import { Upload, Building2, ChevronDown } from "lucide-react";
 
 export interface SellerOption {
   id: string;
@@ -124,8 +124,8 @@ export function AdminProductForm({ sellers, adminUserId }: AdminProductFormProps
               </option>
             ))}
           </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pt-1.5 pr-4">
-            <span className="text-[10px] text-[#8C8C85]">▼</span>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <ChevronDown className="h-4 w-4 text-[#73736E]" />
           </div>
         </div>
         <p className="mt-2 text-xs text-[#73736E]">
@@ -273,8 +273,8 @@ export function AdminProductForm({ sellers, adminUserId }: AdminProductFormProps
                 </option>
               ))}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pt-1.5 pr-4">
-              <span className="text-[10px] text-[#8C8C85]">▼</span>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <ChevronDown className="h-4 w-4 text-[#73736E]" />
             </div>
           </div>
         </div>
@@ -296,8 +296,8 @@ export function AdminProductForm({ sellers, adminUserId }: AdminProductFormProps
                 </option>
               ))}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pt-1.5 pr-4">
-              <span className="text-[10px] text-[#8C8C85]">▼</span>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <ChevronDown className="h-4 w-4 text-[#73736E]" />
             </div>
           </div>
         </div>

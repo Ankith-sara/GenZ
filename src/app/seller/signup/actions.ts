@@ -37,12 +37,17 @@ export async function signupSeller(
     return { error: rateLimit.error || "Too many requests. Please try again later." };
   }
 
+  const gstNumber = String(formData.get("gst_number") ?? "")
+    .trim()
+    .toUpperCase();
+
   // 2. Schema Validation
   const validation = sellerSignupSchema.safeParse({
     email,
     password: password || undefined,
     fullName,
     businessType,
+    gstNumber,
   });
   if (!validation.success) {
     await logRateLimitAttempt({

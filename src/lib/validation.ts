@@ -36,11 +36,53 @@ export const signupSchema = z.object({
   role: roleSchema,
 });
 
+// --- GSTIN / Trade ID Verification Schemas ---
+export const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
+export const TRADE_ID_REGEX = /^[A-Z0-9\-\/]{5,20}$/;
+
+export const gstSchema = z
+  .string()
+  .min(1, "GSTIN / Trade ID is required")
+  .trim()
+  .transform((val) => val.toUpperCase())
+  .refine(
+    (val) => GSTIN_REGEX.test(val) || TRADE_ID_REGEX.test(val),
+    "Invalid GSTIN or Trade ID (15-character GSTIN e.g. 22AAAAA0000A1Z5 or valid Trade ID required)"
+  );
+
+export function validateGstOrTradeId(val: string): {
+  isValid: boolean;
+  type: "GSTIN" | "Trade ID" | "invalid" | "empty";
+  message: string;
+} {
+  const trimmed = val.trim().toUpperCase();
+  if (!trimmed) {
+    return { isValid: false, type: "empty", message: "GSTIN / Trade ID is required" };
+  }
+  if (GSTIN_REGEX.test(trimmed)) {
+    return { isValid: true, type: "GSTIN", message: "Valid 15-character Indian GSTIN" };
+  }
+  if (TRADE_ID_REGEX.test(trimmed)) {
+    return {
+      isValid: true,
+      type: "Trade ID",
+      message: "Valid Trade / Business License ID",
+    };
+  }
+  return {
+    isValid: false,
+    type: "invalid",
+    message:
+      "Invalid format. Expected 15-character GSTIN (e.g. 22AAAAA0000A1Z5) or Trade ID",
+  };
+}
+
 export const sellerSignupSchema = z.object({
   email: emailSchema,
   password: passwordSchema.optional().or(z.literal("")),
   fullName: fullNameSchema,
   businessType: z.string().max(100).trim().default("seller"),
+  gstNumber: gstSchema.optional().or(z.literal("")),
 });
 
 // --- Public Form Schemas ---
@@ -74,7 +116,7 @@ export const newsletterSchema = z.object({
 
 // --- Product & Catalog Schemas ---
 export const productSchema = z.object({
-  name: z.string().min(1, "Product name is required").max(100).trim(),
+  name: z.string().trim().min(1, "Product name is required").max(100),
   category: z.string().min(1, "Category is required").max(50).trim(),
   age_group: z.string().max(50).trim().nullable().optional(),
   description: z.string().max(2000).trim().nullable().optional(),
@@ -138,13 +180,6 @@ export const addressSchema = z.object({
 export const addressesSchema = z.array(addressSchema);
 
 // --- Seller Verification Profile Schemas ---
-export const gstSchema = z
-  .string()
-  .regex(
-    /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/,
-    "Invalid 15-character GSTIN format"
-  )
-  .trim();
 
 export const sellerProfileSchema = z.object({
   business_name: z.string().min(1, "Business name is required").max(200).trim(),

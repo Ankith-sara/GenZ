@@ -40,7 +40,7 @@ export function InquiriesClient({ initialInquiries }: InquiriesClientProps) {
   const activeInquiry = initialInquiries.find((i) => i.id === selectedId);
 
   return (
-    <div className="space-y-6 select-none">
+    <div className="space-y-6">
       <PageHeader
         title="Buyer Sourcing & Inquiry Stream"
         description="Direct procurement inquiries submitted by wholesale buyers."

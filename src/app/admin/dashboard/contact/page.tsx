@@ -17,7 +17,7 @@ export default async function AdminContactPage() {
   const list = contactMessages ?? [];
 
   return (
-    <div className="space-y-6 select-none">
+    <div className="space-y-6">
       <PageHeader
         title="Contact Form Communications"
         description="Submissions received via the platform Contact Us form."

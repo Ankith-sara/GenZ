@@ -26,6 +26,7 @@ export default async function SellerDashboardPage() {
   const [
     { count: productCount },
     { count: inquiryCount },
+    { count: documentCount },
     { data: sellerProfile },
     { data: recentProducts },
     analytics,
@@ -36,6 +37,10 @@ export default async function SellerDashboardPage() {
       .eq("seller_id", session.userId),
     supabase
       .from("inquiries")
+      .select("*", { count: "exact", head: true })
+      .eq("seller_id", session.userId),
+    supabase
+      .from("seller_documents")
       .select("*", { count: "exact", head: true })
       .eq("seller_id", session.userId),
     supabase.from("seller_profiles").select("*").eq("id", session.userId).maybeSingle(),
@@ -50,9 +55,140 @@ export default async function SellerDashboardPage() {
 
   const isVerified = sellerProfile?.status === "verified";
   const verificationStatus = sellerProfile?.status || "pending";
+  const hasProfileDetails =
+    Boolean(sellerProfile?.business_name) &&
+    Boolean(sellerProfile?.gst_number && sellerProfile?.gst_number !== "PENDING");
+  const hasDocuments = (documentCount ?? 0) > 0;
+  const hasProducts = (productCount ?? 0) > 0;
+
+  let completedSteps = 0;
+  if (hasProfileDetails) completedSteps++;
+  if (hasDocuments) completedSteps++;
+  if (hasProducts) completedSteps++;
+  if (isVerified) completedSteps++;
 
   return (
     <div className="space-y-8 select-none">
+      {/* 0. FIRST-TIME SELLER ONBOARDING CHECKLIST NOTIFICATION */}
+      <div className="rounded-2xl border border-[#E5E5E0] bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-6 shadow-2xs">
+        <div className="flex flex-col justify-between gap-4 border-b border-[#E5E5E0]/60 pb-4 sm:flex-row sm:items-center">
+          <div className="flex items-center gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="font-graphik text-sm font-bold text-[#1A1A18]">
+                  Welcome to GenZ Seller Portal!
+                </h2>
+                <span className="rounded-full border border-amber-300 bg-amber-100 px-2.5 py-0.5 font-mono text-[10px] font-bold text-amber-900 uppercase">
+                  Required Steps
+                </span>
+              </div>
+              <p className="font-graphik text-xs text-[#52524E]">
+                Complete your required factory onboarding steps to start receiving
+                direct buyer procurement RFQs.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs font-bold text-[#1A1A18]">
+              {completedSteps}/4 Steps Complete
+            </span>
+          </div>
+        </div>
+
+        {/* Step Progress Bar */}
+        <div className="my-4 h-2 w-full overflow-hidden rounded-full bg-[#E5E5E0]">
+          <div
+            className="h-full bg-black transition-all duration-500"
+            style={{ width: `${(completedSteps / 4) * 100}%` }}
+          />
+        </div>
+
+        {/* 4 Step Action Cards */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Link
+            href="/seller/dashboard/account"
+            className={`flex items-start gap-3 rounded-xl border p-3.5 transition-all ${
+              hasProfileDetails
+                ? "border-emerald-200 bg-emerald-50/60 text-emerald-900"
+                : "border-[#E5E5E0] bg-white hover:border-black"
+            }`}
+          >
+            {hasProfileDetails ? (
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+            ) : (
+              <Building2 className="h-5 w-5 shrink-0 text-amber-600" />
+            )}
+            <div>
+              <span className="block text-xs font-bold">1. Business Profile</span>
+              <span className="block text-[11px] opacity-80">
+                {hasProfileDetails ? "GST & Address Done" : "Fill Factory & GST"}
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/seller/dashboard/documents"
+            className={`flex items-start gap-3 rounded-xl border p-3.5 transition-all ${
+              hasDocuments
+                ? "border-emerald-200 bg-emerald-50/60 text-emerald-900"
+                : "border-[#E5E5E0] bg-white hover:border-black"
+            }`}
+          >
+            {hasDocuments ? (
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+            ) : (
+              <FileText className="h-5 w-5 shrink-0 text-amber-600" />
+            )}
+            <div>
+              <span className="block text-xs font-bold">2. Document Vault</span>
+              <span className="block text-[11px] opacity-80">
+                {hasDocuments ? "Documents Uploaded" : "Upload GST License"}
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/seller/dashboard/products/new"
+            className={`flex items-start gap-3 rounded-xl border p-3.5 transition-all ${
+              hasProducts
+                ? "border-emerald-200 bg-emerald-50/60 text-emerald-900"
+                : "border-[#E5E5E0] bg-white hover:border-black"
+            }`}
+          >
+            {hasProducts ? (
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+            ) : (
+              <Package className="h-5 w-5 shrink-0 text-amber-600" />
+            )}
+            <div>
+              <span className="block text-xs font-bold">3. Add Products</span>
+              <span className="block text-[11px] opacity-80">
+                {hasProducts ? `${productCount} Listed` : "Publish First Listing"}
+              </span>
+            </div>
+          </Link>
+
+          <div
+            className={`flex items-start gap-3 rounded-xl border p-3.5 ${
+              isVerified
+                ? "border-emerald-200 bg-emerald-50/60 text-emerald-900"
+                : "border-amber-200 bg-amber-50/60 text-amber-900"
+            }`}
+          >
+            <ShieldCheck
+              className={`h-5 w-5 shrink-0 ${
+                isVerified ? "text-emerald-600" : "text-amber-600"
+              }`}
+            />
+            <div>
+              <span className="block text-xs font-bold">4. Audit Clearance</span>
+              <span className="block text-[11px] opacity-80">
+                {isVerified ? "Verified Manufacturer" : "Under Admin Audit"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* 1. KPI WIDGETS SECTION (4 Column Grid) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard

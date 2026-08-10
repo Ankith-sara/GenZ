@@ -17,7 +17,7 @@ export default async function AdminWaitlistPage() {
   const list = waitlist ?? [];
 
   return (
-    <div className="space-y-6 select-none">
+    <div className="space-y-6">
       <PageHeader
         title="Early Access Waitlist Directory"
         description="Prospective buyer and seller leads captured from the pre-launch landing page."

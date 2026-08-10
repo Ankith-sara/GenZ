@@ -60,8 +60,8 @@ export default async function AdminDashboardOverviewPage() {
   const buyersCount = (allProfiles ?? []).filter((p) => p.role === "buyer").length;
 
   return (
-    <div className="space-y-8 select-none">
-      {/* 1. KPI WIDGETS SECTION (4 Column Grid) */}
+    <div className="space-y-8">
+      {/* 1. KPI WIDGETS SECTION */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Total Platform Users"

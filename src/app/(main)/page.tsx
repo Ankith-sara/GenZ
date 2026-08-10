@@ -250,7 +250,7 @@ export default function HomePage() {
                 className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik h-12 rounded-none border-none px-6 text-xs font-semibold tracking-[0.05em] text-black uppercase transition-colors"
               >
                 <Link href="/discover" className="flex items-center gap-2">
-                  <span>Explore India</span>
+                  <span>Explore Now</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -261,7 +261,7 @@ export default function HomePage() {
                 size="lg"
                 className="font-graphik h-12 rounded-none border-black px-6 text-xs font-semibold tracking-[0.05em] text-black uppercase transition-colors hover:bg-black hover:text-white"
               >
-                <Link href="/signup/seller">Sell on GenZ</Link>
+                <Link href="/seller/signup">Sell on GenZ</Link>
               </Button>
             </div>
 
@@ -331,30 +331,34 @@ export default function HomePage() {
               <Link
                 key={cat.name}
                 href={cat.href}
-                className="relative flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4 shadow-xs"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#E5E5E0] bg-white p-4.5 shadow-2xs"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100">
-                  <Image
-                    src={cat.image}
-                    alt={cat.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="font-graphik absolute top-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-xs">
-                    {cat.count}
+                <div>
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100">
+                    <Image
+                      src={cat.image}
+                      alt={cat.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                  </div>
+
+                  <div className="mt-4 space-y-1.5">
+                    <h3 className="font-nantes text-2xl font-bold tracking-tight text-[#1A1A18] transition-colors group-hover:text-black">
+                      {cat.name}
+                    </h3>
+                    {cat.desc && (
+                      <p className="font-graphik line-clamp-2 text-xs leading-relaxed text-[#73736E]">
+                        {cat.desc}
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                <div className="mt-4 flex flex-1 flex-col justify-between">
-                  <div>
-                    <h3 className="font-nantes text-xl font-bold text-neutral-900">
-                      {cat.name}
-                    </h3>
-                  </div>
-
-                  <div className="font-graphik mt-4 flex items-center gap-1 text-xs font-bold text-amber-600">
-                    <span>Explore Products</span>
+                <div className="font-graphik mt-5 flex items-center justify-between border-t border-[#F0F0EC] pt-3.5 text-xs font-bold text-[#1A1A18]">
+                  <span className="group-hover:text-amber-800">Explore Catalog</span>
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#E5E5E0] bg-[#FAF8F4] transition-colors group-hover:border-black group-hover:bg-black group-hover:text-white">
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
