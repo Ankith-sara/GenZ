@@ -1,6 +1,8 @@
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
 export async function getClientIp(): Promise<string> {
   try {
     const headerList = await headers();
@@ -26,7 +28,12 @@ function handleDbError(
     // Table not yet migrated in database — fail open silently without error spam
     return;
   }
-  console.error(`${label}:`, err);
+  if (IS_PRODUCTION) {
+    // In production, a DB error disabling rate limiting is a security concern
+    console.error(`[RATE_LIMIT_DEGRADED] ${label}:`, err?.message ?? err);
+  } else {
+    console.error(`${label}:`, err);
+  }
 }
 
 // Config thresholds
@@ -55,8 +62,7 @@ export async function checkRateLimit(options: {
   identifier?: string; // e.g. email or userId
 }): Promise<RateLimitCheckResult> {
   const ip = await getClientIp();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const supabase = (await createClient()) as any;
+  const supabase = await createClient();
   const now = new Date();
 
   // 1. Authenticated User Rate Limiting
@@ -223,8 +229,7 @@ export async function logRateLimitAttempt(options: {
 }) {
   try {
     const ip = await getClientIp();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const supabase = (await createClient()) as any;
+    const supabase = await createClient();
     const { error } = await supabase.from("rate_limit_logs").insert({
       ip_address: ip,
       identifier: options.identifier || null,

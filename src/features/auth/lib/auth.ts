@@ -1,16 +1,14 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile, Role } from "@/types/database";
-
-/**
- * Fetches the current authenticated user along with their profile row
- * (which carries the role). Returns null if there is no session.
- *
- * If the profile query fails (e.g. RLS error) or no row exists,
- * a synthetic profile object is returned using auth user_metadata
- * so that role-based routing still works.
- */
 import type { User } from "@supabase/supabase-js";
+
+const IS_DEV = process.env.NODE_ENV !== "production";
+
+/** Dev-only debug log — suppressed in production to avoid PII leakage. */
+function authDebug(...args: unknown[]) {
+  if (IS_DEV) console.log("[auth]", ...args);
+}
 
 /**
  * Fetches the current authenticated user along with their profile row
@@ -46,9 +44,7 @@ export async function getUserAndProfile(): Promise<{
     .single();
 
   if (profileError) {
-    console.log(
-      `[auth] Profile query error for ${user.email}: ${profileError.message}`
-    );
+    authDebug(`Profile query error for user ${user.id}: ${profileError.message}`);
   }
 
   // If no profile row exists, try to create one from auth metadata
@@ -57,26 +53,21 @@ export async function getUserAndProfile(): Promise<{
     const metaRole = (user.user_metadata?.role as Role) ?? "buyer";
     const fullName = user.user_metadata?.full_name || user.user_metadata?.name || null;
 
-    console.log(
-      `[auth] No profile row for ${user.email} (${user.id}). Creating with role="${metaRole}".`
-    );
-
-    // DB enum app_role uses 'manufacturer' for seller role
-    const dbRole = (metaRole as string) === "seller" ? "manufacturer" : metaRole;
+    authDebug(`No profile row for user ${user.id}. Creating with role="${metaRole}".`);
 
     const { data: newProfile, error: insertError } = await supabase
       .from("profiles")
       .upsert({
         id: user.id,
-        role: dbRole as Role,
+        role: metaRole,
         full_name: fullName,
       })
       .select("*")
       .single();
 
     if (insertError) {
-      console.log(
-        `[auth] Profile insert also failed for ${user.email}: ${insertError.message}. Using synthetic profile.`
+      authDebug(
+        `Profile insert also failed for user ${user.id}: ${insertError.message}. Using synthetic profile.`
       );
       // Return a synthetic profile from user_metadata so routing still works
       resolvedProfile = {
@@ -93,21 +84,17 @@ export async function getUserAndProfile(): Promise<{
     }
   }
 
-  if (resolvedProfile && (resolvedProfile.role as string) === "manufacturer") {
-    resolvedProfile.role = "seller";
-  }
-
   // If user is a seller, ensure a seller_profiles row exists
   if (resolvedProfile?.role === "seller") {
     try {
-      const { data: mfg } = await supabase
+      const { data: sellerProfile } = await supabase
         .from("seller_profiles")
         .select("id, status")
         .eq("id", user.id)
         .maybeSingle();
 
-      if (!mfg) {
-        console.log(`[auth] Auto-creating missing seller_profile for ${user.email}`);
+      if (!sellerProfile) {
+        authDebug(`Auto-creating missing seller_profile for user ${user.id}`);
         const bName =
           user.user_metadata?.business_name ||
           user.user_metadata?.full_name ||
@@ -118,7 +105,7 @@ export async function getUserAndProfile(): Promise<{
         const pincode = user.user_metadata?.pincode || null;
         const descriptionStr = JSON.stringify(user.user_metadata || {});
 
-        // Default to 'verified' since profile role has been set to seller by admin
+        // Default auto-created seller_profiles to 'pending' verification status
         await supabase.from("seller_profiles").upsert({
           id: user.id,
           business_name: bName,
@@ -127,7 +114,7 @@ export async function getUserAndProfile(): Promise<{
           state: state,
           pincode: pincode,
           description: descriptionStr,
-          status: "verified",
+          status: "pending",
           submitted_at: new Date().toISOString(),
         });
       }

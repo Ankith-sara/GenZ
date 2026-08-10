@@ -89,7 +89,7 @@ export async function createProduct(
       {
         id: targetSellerId,
         full_name: session.profile?.full_name || session.email || "Factory Seller",
-        role: "manufacturer" as Role,
+        role: "seller" as Role,
       },
       { onConflict: "id" }
     );

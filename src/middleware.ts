@@ -53,14 +53,18 @@ export async function updateSession(request: NextRequest) {
 
     const profileRole = profile?.role;
     const metaRole = user.user_metadata?.role;
-    let resolved = profileRole ?? metaRole ?? "buyer";
-    if ((resolved as string) === "manufacturer") {
-      resolved = "seller";
-    }
+    const validRoles = ["buyer", "seller", "admin"];
+    const safeMetaRole =
+      typeof metaRole === "string" && validRoles.includes(metaRole)
+        ? metaRole
+        : undefined;
+    const resolved = profileRole ?? safeMetaRole ?? "buyer";
 
-    console.log(
-      `[middleware] path=${path}, user=${user.email}, profile_role=${profileRole ?? "NULL"}, meta_role=${metaRole ?? "NULL"}, resolved=${resolved}, profile_error=${profileError?.message ?? "none"}`
-    );
+    if (process.env.NODE_ENV !== "production") {
+      console.log(
+        `[middleware] path=${path}, uid=${user.id}, profile_role=${profileRole ?? "NULL"}, meta_role=${safeMetaRole ?? "NULL"}, resolved=${resolved}, profile_error=${profileError?.message ?? "none"}`
+      );
+    }
 
     return resolved;
   }

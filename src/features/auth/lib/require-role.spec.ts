@@ -2,8 +2,7 @@ import { describe, it, expect } from "vitest";
 import type { Role } from "@/types/database";
 
 describe("Require Role Authorization Logic Specs", () => {
-  function checkRoleAccess(userRole: string, allowed: Role): boolean {
-    const role = userRole === "manufacturer" ? "seller" : (userRole as Role);
+  function checkRoleAccess(role: Role, allowed: Role): boolean {
     return (
       role === "admin" ||
       (role === "seller" && (allowed === "seller" || allowed === "buyer")) ||
@@ -16,10 +15,10 @@ describe("Require Role Authorization Logic Specs", () => {
     expect(checkRoleAccess("admin", "seller")).toBe(true);
     expect(checkRoleAccess("admin", "buyer")).toBe(true);
   });
-
-  it("normalizes legacy 'manufacturer' role to 'seller'", () => {
-    expect(checkRoleAccess("manufacturer", "seller")).toBe(true);
-    expect(checkRoleAccess("manufacturer", "buyer")).toBe(true);
+  it("grants seller role access to seller and buyer routes", () => {
+    expect(checkRoleAccess("seller", "seller")).toBe(true);
+    expect(checkRoleAccess("seller", "buyer")).toBe(true);
+    expect(checkRoleAccess("seller", "admin")).toBe(false);
   });
 
   it("prevents buyer role from accessing seller or admin routes", () => {

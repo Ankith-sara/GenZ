@@ -12,7 +12,8 @@ export const passwordSchema = z
   .max(72)
   .trim();
 export const fullNameSchema = z.string().min(1, "Name is required").max(100).trim();
-export const roleSchema = z.enum(["buyer", "seller", "admin"]);
+export const publicRoleSchema = z.enum(["buyer", "seller"]);
+export const roleSchema = publicRoleSchema;
 export const tokenSchema = z
   .string()
   .min(6, "Verification code must be at least 6 characters")

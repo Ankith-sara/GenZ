@@ -71,9 +71,11 @@ async function getOrCreateAuthUser(
   }
 
   if (existingUser) {
-    console.log(
-      `[getOrCreateAuthUser] Updating existing auth user ${existingUser.id} (${email})`
-    );
+    if (process.env.NODE_ENV !== "production") {
+      console.log(
+        `[getOrCreateAuthUser] Updating existing auth user ${existingUser.id}`
+      );
+    }
     const { data: updatedData, error: updateError } =
       await adminClient.auth.admin.updateUserById(existingUser.id, {
         password,
@@ -84,10 +86,7 @@ async function getOrCreateAuthUser(
       });
 
     if (updateError || !updatedData?.user) {
-      console.error(
-        `[getOrCreateAuthUser] Update user error for ${email}:`,
-        updateError
-      );
+      console.error(`[getOrCreateAuthUser] Update user error:`, updateError);
       const errMsg =
         updateError?.message && updateError.message !== "{}"
           ? updateError.message
@@ -97,7 +96,9 @@ async function getOrCreateAuthUser(
 
     return { id: updatedData.user.id, email: updatedData.user.email || email };
   } else {
-    console.log(`[getOrCreateAuthUser] Creating new auth user for ${email}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[getOrCreateAuthUser] Creating new auth user`);
+    }
     const { data: createdData, error: createError } =
       await adminClient.auth.admin.createUser({
         email,
@@ -107,10 +108,7 @@ async function getOrCreateAuthUser(
       });
 
     if (createError || !createdData?.user) {
-      console.error(
-        `[getOrCreateAuthUser] Create user error for ${email}:`,
-        createError
-      );
+      console.error(`[getOrCreateAuthUser] Create user error:`, createError);
       throw new Error(
         `Failed to create authentication credentials: ${createError?.message || "Unknown auth error"}`
       );

@@ -147,6 +147,16 @@ export type PageView = {
   created_at: string;
 };
 
+export type RateLimitLog = {
+  id: string;
+  ip_address: string;
+  identifier: string | null;
+  endpoint_type: string;
+  action_name: string;
+  is_failed: boolean;
+  created_at: string;
+};
+
 export type ApplicationStatus = "pending" | "approved" | "rejected";
 
 export type SellerApplication = {
@@ -271,6 +281,12 @@ export type Database = {
         Row: PageView;
         Insert: Omit<PageView, "id" | "created_at">;
         Update: Partial<PageView>;
+        Relationships: [];
+      };
+      rate_limit_logs: {
+        Row: RateLimitLog;
+        Insert: Omit<RateLimitLog, "id" | "created_at">;
+        Update: Partial<RateLimitLog>;
         Relationships: [];
       };
       seller_applications: {

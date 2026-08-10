@@ -15,8 +15,7 @@ export async function requireRole(allowed: Role) {
   if (!session) redirect("/login");
 
   const user = session.user;
-  const rawRole = session.profile?.role ?? user?.user_metadata?.role ?? "buyer";
-  const role = (rawRole as string) === "manufacturer" ? "seller" : (rawRole as Role);
+  const role = (session.profile?.role ?? user?.user_metadata?.role ?? "buyer") as Role;
 
   const isAllowed =
     role === "admin" ||

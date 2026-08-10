@@ -11,13 +11,12 @@ async function ensureProfileCreated(
     } = await supabase.auth.getUser();
     if (user) {
       const meta = user.user_metadata ?? {};
-      const role = (meta.role as "buyer" | "seller" | "admin") || "buyer";
-      const dbRole = role === "seller" ? "manufacturer" : role;
+      const role = (meta.role as Role) || "buyer";
       const fullName = meta.full_name || meta.fullName || null;
 
       await supabase.from("profiles").upsert({
         id: user.id,
-        role: dbRole as Role,
+        role,
         full_name: fullName,
         phone: meta.phone || null,
         city: meta.city || null,
