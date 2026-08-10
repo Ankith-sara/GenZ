@@ -73,8 +73,15 @@ export async function signupSeller(
   let supabase;
   try {
     supabase = createAdminClient();
-  } catch {
-    supabase = await createClient();
+  } catch (err: unknown) {
+    console.error(
+      "[CONFIG_ERROR] [signupSeller] Failed to initialize admin client:",
+      err
+    );
+    return {
+      error:
+        "Server misconfiguration: admin credentials are not set up. Contact an engineer.",
+    };
   }
 
   try {

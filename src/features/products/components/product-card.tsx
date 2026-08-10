@@ -5,7 +5,13 @@ import { VerifiedBadge } from "@/components/ui/atoms/verified-badge";
 import { ProductWishlistButton } from "@/features/products/components/product-wishlist-button";
 import type { Product } from "@/types/database";
 
-export function ProductCard({ product }: { product: Product }) {
+interface ProductCardProps {
+  product: Product;
+  sellerVerified?: boolean;
+}
+
+export function ProductCard({ product, sellerVerified }: ProductCardProps) {
+  const isVerified = sellerVerified ?? product.seller_verified ?? false;
   const coverUrl = productMediaUrl(product.cover_image_path);
 
   return (
@@ -27,7 +33,9 @@ export function ProductCard({ product }: { product: Product }) {
             No image
           </div>
         )}
-        <VerifiedBadge className="bg-paper-white/95 absolute top-2.5 left-2.5" />
+        {isVerified && (
+          <VerifiedBadge className="bg-paper-white/95 absolute top-2.5 left-2.5" />
+        )}
 
         {/* Wishlist Button */}
         <div className="absolute top-2.5 right-2.5 z-10">

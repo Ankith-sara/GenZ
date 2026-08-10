@@ -12,6 +12,7 @@ import {
   Check,
   Send,
   ArrowRight,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
 import { Textarea } from "@/components/ui/atoms/textarea";
@@ -150,11 +151,26 @@ export function ReviewActions({
             </div>
           </div>
 
-          <p className="mt-3 text-[11px] text-[#73736E]">
-            {approveState.credentials.emailSent
-              ? "✅ Email notification with login credentials sent to seller."
-              : "ℹ️ Credentials generated. Use the copy button above to share them with the seller."}
-          </p>
+          {approveState.credentials.emailSent ? (
+            <div className="mt-3 flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-2.5 text-xs text-emerald-800">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+              <span>Email notification with login credentials sent to seller.</span>
+            </div>
+          ) : (
+            <div className="mt-3 space-y-1 rounded-lg border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900">
+              <div className="flex items-center gap-2 font-semibold">
+                <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
+                <span>Warning: Email Dispatch Failed</span>
+              </div>
+              <p className="text-[11px] text-amber-800">
+                {approveState.credentials.emailError
+                  ? `Reason: ${approveState.credentials.emailError}.`
+                  : "Credentials generated."}{" "}
+                Please copy the credentials above and manually share them with the
+                seller.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="mt-5 flex gap-3">

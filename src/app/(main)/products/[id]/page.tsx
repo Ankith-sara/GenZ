@@ -161,7 +161,7 @@ export default async function PublicProductPage({
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <p className="text-muted-foreground text-sm">{product.category}</p>
-                  <VerifiedBadge />
+                  {(product.seller_verified ?? seller !== null) && <VerifiedBadge />}
                 </div>
                 <ProductWishlistButton product={product} />
               </div>

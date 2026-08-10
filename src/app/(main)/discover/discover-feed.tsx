@@ -122,7 +122,11 @@ export function DiscoverFeed({
     <div className="space-y-8">
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            sellerVerified={product.seller_verified ?? false}
+          />
         ))}
       </div>
 

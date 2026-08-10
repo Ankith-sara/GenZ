@@ -1,89 +1,99 @@
+export type AllowedFileType = "image" | "pdf" | "video";
+
 export interface FileValidationResult {
   valid: boolean;
   error?: string;
 }
 
 /**
- * Validates a file's content by checking its magic bytes/header signature.
- * Prevents disguised files (e.g., .exe renamed to .png) from being processed.
+ * Validates magic byte signatures from a Uint8Array slice.
  */
-export async function validateFileContent(
-  file: File,
-  allowedTypes: ("image" | "pdf" | "video")[]
-): Promise<FileValidationResult> {
-  const isImage = file.type.startsWith("image/");
-  const isPdf = file.type === "application/pdf";
-  const isVideo = file.type.startsWith("video/");
+export function validateBufferMagicBytes(
+  bytes: Uint8Array,
+  size: number,
+  allowedTypes: AllowedFileType[],
+  mimeTypeHint?: string
+): FileValidationResult {
+  const isVideo = allowedTypes.includes("video") && mimeTypeHint?.startsWith("video/");
+  const isPdf = allowedTypes.includes("pdf") && mimeTypeHint === "application/pdf";
+  const isImage = allowedTypes.includes("image") && mimeTypeHint?.startsWith("image/");
 
-  // 1. Double check size limits first
-  if (isVideo && file.size > 50 * 1024 * 1024) {
+  if (isVideo && size > 50 * 1024 * 1024) {
     return { valid: false, error: "Video files must be under 50MB." };
   }
-  if (isPdf && file.size > 10 * 1024 * 1024) {
+  if (isPdf && size > 10 * 1024 * 1024) {
     return { valid: false, error: "PDF documents must be under 10MB." };
   }
-  if (isImage && file.size > 5 * 1024 * 1024) {
+  if (isImage && size > 5 * 1024 * 1024) {
     return { valid: false, error: "Image files must be under 5MB." };
   }
 
-  // 2. Read first 12 bytes
-  let buffer: ArrayBuffer;
-  try {
-    buffer = await new Promise<ArrayBuffer>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as ArrayBuffer);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsArrayBuffer(file.slice(0, 12));
-    });
-  } catch (err) {
-    console.error("FileReader error:", err);
-    return { valid: false, error: "Could not read file contents." };
+  // General size fallbacks if mimeTypeHint is not set
+  if (
+    allowedTypes.length === 1 &&
+    allowedTypes[0] === "image" &&
+    size > 5 * 1024 * 1024
+  ) {
+    return { valid: false, error: "Image files must be under 5MB." };
+  }
+  if (
+    allowedTypes.length === 1 &&
+    allowedTypes[0] === "pdf" &&
+    size > 10 * 1024 * 1024
+  ) {
+    return { valid: false, error: "PDF documents must be under 10MB." };
+  }
+  if (
+    allowedTypes.length === 1 &&
+    allowedTypes[0] === "video" &&
+    size > 50 * 1024 * 1024
+  ) {
+    return { valid: false, error: "Video files must be under 50MB." };
   }
 
-  const arr = new Uint8Array(buffer);
-  if (arr.length < 4) {
+  if (bytes.length < 4) {
     return { valid: false, error: "File is empty or corrupt." };
   }
 
   // JPEG: FF D8 FF
-  const isJpegSig = arr[0] === 0xff && arr[1] === 0xd8 && arr[2] === 0xff;
+  const isJpegSig = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
 
   // PNG: 89 50 4E 47 0D 0A 1A 0A
   const isPngSig =
-    arr[0] === 0x89 &&
-    arr[1] === 0x50 &&
-    arr[2] === 0x4e &&
-    arr[3] === 0x47 &&
-    arr[4] === 0x0d &&
-    arr[5] === 0x0a &&
-    arr[6] === 0x1a &&
-    arr[7] === 0x0a;
+    bytes[0] === 0x89 &&
+    bytes[1] === 0x50 &&
+    bytes[2] === 0x4e &&
+    bytes[3] === 0x47 &&
+    bytes[4] === 0x0d &&
+    bytes[5] === 0x0a &&
+    bytes[6] === 0x1a &&
+    bytes[7] === 0x0a;
 
   // WEBP: RIFF (52 49 46 46) ... WEBP (57 45 42 50)
   const isWebpSig =
-    arr[0] === 0x52 &&
-    arr[1] === 0x49 &&
-    arr[2] === 0x46 &&
-    arr[3] === 0x46 &&
-    arr[8] === 0x57 &&
-    arr[9] === 0x45 &&
-    arr[10] === 0x42 &&
-    arr[11] === 0x50;
+    bytes[0] === 0x52 &&
+    bytes[1] === 0x49 &&
+    bytes[2] === 0x46 &&
+    bytes[3] === 0x46 &&
+    bytes[8] === 0x57 &&
+    bytes[9] === 0x45 &&
+    bytes[10] === 0x42 &&
+    bytes[11] === 0x50;
 
   // PDF: %PDF (25 50 44 46)
   const isPdfSig =
-    arr[0] === 0x25 && arr[1] === 0x50 && arr[2] === 0x44 && arr[3] === 0x46;
+    bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46;
 
   // MP4/MOV: ftyp (66 74 79 70) at offset 4
   const isMp4Sig =
-    arr[4] === 0x66 && arr[5] === 0x74 && arr[6] === 0x79 && arr[7] === 0x70;
+    bytes[4] === 0x66 && bytes[5] === 0x74 && bytes[6] === 0x79 && bytes[7] === 0x70;
 
   // WEBM: 1A 45 DF A3
   const isWebmSig =
-    arr[0] === 0x1a && arr[1] === 0x45 && arr[2] === 0xdf && arr[3] === 0xa3;
+    bytes[0] === 0x1a && bytes[1] === 0x45 && bytes[2] === 0xdf && bytes[3] === 0xa3;
 
   // Determine detected type
-  let detected: "image" | "pdf" | "video" | null = null;
+  let detected: AllowedFileType | null = null;
   if (isJpegSig || isPngSig || isWebpSig) {
     detected = "image";
   } else if (isPdfSig) {
@@ -100,4 +110,43 @@ export async function validateFileContent(
   }
 
   return { valid: true };
+}
+
+/**
+ * Server-side file content validator.
+ * Accepts Node Buffer, Uint8Array, or Web File/Blob object.
+ */
+export async function validateFileContentServer(
+  fileOrBuffer: File | Buffer | Uint8Array,
+  allowedTypes: AllowedFileType[],
+  mimeTypeHint?: string
+): Promise<FileValidationResult> {
+  let bytes: Uint8Array;
+  let size: number;
+
+  if (Buffer.isBuffer(fileOrBuffer) || fileOrBuffer instanceof Uint8Array) {
+    bytes = new Uint8Array(fileOrBuffer.subarray(0, 12));
+    size = fileOrBuffer.byteLength;
+  } else if (typeof (fileOrBuffer as File).arrayBuffer === "function") {
+    const file = fileOrBuffer as File;
+    size = file.size;
+    mimeTypeHint = mimeTypeHint || file.type;
+    const slice = file.slice(0, 12);
+    const ab = await slice.arrayBuffer();
+    bytes = new Uint8Array(ab);
+  } else {
+    return { valid: false, error: "Invalid file object provided." };
+  }
+
+  return validateBufferMagicBytes(bytes, size, allowedTypes, mimeTypeHint);
+}
+
+/**
+ * Client-side file content validator (delegates to server-capable validator).
+ */
+export async function validateFileContent(
+  file: File,
+  allowedTypes: AllowedFileType[]
+): Promise<FileValidationResult> {
+  return validateFileContentServer(file, allowedTypes, file.type);
 }

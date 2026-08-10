@@ -244,3 +244,63 @@ export async function logRateLimitAttempt(options: {
     // Fail silent
   }
 }
+
+export interface RateLimitOptions {
+  endpointType: "auth" | "public" | "user";
+  actionName: string;
+  identifier?: string;
+}
+
+function isNextRedirectError(err: unknown): boolean {
+  if (typeof err === "object" && err !== null) {
+    const digest = (err as { digest?: string }).digest;
+    if (typeof digest === "string" && digest.startsWith("NEXT_REDIRECT")) {
+      return true;
+    }
+  }
+  if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Higher-order rate limiting helper for Server Actions.
+ * Performs pre-check, executes the action, and logs success/failure automatically.
+ */
+export async function withRateLimit<T>(
+  options: RateLimitOptions | (() => Promise<RateLimitOptions>),
+  fn: () => Promise<T>
+): Promise<T | { error: string }> {
+  const resolvedOptions = typeof options === "function" ? await options() : options;
+
+  const rateLimit = await checkRateLimit(resolvedOptions);
+  if (rateLimit.blocked) {
+    return {
+      error: rateLimit.error || "Too many requests. Please try again later.",
+    } as T | { error: string };
+  }
+
+  try {
+    const result = await fn();
+    const isFailed =
+      typeof result === "object" &&
+      result !== null &&
+      "error" in result &&
+      Boolean((result as { error?: unknown }).error);
+
+    await logRateLimitAttempt({
+      ...resolvedOptions,
+      isFailed,
+    });
+
+    return result;
+  } catch (err: unknown) {
+    const isRedirect = isNextRedirectError(err);
+    await logRateLimitAttempt({
+      ...resolvedOptions,
+      isFailed: !isRedirect,
+    });
+    throw err;
+  }
+}

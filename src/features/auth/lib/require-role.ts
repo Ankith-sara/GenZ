@@ -23,7 +23,7 @@ export async function requireRole(allowed: Role) {
     (role === "buyer" && allowed === "buyer");
 
   if (!isAllowed) {
-    if (role === "seller") redirect("/dashboard");
+    if (role === "seller") redirect("/seller/dashboard");
     redirect("/profile");
   }
 

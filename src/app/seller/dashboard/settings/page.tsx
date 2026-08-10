@@ -1,5 +1,5 @@
 import { requireRole } from "@/features/auth/lib/require-role";
-import { SellerSettingsClient } from "@/app/dashboard/settings/settings-client";
+import { SellerSettingsClient } from "./settings-client";
 
 export default async function SellerSettingsDashboardPage() {
   const session = await requireRole("seller");

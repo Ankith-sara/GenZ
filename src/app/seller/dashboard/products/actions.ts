@@ -7,8 +7,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { parseMaterials } from "@/features/products/lib/products";
 import type { ProductStatus, Role } from "@/types/database";
-import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { checkRateLimit, logRateLimitAttempt, withRateLimit } from "@/lib/rate-limiter";
 import { productSchema, variantSchema } from "@/lib/validation";
+import { validateFileContentServer } from "@/lib/file-validation";
 
 export interface ProductFormState {
   error?: string;
@@ -76,8 +77,15 @@ export async function createProduct(
   let supabase;
   try {
     supabase = createAdminClient();
-  } catch {
-    supabase = await createClient();
+  } catch (err: unknown) {
+    console.error(
+      "[CONFIG_ERROR] [createProduct] Failed to initialize admin client:",
+      err
+    );
+    return {
+      error:
+        "Server misconfiguration: admin credentials are not set up. Contact an engineer.",
+    };
   }
 
   const customSellerId = String(formData.get("seller_id") ?? "").trim();
@@ -432,4 +440,183 @@ export async function deleteVariant(productId: string, variantId: string) {
   });
 
   revalidatePath(`/seller/dashboard/products/${productId}`);
+}
+
+export async function uploadProductCoverAction(
+  productId: string,
+  formData: FormData
+): Promise<{ success?: boolean; error?: string }> {
+  const session = await requireRole("seller");
+  const file = formData.get("cover_image") as File | null;
+
+  if (!file || file.size === 0) {
+    return { error: "No cover image provided." };
+  }
+
+  return withRateLimit(
+    {
+      endpointType: "user",
+      actionName: "upload_product_cover",
+      identifier: session.userId,
+    },
+    async () => {
+      // Server-side magic byte & size validation
+      const validation = await validateFileContentServer(file, ["image"]);
+      if (!validation.valid) {
+        return { error: validation.error || "Invalid image file." };
+      }
+
+      let supabase;
+      try {
+        supabase = createAdminClient();
+      } catch (err: unknown) {
+        console.error(
+          "[CONFIG_ERROR] [uploadProductCoverAction] Admin client init failed:",
+          err
+        );
+        return {
+          error:
+            "Server misconfiguration: admin credentials are not set up. Contact an engineer.",
+        };
+      }
+
+      // Verify product ownership or admin
+      const { data: product } = await supabase
+        .from("products")
+        .select("seller_id, cover_image_path")
+        .eq("id", productId)
+        .single();
+
+      if (
+        !product ||
+        (product.seller_id !== session.userId && session.profile?.role !== "admin")
+      ) {
+        return { error: "Permission denied: Product not found or unauthorized." };
+      }
+
+      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+      const path = `${product.seller_id}/products/${productId}/cover-${Date.now()}-${safeName}`;
+
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const { error: uploadError } = await supabase.storage
+        .from("product-media")
+        .upload(path, buffer, { contentType: file.type, upsert: false });
+
+      if (uploadError) {
+        return { error: uploadError.message || "Failed to upload cover image." };
+      }
+
+      const { error: updateError } = await supabase
+        .from("products")
+        .update({ cover_image_path: path })
+        .eq("id", productId);
+
+      if (updateError) {
+        // Rollback storage upload
+        await supabase.storage.from("product-media").remove([path]);
+        return { error: "Failed to update product cover image path." };
+      }
+
+      if (product.cover_image_path) {
+        await supabase.storage.from("product-media").remove([product.cover_image_path]);
+      }
+
+      revalidatePath(`/seller/dashboard/products/${productId}`);
+      return { success: true };
+    }
+  );
+}
+
+export async function uploadProductImagesAction(
+  productId: string,
+  formData: FormData
+): Promise<{ success?: boolean; error?: string }> {
+  const session = await requireRole("seller");
+  const files = formData.getAll("gallery_images") as File[];
+
+  if (files.length === 0) {
+    return { error: "No gallery images provided." };
+  }
+
+  return withRateLimit(
+    {
+      endpointType: "user",
+      actionName: "upload_product_images",
+      identifier: session.userId,
+    },
+    async () => {
+      // Validate all files server-side first
+      for (const file of files) {
+        const validation = await validateFileContentServer(file, ["image"]);
+        if (!validation.valid) {
+          return { error: validation.error || "Invalid gallery image file." };
+        }
+      }
+
+      let supabase;
+      try {
+        supabase = createAdminClient();
+      } catch (err: unknown) {
+        console.error(
+          "[CONFIG_ERROR] [uploadProductImagesAction] Admin client init failed:",
+          err
+        );
+        return {
+          error:
+            "Server misconfiguration: admin credentials are not set up. Contact an engineer.",
+        };
+      }
+
+      const { data: product } = await supabase
+        .from("products")
+        .select("seller_id")
+        .eq("id", productId)
+        .single();
+
+      if (
+        !product ||
+        (product.seller_id !== session.userId && session.profile?.role !== "admin")
+      ) {
+        return { error: "Permission denied: Product not found or unauthorized." };
+      }
+
+      const { data: existingImages } = await supabase
+        .from("product_images")
+        .select("position")
+        .eq("product_id", productId);
+
+      let nextPosition = existingImages?.length ?? 0;
+
+      for (const file of files) {
+        const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+        const path = `${product.seller_id}/products/${productId}/gallery-${Date.now()}-${safeName}`;
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const { error: uploadError } = await supabase.storage
+          .from("product-media")
+          .upload(path, buffer, { contentType: file.type, upsert: false });
+
+        if (uploadError) {
+          return { error: uploadError.message || "Failed to upload gallery image." };
+        }
+
+        const { error: insertError } = await supabase.from("product_images").insert({
+          product_id: productId,
+          seller_id: product.seller_id,
+          image_path: path,
+          position: nextPosition,
+        });
+
+        if (insertError) {
+          await supabase.storage.from("product-media").remove([path]);
+          return { error: "Failed to record product gallery image." };
+        }
+
+        nextPosition++;
+      }
+
+      revalidatePath(`/seller/dashboard/products/${productId}`);
+      return { success: true };
+    }
+  );
 }

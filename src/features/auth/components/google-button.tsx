@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
 
-export function SocialLogin({ redirectTo = "/dashboard" }: { redirectTo?: string }) {
+export function SocialLogin({ redirectTo = "" }: { redirectTo?: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,10 +13,11 @@ export function SocialLogin({ redirectTo = "/dashboard" }: { redirectTo?: string
     setError(null);
 
     const supabase = createClient();
+    const nextQuery = redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : "";
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${redirectTo}`,
+        redirectTo: `${window.location.origin}/auth/callback${nextQuery}`,
       },
     });
 

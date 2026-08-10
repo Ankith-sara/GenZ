@@ -25,16 +25,14 @@ export default function NotFound() {
     return <AdminNotFound />;
   }
 
-  if (pathname.startsWith("/dashboard")) {
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/seller/dashboard")) {
     return <SellerNotFound />;
   }
 
   return <MainNotFound />;
 }
 
-/* ============================================================================
- * 1. ADMIN PORTAL 404 LAYOUT (/admin/*)
- * ============================================================================ */
+/* 1. ADMIN PORTAL 404 LAYOUT */
 function AdminNotFound() {
   return (
     <div className="font-graphik flex min-h-screen flex-col bg-[#FAF8F4] text-[#1A1A18] select-none">
@@ -126,9 +124,7 @@ function AdminNotFound() {
   );
 }
 
-/* ============================================================================
- * 2. SELLER WORKSPACE 404 LAYOUT (/dashboard/*)
- * ============================================================================ */
+/* 2. SELLER WORKSPACE 404 LAYOUT */
 function SellerNotFound() {
   return (
     <div className="font-graphik flex min-h-screen flex-col bg-[#FAF7F0] text-[#1A1A18] select-none">
@@ -220,9 +216,7 @@ function SellerNotFound() {
   );
 }
 
-/* ============================================================================
- * 3. MAIN PUBLIC STOREFRONT 404 LAYOUT (Default / Storefront)
- * ============================================================================ */
+/* 3. MAIN PUBLIC STOREFRONT 404 LAYOUT  */
 function MainNotFound() {
   return (
     <div className="font-graphik flex min-h-screen flex-col bg-[#FAF7F0] text-[#1A1A18] antialiased select-none">

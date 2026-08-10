@@ -413,12 +413,13 @@ export function Header({
                         </>
                       ) : (
                         <Link
-                          href="/dashboard"
+                          href="/seller/dashboard"
                           role="menuitem"
                           className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          <Compass className="h-4 w-4 text-neutral-300" /> Dashboard
+                          <Compass className="h-4 w-4 text-neutral-300" /> Seller
+                          Dashboard
                         </Link>
                       )}
 

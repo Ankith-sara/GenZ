@@ -5,13 +5,13 @@ import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/atoms/button";
-import { createClient } from "@/lib/supabase/client";
 import { validateFileContent } from "@/lib/file-validation";
 import { productMediaUrl } from "@/features/products/lib/products";
+import { uploadProductCoverAction } from "@/app/seller/dashboard/products/actions";
 
 export function ProductCoverUploader({
   productId,
-  sellerId,
+  sellerId: _sellerId,
   currentPath,
 }: {
   productId: string;
@@ -31,6 +31,7 @@ export function ProductCoverUploader({
     setStatus("uploading");
     setError(null);
 
+    // Fast client-side check
     const validation = await validateFileContent(file, ["image"]);
     if (!validation.valid) {
       setStatus("error");
@@ -38,34 +39,15 @@ export function ProductCoverUploader({
       return;
     }
 
-    const supabase = createClient();
-    const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${sellerId}/products/${productId}/cover-${Date.now()}-${safeName}`;
+    const formData = new FormData();
+    formData.append("cover_image", file);
 
-    const { error: uploadError } = await supabase.storage
-      .from("product-media")
-      .upload(path, file, { upsert: false });
+    const result = await uploadProductCoverAction(productId, formData);
 
-    if (uploadError) {
+    if (result.error) {
       setStatus("error");
-      setError(uploadError.message);
+      setError(result.error);
       return;
-    }
-
-    const previous = currentPath;
-    const { error: updateError } = await supabase
-      .from("products")
-      .update({ cover_image_path: path })
-      .eq("id", productId);
-
-    if (updateError) {
-      setStatus("error");
-      setError(updateError.message);
-      return;
-    }
-
-    if (previous) {
-      await supabase.storage.from("product-media").remove([previous]);
     }
 
     setStatus("idle");

@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/atoms/button";
 import { Label } from "@/components/ui/atoms/label";
 import { Input } from "@/components/ui/atoms/input";
-import { createClient } from "@/lib/supabase/client";
 import { validateFileContent } from "@/lib/file-validation";
+import { uploadReelAction } from "@/features/reels/actions";
 
 export function ReelUploader({
   productId,
-  sellerId,
+  sellerId: _sellerId,
 }: {
   productId: string;
   sellerId: string;
@@ -36,7 +36,7 @@ export function ReelUploader({
       return;
     }
 
-    // Validate video file
+    // Validate video file on client side first
     const videoValidation = await validateFileContent(video, ["video"]);
     if (!videoValidation.valid) {
       setStatus("error");
@@ -44,7 +44,7 @@ export function ReelUploader({
       return;
     }
 
-    // Validate optional thumbnail image
+    // Validate optional thumbnail image on client side first
     if (thumb) {
       const thumbValidation = await validateFileContent(thumb, ["image"]);
       if (!thumbValidation.valid) {
@@ -54,46 +54,18 @@ export function ReelUploader({
       }
     }
 
-    const supabase = createClient();
-    const stamp = Date.now();
-    const safeVideoName = video.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const videoPath = `${sellerId}/products/${productId}/reels/${stamp}-${safeVideoName}`;
-
-    const { error: videoError } = await supabase.storage
-      .from("product-media")
-      .upload(videoPath, video, { upsert: false });
-
-    if (videoError) {
-      setStatus("error");
-      setError(videoError.message);
-      return;
+    const formData = new FormData();
+    formData.append("video", video);
+    if (thumb) formData.append("thumbnail", thumb);
+    if (captionRef.current?.value) {
+      formData.append("caption", captionRef.current.value);
     }
 
-    let thumbnailPath: string | null = null;
-    if (thumb) {
-      const safeThumbName = thumb.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      thumbnailPath = `${sellerId}/products/${productId}/reels/${stamp}-thumb-${safeThumbName}`;
-      const { error: thumbError } = await supabase.storage
-        .from("product-media")
-        .upload(thumbnailPath, thumb, { upsert: false });
-      if (thumbError) {
-        setStatus("error");
-        setError(thumbError.message);
-        return;
-      }
-    }
+    const result = await uploadReelAction(productId, formData);
 
-    const { error: insertError } = await supabase.from("reels").insert({
-      product_id: productId,
-      seller_id: sellerId,
-      video_path: videoPath,
-      thumbnail_path: thumbnailPath,
-      caption: captionRef.current?.value.trim() || null,
-    });
-
-    if (insertError) {
+    if (result.error) {
       setStatus("error");
-      setError(insertError.message);
+      setError(result.error);
       return;
     }
 

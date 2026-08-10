@@ -4,11 +4,14 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Trash2, Check, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
-import { createClient } from "@/lib/supabase/client";
 import { validateFileContent } from "@/lib/file-validation";
 import type { DocType, SellerDocument, VerificationStatus } from "@/types/database";
 import { STATUS_LABEL } from "@/features/documents/lib/verification";
 import { submitForVerification } from "@/app/seller/dashboard/onboarding/actions";
+import {
+  uploadDocumentAction,
+  deleteDocumentAction,
+} from "@/features/documents/actions";
 
 const ACCEPTED = ".pdf,.jpg,.jpeg,.png,.webp";
 
@@ -75,6 +78,7 @@ function StepUploader({
       return;
     }
 
+    // Fast client-side check
     const validation = await validateFileContent(file, ["image", "pdf"]);
     if (!validation.valid) {
       setStatus("error");
@@ -82,30 +86,15 @@ function StepUploader({
       return;
     }
 
-    const supabase = createClient();
-    const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${sellerId}/${docType}/${Date.now()}-${safeName}`;
+    const formData = new FormData();
+    formData.append("document", file);
+    formData.append("doc_type", docType);
 
-    const { error: uploadError } = await supabase.storage
-      .from("seller-documents")
-      .upload(path, file, { upsert: false });
+    const result = await uploadDocumentAction(formData);
 
-    if (uploadError) {
+    if (result.error) {
       setStatus("error");
-      setError(uploadError.message);
-      return;
-    }
-
-    const { error: insertError } = await supabase.from("seller_documents").insert({
-      seller_id: sellerId,
-      doc_type: docType,
-      file_path: path,
-      file_name: file.name,
-    });
-
-    if (insertError) {
-      setStatus("error");
-      setError(insertError.message);
+      setError(result.error);
       return;
     }
 
@@ -116,9 +105,7 @@ function StepUploader({
 
   async function handleDelete(doc: SellerDocument) {
     setPendingDeleteId(doc.id);
-    const supabase = createClient();
-    await supabase.storage.from("seller-documents").remove([doc.file_path]);
-    await supabase.from("seller_documents").delete().eq("id", doc.id);
+    await deleteDocumentAction(doc.id, doc.file_path);
     setPendingDeleteId(null);
     onChange();
   }

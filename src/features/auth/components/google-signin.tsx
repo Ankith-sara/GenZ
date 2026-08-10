@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/atoms/button";
 import { createClient } from "@/lib/supabase/client";
 
 export function GoogleSignInButton({
-  redirectTo = "/dashboard",
+  redirectTo = "",
   text = "Continue with Google",
 }: {
   redirectTo?: string;
@@ -19,10 +19,11 @@ export function GoogleSignInButton({
     setError(null);
 
     const supabase = createClient();
+    const nextQuery = redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : "";
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${redirectTo}`,
+        redirectTo: `${window.location.origin}/auth/callback${nextQuery}`,
       },
     });
 

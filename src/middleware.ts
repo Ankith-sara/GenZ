@@ -79,7 +79,7 @@ export async function updateSession(request: NextRequest) {
       role === "admin"
         ? "/admin/dashboard"
         : role === "seller"
-          ? "/dashboard"
+          ? "/seller/dashboard"
           : "/profile";
     return NextResponse.redirect(url);
   }

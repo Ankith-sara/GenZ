@@ -86,7 +86,11 @@ export default function WishlistPage() {
           ) : (
             <div className="animate-fadeIn grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {wishlist.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  sellerVerified={product.seller_verified ?? false}
+                />
               ))}
             </div>
           )}

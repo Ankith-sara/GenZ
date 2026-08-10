@@ -4,11 +4,11 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/atoms/button";
 import { UserAvatar } from "@/components/ui/atoms/user-avatar";
-import { createClient } from "@/lib/supabase/client";
 import { validateFileContent } from "@/lib/file-validation";
+import { uploadAvatarAction } from "@/features/user/actions";
 
 export function AvatarUploader({
-  userId,
+  userId: _userId,
   fullName,
   currentUrl,
 }: {
@@ -28,6 +28,7 @@ export function AvatarUploader({
     setStatus("uploading");
     setError(null);
 
+    // Fast client-side check
     const validation = await validateFileContent(file, ["image"]);
     if (!validation.valid) {
       setStatus("error");
@@ -35,31 +36,14 @@ export function AvatarUploader({
       return;
     }
 
-    const supabase = createClient();
-    const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${userId}/avatar-${Date.now()}-${safeName}`;
+    const formData = new FormData();
+    formData.append("avatar", file);
 
-    const { error: uploadError } = await supabase.storage
-      .from("avatars")
-      .upload(path, file, { upsert: false });
+    const result = await uploadAvatarAction(formData);
 
-    if (uploadError) {
+    if (result.error) {
       setStatus("error");
-      setError(uploadError.message);
-      return;
-    }
-
-    const publicUrl = supabase.storage.from("avatars").getPublicUrl(path)
-      .data.publicUrl;
-
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ avatar_url: publicUrl })
-      .eq("id", userId);
-
-    if (updateError) {
-      setStatus("error");
-      setError(updateError.message);
+      setError(result.error);
       return;
     }
 

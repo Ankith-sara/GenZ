@@ -10,8 +10,14 @@ export default async function AdminNewProductPage() {
   let supabase;
   try {
     supabase = createAdminClient();
-  } catch {
-    supabase = await createClient();
+  } catch (err: unknown) {
+    console.error(
+      "[CONFIG_ERROR] [AdminNewProductPage] Failed to initialize admin client:",
+      err
+    );
+    throw new Error(
+      "Server misconfiguration: admin credentials are not set up. Contact an engineer."
+    );
   }
 
   // Fetch list of sellers to allow admin assignment

@@ -98,7 +98,7 @@ export function SignupForm({ defaultRole }: SignupFormProps) {
           role === "admin"
             ? "/admin/dashboard"
             : role === "seller"
-              ? "/dashboard/pending-verification"
+              ? "/seller/dashboard"
               : "/profile";
         window.location.href = target;
       }

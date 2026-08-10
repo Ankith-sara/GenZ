@@ -14,8 +14,14 @@ export async function adminSetProductStatus(
   let supabase;
   try {
     supabase = createAdminClient();
-  } catch {
-    supabase = await createClient();
+  } catch (err: unknown) {
+    console.error(
+      "[CONFIG_ERROR] [adminSetProductStatus] Failed to initialize admin client:",
+      err
+    );
+    throw new Error(
+      "Server misconfiguration: admin credentials are not set up. Contact an engineer."
+    );
   }
 
   const { error } = await supabase
@@ -38,8 +44,14 @@ export async function adminDeleteProduct(productId: string) {
   let supabase;
   try {
     supabase = createAdminClient();
-  } catch {
-    supabase = await createClient();
+  } catch (err: unknown) {
+    console.error(
+      "[CONFIG_ERROR] [adminDeleteProduct] Failed to initialize admin client:",
+      err
+    );
+    throw new Error(
+      "Server misconfiguration: admin credentials are not set up. Contact an engineer."
+    );
   }
 
   const { error } = await supabase.from("products").delete().eq("id", productId);

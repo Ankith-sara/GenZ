@@ -88,6 +88,54 @@ describe("Role Authorization & Access Control (requireRole)", () => {
     await expect(requireRole("admin")).rejects.toThrow("REDIRECT:/profile");
   });
 
+  it("redirects buyer role trying to access seller routes to profile page", async () => {
+    mockGetUser.mockResolvedValue({
+      data: { user: { id: "user_buyer_02", email: "buyer2@genz.in" } },
+      error: null,
+    });
+
+    mockFrom.mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({
+            data: { id: "user_buyer_02", role: "buyer" },
+            error: null,
+          }),
+          maybeSingle: vi.fn().mockResolvedValue({
+            data: null,
+            error: null,
+          }),
+        }),
+      }),
+    });
+
+    await expect(requireRole("seller")).rejects.toThrow("REDIRECT:/profile");
+  });
+
+  it("redirects seller role trying to access admin routes to canonical /seller/dashboard", async () => {
+    mockGetUser.mockResolvedValue({
+      data: { user: { id: "user_seller_02", email: "seller2@genz.in" } },
+      error: null,
+    });
+
+    mockFrom.mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({
+            data: { id: "user_seller_02", role: "seller" },
+            error: null,
+          }),
+          maybeSingle: vi.fn().mockResolvedValue({
+            data: { id: "user_seller_02", status: "verified" },
+            error: null,
+          }),
+        }),
+      }),
+    });
+
+    await expect(requireRole("admin")).rejects.toThrow("REDIRECT:/seller/dashboard");
+  });
+
   it("grants access for seller role access check", async () => {
     mockGetUser.mockResolvedValue({
       data: { user: { id: "user_seller_01", email: "seller@genz.in" } },

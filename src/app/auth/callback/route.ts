@@ -87,13 +87,13 @@ export async function GET(request: Request) {
     } else if (!next) {
       next =
         currentRole === "seller"
-          ? "/dashboard"
+          ? "/seller/dashboard"
           : currentRole === "buyer"
             ? "/profile"
-            : "/dashboard";
+            : "/seller/dashboard";
     }
 
-    const redirectPath = next ?? "/dashboard";
+    const redirectPath = next ?? "/profile";
     const forwardedHost = request.headers.get("x-forwarded-host");
     const isLocalEnv = process.env.NODE_ENV === "development";
 

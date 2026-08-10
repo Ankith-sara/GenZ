@@ -77,6 +77,7 @@ export type Product = {
   status: ProductStatus;
   cover_image_path: string | null;
   materials: string[];
+  seller_verified?: boolean;
   created_at: string;
   updated_at: string;
 };

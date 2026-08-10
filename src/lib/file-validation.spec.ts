@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateFileContent } from "./file-validation";
+import { validateFileContent, validateFileContentServer } from "./file-validation";
 
 describe("File Validation Magic Byte Logic Specs", () => {
   it("rejects file exceeding max size", async () => {
@@ -27,6 +27,23 @@ describe("File Validation Magic Byte Logic Specs", () => {
     const file = new File([exeHeader.buffer], "fake.png", { type: "image/png" });
 
     const result = await validateFileContent(file, ["image"]);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("Invalid file contents");
+  });
+
+  it("validates Node Buffer magic bytes server-side", async () => {
+    const pngBuffer = Buffer.from([
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0,
+    ]);
+
+    const result = await validateFileContentServer(pngBuffer, ["image"]);
+    expect(result.valid).toBe(true);
+  });
+
+  it("rejects fake PDF Buffer server-side", async () => {
+    const exeBuffer = Buffer.from([0x4d, 0x5a, 0x90, 0x00, 0, 0, 0, 0, 0, 0, 0, 0]);
+
+    const result = await validateFileContentServer(exeBuffer, ["pdf"]);
     expect(result.valid).toBe(false);
     expect(result.error).toContain("Invalid file contents");
   });

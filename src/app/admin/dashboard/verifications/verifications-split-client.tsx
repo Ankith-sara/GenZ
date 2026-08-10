@@ -25,6 +25,7 @@ import {
   EyeOff,
   RefreshCw,
   ChevronRight,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
 
@@ -785,7 +786,7 @@ export function VerificationsSplitClient({
               </div>
             </div>
 
-            <div className="space-y-1 text-xs">
+            <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between text-[#73736E]">
                 <span>Email Dispatch:</span>
                 <span
@@ -800,10 +801,20 @@ export function VerificationsSplitClient({
                     : "Not Sent (Manual Copy Required)"}
                 </span>
               </div>
-              {credentialsModal.emailError && (
-                <p className="text-[11px] text-amber-700">
-                  Notice: {credentialsModal.emailError}
-                </p>
+              {!credentialsModal.emailSent && (
+                <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900">
+                  <div className="flex items-center gap-1.5 font-semibold">
+                    <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
+                    <span>Warning: Email Dispatch Failed</span>
+                  </div>
+                  <p className="mt-1 text-[11px] text-amber-800">
+                    {credentialsModal.emailError
+                      ? `Reason: ${credentialsModal.emailError}.`
+                      : "Credentials provisioned."}{" "}
+                    You must manually copy and relay these credentials to the seller
+                    using the button below.
+                  </p>
+                </div>
               )}
             </div>
 

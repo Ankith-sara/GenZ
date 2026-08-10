@@ -9,12 +9,13 @@ import { createClient } from "@/lib/supabase/client";
 import { validateFileContent } from "@/lib/file-validation";
 import { productMediaUrl } from "@/features/products/lib/products";
 import type { ProductImage } from "@/types/database";
+import { uploadProductImagesAction } from "@/app/seller/dashboard/products/actions";
 
 const MAX_IMAGES = 8;
 
 export function ProductImageUploader({
   productId,
-  sellerId,
+  sellerId: _sellerId,
   images,
 }: {
   productId: string;
@@ -37,7 +38,7 @@ export function ProductImageUploader({
     setStatus("uploading");
     setError(null);
 
-    // Validate all files first
+    // Fast client-side check
     for (const file of files) {
       const validation = await validateFileContent(file, ["image"]);
       if (!validation.valid) {
@@ -47,37 +48,17 @@ export function ProductImageUploader({
       }
     }
 
-    const supabase = createClient();
-    let nextPosition = images.length;
-
+    const formData = new FormData();
     for (const file of files) {
-      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      const path = `${sellerId}/products/${productId}/gallery-${Date.now()}-${safeName}`;
+      formData.append("gallery_images", file);
+    }
 
-      const { error: uploadError } = await supabase.storage
-        .from("product-media")
-        .upload(path, file, { upsert: false });
+    const result = await uploadProductImagesAction(productId, formData);
 
-      if (uploadError) {
-        setStatus("error");
-        setError(uploadError.message);
-        return;
-      }
-
-      const { error: insertError } = await supabase.from("product_images").insert({
-        product_id: productId,
-        seller_id: sellerId,
-        image_path: path,
-        position: nextPosition,
-      });
-
-      if (insertError) {
-        setStatus("error");
-        setError(insertError.message);
-        return;
-      }
-
-      nextPosition += 1;
+    if (result.error) {
+      setStatus("error");
+      setError(result.error);
+      return;
     }
 
     setStatus("idle");

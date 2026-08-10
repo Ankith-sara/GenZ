@@ -8,6 +8,13 @@ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "mock-key";
 vi.mock("@/lib/rate-limiter", () => ({
   checkRateLimit: vi.fn().mockResolvedValue({ blocked: false }),
   logRateLimitAttempt: vi.fn().mockResolvedValue(undefined),
+  withRateLimit: vi.fn().mockImplementation(async (_options, fn) => fn()),
+}));
+
+// Mock next/cache
+vi.mock("next/cache", () => ({
+  revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
 }));
 
 // Mock next/headers
@@ -20,21 +27,29 @@ vi.mock("next/headers", () => ({
   }),
 }));
 
+vi.mock("@/lib/resend", () => ({
+  sendSellerApprovalEmail: vi.fn(),
+}));
+
 import {
   approveSeller,
   rejectSeller,
 } from "@/app/admin/dashboard/verifications/actions";
+import { sendSellerApprovalEmail } from "@/lib/resend";
 
 // Mock Supabase admin client
 const mockSelect = vi.fn();
 const mockUpdate = vi.fn();
+const mockUpsert = vi.fn();
 const mockEq = vi.fn();
-const mockSingle = vi.fn();
+const mockOr = vi.fn();
+const mockMaybeSingle = vi.fn();
 
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: vi.fn().mockImplementation(() => ({
     auth: {
       admin: {
+        listUsers: vi.fn().mockResolvedValue({ data: { users: [] }, error: null }),
         createUser: vi.fn().mockResolvedValue({
           data: { user: { id: "user_new_seller_01", email: "seller@genz.in" } },
           error: null,
@@ -42,10 +57,22 @@ vi.mock("@/lib/supabase/admin", () => ({
       },
     },
     from: vi.fn().mockReturnValue({
-      select: mockSelect,
-      update: mockUpdate,
-      eq: mockEq,
-      single: mockSingle,
+      select: vi.fn().mockReturnThis(),
+      update: vi.fn().mockReturnThis(),
+      upsert: mockUpsert.mockResolvedValue({ error: null }),
+      eq: vi.fn().mockReturnThis(),
+      or: mockOr.mockResolvedValue({ error: null }),
+      maybeSingle: mockMaybeSingle.mockResolvedValue({
+        data: {
+          id: "app_123",
+          business_name: "Artisan Toys Co",
+          full_name: "Rajesh Kumar",
+          email: "rajesh@artisantoys.com",
+          phone: "9876543210",
+          business_type: "Manufacturer",
+          form_data: { city: "Jaipur", state: "Rajasthan" },
+        },
+      }),
     }),
   })),
 }));
@@ -75,5 +102,59 @@ describe("Admin Feature: Seller Verification Actions", () => {
     // Reason omitted
     const result = await rejectSeller({}, formData);
     expect(result.error).toBe("Rejection reason is required");
+  });
+
+  it("approves seller application and sets emailSent: true when Resend email succeeds", async () => {
+    vi.mocked(sendSellerApprovalEmail).mockResolvedValue({
+      success: true,
+      id: "msg_12345",
+    });
+
+    const formData = new FormData();
+    formData.append("applicationId", "app_123");
+    formData.append("email", "rajesh@artisantoys.com");
+    formData.append("password", "SecurePass123!");
+    formData.append("sendEmail", "on");
+
+    const result = await approveSeller({}, formData);
+
+    expect(result.success).toBe(true);
+    expect(result.credentials).toEqual({
+      email: "rajesh@artisantoys.com",
+      password: "SecurePass123!",
+      emailSent: true,
+      emailError: undefined,
+    });
+    expect(sendSellerApprovalEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "rajesh@artisantoys.com",
+        fullName: "Rajesh Kumar",
+        businessName: "Artisan Toys Co",
+        password: "SecurePass123!",
+      })
+    );
+  });
+
+  it("approves seller application and sets emailSent: false with error when Resend email fails", async () => {
+    vi.mocked(sendSellerApprovalEmail).mockResolvedValue({
+      success: false,
+      error: "RESEND_API_KEY is not configured in environment variables.",
+    });
+
+    const formData = new FormData();
+    formData.append("applicationId", "app_123");
+    formData.append("email", "rajesh@artisantoys.com");
+    formData.append("password", "SecurePass123!");
+    formData.append("sendEmail", "on");
+
+    const result = await approveSeller({}, formData);
+
+    expect(result.success).toBe(true);
+    expect(result.credentials).toEqual({
+      email: "rajesh@artisantoys.com",
+      password: "SecurePass123!",
+      emailSent: false,
+      emailError: "RESEND_API_KEY is not configured in environment variables.",
+    });
   });
 });

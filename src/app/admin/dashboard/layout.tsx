@@ -13,8 +13,14 @@ export default async function AdminDashboardLayout({
   let supabase;
   try {
     supabase = createAdminClient();
-  } catch {
-    supabase = await createClient();
+  } catch (err: unknown) {
+    console.error(
+      "[CONFIG_ERROR] [AdminDashboardLayout] Failed to initialize admin client:",
+      err
+    );
+    throw new Error(
+      "Server misconfiguration: admin credentials are not set up. Contact an engineer."
+    );
   }
 
   // 1. Fetch records in parallel

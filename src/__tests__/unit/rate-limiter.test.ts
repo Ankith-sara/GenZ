@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { checkRateLimit, logRateLimitAttempt, getClientIp } from "@/lib/rate-limiter";
+import {
+  checkRateLimit,
+  logRateLimitAttempt,
+  getClientIp,
+  withRateLimit,
+} from "@/lib/rate-limiter";
 
 // Mock next/headers
 vi.mock("next/headers", () => ({
@@ -107,6 +112,103 @@ describe("Rate Limiter Utility", () => {
         action_name: "page_view",
         is_failed: false,
       });
+    });
+  });
+
+  describe("withRateLimit HOF", () => {
+    function createMockQuery(count = 1) {
+      const queryObj = {
+        or: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        order: vi.fn().mockReturnThis(),
+        limit: vi.fn().mockResolvedValue({ data: [], error: null }),
+        gte: vi.fn().mockResolvedValue({ count, error: null }),
+      };
+      return {
+        select: vi.fn().mockReturnValue(queryObj),
+        insert: mockInsert.mockResolvedValue({ error: null }),
+      };
+    }
+
+    it("returns blocked error immediately if checkRateLimit returns blocked: true", async () => {
+      mockFrom.mockReturnValue(createMockQuery(250));
+
+      const fn = vi.fn().mockResolvedValue({ success: true });
+
+      const result = await withRateLimit(
+        { endpointType: "user", actionName: "test_action", identifier: "user_123" },
+        fn
+      );
+
+      expect(result).toHaveProperty("error");
+      expect(fn).not.toHaveBeenCalled();
+    });
+
+    it("executes fn and logs isFailed: false when fn succeeds", async () => {
+      mockFrom.mockReturnValue(createMockQuery(1));
+
+      const fn = vi.fn().mockResolvedValue({ success: true });
+
+      const result = await withRateLimit(
+        { endpointType: "user", actionName: "test_action", identifier: "user_123" },
+        fn
+      );
+
+      expect(result).toEqual({ success: true });
+      expect(fn).toHaveBeenCalledTimes(1);
+      expect(mockFrom).toHaveBeenCalledWith("rate_limit_logs");
+      expect(mockInsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action_name: "test_action",
+          is_failed: false,
+        })
+      );
+    });
+
+    it("logs isFailed: true when fn returns an error object", async () => {
+      mockFrom.mockReturnValue(createMockQuery(1));
+
+      const fn = vi.fn().mockResolvedValue({ error: "Invalid credentials" });
+
+      const result = await withRateLimit(
+        { endpointType: "auth", actionName: "login", identifier: "user@example.com" },
+        fn
+      );
+
+      expect(result).toEqual({ error: "Invalid credentials" });
+      expect(mockInsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action_name: "login",
+          is_failed: true,
+        })
+      );
+    });
+
+    it("logs isFailed: false and rethrows when a Next.js redirect error is thrown", async () => {
+      mockFrom.mockReturnValue(createMockQuery(1));
+
+      const redirectErr = new Error("NEXT_REDIRECT");
+      (redirectErr as unknown as { digest: string }).digest =
+        "NEXT_REDIRECT;replace;/dashboard;307;";
+      const fn = vi.fn().mockRejectedValue(redirectErr);
+
+      await expect(
+        withRateLimit(
+          {
+            endpointType: "user",
+            actionName: "redirect_action",
+            identifier: "user_123",
+          },
+          fn
+        )
+      ).rejects.toThrow("NEXT_REDIRECT");
+
+      expect(mockInsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action_name: "redirect_action",
+          is_failed: false,
+        })
+      );
     });
   });
 });

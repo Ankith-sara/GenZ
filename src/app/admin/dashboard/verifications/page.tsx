@@ -18,8 +18,14 @@ export default async function AdminVerificationsPage({
   let supabase;
   try {
     supabase = createAdminClient();
-  } catch {
-    supabase = await createClient();
+  } catch (err: unknown) {
+    console.error(
+      "[CONFIG_ERROR] [AdminVerificationsPage] Failed to initialize admin client:",
+      err
+    );
+    throw new Error(
+      "Server misconfiguration: admin credentials are not set up. Contact an engineer."
+    );
   }
 
   // 0. Fetch real Auth emails with pagination
