@@ -1,0 +1,26 @@
+{
+  "name": "@genz/database",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./admin": "./src/admin.ts",
+    "./auth": "./src/auth.ts",
+    "./authorization": "./src/authorization.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.110.0",
+    "@genz/types": "workspace:*",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@genz/config": "workspace:*",
+    "next": "^15.5.19",
+    "typescript": "^5"
+  }
+}

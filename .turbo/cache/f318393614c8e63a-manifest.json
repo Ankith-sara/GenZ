@@ -1,0 +1,2017 @@
+{
+  "files": {
+    "apps/seller/.next/server/app/auth/confirm/route.js.nft.json": {
+      "size": 8183,
+      "mtime_nanos": 1786643222742489400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/documents.rsc": {
+      "size": 4261,
+      "mtime_nanos": 1786643206324870400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/557-a60bd178973ad153.js": {
+      "size": 39503,
+      "mtime_nanos": 1786643169426106900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/required-server-files.json": {
+      "size": 9403,
+      "mtime_nanos": 1786643198938131100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/426.js": {
+      "size": 95674,
+      "mtime_nanos": 1786643127598261600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/server-reference-manifest.js": {
+      "size": 22372,
+      "mtime_nanos": 1786643127967066600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/app/layout.ts": {
+      "size": 3732,
+      "mtime_nanos": 1786643127913452800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/media": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/page.js": {
+      "size": 41614,
+      "mtime_nanos": 1786643127594461700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/layout-d9f0d4c504d0e012.js": {
+      "size": 365,
+      "mtime_nanos": 1786643169213929400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/next-server.js.nft.json": {
+      "size": 93944,
+      "mtime_nanos": 1786643222822938300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/polyfills-42372ed130431b0a.js": {
+      "size": 112594,
+      "mtime_nanos": 1786643169083148500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products.meta": {
+      "size": 280,
+      "mtime_nanos": 1786643206709428400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/inquiries": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/inquiries.html": {
+      "size": 6306,
+      "mtime_nanos": 1786643206322342400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/778.js": {
+      "size": 31313,
+      "mtime_nanos": 1786643127642657400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/products/[id]/page.js": {
+      "size": 46437,
+      "mtime_nanos": 1786643127593036000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/page.js": {
+      "size": 23754,
+      "mtime_nanos": 1786643127590494700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/_not-found/page_client-reference-manifest.js": {
+      "size": 20339,
+      "mtime_nanos": 1786643169427118500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/login": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/pages/500.html": {
+      "size": 2007,
+      "mtime_nanos": 1786643206306633700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/page-a93ceadaafbd747a.js": {
+      "size": 146,
+      "mtime_nanos": 1786643169283119400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/signup": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/793-7a40a38e3128e553.js": {
+      "size": 18243,
+      "mtime_nanos": 1786643169426106900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/h7qmEAvBfF_NbmwSaxyNC/_buildManifest.js": {
+      "size": 1049,
+      "mtime_nanos": 1786643169111585500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/_not-found/page.js.nft.json": {
+      "size": 8028,
+      "mtime_nanos": 1786643222742489400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/app-path-routes-manifest.json": {
+      "size": 806,
+      "mtime_nanos": 1786643193527916700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/documents.html": {
+      "size": 6306,
+      "mtime_nanos": 1786643206324870400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/new/page.js": {
+      "size": 17279,
+      "mtime_nanos": 1786643127589103700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/inquiries/page.js": {
+      "size": 32939,
+      "mtime_nanos": 1786643127589103700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/new": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/main-403e0841c215f405.js": {
+      "size": 122362,
+      "mtime_nanos": 1786643169146280200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/972.js": {
+      "size": 70603,
+      "mtime_nanos": 1786643127634996800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/signup.html": {
+      "size": 33607,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/documents": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/chunks/904.js": {
+      "size": 32560,
+      "mtime_nanos": 1786643127643658500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/media/8ebc6e9dde468c4a-s.woff2": {
+      "size": 8292,
+      "mtime_nanos": 1786643169082138500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/auth/confirm": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/app/dashboard/documents": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/app/dashboard/products/page.ts": {
+      "size": 3789,
+      "mtime_nanos": 1786643127713105300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/media/6fe53d21e6e7ebd8-s.woff2": {
+      "size": 1716,
+      "mtime_nanos": 1786643169082138500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/auth/confirm/route.ts": {
+      "size": 8761,
+      "mtime_nanos": 1786643127712480500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/settings": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/validator.ts": {
+      "size": 7968,
+      "mtime_nanos": 1786643092345217100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/functions-config-manifest.json": {
+      "size": 37,
+      "mtime_nanos": 1786643198852189900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/onboarding.meta": {
+      "size": 286,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/page_client-reference-manifest.js": {
+      "size": 25085,
+      "mtime_nanos": 1786643169455475100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/account.html": {
+      "size": 6300,
+      "mtime_nanos": 1786643206324870400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/page.js.nft.json": {
+      "size": 7923,
+      "mtime_nanos": 1786643222751847600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next": { "size": 0, "mtime_nanos": 0, "mode": 0, "is_dir": true },
+    "apps/seller/.next/server/app/dashboard/inquiries": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/b6c3cc3b-6c001a8884260ead.js": {
+      "size": 555995,
+      "mtime_nanos": 1786643169385701500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/media/af4bf8399d1aacdf-s.p.woff2": {
+      "size": 36560,
+      "mtime_nanos": 1786643169146280200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/cache-life.d.ts": {
+      "size": 5863,
+      "mtime_nanos": 1786643127967066600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/products/[id]/reels/page.ts": {
+      "size": 3834,
+      "mtime_nanos": 1786643127913452800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/account.rsc": {
+      "size": 4255,
+      "mtime_nanos": 1786643206324870400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/new.rsc": {
+      "size": 4647,
+      "mtime_nanos": 1786643206704621700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/inquiries/page-7ea5694c1c8cb930.js": {
+      "size": 10152,
+      "mtime_nanos": 1786643169283119400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/onboarding.html": {
+      "size": 6371,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/settings/page-3a77823afd1209ba.js": {
+      "size": 7468,
+      "mtime_nanos": 1786643169354596000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/profile/page.js": {
+      "size": 15828,
+      "mtime_nanos": 1786643127589452500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/middleware.js": {
+      "size": 334928,
+      "mtime_nanos": 1786643151156606600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/auth/confirm": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/settings.html": {
+      "size": 6303,
+      "mtime_nanos": 1786643206707164700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/page_client-reference-manifest.js": {
+      "size": 20228,
+      "mtime_nanos": 1786643169454261100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/login/page_client-reference-manifest.js": {
+      "size": 22352,
+      "mtime_nanos": 1786643169455475100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/login/page.ts": {
+      "size": 3744,
+      "mtime_nanos": 1786643127708366900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard.html": {
+      "size": 5835,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/auth/callback": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/products/[id]/reels/page_client-reference-manifest.js": {
+      "size": 33199,
+      "mtime_nanos": 1786643169459061500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/media/9e7b0a821b9dfcb4-s.woff2": {
+      "size": 21688,
+      "mtime_nanos": 1786643169082138500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/inquiries": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/package.json": {
+      "size": 18,
+      "mtime_nanos": 1786643127967066600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/page-c130841836ded519.js": {
+      "size": 6402,
+      "mtime_nanos": 1786643169354596000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/pages": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/570-f1da3ba57ae959bc.js": {
+      "size": 65582,
+      "mtime_nanos": 1786643169423470500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/page.js.nft.json": {
+      "size": 8482,
+      "mtime_nanos": 1786643222751847600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/auth/confirm/route.js": {
+      "size": 10650,
+      "mtime_nanos": 1786643127591596600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/documents/page-8592d24f7db2def2.js": {
+      "size": 17691,
+      "mtime_nanos": 1786643169348668400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/signup/page.js.nft.json": {
+      "size": 8308,
+      "mtime_nanos": 1786643222743498800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/pages/_app-6981e6fab6dbc417.js": {
+      "size": 912,
+      "mtime_nanos": 1786643169181176500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/auth/callback": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/documents.meta": {
+      "size": 283,
+      "mtime_nanos": 1786643206324870400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/routes-manifest.json": {
+      "size": 3887,
+      "mtime_nanos": 1786643209064424100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/auth/callback/route.js": {
+      "size": 8336,
+      "mtime_nanos": 1786643127590494700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/profile.meta": {
+      "size": 277,
+      "mtime_nanos": 1786643206704621700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/_not-found/page-01ab6f4d3e35b8b4.js": {
+      "size": 2670,
+      "mtime_nanos": 1786643169247544600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/874.js": {
+      "size": 346107,
+      "mtime_nanos": 1786643127633982500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/[id]/page.js.nft.json": {
+      "size": 9028,
+      "mtime_nanos": 1786643222755875600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/profile/page.ts": {
+      "size": 3786,
+      "mtime_nanos": 1786643127713615000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/new/page_client-reference-manifest.js": {
+      "size": 26761,
+      "mtime_nanos": 1786643169455475100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/products/[id]/reels": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/app/dashboard/products/new/page.ts": {
+      "size": 3807,
+      "mtime_nanos": 1786643127713105300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/7b7cceea-e625a6e650fb1524.js": {
+      "size": 8109740,
+      "mtime_nanos": 1786643169360456300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/settings": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/pages/_document.js": {
+      "size": 373,
+      "mtime_nanos": 1786643127598261600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/[id]/reels": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/products.rsc": {
+      "size": 4258,
+      "mtime_nanos": 1786643206707164700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/pages/404.html": {
+      "size": 7584,
+      "mtime_nanos": 1786643206772034600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/onboarding": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/edge-runtime-webpack.js.map": {
+      "size": 6132,
+      "mtime_nanos": 1786643151156606600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/products/[id]/page-8e3274bb5edad18e.js": {
+      "size": 23924,
+      "mtime_nanos": 1786643169354596000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/onboarding": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/routes.d.ts": {
+      "size": 2689,
+      "mtime_nanos": 1786643092336787100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/diagnostics/build-diagnostics.json": {
+      "size": 93,
+      "mtime_nanos": 1786643199050316200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/450.js": {
+      "size": 64231,
+      "mtime_nanos": 1786643127634996800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/inquiries/page.ts": {
+      "size": 3792,
+      "mtime_nanos": 1786643127713105300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/account.meta": {
+      "size": 277,
+      "mtime_nanos": 1786643206324870400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/diagnostics": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/771.f2b1234e8cb87533.js": {
+      "size": 739,
+      "mtime_nanos": 1786643169354596000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/css/d7b180f1df5dc93e.css": {
+      "size": 70971,
+      "mtime_nanos": 1786643169356279000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/onboarding.rsc": {
+      "size": 4283,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/account/page.js.nft.json": {
+      "size": 8632,
+      "mtime_nanos": 1786643222751847600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/edge-runtime-webpack.js": {
+      "size": 1504,
+      "mtime_nanos": 1786643151156606600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/account/page_client-reference-manifest.js": {
+      "size": 25174,
+      "mtime_nanos": 1786643169454261100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard.rsc": {
+      "size": 3854,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/330-a81d1412d2308b6d.js": {
+      "size": 8489,
+      "mtime_nanos": 1786643169426106900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/login": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/documents/page.js.nft.json": {
+      "size": 8756,
+      "mtime_nanos": 1786643222751847600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/export-marker.json": {
+      "size": 111,
+      "mtime_nanos": 1786643209510334200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/pages/_error-61dbaea06be24fca.js": {
+      "size": 5652,
+      "mtime_nanos": 1786643169181176500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/products/page.js": {
+      "size": 24923,
+      "mtime_nanos": 1786643127588580500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/150-cfc075249a4a046d.js": {
+      "size": 29885,
+      "mtime_nanos": 1786643169425095400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/media/fb526027db1fc1ae-s.woff2": {
+      "size": 11536,
+      "mtime_nanos": 1786643169082138500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products.html": {
+      "size": 6303,
+      "mtime_nanos": 1786643206707164700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/888.js": {
+      "size": 9279,
+      "mtime_nanos": 1786643127676071600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.turbo/turbo-build.log": {
+      "size": 3169,
+      "mtime_nanos": 1786643223121008900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/pages/_app.js.nft.json": {
+      "size": 897,
+      "mtime_nanos": 1786643222742489400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/_not-found/page.js": {
+      "size": 17241,
+      "mtime_nanos": 1786643127588580500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/signup.meta": {
+      "size": 178,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/main-app-a2e34b6784c53669.js": {
+      "size": 555,
+      "mtime_nanos": 1786643169148525400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/login": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/chunks/408.js": {
+      "size": 9747,
+      "mtime_nanos": 1786643127643658500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/_not-found.meta": {
+      "size": 207,
+      "mtime_nanos": 1786643206782014200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/profile/page-a93ceadaafbd747a.js": {
+      "size": 146,
+      "mtime_nanos": 1786643169350178100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/index.meta": {
+      "size": 192,
+      "mtime_nanos": 1786643206711948200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/next-font-manifest.json": {
+      "size": 77,
+      "mtime_nanos": 1786643169147516500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/webpack-runtime.js": {
+      "size": 1469,
+      "mtime_nanos": 1786643127598261600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/profile/page_client-reference-manifest.js": {
+      "size": 24730,
+      "mtime_nanos": 1786643169457495800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/products/[id]/reels/page-1cf0ffe81e3b4cf9.js": {
+      "size": 10745,
+      "mtime_nanos": 1786643169356279000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/products/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/documents/page_client-reference-manifest.js": {
+      "size": 29044,
+      "mtime_nanos": 1786643169456484600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/middleware-manifest.json": {
+      "size": 1132,
+      "mtime_nanos": 1786643151156606600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/next-font-manifest.js": {
+      "size": 106,
+      "mtime_nanos": 1786643169147516500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/index.html": {
+      "size": 5649,
+      "mtime_nanos": 1786643206710438500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/account/page.js": {
+      "size": 41031,
+      "mtime_nanos": 1786643127589103700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/pages-manifest.json": {
+      "size": 128,
+      "mtime_nanos": 1786643208990213600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/media/636a5ac981f94f8b-s.p.woff2": {
+      "size": 27272,
+      "mtime_nanos": 1786643169083148500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/auth": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/chunks": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/app/auth/callback/route-a93ceadaafbd747a.js": {
+      "size": 146,
+      "mtime_nanos": 1786643169283119400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/inquiries.meta": {
+      "size": 283,
+      "mtime_nanos": 1786643206323355300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/package.json": {
+      "size": 20,
+      "mtime_nanos": 1786643092357118300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/new.meta": {
+      "size": 324,
+      "mtime_nanos": 1786643206709428400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/signup": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/documents/page.js": {
+      "size": 42534,
+      "mtime_nanos": 1786643127589959000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/inquiries.rsc": {
+      "size": 4261,
+      "mtime_nanos": 1786643206322342400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/[id]/reels/page.js.nft.json": {
+      "size": 9077,
+      "mtime_nanos": 1786643222755875600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/pages/_app.js": {
+      "size": 3363,
+      "mtime_nanos": 1786643127572871600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/images-manifest.json": {
+      "size": 1127,
+      "mtime_nanos": 1786643209416326900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/auth/callback/route_client-reference-manifest.js": {
+      "size": 20348,
+      "mtime_nanos": 1786643169428639500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/login/page.js.nft.json": {
+      "size": 8264,
+      "mtime_nanos": 1786643222743498800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/account": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/onboarding/page.js.nft.json": {
+      "size": 8403,
+      "mtime_nanos": 1786643222753356000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/products/[id]/page.ts": {
+      "size": 3810,
+      "mtime_nanos": 1786643127713105300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/673.js": {
+      "size": 8212,
+      "mtime_nanos": 1786643127643658500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/81e6ba02-1b6e1f403c9dc4a0.js": {
+      "size": 63859,
+      "mtime_nanos": 1786643169385701500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/_not-found.rsc": {
+      "size": 4097,
+      "mtime_nanos": 1786643206771487000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/auth/confirm": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/trace": {
+      "size": 1002178,
+      "mtime_nanos": 1786643222864315100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/server-reference-manifest.json": {
+      "size": 19831,
+      "mtime_nanos": 1786643127970390500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/_not-found": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/app/dashboard/account": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/products/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/pages/_error.js": {
+      "size": 79986,
+      "mtime_nanos": 1786643127572871600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/onboarding/page.ts": {
+      "size": 3795,
+      "mtime_nanos": 1786643127911441700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/159.js": {
+      "size": 8318,
+      "mtime_nanos": 1786643127643658500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/react-loadable-manifest.json": {
+      "size": 495,
+      "mtime_nanos": 1786643169042797300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/page.ts": {
+      "size": 3756,
+      "mtime_nanos": 1786643127910931400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/680.js": {
+      "size": 13153,
+      "mtime_nanos": 1786643127642657400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/settings/page_client-reference-manifest.js": {
+      "size": 25085,
+      "mtime_nanos": 1786643169458003800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/741.js": {
+      "size": 8801236,
+      "mtime_nanos": 1786643127639055300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/products/new": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/page_client-reference-manifest.js": {
+      "size": 24614,
+      "mtime_nanos": 1786643169458546000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/658.js": {
+      "size": 28410,
+      "mtime_nanos": 1786643127643658500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/products/page-95f9f0b41af1841a.js": {
+      "size": 9028,
+      "mtime_nanos": 1786643169283119400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/settings/page.js.nft.json": {
+      "size": 8482,
+      "mtime_nanos": 1786643222753356000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/pages": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/media/4da3161b738b07dd-s.woff2": {
+      "size": 33640,
+      "mtime_nanos": 1786643169144731000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/signup": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/profile": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/types/app/dashboard/products/[id]/reels": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/products/new.html": {
+      "size": 6756,
+      "mtime_nanos": 1786643206709428400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/app-build-manifest.json": {
+      "size": 10211,
+      "mtime_nanos": 1786643169042797300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/next-minimal-server.js.nft.json": {
+      "size": 14736,
+      "mtime_nanos": 1786643222828995700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/BUILD_ID": {
+      "size": 21,
+      "mtime_nanos": 1786643198896169500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/documents": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/settings.rsc": {
+      "size": 4258,
+      "mtime_nanos": 1786643206707164700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/account/page-17a4d40e466ef68b.js": {
+      "size": 19136,
+      "mtime_nanos": 1786643169283119400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/settings": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/chunks/861.js": {
+      "size": 74423,
+      "mtime_nanos": 1786643127597738200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/auth/confirm/route-a93ceadaafbd747a.js": {
+      "size": 146,
+      "mtime_nanos": 1786643169283119400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/275.js": {
+      "size": 69173,
+      "mtime_nanos": 1786643127642657400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/interception-route-rewrite-manifest.js": {
+      "size": 48,
+      "mtime_nanos": 1786643151156606600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/[id]/page_client-reference-manifest.js": {
+      "size": 32215,
+      "mtime_nanos": 1786643169458003800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/onboarding": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/h7qmEAvBfF_NbmwSaxyNC/_ssgManifest.js": {
+      "size": 80,
+      "mtime_nanos": 1786643209301641700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/account/page.ts": {
+      "size": 3786,
+      "mtime_nanos": 1786643127713105300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/account": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/inquiries/page_client-reference-manifest.js": {
+      "size": 25087,
+      "mtime_nanos": 1786643169455475100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/onboarding/page_client-reference-manifest.js": {
+      "size": 24736,
+      "mtime_nanos": 1786643169458546000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/249.js": {
+      "size": 229537,
+      "mtime_nanos": 1786643127597738200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/middleware-build-manifest.js": {
+      "size": 921,
+      "mtime_nanos": 1786643169046156600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/auth/confirm/route_client-reference-manifest.js": {
+      "size": 20346,
+      "mtime_nanos": 1786643169428639500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/254.js": {
+      "size": 64231,
+      "mtime_nanos": 1786643127634996800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/layout-fae14cff1e848a6d.js": {
+      "size": 14906,
+      "mtime_nanos": 1786643169283119400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/528-732691c9d068b7fc.js": {
+      "size": 135625,
+      "mtime_nanos": 1786643169422458700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/login/page.js": {
+      "size": 41722,
+      "mtime_nanos": 1786643127589959000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app-paths-manifest.json": {
+      "size": 994,
+      "mtime_nanos": 1786643150427516200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/page.ts": {
+      "size": 3720,
+      "mtime_nanos": 1786643127707826300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/framework-56cbe600c8f4cc6d.js": {
+      "size": 189765,
+      "mtime_nanos": 1786643169356279000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/onboarding/page-a93ceadaafbd747a.js": {
+      "size": 146,
+      "mtime_nanos": 1786643169354596000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/169-aa81a6753e54ff3c.js": {
+      "size": 22983,
+      "mtime_nanos": 1786643169423470500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/css": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/settings/page.js": {
+      "size": 22938,
+      "mtime_nanos": 1786643127589452500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/middleware-react-loadable-manifest.js": {
+      "size": 502,
+      "mtime_nanos": 1786643169044142100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/onboarding/page.js": {
+      "size": 15848,
+      "mtime_nanos": 1786643127597220300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/profile": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/app/login/page-a05b1cb1f93f0169.js": {
+      "size": 10586,
+      "mtime_nanos": 1786643169282118200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/_not-found": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/signup/page_client-reference-manifest.js": {
+      "size": 23205,
+      "mtime_nanos": 1786643169454261100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/123.js": {
+      "size": 46545,
+      "mtime_nanos": 1786643127643658500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/pages/_document.js.nft.json": {
+      "size": 8847,
+      "mtime_nanos": 1786643222753356000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/profile": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/chunks/137.js": {
+      "size": 292892,
+      "mtime_nanos": 1786643127597738200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/middleware.js.map": {
+      "size": 1474172,
+      "mtime_nanos": 1786643151156606600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/auth/callback/route.ts": {
+      "size": 8764,
+      "mtime_nanos": 1786643127711928200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/products/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/_not-found.html": {
+      "size": 7584,
+      "mtime_nanos": 1786643206772034600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/auth": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/products/new/page.js.nft.json": {
+      "size": 8944,
+      "mtime_nanos": 1786643222753356000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/page.js.nft.json": {
+      "size": 8364,
+      "mtime_nanos": 1786643222753356000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/84-48ba13bebff43b42.js": {
+      "size": 10375,
+      "mtime_nanos": 1786643169388242300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/products/[id]/reels/page.js": {
+      "size": 34482,
+      "mtime_nanos": 1786643127598261600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/auth/callback": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/settings.meta": {
+      "size": 280,
+      "mtime_nanos": 1786643206707164700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/signup/page-dc26e00b8c176d8e.js": {
+      "size": 10768,
+      "mtime_nanos": 1786643169247544600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/diagnostics/framework.json": {
+      "size": 38,
+      "mtime_nanos": 1786643092359165800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/925-d3e0e2c0ab94c901.js": {
+      "size": 173698,
+      "mtime_nanos": 1786643169423470500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/h7qmEAvBfF_NbmwSaxyNC": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/chunks/347.js": {
+      "size": 128022,
+      "mtime_nanos": 1786643127596713400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/chunks/846.js": {
+      "size": 229124,
+      "mtime_nanos": 1786643127640648000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/auth": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/auth/callback/route.js.nft.json": {
+      "size": 8183,
+      "mtime_nanos": 1786643222751847600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/profile.html": {
+      "size": 6362,
+      "mtime_nanos": 1786643206704621700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/662.86d9439564493f18.js": {
+      "size": 5444,
+      "mtime_nanos": 1786643169356279000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/signup/page.js": {
+      "size": 36050,
+      "mtime_nanos": 1786643127582007900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/index.rsc": {
+      "size": 3691,
+      "mtime_nanos": 1786643206709428400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/inquiries/page.js.nft.json": {
+      "size": 8557,
+      "mtime_nanos": 1786643222751847600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/products/new/page-20493f99d50bf539.js": {
+      "size": 2347,
+      "mtime_nanos": 1786643169348668400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/build-manifest.json": {
+      "size": 995,
+      "mtime_nanos": 1786643169042797300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard.meta": {
+      "size": 230,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/prerender-manifest.json": {
+      "size": 7922,
+      "mtime_nanos": 1786643209144976200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/signup.rsc": {
+      "size": 11115,
+      "mtime_nanos": 1786643206321334300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/638-8f3a9b1a7c43ac64.js": {
+      "size": 168960,
+      "mtime_nanos": 1786643169423978900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/signup/page.ts": {
+      "size": 3747,
+      "mtime_nanos": 1786643127712480500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/334-2608a8a66e160f46.js": {
+      "size": 13558,
+      "mtime_nanos": 1786643169423470500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/documents/page.ts": {
+      "size": 3792,
+      "mtime_nanos": 1786643127713105300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/products/new": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/server/app/dashboard/profile/page.js.nft.json": {
+      "size": 8403,
+      "mtime_nanos": 1786643222753356000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/pages/_error.js.nft.json": {
+      "size": 8839,
+      "mtime_nanos": 1786643222743498800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/app/dashboard/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/seller/.next/static/chunks/webpack-04a3beabca6f7e59.js": {
+      "size": 3481,
+      "mtime_nanos": 1786643169354596000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/server/app/dashboard/profile.rsc": {
+      "size": 4274,
+      "mtime_nanos": 1786643206704621700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/types/app/dashboard/settings/page.ts": {
+      "size": 3789,
+      "mtime_nanos": 1786643127713105300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/seller/.next/static/chunks/a1a32e71-9d16fb9597fd0dad.js": {
+      "size": 173019,
+      "mtime_nanos": 1786643169385701500,
+      "mode": 420,
+      "is_dir": false
+    }
+  },
+  "order": [
+    "apps/seller/.next",
+    "apps/seller/.next/BUILD_ID",
+    "apps/seller/.next/app-build-manifest.json",
+    "apps/seller/.next/app-path-routes-manifest.json",
+    "apps/seller/.next/build-manifest.json",
+    "apps/seller/.next/diagnostics",
+    "apps/seller/.next/diagnostics/build-diagnostics.json",
+    "apps/seller/.next/diagnostics/framework.json",
+    "apps/seller/.next/export-marker.json",
+    "apps/seller/.next/images-manifest.json",
+    "apps/seller/.next/next-minimal-server.js.nft.json",
+    "apps/seller/.next/next-server.js.nft.json",
+    "apps/seller/.next/package.json",
+    "apps/seller/.next/prerender-manifest.json",
+    "apps/seller/.next/react-loadable-manifest.json",
+    "apps/seller/.next/required-server-files.json",
+    "apps/seller/.next/routes-manifest.json",
+    "apps/seller/.next/server",
+    "apps/seller/.next/server/app",
+    "apps/seller/.next/server/app/_not-found",
+    "apps/seller/.next/server/app/_not-found/page.js",
+    "apps/seller/.next/server/app/_not-found/page.js.nft.json",
+    "apps/seller/.next/server/app/_not-found/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/_not-found.html",
+    "apps/seller/.next/server/app/_not-found.meta",
+    "apps/seller/.next/server/app/_not-found.rsc",
+    "apps/seller/.next/server/app/auth",
+    "apps/seller/.next/server/app/auth/callback",
+    "apps/seller/.next/server/app/auth/callback/route.js",
+    "apps/seller/.next/server/app/auth/callback/route.js.nft.json",
+    "apps/seller/.next/server/app/auth/callback/route_client-reference-manifest.js",
+    "apps/seller/.next/server/app/auth/confirm",
+    "apps/seller/.next/server/app/auth/confirm/route.js",
+    "apps/seller/.next/server/app/auth/confirm/route.js.nft.json",
+    "apps/seller/.next/server/app/auth/confirm/route_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard",
+    "apps/seller/.next/server/app/dashboard/account",
+    "apps/seller/.next/server/app/dashboard/account/page.js",
+    "apps/seller/.next/server/app/dashboard/account/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/account/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/account.html",
+    "apps/seller/.next/server/app/dashboard/account.meta",
+    "apps/seller/.next/server/app/dashboard/account.rsc",
+    "apps/seller/.next/server/app/dashboard/documents",
+    "apps/seller/.next/server/app/dashboard/documents/page.js",
+    "apps/seller/.next/server/app/dashboard/documents/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/documents/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/documents.html",
+    "apps/seller/.next/server/app/dashboard/documents.meta",
+    "apps/seller/.next/server/app/dashboard/documents.rsc",
+    "apps/seller/.next/server/app/dashboard/inquiries",
+    "apps/seller/.next/server/app/dashboard/inquiries/page.js",
+    "apps/seller/.next/server/app/dashboard/inquiries/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/inquiries/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/inquiries.html",
+    "apps/seller/.next/server/app/dashboard/inquiries.meta",
+    "apps/seller/.next/server/app/dashboard/inquiries.rsc",
+    "apps/seller/.next/server/app/dashboard/onboarding",
+    "apps/seller/.next/server/app/dashboard/onboarding/page.js",
+    "apps/seller/.next/server/app/dashboard/onboarding/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/onboarding/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/onboarding.html",
+    "apps/seller/.next/server/app/dashboard/onboarding.meta",
+    "apps/seller/.next/server/app/dashboard/onboarding.rsc",
+    "apps/seller/.next/server/app/dashboard/page.js",
+    "apps/seller/.next/server/app/dashboard/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/products",
+    "apps/seller/.next/server/app/dashboard/products/[id]",
+    "apps/seller/.next/server/app/dashboard/products/[id]/page.js",
+    "apps/seller/.next/server/app/dashboard/products/[id]/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/products/[id]/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/products/[id]/reels",
+    "apps/seller/.next/server/app/dashboard/products/[id]/reels/page.js",
+    "apps/seller/.next/server/app/dashboard/products/[id]/reels/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/products/[id]/reels/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/products/new",
+    "apps/seller/.next/server/app/dashboard/products/new/page.js",
+    "apps/seller/.next/server/app/dashboard/products/new/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/products/new/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/products/new.html",
+    "apps/seller/.next/server/app/dashboard/products/new.meta",
+    "apps/seller/.next/server/app/dashboard/products/new.rsc",
+    "apps/seller/.next/server/app/dashboard/products/page.js",
+    "apps/seller/.next/server/app/dashboard/products/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/products/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/products.html",
+    "apps/seller/.next/server/app/dashboard/products.meta",
+    "apps/seller/.next/server/app/dashboard/products.rsc",
+    "apps/seller/.next/server/app/dashboard/profile",
+    "apps/seller/.next/server/app/dashboard/profile/page.js",
+    "apps/seller/.next/server/app/dashboard/profile/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/profile/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/profile.html",
+    "apps/seller/.next/server/app/dashboard/profile.meta",
+    "apps/seller/.next/server/app/dashboard/profile.rsc",
+    "apps/seller/.next/server/app/dashboard/settings",
+    "apps/seller/.next/server/app/dashboard/settings/page.js",
+    "apps/seller/.next/server/app/dashboard/settings/page.js.nft.json",
+    "apps/seller/.next/server/app/dashboard/settings/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/dashboard/settings.html",
+    "apps/seller/.next/server/app/dashboard/settings.meta",
+    "apps/seller/.next/server/app/dashboard/settings.rsc",
+    "apps/seller/.next/server/app/dashboard.html",
+    "apps/seller/.next/server/app/dashboard.meta",
+    "apps/seller/.next/server/app/dashboard.rsc",
+    "apps/seller/.next/server/app/index.html",
+    "apps/seller/.next/server/app/index.meta",
+    "apps/seller/.next/server/app/index.rsc",
+    "apps/seller/.next/server/app/login",
+    "apps/seller/.next/server/app/login/page.js",
+    "apps/seller/.next/server/app/login/page.js.nft.json",
+    "apps/seller/.next/server/app/login/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/page.js",
+    "apps/seller/.next/server/app/page.js.nft.json",
+    "apps/seller/.next/server/app/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/signup",
+    "apps/seller/.next/server/app/signup/page.js",
+    "apps/seller/.next/server/app/signup/page.js.nft.json",
+    "apps/seller/.next/server/app/signup/page_client-reference-manifest.js",
+    "apps/seller/.next/server/app/signup.html",
+    "apps/seller/.next/server/app/signup.meta",
+    "apps/seller/.next/server/app/signup.rsc",
+    "apps/seller/.next/server/app-paths-manifest.json",
+    "apps/seller/.next/server/chunks",
+    "apps/seller/.next/server/chunks/123.js",
+    "apps/seller/.next/server/chunks/137.js",
+    "apps/seller/.next/server/chunks/159.js",
+    "apps/seller/.next/server/chunks/249.js",
+    "apps/seller/.next/server/chunks/254.js",
+    "apps/seller/.next/server/chunks/275.js",
+    "apps/seller/.next/server/chunks/347.js",
+    "apps/seller/.next/server/chunks/408.js",
+    "apps/seller/.next/server/chunks/426.js",
+    "apps/seller/.next/server/chunks/450.js",
+    "apps/seller/.next/server/chunks/658.js",
+    "apps/seller/.next/server/chunks/673.js",
+    "apps/seller/.next/server/chunks/680.js",
+    "apps/seller/.next/server/chunks/741.js",
+    "apps/seller/.next/server/chunks/778.js",
+    "apps/seller/.next/server/chunks/846.js",
+    "apps/seller/.next/server/chunks/861.js",
+    "apps/seller/.next/server/chunks/874.js",
+    "apps/seller/.next/server/chunks/888.js",
+    "apps/seller/.next/server/chunks/904.js",
+    "apps/seller/.next/server/chunks/972.js",
+    "apps/seller/.next/server/edge-runtime-webpack.js",
+    "apps/seller/.next/server/edge-runtime-webpack.js.map",
+    "apps/seller/.next/server/functions-config-manifest.json",
+    "apps/seller/.next/server/interception-route-rewrite-manifest.js",
+    "apps/seller/.next/server/middleware-build-manifest.js",
+    "apps/seller/.next/server/middleware-manifest.json",
+    "apps/seller/.next/server/middleware-react-loadable-manifest.js",
+    "apps/seller/.next/server/middleware.js",
+    "apps/seller/.next/server/middleware.js.map",
+    "apps/seller/.next/server/next-font-manifest.js",
+    "apps/seller/.next/server/next-font-manifest.json",
+    "apps/seller/.next/server/pages",
+    "apps/seller/.next/server/pages/404.html",
+    "apps/seller/.next/server/pages/500.html",
+    "apps/seller/.next/server/pages/_app.js",
+    "apps/seller/.next/server/pages/_app.js.nft.json",
+    "apps/seller/.next/server/pages/_document.js",
+    "apps/seller/.next/server/pages/_document.js.nft.json",
+    "apps/seller/.next/server/pages/_error.js",
+    "apps/seller/.next/server/pages/_error.js.nft.json",
+    "apps/seller/.next/server/pages-manifest.json",
+    "apps/seller/.next/server/server-reference-manifest.js",
+    "apps/seller/.next/server/server-reference-manifest.json",
+    "apps/seller/.next/server/webpack-runtime.js",
+    "apps/seller/.next/static",
+    "apps/seller/.next/static/chunks",
+    "apps/seller/.next/static/chunks/150-cfc075249a4a046d.js",
+    "apps/seller/.next/static/chunks/169-aa81a6753e54ff3c.js",
+    "apps/seller/.next/static/chunks/330-a81d1412d2308b6d.js",
+    "apps/seller/.next/static/chunks/334-2608a8a66e160f46.js",
+    "apps/seller/.next/static/chunks/528-732691c9d068b7fc.js",
+    "apps/seller/.next/static/chunks/557-a60bd178973ad153.js",
+    "apps/seller/.next/static/chunks/570-f1da3ba57ae959bc.js",
+    "apps/seller/.next/static/chunks/638-8f3a9b1a7c43ac64.js",
+    "apps/seller/.next/static/chunks/662.86d9439564493f18.js",
+    "apps/seller/.next/static/chunks/771.f2b1234e8cb87533.js",
+    "apps/seller/.next/static/chunks/793-7a40a38e3128e553.js",
+    "apps/seller/.next/static/chunks/7b7cceea-e625a6e650fb1524.js",
+    "apps/seller/.next/static/chunks/81e6ba02-1b6e1f403c9dc4a0.js",
+    "apps/seller/.next/static/chunks/84-48ba13bebff43b42.js",
+    "apps/seller/.next/static/chunks/925-d3e0e2c0ab94c901.js",
+    "apps/seller/.next/static/chunks/a1a32e71-9d16fb9597fd0dad.js",
+    "apps/seller/.next/static/chunks/app",
+    "apps/seller/.next/static/chunks/app/_not-found",
+    "apps/seller/.next/static/chunks/app/_not-found/page-01ab6f4d3e35b8b4.js",
+    "apps/seller/.next/static/chunks/app/auth",
+    "apps/seller/.next/static/chunks/app/auth/callback",
+    "apps/seller/.next/static/chunks/app/auth/callback/route-a93ceadaafbd747a.js",
+    "apps/seller/.next/static/chunks/app/auth/confirm",
+    "apps/seller/.next/static/chunks/app/auth/confirm/route-a93ceadaafbd747a.js",
+    "apps/seller/.next/static/chunks/app/dashboard",
+    "apps/seller/.next/static/chunks/app/dashboard/account",
+    "apps/seller/.next/static/chunks/app/dashboard/account/page-17a4d40e466ef68b.js",
+    "apps/seller/.next/static/chunks/app/dashboard/documents",
+    "apps/seller/.next/static/chunks/app/dashboard/documents/page-8592d24f7db2def2.js",
+    "apps/seller/.next/static/chunks/app/dashboard/inquiries",
+    "apps/seller/.next/static/chunks/app/dashboard/inquiries/page-7ea5694c1c8cb930.js",
+    "apps/seller/.next/static/chunks/app/dashboard/layout-fae14cff1e848a6d.js",
+    "apps/seller/.next/static/chunks/app/dashboard/onboarding",
+    "apps/seller/.next/static/chunks/app/dashboard/onboarding/page-a93ceadaafbd747a.js",
+    "apps/seller/.next/static/chunks/app/dashboard/page-c130841836ded519.js",
+    "apps/seller/.next/static/chunks/app/dashboard/products",
+    "apps/seller/.next/static/chunks/app/dashboard/products/[id]",
+    "apps/seller/.next/static/chunks/app/dashboard/products/[id]/page-8e3274bb5edad18e.js",
+    "apps/seller/.next/static/chunks/app/dashboard/products/[id]/reels",
+    "apps/seller/.next/static/chunks/app/dashboard/products/[id]/reels/page-1cf0ffe81e3b4cf9.js",
+    "apps/seller/.next/static/chunks/app/dashboard/products/new",
+    "apps/seller/.next/static/chunks/app/dashboard/products/new/page-20493f99d50bf539.js",
+    "apps/seller/.next/static/chunks/app/dashboard/products/page-95f9f0b41af1841a.js",
+    "apps/seller/.next/static/chunks/app/dashboard/profile",
+    "apps/seller/.next/static/chunks/app/dashboard/profile/page-a93ceadaafbd747a.js",
+    "apps/seller/.next/static/chunks/app/dashboard/settings",
+    "apps/seller/.next/static/chunks/app/dashboard/settings/page-3a77823afd1209ba.js",
+    "apps/seller/.next/static/chunks/app/layout-d9f0d4c504d0e012.js",
+    "apps/seller/.next/static/chunks/app/login",
+    "apps/seller/.next/static/chunks/app/login/page-a05b1cb1f93f0169.js",
+    "apps/seller/.next/static/chunks/app/page-a93ceadaafbd747a.js",
+    "apps/seller/.next/static/chunks/app/signup",
+    "apps/seller/.next/static/chunks/app/signup/page-dc26e00b8c176d8e.js",
+    "apps/seller/.next/static/chunks/b6c3cc3b-6c001a8884260ead.js",
+    "apps/seller/.next/static/chunks/framework-56cbe600c8f4cc6d.js",
+    "apps/seller/.next/static/chunks/main-403e0841c215f405.js",
+    "apps/seller/.next/static/chunks/main-app-a2e34b6784c53669.js",
+    "apps/seller/.next/static/chunks/pages",
+    "apps/seller/.next/static/chunks/pages/_app-6981e6fab6dbc417.js",
+    "apps/seller/.next/static/chunks/pages/_error-61dbaea06be24fca.js",
+    "apps/seller/.next/static/chunks/polyfills-42372ed130431b0a.js",
+    "apps/seller/.next/static/chunks/webpack-04a3beabca6f7e59.js",
+    "apps/seller/.next/static/css",
+    "apps/seller/.next/static/css/d7b180f1df5dc93e.css",
+    "apps/seller/.next/static/h7qmEAvBfF_NbmwSaxyNC",
+    "apps/seller/.next/static/h7qmEAvBfF_NbmwSaxyNC/_buildManifest.js",
+    "apps/seller/.next/static/h7qmEAvBfF_NbmwSaxyNC/_ssgManifest.js",
+    "apps/seller/.next/static/media",
+    "apps/seller/.next/static/media/4da3161b738b07dd-s.woff2",
+    "apps/seller/.next/static/media/636a5ac981f94f8b-s.p.woff2",
+    "apps/seller/.next/static/media/6fe53d21e6e7ebd8-s.woff2",
+    "apps/seller/.next/static/media/8ebc6e9dde468c4a-s.woff2",
+    "apps/seller/.next/static/media/9e7b0a821b9dfcb4-s.woff2",
+    "apps/seller/.next/static/media/af4bf8399d1aacdf-s.p.woff2",
+    "apps/seller/.next/static/media/fb526027db1fc1ae-s.woff2",
+    "apps/seller/.next/trace",
+    "apps/seller/.next/types",
+    "apps/seller/.next/types/app",
+    "apps/seller/.next/types/app/auth",
+    "apps/seller/.next/types/app/auth/callback",
+    "apps/seller/.next/types/app/auth/callback/route.ts",
+    "apps/seller/.next/types/app/auth/confirm",
+    "apps/seller/.next/types/app/auth/confirm/route.ts",
+    "apps/seller/.next/types/app/dashboard",
+    "apps/seller/.next/types/app/dashboard/account",
+    "apps/seller/.next/types/app/dashboard/account/page.ts",
+    "apps/seller/.next/types/app/dashboard/documents",
+    "apps/seller/.next/types/app/dashboard/documents/page.ts",
+    "apps/seller/.next/types/app/dashboard/inquiries",
+    "apps/seller/.next/types/app/dashboard/inquiries/page.ts",
+    "apps/seller/.next/types/app/dashboard/onboarding",
+    "apps/seller/.next/types/app/dashboard/onboarding/page.ts",
+    "apps/seller/.next/types/app/dashboard/page.ts",
+    "apps/seller/.next/types/app/dashboard/products",
+    "apps/seller/.next/types/app/dashboard/products/[id]",
+    "apps/seller/.next/types/app/dashboard/products/[id]/page.ts",
+    "apps/seller/.next/types/app/dashboard/products/[id]/reels",
+    "apps/seller/.next/types/app/dashboard/products/[id]/reels/page.ts",
+    "apps/seller/.next/types/app/dashboard/products/new",
+    "apps/seller/.next/types/app/dashboard/products/new/page.ts",
+    "apps/seller/.next/types/app/dashboard/products/page.ts",
+    "apps/seller/.next/types/app/dashboard/profile",
+    "apps/seller/.next/types/app/dashboard/profile/page.ts",
+    "apps/seller/.next/types/app/dashboard/settings",
+    "apps/seller/.next/types/app/dashboard/settings/page.ts",
+    "apps/seller/.next/types/app/layout.ts",
+    "apps/seller/.next/types/app/login",
+    "apps/seller/.next/types/app/login/page.ts",
+    "apps/seller/.next/types/app/page.ts",
+    "apps/seller/.next/types/app/signup",
+    "apps/seller/.next/types/app/signup/page.ts",
+    "apps/seller/.next/types/cache-life.d.ts",
+    "apps/seller/.next/types/package.json",
+    "apps/seller/.next/types/routes.d.ts",
+    "apps/seller/.next/types/validator.ts",
+    "apps/seller/.turbo/turbo-build.log"
+  ]
+}

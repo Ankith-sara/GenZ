@@ -1,12 +1,16 @@
 {
   "name": "genz-app",
-  "version": "0.7.6",
+  "version": "0.8.3",
   "private": true,
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "turbo dev",
+    "dev:web": "pnpm --filter=@genz/web dev",
+    "dev:seller": "pnpm --filter=@genz/seller dev",
+    "dev:admin": "pnpm --filter=@genz/admin dev",
+    "build": "turbo build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "turbo lint",
     "test": "vitest run",
     "test:changed": "vitest related --run --passWithNoTests",
     "test:watch": "vitest",
@@ -62,6 +66,7 @@
     "prettier": "^3.9.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
+    "turbo": "^2.4.0",
     "typescript": "^5",
     "vitest": "^4.1.10"
   },

@@ -1,0 +1,2478 @@
+{
+  "files": {
+    "apps/web/.next/server/chunks/608.js": {
+      "size": 9937,
+      "mtime_nanos": 1786643129661952700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/products/[id]/page.ts": {
+      "size": 3798,
+      "mtime_nanos": 1786643130314517600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/main-app-a2e34b6784c53669.js": {
+      "size": 555,
+      "mtime_nanos": 1786643168255630600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/about.html": {
+      "size": 72100,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/81e6ba02-1b6e1f403c9dc4a0.js": {
+      "size": 63859,
+      "mtime_nanos": 1786643168311477700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/auth/callback/route.js.nft.json": {
+      "size": 8183,
+      "mtime_nanos": 1786643223119427500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/media/8ebc6e9dde468c4a-s.woff2": {
+      "size": 8292,
+      "mtime_nanos": 1786643168249874400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/forgot-password": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/about": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/cart/page_client-reference-manifest.js": {
+      "size": 21595,
+      "mtime_nanos": 1786643168333755300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/150-a586785dd290cc78.js": {
+      "size": 29851,
+      "mtime_nanos": 1786643168315727500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/orders/page_client-reference-manifest.js": {
+      "size": 21361,
+      "mtime_nanos": 1786643168334795900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/contact/page.js.nft.json": {
+      "size": 8501,
+      "mtime_nanos": 1786643223128138300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/orders/page.js": {
+      "size": 26765,
+      "mtime_nanos": 1786643129523307500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/api": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/reset-password": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/faqs": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/contact/page.ts": {
+      "size": 3774,
+      "mtime_nanos": 1786643130546551600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/page_client-reference-manifest.js": {
+      "size": 21144,
+      "mtime_nanos": 1786643168330244500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/middleware-react-loadable-manifest.js": {
+      "size": 502,
+      "mtime_nanos": 1786643168246332300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/package.json": {
+      "size": 20,
+      "mtime_nanos": 1786643092412793600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/reset-password.html": {
+      "size": 16112,
+      "mtime_nanos": 1786643206120943200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/api/analytics/track": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/485-57e04ba77c904dae.js": {
+      "size": 9740,
+      "mtime_nanos": 1786643168311984900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/sitemap.xml": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/api/products/route_client-reference-manifest.js": {
+      "size": 21252,
+      "mtime_nanos": 1786643168320011700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/wishlist": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/(main)/sellers": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/edge-runtime-webpack.js": {
+      "size": 1504,
+      "mtime_nanos": 1786643151166388300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/about/page.js": {
+      "size": 45902,
+      "mtime_nanos": 1786643129523837300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/webpack-runtime.js": {
+      "size": 1469,
+      "mtime_nanos": 1786643129559733700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/about.rsc": {
+      "size": 7252,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/next-minimal-server.js.nft.json": {
+      "size": 14736,
+      "mtime_nanos": 1786643223207912100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/auth/confirm": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/auth/confirm/route.js.nft.json": {
+      "size": 8183,
+      "mtime_nanos": 1786643223118159500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/sellers/[id]/page.js.nft.json": {
+      "size": 8914,
+      "mtime_nanos": 1786643223129149100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/557-a60bd178973ad153.js": {
+      "size": 39503,
+      "mtime_nanos": 1786643168315218500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/wishlist/page.ts": {
+      "size": 3777,
+      "mtime_nanos": 1786643130349602300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/next-font-manifest.js": {
+      "size": 106,
+      "mtime_nanos": 1786643168253528800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/cart.meta": {
+      "size": 206,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/faqs.meta": {
+      "size": 206,
+      "mtime_nanos": 1786643206883465300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/reset-password/page.ts": {
+      "size": 3768,
+      "mtime_nanos": 1786643130247366200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/webpack-04a3beabca6f7e59.js": {
+      "size": 3481,
+      "mtime_nanos": 1786643168304374700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/contact": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/css": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/orders": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/contact.rsc": {
+      "size": 25791,
+      "mtime_nanos": 1786643206880101300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/edge-runtime-webpack.js.map": {
+      "size": 6132,
+      "mtime_nanos": 1786643151166907400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/forgot-password/page.ts": {
+      "size": 3771,
+      "mtime_nanos": 1786643130247366200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/wishlist": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/cart/page.js.nft.json": {
+      "size": 8555,
+      "mtime_nanos": 1786643223127592600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/api/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/_not-found/page-ea1ddfa8182c090c.js": {
+      "size": 154,
+      "mtime_nanos": 1786643168292892500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/routes.d.ts": {
+      "size": 2602,
+      "mtime_nanos": 1786643092386605200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/forgot-password/page_client-reference-manifest.js": {
+      "size": 21653,
+      "mtime_nanos": 1786643168326580000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/profile/page-1c1033ded4cb292c.js": {
+      "size": 18628,
+      "mtime_nanos": 1786643168299950700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/wishlist/page.js.nft.json": {
+      "size": 8435,
+      "mtime_nanos": 1786643223127592600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/privacy.rsc": {
+      "size": 15767,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/functions-config-manifest.json": {
+      "size": 37,
+      "mtime_nanos": 1786643198757398500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/925-d3e0e2c0ab94c901.js": {
+      "size": 173698,
+      "mtime_nanos": 1786643168315218500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/privacy.meta": {
+      "size": 215,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/702.js": {
+      "size": 8800829,
+      "mtime_nanos": 1786643131639084300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/profile.html": {
+      "size": 10719,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/sellers/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/reset-password.meta": {
+      "size": 202,
+      "mtime_nanos": 1786643206120943200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/products/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/products/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/chunks/347.js": {
+      "size": 128022,
+      "mtime_nanos": 1786643129559733700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/main-403e0841c215f405.js": {
+      "size": 122362,
+      "mtime_nanos": 1786643168253528800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/privacy": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/api/analytics/track/route.js": {
+      "size": 7403,
+      "mtime_nanos": 1786643129384878200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/auth/callback/route_client-reference-manifest.js": {
+      "size": 21254,
+      "mtime_nanos": 1786643168325567600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/contact/page-a86cf7e9d70843b8.js": {
+      "size": 6413,
+      "mtime_nanos": 1786643168302022400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/layout-09dbb94bfaf1cfb1.js": {
+      "size": 365,
+      "mtime_nanos": 1786643168292188900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/diagnostics": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/(main)/privacy": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/images-manifest.json": {
+      "size": 1127,
+      "mtime_nanos": 1786643209583132100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/sellers/[id]/page.js": {
+      "size": 23920,
+      "mtime_nanos": 1786643129559733700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/cart.rsc": {
+      "size": 8050,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/discover": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/chunks/858.js": {
+      "size": 27806,
+      "mtime_nanos": 1786643129558725700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/page.js.nft.json": {
+      "size": 8246,
+      "mtime_nanos": 1786643223127592600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/auth/confirm/route.js": {
+      "size": 10644,
+      "mtime_nanos": 1786643129420607100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/api/analytics/track/route_client-reference-manifest.js": {
+      "size": 21267,
+      "mtime_nanos": 1786643168320011700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/807.js": {
+      "size": 12652,
+      "mtime_nanos": 1786643129727753000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/auth/confirm": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/about/page.ts": {
+      "size": 3768,
+      "mtime_nanos": 1786643130413831800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/33.js": {
+      "size": 229486,
+      "mtime_nanos": 1786643129661952700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/products/[id]/page.js.nft.json": {
+      "size": 8914,
+      "mtime_nanos": 1786643223128138300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/auth": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/middleware.js.map": {
+      "size": 1472623,
+      "mtime_nanos": 1786643151166907400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/products/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/profile.rsc": {
+      "size": 6841,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/profile": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/app-build-manifest.json": {
+      "size": 13161,
+      "mtime_nanos": 1786643168245413900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/robots.txt": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/(main)": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/371-1a129c95695a3985.js": {
+      "size": 66525,
+      "mtime_nanos": 1786643168315727500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/sellers/[id]/page_client-reference-manifest.js": {
+      "size": 26305,
+      "mtime_nanos": 1786643168332246300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/media/4da3161b738b07dd-s.woff2": {
+      "size": 33640,
+      "mtime_nanos": 1786643168249874400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/terms": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/auth/callback/route.js": {
+      "size": 8381,
+      "mtime_nanos": 1786643129287382900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/index.meta": {
+      "size": 172,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/robots.txt/route-ea1ddfa8182c090c.js": {
+      "size": 154,
+      "mtime_nanos": 1786643168292188900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/cart/page.ts": {
+      "size": 3765,
+      "mtime_nanos": 1786643130378050700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/contact.html": {
+      "size": 71910,
+      "mtime_nanos": 1786643206881361000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/sitemap.xml/route_client-reference-manifest.js": {
+      "size": 21249,
+      "mtime_nanos": 1786643168325567600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/7b7cceea-e625a6e650fb1524.js": {
+      "size": 8109740,
+      "mtime_nanos": 1786643168313663900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/faqs": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/middleware-build-manifest.js": {
+      "size": 921,
+      "mtime_nanos": 1786643168246332300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/108-5360b2d99ee7c21d.js": {
+      "size": 169723,
+      "mtime_nanos": 1786643168314208500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/auth/callback": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/auth/callback": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/forgot-password.html": {
+      "size": 14259,
+      "mtime_nanos": 1786643206121601600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/reset-password.rsc": {
+      "size": 5986,
+      "mtime_nanos": 1786643206120943200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/media/6fe53d21e6e7ebd8-s.woff2": {
+      "size": 1716,
+      "mtime_nanos": 1786643168249874400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/products/[id]/page.js": {
+      "size": 28996,
+      "mtime_nanos": 1786643129522791700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/cart": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/forgot-password/page-ccbb498a54d7817a.js": {
+      "size": 9373,
+      "mtime_nanos": 1786643168293899300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/about/page.js.nft.json": {
+      "size": 8501,
+      "mtime_nanos": 1786643223128138300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/forgot-password": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/chunks/275.js": {
+      "size": 69173,
+      "mtime_nanos": 1786643129726713700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/validator.ts": {
+      "size": 9217,
+      "mtime_nanos": 1786643092389902300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/wishlist/page.js": {
+      "size": 22672,
+      "mtime_nanos": 1786643129422372300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/trace": {
+      "size": 981110,
+      "mtime_nanos": 1786643223260648600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/forgot-password": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/signup/page_client-reference-manifest.js": {
+      "size": 23267,
+      "mtime_nanos": 1786643168327719800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/server-reference-manifest.json": {
+      "size": 22222,
+      "mtime_nanos": 1786643130577850700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/login": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/diagnostics/build-diagnostics.json": {
+      "size": 93,
+      "mtime_nanos": 1786643198966965800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/login/page.js.nft.json": {
+      "size": 8262,
+      "mtime_nanos": 1786643223119965200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/robots.txt/route.js.nft.json": {
+      "size": 8012,
+      "mtime_nanos": 1786643223126576200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/diagnostics/framework.json": {
+      "size": 38,
+      "mtime_nanos": 1786643092422377700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/required-server-files.json": {
+      "size": 9397,
+      "mtime_nanos": 1786643198816974400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/index.rsc": {
+      "size": 6998,
+      "mtime_nanos": 1786643206866055500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/faqs.rsc": {
+      "size": 31828,
+      "mtime_nanos": 1786643206883465300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/sellers": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/reset-password": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/auth/confirm": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/api/analytics/track": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/wishlist.meta": {
+      "size": 218,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/pages/_error.js.nft.json": {
+      "size": 8839,
+      "mtime_nanos": 1786643223125567300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/NUBAwoknxL31MYpiM61UK/_buildManifest.js": {
+      "size": 1355,
+      "mtime_nanos": 1786643168251396600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/249.js": {
+      "size": 229537,
+      "mtime_nanos": 1786643129559733700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/_not-found/page.js": {
+      "size": 15386,
+      "mtime_nanos": 1786643129287382900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/sitemap.xml/route-ea1ddfa8182c090c.js": {
+      "size": 154,
+      "mtime_nanos": 1786643168292892500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/auth/confirm/route_client-reference-manifest.js": {
+      "size": 21252,
+      "mtime_nanos": 1786643168324049300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/a1a32e71-9d16fb9597fd0dad.js": {
+      "size": 173019,
+      "mtime_nanos": 1786643168311984900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/orders/page.ts": {
+      "size": 3771,
+      "mtime_nanos": 1786643130546551600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/faqs/page.js.nft.json": {
+      "size": 8625,
+      "mtime_nanos": 1786643223128138300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/159.js": {
+      "size": 31097,
+      "mtime_nanos": 1786643129727236100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/408.js": {
+      "size": 9763,
+      "mtime_nanos": 1786643129661952700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/forgot-password/page.js.nft.json": {
+      "size": 8181,
+      "mtime_nanos": 1786643223125567300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/b6c3cc3b-6c001a8884260ead.js": {
+      "size": 555995,
+      "mtime_nanos": 1786643168310468800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/auth": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/login": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app-paths-manifest.json": {
+      "size": 1292,
+      "mtime_nanos": 1786643150388038000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/pages/_error.js": {
+      "size": 79986,
+      "mtime_nanos": 1786643129252993000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/cart/page-06707eaec7d1d9ed.js": {
+      "size": 11552,
+      "mtime_nanos": 1786643168302022400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/reset-password/page-57f3b6771a74702b.js": {
+      "size": 8055,
+      "mtime_nanos": 1786643168295415000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.turbo/turbo-build.log": {
+      "size": 3419,
+      "mtime_nanos": 1786643223527605200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/60.js": {
+      "size": 410651,
+      "mtime_nanos": 1786643129660941300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/terms/page_client-reference-manifest.js": {
+      "size": 21577,
+      "mtime_nanos": 1786643168334795900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/cart": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/api": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/build-manifest.json": {
+      "size": 995,
+      "mtime_nanos": 1786643168244906900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/forgot-password.rsc": {
+      "size": 5990,
+      "mtime_nanos": 1786643206120943200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/login/page.js": {
+      "size": 26106,
+      "mtime_nanos": 1786643129287382900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/prerender-manifest.json": {
+      "size": 9355,
+      "mtime_nanos": 1786643209370927300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static": { "size": 0, "mtime_nanos": 0, "mode": 0, "is_dir": true },
+    "apps/web/.next/static/chunks/app/(main)/terms": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/privacy/page_client-reference-manifest.js": {
+      "size": 21587,
+      "mtime_nanos": 1786643168333755300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/pages/404.html": {
+      "size": 15518,
+      "mtime_nanos": 1786643206120943200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/auth/callback/route-ea1ddfa8182c090c.js": {
+      "size": 154,
+      "mtime_nanos": 1786643168295415000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/login/page-4ea961659e08f289.js": {
+      "size": 9745,
+      "mtime_nanos": 1786643168293899300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/signup": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/faqs.html": {
+      "size": 81243,
+      "mtime_nanos": 1786643206883465300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/next-font-manifest.json": {
+      "size": 77,
+      "mtime_nanos": 1786643168253528800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/robots.txt.body": {
+      "size": 161,
+      "mtime_nanos": 1786643207048095300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/about": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/cart/page.js": {
+      "size": 27260,
+      "mtime_nanos": 1786643129522791700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/auth/callback/route.ts": {
+      "size": 8761,
+      "mtime_nanos": 1786643130310981100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/products/[id]/page-0e4935058a6ee6e0.js": {
+      "size": 6136,
+      "mtime_nanos": 1786643168301457000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/pages/_app.js.nft.json": {
+      "size": 897,
+      "mtime_nanos": 1786643223118711300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/NUBAwoknxL31MYpiM61UK": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/(main)/cart": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/terms/page.js.nft.json": {
+      "size": 8501,
+      "mtime_nanos": 1786643223128138300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/page.js": {
+      "size": 37493,
+      "mtime_nanos": 1786643129422372300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/terms.html": {
+      "size": 47360,
+      "mtime_nanos": 1786643207049258900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/api/products/route-ea1ddfa8182c090c.js": {
+      "size": 154,
+      "mtime_nanos": 1786643168293899300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/_not-found/page_client-reference-manifest.js": {
+      "size": 21245,
+      "mtime_nanos": 1786643168317806400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/faqs/page_client-reference-manifest.js": {
+      "size": 24559,
+      "mtime_nanos": 1786643168334795900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/about": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/next-server.js.nft.json": {
+      "size": 93944,
+      "mtime_nanos": 1786643223207404600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/profile/page_client-reference-manifest.js": {
+      "size": 21695,
+      "mtime_nanos": 1786643168330244500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/terms/page.js": {
+      "size": 23532,
+      "mtime_nanos": 1786643129559733700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/media/636a5ac981f94f8b-s.p.woff2": {
+      "size": 27272,
+      "mtime_nanos": 1786643168249874400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/profile/page.js": {
+      "size": 175152,
+      "mtime_nanos": 1786643129523837300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/page.ts": {
+      "size": 3744,
+      "mtime_nanos": 1786643130310981100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/api/analytics": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/forgot-password/page.js": {
+      "size": 29283,
+      "mtime_nanos": 1786643129388931100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/70.js": {
+      "size": 46511,
+      "mtime_nanos": 1786643129727236100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/_not-found": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/discover/page.js": {
+      "size": 31167,
+      "mtime_nanos": 1786643129287382900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/robots.txt.meta": {
+      "size": 206,
+      "mtime_nanos": 1786643207049258900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/discover": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/pages/500.html": {
+      "size": 2007,
+      "mtime_nanos": 1786643206105962700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/api/products/route.js.nft.json": {
+      "size": 8259,
+      "mtime_nanos": 1786643223127592600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/pages": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/(main)/privacy/page-1b16fa90cee0a0da.js": {
+      "size": 226,
+      "mtime_nanos": 1786643168302022400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/page-f5b39d0c30510981.js": {
+      "size": 22946,
+      "mtime_nanos": 1786643168297943900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/export-marker.json": {
+      "size": 111,
+      "mtime_nanos": 1786643209656449800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/641.js": {
+      "size": 354411,
+      "mtime_nanos": 1786643129559733700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/25-91418548a8ca53c7.js": {
+      "size": 23662,
+      "mtime_nanos": 1786643168311984900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/pages/_error-61dbaea06be24fca.js": {
+      "size": 5652,
+      "mtime_nanos": 1786643168292188900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/discover/page.js.nft.json": {
+      "size": 8555,
+      "mtime_nanos": 1786643223126576200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/profile/page.js.nft.json": {
+      "size": 8555,
+      "mtime_nanos": 1786643223127592600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/auth/confirm/route.ts": {
+      "size": 8758,
+      "mtime_nanos": 1786643130312496500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/sitemap.xml.body": {
+      "size": 1373,
+      "mtime_nanos": 1786643206158325100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/reset-password": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/css/25491f176f04071b.css": {
+      "size": 86016,
+      "mtime_nanos": 1786643168304374700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/sellers/[id]/page.ts": {
+      "size": 3795,
+      "mtime_nanos": 1786643130349602300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/orders": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/api": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/about.meta": {
+      "size": 209,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/sellers/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/framework-56cbe600c8f4cc6d.js": {
+      "size": 189765,
+      "mtime_nanos": 1786643168305382200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/profile/page.ts": {
+      "size": 3774,
+      "mtime_nanos": 1786643130312496500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/_not-found.rsc": {
+      "size": 5605,
+      "mtime_nanos": 1786643206120943200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/faqs/page-4aafc84194762270.js": {
+      "size": 548,
+      "mtime_nanos": 1786643168303029900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/662.86d9439564493f18.js": {
+      "size": 5444,
+      "mtime_nanos": 1786643168305382200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/api/analytics/track/route.ts": {
+      "size": 8785,
+      "mtime_nanos": 1786643130349602300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/media/af4bf8399d1aacdf-s.p.woff2": {
+      "size": 36560,
+      "mtime_nanos": 1786643168250382300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/auth": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/privacy/page.ts": {
+      "size": 3774,
+      "mtime_nanos": 1786643130413831800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/reset-password/page.js": {
+      "size": 27966,
+      "mtime_nanos": 1786643129386384500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/contact/page_client-reference-manifest.js": {
+      "size": 22658,
+      "mtime_nanos": 1786643168334795900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/contact.meta": {
+      "size": 215,
+      "mtime_nanos": 1786643206881361000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/profile.meta": {
+      "size": 258,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/wishlist/page_client-reference-manifest.js": {
+      "size": 21654,
+      "mtime_nanos": 1786643168330244500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/orders/page.js.nft.json": {
+      "size": 8555,
+      "mtime_nanos": 1786643223128138300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/cart.html": {
+      "size": 31433,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/privacy.html": {
+      "size": 46509,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/faqs": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/334-2608a8a66e160f46.js": {
+      "size": 13558,
+      "mtime_nanos": 1786643168311984900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/middleware.js": {
+      "size": 334609,
+      "mtime_nanos": 1786643151166907400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/layout-a9695c7925e61a78.js": {
+      "size": 30431,
+      "mtime_nanos": 1786643168297943900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/terms/page.ts": {
+      "size": 3768,
+      "mtime_nanos": 1786643130547531200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/discover/page-e3362ffd0de4ea68.js": {
+      "size": 13931,
+      "mtime_nanos": 1786643168297943900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/login": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/sitemap.xml/route.js.nft.json": {
+      "size": 7986,
+      "mtime_nanos": 1786643223118159500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next": { "size": 0, "mtime_nanos": 0, "mode": 0, "is_dir": true },
+    "apps/web/.next/server/app/wishlist.html": {
+      "size": 30274,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/terms/page-1b16fa90cee0a0da.js": {
+      "size": 226,
+      "mtime_nanos": 1786643168304374700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/cache-life.d.ts": {
+      "size": 5863,
+      "mtime_nanos": 1786643130546551600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/pages/_app.js": {
+      "size": 3363,
+      "mtime_nanos": 1786643129252993000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/_not-found.html": {
+      "size": 15518,
+      "mtime_nanos": 1786643206120943200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/_not-found": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/wishlist.rsc": {
+      "size": 7419,
+      "mtime_nanos": 1786643206879085400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/server-reference-manifest.js": {
+      "size": 25165,
+      "mtime_nanos": 1786643130547531200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/signup/page-0df418f0f1f73f57.js": {
+      "size": 11073,
+      "mtime_nanos": 1786643168293899300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/pages": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/react-loadable-manifest.json": {
+      "size": 495,
+      "mtime_nanos": 1786643168244906900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/app-path-routes-manifest.json": {
+      "size": 932,
+      "mtime_nanos": 1786643193109146400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/login/page_client-reference-manifest.js": {
+      "size": 23258,
+      "mtime_nanos": 1786643168326580000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/reset-password/page.js.nft.json": {
+      "size": 8181,
+      "mtime_nanos": 1786643223125567300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/signup/page.js.nft.json": {
+      "size": 8262,
+      "mtime_nanos": 1786643223125567300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/forgot-password.meta": {
+      "size": 205,
+      "mtime_nanos": 1786643206121601600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/api/analytics": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/discover/page_client-reference-manifest.js": {
+      "size": 22052,
+      "mtime_nanos": 1786643168328728900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/sitemap.xml.meta": {
+      "size": 214,
+      "mtime_nanos": 1786643206158325100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/faqs/page.ts": {
+      "size": 3765,
+      "mtime_nanos": 1786643130547531200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/auth/confirm/route-ea1ddfa8182c090c.js": {
+      "size": 154,
+      "mtime_nanos": 1786643168295415000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/api/products/route.js": {
+      "size": 71335,
+      "mtime_nanos": 1786643129422372300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/sitemap.xml": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/(main)/terms": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/media/fb526027db1fc1ae-s.woff2": {
+      "size": 11536,
+      "mtime_nanos": 1786643168250889900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/298.js": {
+      "size": 12246,
+      "mtime_nanos": 1786643129727753000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/_not-found/page.js.nft.json": {
+      "size": 8072,
+      "mtime_nanos": 1786643223126576200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/sellers/[id]/page-113b93d9281672ba.js": {
+      "size": 2459,
+      "mtime_nanos": 1786643168302022400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/privacy": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/(main)/contact": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/discover/page.ts": {
+      "size": 3777,
+      "mtime_nanos": 1786643130313505900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/sellers": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/api/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/(main)/discover": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/signup": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types": { "size": 0, "mtime_nanos": 0, "mode": 0, "is_dir": true },
+    "apps/web/.next/server/chunks/248.js": {
+      "size": 75381,
+      "mtime_nanos": 1786643129657366600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/about/page_client-reference-manifest.js": {
+      "size": 21644,
+      "mtime_nanos": 1786643168334795900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/(main)/wishlist": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/api/analytics/track/route-ea1ddfa8182c090c.js": {
+      "size": 154,
+      "mtime_nanos": 1786643168297943900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/products/[id]/page_client-reference-manifest.js": {
+      "size": 27372,
+      "mtime_nanos": 1786643168328728900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/package.json": {
+      "size": 18,
+      "mtime_nanos": 1786643130546551600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/login/page.ts": {
+      "size": 3741,
+      "mtime_nanos": 1786643130312496500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/privacy/page.js": {
+      "size": 23679,
+      "mtime_nanos": 1786643129523307500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/routes-manifest.json": {
+      "size": 4253,
+      "mtime_nanos": 1786643209287404100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/orders": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/contact": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/types/app/(main)/profile": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/middleware-manifest.json": {
+      "size": 1132,
+      "mtime_nanos": 1786643151166388300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/signup/page.ts": {
+      "size": 3744,
+      "mtime_nanos": 1786643130220856600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/robots.txt": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/pages/_document.js.nft.json": {
+      "size": 8847,
+      "mtime_nanos": 1786643223119965200,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/771.f2b1234e8cb87533.js": {
+      "size": 739,
+      "mtime_nanos": 1786643168304374700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/privacy/page.js.nft.json": {
+      "size": 8501,
+      "mtime_nanos": 1786643223127592600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/(main)/sellers/[id]": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/signup": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/interception-route-rewrite-manifest.js": {
+      "size": 48,
+      "mtime_nanos": 1786643151166388300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/pages-manifest.json": {
+      "size": 128,
+      "mtime_nanos": 1786643209198324000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/385.js": {
+      "size": 9474,
+      "mtime_nanos": 1786643129661952700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/about/page-5633fb69866458bd.js": {
+      "size": 31253,
+      "mtime_nanos": 1786643168302022400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/types/app/api/products/route.ts": {
+      "size": 8758,
+      "mtime_nanos": 1786643130313505900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/terms.rsc": {
+      "size": 16233,
+      "mtime_nanos": 1786643207049258900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/919.js": {
+      "size": 12890,
+      "mtime_nanos": 1786643129657366600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/media": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/robots.txt/route.js": {
+      "size": 10830,
+      "mtime_nanos": 1786643129287382900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/api/analytics": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/sitemap.xml/route.js": {
+      "size": 12639,
+      "mtime_nanos": 1786643129287382900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/NUBAwoknxL31MYpiM61UK/_ssgManifest.js": {
+      "size": 80,
+      "mtime_nanos": 1786643209479149400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/profile": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/static/chunks/app/auth/callback": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server": { "size": 0, "mtime_nanos": 0, "mode": 0, "is_dir": true },
+    "apps/web/.next/server/app/_not-found.meta": {
+      "size": 207,
+      "mtime_nanos": 1786643206121601600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/terms.meta": {
+      "size": 209,
+      "mtime_nanos": 1786643207049258900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/pages/_app-6981e6fab6dbc417.js": {
+      "size": 912,
+      "mtime_nanos": 1786643168292188900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/polyfills-42372ed130431b0a.js": {
+      "size": 112594,
+      "mtime_nanos": 1786643168250382300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/pages/_document.js": {
+      "size": 373,
+      "mtime_nanos": 1786643129252993000,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/330-267128d017903f62.js": {
+      "size": 5147,
+      "mtime_nanos": 1786643168317806400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/api/analytics/track": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/server/app/api/analytics/track/route.js.nft.json": {
+      "size": 8351,
+      "mtime_nanos": 1786643223118159500,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/api/products": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "apps/web/.next/BUILD_ID": {
+      "size": 21,
+      "mtime_nanos": 1786643198801580400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/reset-password/page_client-reference-manifest.js": {
+      "size": 21650,
+      "mtime_nanos": 1786643168327719800,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/robots.txt/route_client-reference-manifest.js": {
+      "size": 21247,
+      "mtime_nanos": 1786643168325567600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/contact/page.js": {
+      "size": 34160,
+      "mtime_nanos": 1786643129559733700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/signup/page.js": {
+      "size": 27317,
+      "mtime_nanos": 1786643129388931100,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/821.js": {
+      "size": 15145,
+      "mtime_nanos": 1786643129661952700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/chunks/778.js": {
+      "size": 31313,
+      "mtime_nanos": 1786643129660941300,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/index.html": {
+      "size": 93078,
+      "mtime_nanos": 1786643206878578600,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/753-6a5bda14f359417f.js": {
+      "size": 136261,
+      "mtime_nanos": 1786643168311984900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/orders/page-e10a33c3de26278a.js": {
+      "size": 10043,
+      "mtime_nanos": 1786643168302022400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/(main)/wishlist/page-250756ef05eff187.js": {
+      "size": 8784,
+      "mtime_nanos": 1786643168299950700,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/chunks/app/not-found-fb54e859c68845c7.js": {
+      "size": 16049,
+      "mtime_nanos": 1786643168292188900,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/static/media/9e7b0a821b9dfcb4-s.woff2": {
+      "size": 21688,
+      "mtime_nanos": 1786643168249874400,
+      "mode": 420,
+      "is_dir": false
+    },
+    "apps/web/.next/server/app/(main)/faqs/page.js": {
+      "size": 26211,
+      "mtime_nanos": 1786643129559733700,
+      "mode": 420,
+      "is_dir": false
+    }
+  },
+  "order": [
+    "apps/web/.next",
+    "apps/web/.next/BUILD_ID",
+    "apps/web/.next/app-build-manifest.json",
+    "apps/web/.next/app-path-routes-manifest.json",
+    "apps/web/.next/build-manifest.json",
+    "apps/web/.next/diagnostics",
+    "apps/web/.next/diagnostics/build-diagnostics.json",
+    "apps/web/.next/diagnostics/framework.json",
+    "apps/web/.next/export-marker.json",
+    "apps/web/.next/images-manifest.json",
+    "apps/web/.next/next-minimal-server.js.nft.json",
+    "apps/web/.next/next-server.js.nft.json",
+    "apps/web/.next/package.json",
+    "apps/web/.next/prerender-manifest.json",
+    "apps/web/.next/react-loadable-manifest.json",
+    "apps/web/.next/required-server-files.json",
+    "apps/web/.next/routes-manifest.json",
+    "apps/web/.next/server",
+    "apps/web/.next/server/app",
+    "apps/web/.next/server/app/(main)",
+    "apps/web/.next/server/app/(main)/about",
+    "apps/web/.next/server/app/(main)/about/page.js",
+    "apps/web/.next/server/app/(main)/about/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/about/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/cart",
+    "apps/web/.next/server/app/(main)/cart/page.js",
+    "apps/web/.next/server/app/(main)/cart/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/cart/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/contact",
+    "apps/web/.next/server/app/(main)/contact/page.js",
+    "apps/web/.next/server/app/(main)/contact/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/contact/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/discover",
+    "apps/web/.next/server/app/(main)/discover/page.js",
+    "apps/web/.next/server/app/(main)/discover/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/discover/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/faqs",
+    "apps/web/.next/server/app/(main)/faqs/page.js",
+    "apps/web/.next/server/app/(main)/faqs/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/faqs/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/orders",
+    "apps/web/.next/server/app/(main)/orders/page.js",
+    "apps/web/.next/server/app/(main)/orders/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/orders/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/page.js",
+    "apps/web/.next/server/app/(main)/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/privacy",
+    "apps/web/.next/server/app/(main)/privacy/page.js",
+    "apps/web/.next/server/app/(main)/privacy/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/privacy/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/products",
+    "apps/web/.next/server/app/(main)/products/[id]",
+    "apps/web/.next/server/app/(main)/products/[id]/page.js",
+    "apps/web/.next/server/app/(main)/products/[id]/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/products/[id]/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/profile",
+    "apps/web/.next/server/app/(main)/profile/page.js",
+    "apps/web/.next/server/app/(main)/profile/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/profile/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/sellers",
+    "apps/web/.next/server/app/(main)/sellers/[id]",
+    "apps/web/.next/server/app/(main)/sellers/[id]/page.js",
+    "apps/web/.next/server/app/(main)/sellers/[id]/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/sellers/[id]/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/terms",
+    "apps/web/.next/server/app/(main)/terms/page.js",
+    "apps/web/.next/server/app/(main)/terms/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/terms/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/(main)/wishlist",
+    "apps/web/.next/server/app/(main)/wishlist/page.js",
+    "apps/web/.next/server/app/(main)/wishlist/page.js.nft.json",
+    "apps/web/.next/server/app/(main)/wishlist/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/_not-found",
+    "apps/web/.next/server/app/_not-found/page.js",
+    "apps/web/.next/server/app/_not-found/page.js.nft.json",
+    "apps/web/.next/server/app/_not-found/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/_not-found.html",
+    "apps/web/.next/server/app/_not-found.meta",
+    "apps/web/.next/server/app/_not-found.rsc",
+    "apps/web/.next/server/app/about.html",
+    "apps/web/.next/server/app/about.meta",
+    "apps/web/.next/server/app/about.rsc",
+    "apps/web/.next/server/app/api",
+    "apps/web/.next/server/app/api/analytics",
+    "apps/web/.next/server/app/api/analytics/track",
+    "apps/web/.next/server/app/api/analytics/track/route.js",
+    "apps/web/.next/server/app/api/analytics/track/route.js.nft.json",
+    "apps/web/.next/server/app/api/analytics/track/route_client-reference-manifest.js",
+    "apps/web/.next/server/app/api/products",
+    "apps/web/.next/server/app/api/products/route.js",
+    "apps/web/.next/server/app/api/products/route.js.nft.json",
+    "apps/web/.next/server/app/api/products/route_client-reference-manifest.js",
+    "apps/web/.next/server/app/auth",
+    "apps/web/.next/server/app/auth/callback",
+    "apps/web/.next/server/app/auth/callback/route.js",
+    "apps/web/.next/server/app/auth/callback/route.js.nft.json",
+    "apps/web/.next/server/app/auth/callback/route_client-reference-manifest.js",
+    "apps/web/.next/server/app/auth/confirm",
+    "apps/web/.next/server/app/auth/confirm/route.js",
+    "apps/web/.next/server/app/auth/confirm/route.js.nft.json",
+    "apps/web/.next/server/app/auth/confirm/route_client-reference-manifest.js",
+    "apps/web/.next/server/app/cart.html",
+    "apps/web/.next/server/app/cart.meta",
+    "apps/web/.next/server/app/cart.rsc",
+    "apps/web/.next/server/app/contact.html",
+    "apps/web/.next/server/app/contact.meta",
+    "apps/web/.next/server/app/contact.rsc",
+    "apps/web/.next/server/app/faqs.html",
+    "apps/web/.next/server/app/faqs.meta",
+    "apps/web/.next/server/app/faqs.rsc",
+    "apps/web/.next/server/app/forgot-password",
+    "apps/web/.next/server/app/forgot-password/page.js",
+    "apps/web/.next/server/app/forgot-password/page.js.nft.json",
+    "apps/web/.next/server/app/forgot-password/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/forgot-password.html",
+    "apps/web/.next/server/app/forgot-password.meta",
+    "apps/web/.next/server/app/forgot-password.rsc",
+    "apps/web/.next/server/app/index.html",
+    "apps/web/.next/server/app/index.meta",
+    "apps/web/.next/server/app/index.rsc",
+    "apps/web/.next/server/app/login",
+    "apps/web/.next/server/app/login/page.js",
+    "apps/web/.next/server/app/login/page.js.nft.json",
+    "apps/web/.next/server/app/login/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/privacy.html",
+    "apps/web/.next/server/app/privacy.meta",
+    "apps/web/.next/server/app/privacy.rsc",
+    "apps/web/.next/server/app/profile.html",
+    "apps/web/.next/server/app/profile.meta",
+    "apps/web/.next/server/app/profile.rsc",
+    "apps/web/.next/server/app/reset-password",
+    "apps/web/.next/server/app/reset-password/page.js",
+    "apps/web/.next/server/app/reset-password/page.js.nft.json",
+    "apps/web/.next/server/app/reset-password/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/reset-password.html",
+    "apps/web/.next/server/app/reset-password.meta",
+    "apps/web/.next/server/app/reset-password.rsc",
+    "apps/web/.next/server/app/robots.txt",
+    "apps/web/.next/server/app/robots.txt/route.js",
+    "apps/web/.next/server/app/robots.txt/route.js.nft.json",
+    "apps/web/.next/server/app/robots.txt/route_client-reference-manifest.js",
+    "apps/web/.next/server/app/robots.txt.body",
+    "apps/web/.next/server/app/robots.txt.meta",
+    "apps/web/.next/server/app/signup",
+    "apps/web/.next/server/app/signup/page.js",
+    "apps/web/.next/server/app/signup/page.js.nft.json",
+    "apps/web/.next/server/app/signup/page_client-reference-manifest.js",
+    "apps/web/.next/server/app/sitemap.xml",
+    "apps/web/.next/server/app/sitemap.xml/route.js",
+    "apps/web/.next/server/app/sitemap.xml/route.js.nft.json",
+    "apps/web/.next/server/app/sitemap.xml/route_client-reference-manifest.js",
+    "apps/web/.next/server/app/sitemap.xml.body",
+    "apps/web/.next/server/app/sitemap.xml.meta",
+    "apps/web/.next/server/app/terms.html",
+    "apps/web/.next/server/app/terms.meta",
+    "apps/web/.next/server/app/terms.rsc",
+    "apps/web/.next/server/app/wishlist.html",
+    "apps/web/.next/server/app/wishlist.meta",
+    "apps/web/.next/server/app/wishlist.rsc",
+    "apps/web/.next/server/app-paths-manifest.json",
+    "apps/web/.next/server/chunks",
+    "apps/web/.next/server/chunks/159.js",
+    "apps/web/.next/server/chunks/248.js",
+    "apps/web/.next/server/chunks/249.js",
+    "apps/web/.next/server/chunks/275.js",
+    "apps/web/.next/server/chunks/298.js",
+    "apps/web/.next/server/chunks/33.js",
+    "apps/web/.next/server/chunks/347.js",
+    "apps/web/.next/server/chunks/385.js",
+    "apps/web/.next/server/chunks/408.js",
+    "apps/web/.next/server/chunks/60.js",
+    "apps/web/.next/server/chunks/608.js",
+    "apps/web/.next/server/chunks/641.js",
+    "apps/web/.next/server/chunks/70.js",
+    "apps/web/.next/server/chunks/702.js",
+    "apps/web/.next/server/chunks/778.js",
+    "apps/web/.next/server/chunks/807.js",
+    "apps/web/.next/server/chunks/821.js",
+    "apps/web/.next/server/chunks/858.js",
+    "apps/web/.next/server/chunks/919.js",
+    "apps/web/.next/server/edge-runtime-webpack.js",
+    "apps/web/.next/server/edge-runtime-webpack.js.map",
+    "apps/web/.next/server/functions-config-manifest.json",
+    "apps/web/.next/server/interception-route-rewrite-manifest.js",
+    "apps/web/.next/server/middleware-build-manifest.js",
+    "apps/web/.next/server/middleware-manifest.json",
+    "apps/web/.next/server/middleware-react-loadable-manifest.js",
+    "apps/web/.next/server/middleware.js",
+    "apps/web/.next/server/middleware.js.map",
+    "apps/web/.next/server/next-font-manifest.js",
+    "apps/web/.next/server/next-font-manifest.json",
+    "apps/web/.next/server/pages",
+    "apps/web/.next/server/pages/404.html",
+    "apps/web/.next/server/pages/500.html",
+    "apps/web/.next/server/pages/_app.js",
+    "apps/web/.next/server/pages/_app.js.nft.json",
+    "apps/web/.next/server/pages/_document.js",
+    "apps/web/.next/server/pages/_document.js.nft.json",
+    "apps/web/.next/server/pages/_error.js",
+    "apps/web/.next/server/pages/_error.js.nft.json",
+    "apps/web/.next/server/pages-manifest.json",
+    "apps/web/.next/server/server-reference-manifest.js",
+    "apps/web/.next/server/server-reference-manifest.json",
+    "apps/web/.next/server/webpack-runtime.js",
+    "apps/web/.next/static",
+    "apps/web/.next/static/NUBAwoknxL31MYpiM61UK",
+    "apps/web/.next/static/NUBAwoknxL31MYpiM61UK/_buildManifest.js",
+    "apps/web/.next/static/NUBAwoknxL31MYpiM61UK/_ssgManifest.js",
+    "apps/web/.next/static/chunks",
+    "apps/web/.next/static/chunks/108-5360b2d99ee7c21d.js",
+    "apps/web/.next/static/chunks/150-a586785dd290cc78.js",
+    "apps/web/.next/static/chunks/25-91418548a8ca53c7.js",
+    "apps/web/.next/static/chunks/330-267128d017903f62.js",
+    "apps/web/.next/static/chunks/334-2608a8a66e160f46.js",
+    "apps/web/.next/static/chunks/371-1a129c95695a3985.js",
+    "apps/web/.next/static/chunks/485-57e04ba77c904dae.js",
+    "apps/web/.next/static/chunks/557-a60bd178973ad153.js",
+    "apps/web/.next/static/chunks/662.86d9439564493f18.js",
+    "apps/web/.next/static/chunks/753-6a5bda14f359417f.js",
+    "apps/web/.next/static/chunks/771.f2b1234e8cb87533.js",
+    "apps/web/.next/static/chunks/7b7cceea-e625a6e650fb1524.js",
+    "apps/web/.next/static/chunks/81e6ba02-1b6e1f403c9dc4a0.js",
+    "apps/web/.next/static/chunks/925-d3e0e2c0ab94c901.js",
+    "apps/web/.next/static/chunks/a1a32e71-9d16fb9597fd0dad.js",
+    "apps/web/.next/static/chunks/app",
+    "apps/web/.next/static/chunks/app/(main)",
+    "apps/web/.next/static/chunks/app/(main)/about",
+    "apps/web/.next/static/chunks/app/(main)/about/page-5633fb69866458bd.js",
+    "apps/web/.next/static/chunks/app/(main)/cart",
+    "apps/web/.next/static/chunks/app/(main)/cart/page-06707eaec7d1d9ed.js",
+    "apps/web/.next/static/chunks/app/(main)/contact",
+    "apps/web/.next/static/chunks/app/(main)/contact/page-a86cf7e9d70843b8.js",
+    "apps/web/.next/static/chunks/app/(main)/discover",
+    "apps/web/.next/static/chunks/app/(main)/discover/page-e3362ffd0de4ea68.js",
+    "apps/web/.next/static/chunks/app/(main)/faqs",
+    "apps/web/.next/static/chunks/app/(main)/faqs/page-4aafc84194762270.js",
+    "apps/web/.next/static/chunks/app/(main)/layout-a9695c7925e61a78.js",
+    "apps/web/.next/static/chunks/app/(main)/orders",
+    "apps/web/.next/static/chunks/app/(main)/orders/page-e10a33c3de26278a.js",
+    "apps/web/.next/static/chunks/app/(main)/page-f5b39d0c30510981.js",
+    "apps/web/.next/static/chunks/app/(main)/privacy",
+    "apps/web/.next/static/chunks/app/(main)/privacy/page-1b16fa90cee0a0da.js",
+    "apps/web/.next/static/chunks/app/(main)/products",
+    "apps/web/.next/static/chunks/app/(main)/products/[id]",
+    "apps/web/.next/static/chunks/app/(main)/products/[id]/page-0e4935058a6ee6e0.js",
+    "apps/web/.next/static/chunks/app/(main)/profile",
+    "apps/web/.next/static/chunks/app/(main)/profile/page-1c1033ded4cb292c.js",
+    "apps/web/.next/static/chunks/app/(main)/sellers",
+    "apps/web/.next/static/chunks/app/(main)/sellers/[id]",
+    "apps/web/.next/static/chunks/app/(main)/sellers/[id]/page-113b93d9281672ba.js",
+    "apps/web/.next/static/chunks/app/(main)/terms",
+    "apps/web/.next/static/chunks/app/(main)/terms/page-1b16fa90cee0a0da.js",
+    "apps/web/.next/static/chunks/app/(main)/wishlist",
+    "apps/web/.next/static/chunks/app/(main)/wishlist/page-250756ef05eff187.js",
+    "apps/web/.next/static/chunks/app/_not-found",
+    "apps/web/.next/static/chunks/app/_not-found/page-ea1ddfa8182c090c.js",
+    "apps/web/.next/static/chunks/app/api",
+    "apps/web/.next/static/chunks/app/api/analytics",
+    "apps/web/.next/static/chunks/app/api/analytics/track",
+    "apps/web/.next/static/chunks/app/api/analytics/track/route-ea1ddfa8182c090c.js",
+    "apps/web/.next/static/chunks/app/api/products",
+    "apps/web/.next/static/chunks/app/api/products/route-ea1ddfa8182c090c.js",
+    "apps/web/.next/static/chunks/app/auth",
+    "apps/web/.next/static/chunks/app/auth/callback",
+    "apps/web/.next/static/chunks/app/auth/callback/route-ea1ddfa8182c090c.js",
+    "apps/web/.next/static/chunks/app/auth/confirm",
+    "apps/web/.next/static/chunks/app/auth/confirm/route-ea1ddfa8182c090c.js",
+    "apps/web/.next/static/chunks/app/forgot-password",
+    "apps/web/.next/static/chunks/app/forgot-password/page-ccbb498a54d7817a.js",
+    "apps/web/.next/static/chunks/app/layout-09dbb94bfaf1cfb1.js",
+    "apps/web/.next/static/chunks/app/login",
+    "apps/web/.next/static/chunks/app/login/page-4ea961659e08f289.js",
+    "apps/web/.next/static/chunks/app/not-found-fb54e859c68845c7.js",
+    "apps/web/.next/static/chunks/app/reset-password",
+    "apps/web/.next/static/chunks/app/reset-password/page-57f3b6771a74702b.js",
+    "apps/web/.next/static/chunks/app/robots.txt",
+    "apps/web/.next/static/chunks/app/robots.txt/route-ea1ddfa8182c090c.js",
+    "apps/web/.next/static/chunks/app/signup",
+    "apps/web/.next/static/chunks/app/signup/page-0df418f0f1f73f57.js",
+    "apps/web/.next/static/chunks/app/sitemap.xml",
+    "apps/web/.next/static/chunks/app/sitemap.xml/route-ea1ddfa8182c090c.js",
+    "apps/web/.next/static/chunks/b6c3cc3b-6c001a8884260ead.js",
+    "apps/web/.next/static/chunks/framework-56cbe600c8f4cc6d.js",
+    "apps/web/.next/static/chunks/main-403e0841c215f405.js",
+    "apps/web/.next/static/chunks/main-app-a2e34b6784c53669.js",
+    "apps/web/.next/static/chunks/pages",
+    "apps/web/.next/static/chunks/pages/_app-6981e6fab6dbc417.js",
+    "apps/web/.next/static/chunks/pages/_error-61dbaea06be24fca.js",
+    "apps/web/.next/static/chunks/polyfills-42372ed130431b0a.js",
+    "apps/web/.next/static/chunks/webpack-04a3beabca6f7e59.js",
+    "apps/web/.next/static/css",
+    "apps/web/.next/static/css/25491f176f04071b.css",
+    "apps/web/.next/static/media",
+    "apps/web/.next/static/media/4da3161b738b07dd-s.woff2",
+    "apps/web/.next/static/media/636a5ac981f94f8b-s.p.woff2",
+    "apps/web/.next/static/media/6fe53d21e6e7ebd8-s.woff2",
+    "apps/web/.next/static/media/8ebc6e9dde468c4a-s.woff2",
+    "apps/web/.next/static/media/9e7b0a821b9dfcb4-s.woff2",
+    "apps/web/.next/static/media/af4bf8399d1aacdf-s.p.woff2",
+    "apps/web/.next/static/media/fb526027db1fc1ae-s.woff2",
+    "apps/web/.next/trace",
+    "apps/web/.next/types",
+    "apps/web/.next/types/app",
+    "apps/web/.next/types/app/(main)",
+    "apps/web/.next/types/app/(main)/about",
+    "apps/web/.next/types/app/(main)/about/page.ts",
+    "apps/web/.next/types/app/(main)/cart",
+    "apps/web/.next/types/app/(main)/cart/page.ts",
+    "apps/web/.next/types/app/(main)/contact",
+    "apps/web/.next/types/app/(main)/contact/page.ts",
+    "apps/web/.next/types/app/(main)/discover",
+    "apps/web/.next/types/app/(main)/discover/page.ts",
+    "apps/web/.next/types/app/(main)/faqs",
+    "apps/web/.next/types/app/(main)/faqs/page.ts",
+    "apps/web/.next/types/app/(main)/orders",
+    "apps/web/.next/types/app/(main)/orders/page.ts",
+    "apps/web/.next/types/app/(main)/page.ts",
+    "apps/web/.next/types/app/(main)/privacy",
+    "apps/web/.next/types/app/(main)/privacy/page.ts",
+    "apps/web/.next/types/app/(main)/products",
+    "apps/web/.next/types/app/(main)/products/[id]",
+    "apps/web/.next/types/app/(main)/products/[id]/page.ts",
+    "apps/web/.next/types/app/(main)/profile",
+    "apps/web/.next/types/app/(main)/profile/page.ts",
+    "apps/web/.next/types/app/(main)/sellers",
+    "apps/web/.next/types/app/(main)/sellers/[id]",
+    "apps/web/.next/types/app/(main)/sellers/[id]/page.ts",
+    "apps/web/.next/types/app/(main)/terms",
+    "apps/web/.next/types/app/(main)/terms/page.ts",
+    "apps/web/.next/types/app/(main)/wishlist",
+    "apps/web/.next/types/app/(main)/wishlist/page.ts",
+    "apps/web/.next/types/app/api",
+    "apps/web/.next/types/app/api/analytics",
+    "apps/web/.next/types/app/api/analytics/track",
+    "apps/web/.next/types/app/api/analytics/track/route.ts",
+    "apps/web/.next/types/app/api/products",
+    "apps/web/.next/types/app/api/products/route.ts",
+    "apps/web/.next/types/app/auth",
+    "apps/web/.next/types/app/auth/callback",
+    "apps/web/.next/types/app/auth/callback/route.ts",
+    "apps/web/.next/types/app/auth/confirm",
+    "apps/web/.next/types/app/auth/confirm/route.ts",
+    "apps/web/.next/types/app/forgot-password",
+    "apps/web/.next/types/app/forgot-password/page.ts",
+    "apps/web/.next/types/app/login",
+    "apps/web/.next/types/app/login/page.ts",
+    "apps/web/.next/types/app/reset-password",
+    "apps/web/.next/types/app/reset-password/page.ts",
+    "apps/web/.next/types/app/signup",
+    "apps/web/.next/types/app/signup/page.ts",
+    "apps/web/.next/types/cache-life.d.ts",
+    "apps/web/.next/types/package.json",
+    "apps/web/.next/types/routes.d.ts",
+    "apps/web/.next/types/validator.ts",
+    "apps/web/.turbo/turbo-build.log"
+  ]
+}
