@@ -22,6 +22,7 @@ export interface ProfileRecord {
   id: string;
   full_name: string | null;
   role: string;
+  email?: string | null;
   city?: string | null;
   state?: string | null;
   created_at?: string | null;
@@ -49,12 +50,8 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
       buyer: initialProfiles.filter(
         (p) => (p.role || "buyer").toLowerCase() === "buyer"
       ).length,
-      seller: initialProfiles.filter(
-        (p) => p.role?.toLowerCase() === "seller"
-      ).length,
-      admin: initialProfiles.filter(
-        (p) => p.role?.toLowerCase() === "admin"
-      ).length,
+      seller: initialProfiles.filter((p) => p.role?.toLowerCase() === "seller").length,
+      admin: initialProfiles.filter((p) => p.role?.toLowerCase() === "admin").length,
     };
   }, [initialProfiles]);
 
@@ -66,8 +63,7 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
         (p.full_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.id.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesRole =
-        roleFilter === "all" || userRole === roleFilter.toLowerCase();
+      const matchesRole = roleFilter === "all" || userRole === roleFilter.toLowerCase();
 
       return matchesSearch && matchesRole;
     });
@@ -117,24 +113,28 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
             User Directory
           </h1>
           <p className="text-xs text-[#737373] sm:text-sm">
-            Comprehensive directory of registered buyers, sellers, and system administrator accounts.
+            Comprehensive directory of registered buyers, sellers, and system
+            administrator accounts.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <Button
             type="button"
             variant="outline"
             onClick={handleExportCSV}
-            className={`h-9 flex-1 sm:flex-initial rounded-lg border-[#E5E5E5] bg-white px-3.5 text-xs font-medium text-[#171717] hover:bg-[#FAFAF9] ${PRESSABLE} ${FOCUS_RING}`}
+            className={`h-9 flex-1 rounded-lg border-[#E5E5E5] bg-white px-3.5 text-xs font-medium text-[#171717] hover:bg-[#FAFAF9] sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
           >
-            <Download className="mr-1.5 h-3.5 w-3.5 text-[#737373]" strokeWidth={ICON_STROKE} />
+            <Download
+              className="mr-1.5 h-3.5 w-3.5 text-[#737373]"
+              strokeWidth={ICON_STROKE}
+            />
             <span>Export CSV</span>
           </Button>
           <Button
             type="button"
             onClick={() => alert("Invite User modal opened")}
-            className={`h-9 flex-1 sm:flex-initial rounded-lg bg-[#171717] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#262626] ${PRESSABLE} ${FOCUS_RING}`}
+            className={`h-9 flex-1 rounded-lg bg-[#171717] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#262626] sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
           >
             <UserPlus className="mr-1.5 h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
             <span>Invite User</span>
@@ -145,7 +145,7 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
       {/* RESPONSIVE SEGMENTED ROLE NAVIGATION & SEARCH TOOLBAR */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         {/* Horizontal Scrollable Role Segmented Tabs on Mobile */}
-        <div className="inline-flex max-w-full overflow-x-auto whitespace-nowrap scrollbar-none items-center gap-1.5 rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-1">
+        <div className="inline-flex max-w-full scrollbar-none items-center gap-1.5 overflow-x-auto rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-1 whitespace-nowrap">
           {[
             { value: "all", label: "All Users", count: counts.all },
             { value: "buyer", label: "Buyers", count: counts.buyer },
@@ -201,7 +201,8 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
           User Profiles
         </h2>
         <span className="text-xs text-[#737373]">
-          {filteredProfiles.length} {filteredProfiles.length === 1 ? "result" : "results"}
+          {filteredProfiles.length}{" "}
+          {filteredProfiles.length === 1 ? "result" : "results"}
         </span>
       </div>
 
@@ -226,7 +227,10 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
               }}
               className={`mt-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#E5E5E5] bg-white px-3 text-xs font-medium text-[#171717] hover:bg-[#F5F5F4] ${PRESSABLE} ${FOCUS_RING}`}
             >
-              <RotateCcw className="h-3.5 w-3.5 text-[#737373]" strokeWidth={ICON_STROKE} />
+              <RotateCcw
+                className="h-3.5 w-3.5 text-[#737373]"
+                strokeWidth={ICON_STROKE}
+              />
               <span>Clear filters</span>
             </button>
           )}
@@ -236,7 +240,7 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
         <div className="overflow-hidden rounded-xl border border-[#E5E5E5] bg-white shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px] text-left text-xs">
-              <thead className="border-b border-[#E5E5E5] bg-[#FAFAF9] text-[11px] font-semibold text-[#737373] uppercase tracking-wider">
+              <thead className="border-b border-[#E5E5E5] bg-[#FAFAF9] text-[11px] font-semibold tracking-wider text-[#737373] uppercase">
                 <tr>
                   <th className="px-4 py-3">User Details</th>
                   <th className="px-4 py-3">Role</th>
@@ -269,7 +273,7 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
                             {(user.full_name || "U")[0].toUpperCase()}
                           </div>
                           <div className="min-w-0">
-                            <span className="block font-semibold text-[#171717] group-hover:underline truncate">
+                            <span className="block truncate font-semibold text-[#171717] group-hover:underline">
                               {user.full_name || "Anonymous User"}
                             </span>
                             <span className="block font-mono text-[10px] text-[#737373]">
@@ -305,7 +309,9 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
                           actions={[
                             {
                               label: "View Profile Drawer",
-                              icon: <UserCheck className="h-3.5 w-3.5 text-[#737373]" />,
+                              icon: (
+                                <UserCheck className="h-3.5 w-3.5 text-[#737373]" />
+                              ),
                               onClick: () => setSelectedUser(user),
                             },
                             {
@@ -340,10 +346,10 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
                 {(selectedUser.full_name || "U")[0].toUpperCase()}
               </div>
               <div className="min-w-0">
-                <h3 className="text-base font-semibold text-[#171717] truncate">
+                <h3 className="truncate text-base font-semibold text-[#171717]">
                   {selectedUser.full_name || "Anonymous User"}
                 </h3>
-                <p className="font-mono text-xs text-[#737373] truncate">
+                <p className="truncate font-mono text-xs text-[#737373]">
                   ID: {selectedUser.id}
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -362,7 +368,8 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
               <div className="space-y-2.5 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-[#737373]">
-                    <Shield className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} /> Role Authorization
+                    <Shield className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} /> Role
+                    Authorization
                   </span>
                   <span className="font-semibold text-[#171717] uppercase">
                     {selectedUser.role}
@@ -371,7 +378,8 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
 
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-[#737373]">
-                    <MapPin className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} /> Primary Region
+                    <MapPin className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} /> Primary
+                    Region
                   </span>
                   <span className="font-medium text-[#171717]">
                     {selectedUser.city
@@ -382,7 +390,8 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
 
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-[#737373]">
-                    <Calendar className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} /> Joined Date
+                    <Calendar className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />{" "}
+                    Joined Date
                   </span>
                   <span className="font-mono text-xs text-[#171717]">
                     {selectedUser.created_at
@@ -401,7 +410,10 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
             {selectedUser.role === "seller" && (
               <div className="space-y-2 rounded-xl border border-amber-200/80 bg-amber-50/50 p-4">
                 <div className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-amber-800" strokeWidth={ICON_STROKE} />
+                  <Building2
+                    className="h-4 w-4 text-amber-800"
+                    strokeWidth={ICON_STROKE}
+                  />
                   <span className="text-xs font-semibold text-amber-900">
                     Seller Portal Access
                   </span>

@@ -1,6 +1,6 @@
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
-import { UsersTableClient } from "./users-table-client";
+import { UsersTableClient, type ProfileRecord } from "./users-table-client";
 
 export default async function AdminUsersPage() {
   await requireRole("admin");
@@ -17,7 +17,10 @@ export default async function AdminUsersPage() {
   const profiles = profilesRes.data ?? [];
   const authUsers = authRes.data?.users ?? [];
 
-  const authMap = new Map<string, { email?: string; last_sign_in_at?: string | null }>();
+  const authMap = new Map<
+    string,
+    { email?: string; last_sign_in_at?: string | null }
+  >();
   authUsers.forEach((u) => {
     authMap.set(u.id, {
       email: u.email,
@@ -25,11 +28,16 @@ export default async function AdminUsersPage() {
     });
   });
 
-  const combinedProfiles = profiles.map((p) => {
+  const combinedProfiles: ProfileRecord[] = profiles.map((p) => {
     const authInfo = authMap.get(p.id);
     return {
-      ...p,
-      email: p.email || authInfo?.email || null,
+      id: p.id,
+      full_name: p.full_name,
+      role: p.role,
+      city: p.city,
+      state: p.state,
+      created_at: p.created_at,
+      email: authInfo?.email || null,
       last_active_at: authInfo?.last_sign_in_at || p.created_at || null,
     };
   });
@@ -40,8 +48,9 @@ export default async function AdminUsersPage() {
     if (!existingProfileIds.has(u.id)) {
       combinedProfiles.push({
         id: u.id,
-        full_name: u.user_metadata?.full_name || u.email?.split("@")[0] || "User",
-        role: u.user_metadata?.role || "buyer",
+        full_name:
+          (u.user_metadata?.full_name as string) || u.email?.split("@")[0] || "User",
+        role: (u.user_metadata?.role as string) || "buyer",
         city: null,
         state: null,
         created_at: u.created_at,

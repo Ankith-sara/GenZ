@@ -7,6 +7,7 @@ import { requireRole } from "@/features/auth/lib/require-role";
 import { productSchema } from "@genz/validation";
 import { validateFileContentServer } from "@/lib/file-validation";
 import { withRateLimit } from "@/lib/rate-limiter";
+import type { ProductStatus } from "@genz/types";
 
 export interface ProductFormState {
   error?: string;
@@ -55,7 +56,7 @@ export async function adminUpdateProduct(
     name: string;
     category?: string | null;
     price_inr?: number | null;
-    status?: string | null;
+    status?: ProductStatus | string | null;
     description?: string | null;
   }
 ) {
@@ -66,9 +67,9 @@ export async function adminUpdateProduct(
     .from("products")
     .update({
       name: data.name,
-      category: data.category,
+      category: data.category ?? undefined,
       price_inr: data.price_inr,
-      status: data.status,
+      status: (data.status as ProductStatus) ?? undefined,
       description: data.description,
       updated_at: new Date().toISOString(),
     })

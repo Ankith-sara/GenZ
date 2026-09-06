@@ -9,7 +9,6 @@ import {
   Users,
   Building2,
   ShoppingBag,
-  MessageSquare,
   ArrowUpRight,
   ExternalLink,
   ShieldCheck,

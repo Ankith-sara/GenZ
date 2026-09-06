@@ -3,7 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@genz/ui";
-import { ShoppingCart, Zap, Plus, Minus, Check, ShieldCheck, Truck } from "lucide-react";
+import {
+  ShoppingCart,
+  Zap,
+  Plus,
+  Minus,
+  Check,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 import { formatInr } from "@/features/products/lib/products";
 
 interface VariantItem {
@@ -17,7 +25,7 @@ interface ProductPurchaseSectionProps {
   product: {
     id: string;
     name: string;
-    price_inr: number;
+    price_inr: number | null;
     category: string;
     coverUrl: string | null;
     seller_id: string;
@@ -46,7 +54,7 @@ export function ProductPurchaseSection({
   const currentPrice =
     activeVariant && activeVariant.price_inr !== null
       ? activeVariant.price_inr
-      : product.price_inr;
+      : (product.price_inr ?? 0);
 
   const handleAddToCart = (redirectAfter = false) => {
     const existingCart = localStorage.getItem("genz-cart");
@@ -57,11 +65,11 @@ export function ProductPurchaseSection({
       } catch {}
     }
 
-    const cartItemId = activeVariant
-      ? `${product.id}-${activeVariant.id}`
-      : product.id;
+    const cartItemId = activeVariant ? `${product.id}-${activeVariant.id}` : product.id;
 
-    const existingIndex = items.findIndex((i: { id: string; quantity: number }) => i.id === cartItemId);
+    const existingIndex = items.findIndex(
+      (i: { id: string; quantity: number }) => i.id === cartItemId
+    );
     if (existingIndex > -1) {
       items[existingIndex].quantity += quantity;
     } else {
@@ -93,15 +101,14 @@ export function ProductPurchaseSection({
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 2500);
     }
-
   };
 
   return (
-    <div className="border-t border-[#E5E5E0] pt-6 mt-6 space-y-5">
+    <div className="mt-6 space-y-5 border-t border-[#E5E5E0] pt-6">
       {/* Variants selection if available */}
       {variants.length > 0 && (
         <div>
-          <label className="block text-xs font-semibold text-[#1A1A18] tracking-wider uppercase mb-2">
+          <label className="mb-2 block text-xs font-semibold tracking-wider text-[#1A1A18] uppercase">
             Select Option / Variant:
           </label>
           <div className="flex flex-wrap gap-2">
@@ -112,10 +119,10 @@ export function ProductPurchaseSection({
                   key={variant.id}
                   type="button"
                   onClick={() => setSelectedVariantId(variant.id)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
                     isSelected
                       ? "bg-[#1A1A18] text-white shadow-sm ring-2 ring-[#1A1A18]/20"
-                      : "bg-white border border-[#E5E5E0] text-[#52524E] hover:border-[#1A1A18]"
+                      : "border border-[#E5E5E0] bg-white text-[#52524E] hover:border-[#1A1A18]"
                   }`}
                 >
                   {variant.variant_name}: {variant.variant_value}
@@ -133,17 +140,17 @@ export function ProductPurchaseSection({
 
       {/* Quantity Selector */}
       <div className="flex items-center gap-4">
-        <label className="text-xs font-semibold text-[#1A1A18] tracking-wider uppercase">
+        <label className="text-xs font-semibold tracking-wider text-[#1A1A18] uppercase">
           Quantity:
         </label>
-        <div className="inline-flex items-center border border-[#E5E5E0] bg-white rounded-lg overflow-hidden h-9">
+        <div className="inline-flex h-9 items-center overflow-hidden rounded-lg border border-[#E5E5E0] bg-white">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            className="px-2.5 h-full flex items-center justify-center text-[#73736E] hover:text-[#1A1A18] hover:bg-[#FAF8F4] transition-colors"
+            className="flex h-full items-center justify-center px-2.5 text-[#73736E] transition-colors hover:bg-[#FAF8F4] hover:text-[#1A1A18]"
             title="Decrease quantity"
           >
-            <Minus className="w-3.5 h-3.5" />
+            <Minus className="h-3.5 w-3.5" />
           </button>
           <span className="w-10 text-center font-mono text-sm font-semibold text-[#1A1A18]">
             {quantity}
@@ -151,35 +158,38 @@ export function ProductPurchaseSection({
           <button
             type="button"
             onClick={() => setQuantity((q) => q + 1)}
-            className="px-2.5 h-full flex items-center justify-center text-[#73736E] hover:text-[#1A1A18] hover:bg-[#FAF8F4] transition-colors"
+            className="flex h-full items-center justify-center px-2.5 text-[#73736E] transition-colors hover:bg-[#FAF8F4] hover:text-[#1A1A18]"
             title="Increase quantity"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="h-3.5 w-3.5" />
           </button>
         </div>
         <span className="text-xs text-[#73736E]">
-          Total: <strong className="text-[#1A1A18]">{formatInr(currentPrice * quantity)}</strong>
+          Total:{" "}
+          <strong className="text-[#1A1A18]">
+            {formatInr(currentPrice * quantity)}
+          </strong>
         </span>
       </div>
 
       {/* Action Buttons: Add to Cart & Buy with COD */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+      <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2">
         <Button
           type="button"
           onClick={() => handleAddToCart(false)}
-          className={`h-12 w-full font-medium text-xs tracking-wider uppercase transition-all duration-200 ${
+          className={`h-12 w-full text-xs font-medium tracking-wider uppercase transition-all duration-200 ${
             isAdded
-              ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-              : "bg-[#FAF7F0] hover:bg-[#F3EFE6] text-[#1A1A18] border border-[#1A1A18]"
+              ? "bg-emerald-600 text-white hover:bg-emerald-700"
+              : "border border-[#1A1A18] bg-[#FAF7F0] text-[#1A1A18] hover:bg-[#F3EFE6]"
           }`}
         >
           {isAdded ? (
             <>
-              <Check className="w-4 h-4 mr-2" /> Added to Basket!
+              <Check className="mr-2 h-4 w-4" /> Added to Basket!
             </>
           ) : (
             <>
-              <ShoppingCart className="w-4 h-4 mr-2" /> Add to Basket
+              <ShoppingCart className="mr-2 h-4 w-4" /> Add to Basket
             </>
           )}
         </Button>
@@ -187,29 +197,29 @@ export function ProductPurchaseSection({
         <Button
           type="button"
           onClick={() => handleAddToCart(true)}
-          className="h-12 w-full bg-[#D97706] hover:bg-[#B45309] text-white font-semibold text-xs tracking-wider uppercase shadow-sm transition-all"
+          className="h-12 w-full bg-[#D97706] text-xs font-semibold tracking-wider text-white uppercase shadow-sm transition-all hover:bg-[#B45309]"
         >
-          <Zap className="w-4 h-4 mr-2 fill-white" /> Buy with COD
+          <Zap className="mr-2 h-4 w-4 fill-white" /> Buy with COD
         </Button>
       </div>
 
       {/* Delivery & Trust Highlights */}
-      <div className="bg-[#FAF8F4] rounded-xl p-3.5 border border-[#E5E5E0]/80 space-y-2 text-xs text-[#52524E]">
+      <div className="space-y-2 rounded-xl border border-[#E5E5E0]/80 bg-[#FAF8F4] p-3.5 text-xs text-[#52524E]">
         <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4 text-[#D97706] shrink-0" />
+          <Truck className="h-4 w-4 shrink-0 text-[#D97706]" />
           <span>
-            <strong>Cash on Delivery Available:</strong> Pay only when delivered to your door.
+            <strong>Cash on Delivery Available:</strong> Pay only when delivered to your
+            door.
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
           <span>
-            Direct dispatch from <strong>{seller?.business_name || "Verified Factory Desk"}</strong>.
+            Direct dispatch from{" "}
+            <strong>{seller?.business_name || "Verified Factory Desk"}</strong>.
           </span>
         </div>
       </div>
-
-
     </div>
   );
 }
