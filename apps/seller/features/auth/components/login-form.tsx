@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Eye, EyeOff, Loader2, ArrowRight, CheckCircle2 } from "lucide-react";
 import {
   verifyPasswordAndSendOtp,

@@ -110,7 +110,7 @@ genz-app/
 - `0001_core_profiles.sql`: App roles (`buyer`, `seller`, `admin`), `profiles` table, auto-profile trigger.
 - `0002_seller_onboarding.sql`: `seller_profiles` table, verification status enum, private `seller-documents` storage bucket.
 - `0003_products_reels.sql`: `products` table (gated to verified sellers), `reels` table, public `product-media` bucket.
-- `0004_inquiries.sql`: Buyer-seller inquiry table and lead status workflow.
+- `0004_orders_and_tracking.sql`: Orders table, shipping addresses, line items, and tracking events.
 - `0005_contact_messages.sql`: General contact & support inquiry tracking.
 - `0006_newsletter.sql`: Newsletter & waitlist subscribers.
 - `0007_rate_limit_logs.sql`: Database-backed rate limiting & audit logs.
@@ -118,7 +118,6 @@ genz-app/
 - `0011_create_page_views.sql`: Platform traffic and pageview telemetry.
 - `0017_sync_seller_profiles_role.sql`: Bidirectional role synchronization between profiles and auth.
 - `0019_harden_rls_policies.sql`: Strict column-level protection on roles and verification status.
-- `0020_orders_and_tracking.sql`: Orders table, shipping addresses, line items, and tracking events.
 
 ---
 

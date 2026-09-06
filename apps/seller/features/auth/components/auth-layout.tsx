@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { SITE_URL } from "@genz/utils";
 import { AuthLogo } from "./logo";
 import { SupportLink } from "./support-link";
@@ -36,7 +35,8 @@ export function AuthLayout({ redirectTo, error }: AuthLayoutProps) {
                 Seller Desk Sign In
               </h2>
               <p className="font-graphik mt-2 text-xs leading-relaxed text-[#73736E] sm:text-sm">
-                Access your factory dashboard to manage catalog listings, respond to buyer RFQs, and track production.
+                Access your factory dashboard to manage catalog listings, respond to
+                buyer RFQs, and track production.
               </p>
             </div>
 

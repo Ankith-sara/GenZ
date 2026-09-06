@@ -23,7 +23,7 @@ interface AdminLayoutShellProps {
     users: number;
     pendingVerifications: number;
     products: number;
-    inquiries: number;
+    orders?: number;
     waitlist: number;
     contact: number;
   };
@@ -85,9 +85,9 @@ export function AdminLayoutShell({
   const getPageTitle = () => {
     if (pathname === "/admin/dashboard") return null;
     if (pathname?.includes("/verifications")) return "Seller Verifications";
+    if (pathname?.includes("/orders")) return "Customer Orders & Tracking";
     if (pathname?.includes("/users")) return "User Profiles";
     if (pathname?.includes("/products")) return "Product Catalog";
-    if (pathname?.includes("/inquiries")) return "Inquiry Stream";
     if (pathname?.includes("/waitlist")) return "Waitlist Leads";
     if (pathname?.includes("/contact")) return "Contact Messages";
     return "Dashboard";

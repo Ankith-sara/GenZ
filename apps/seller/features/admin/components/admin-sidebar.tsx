@@ -8,7 +8,7 @@ import {
   Building2,
   Users,
   ShoppingBag,
-  MessageSquare,
+  Package,
   UserCheck,
   Mail,
   BarChart3,
@@ -31,7 +31,7 @@ interface AdminSidebarProps {
     users?: number;
     pendingVerifications?: number;
     products?: number;
-    inquiries?: number;
+    orders?: number;
     waitlist?: number;
     contact?: number;
   };
@@ -55,37 +55,37 @@ export function AdminSidebar({
   const mainNav = [
     {
       label: "Dashboard",
-      href: "/admin/dashboard",
+      href: "/dashboard",
       icon: LayoutGrid,
       badge: null,
       exact: true,
     },
     {
       label: "Verifications",
-      href: "/admin/dashboard/verifications",
+      href: "/dashboard/verifications",
       icon: Building2,
       badge: counts?.pendingVerifications ?? 0,
       exact: false,
     },
     {
       label: "Users",
-      href: "/admin/dashboard/users",
+      href: "/dashboard/users",
       icon: Users,
       badge: null,
       exact: false,
     },
     {
-      label: "Products",
-      href: "/admin/dashboard/products",
-      icon: ShoppingBag,
+      label: "Orders",
+      href: "/dashboard/orders",
+      icon: Package,
       badge: null,
       exact: false,
     },
     {
-      label: "Inquiries",
-      href: "/admin/dashboard/inquiries",
-      icon: MessageSquare,
-      badge: counts?.inquiries ?? 0,
+      label: "Products",
+      href: "/dashboard/products",
+      icon: ShoppingBag,
+      badge: null,
       exact: false,
     },
   ];
@@ -93,13 +93,13 @@ export function AdminSidebar({
   const leadsNav = [
     {
       label: "Waitlist",
-      href: "/admin/dashboard/waitlist",
+      href: "/dashboard/waitlist",
       icon: UserCheck,
       badge: counts?.waitlist ?? 0,
     },
     {
       label: "Messages",
-      href: "/admin/dashboard/contact",
+      href: "/dashboard/contact",
       icon: Mail,
       badge: counts?.contact ?? 0,
     },
@@ -108,19 +108,19 @@ export function AdminSidebar({
   const systemNav = [
     {
       label: "Analytics",
-      href: "/admin/dashboard?view=analytics",
+      href: "/dashboard?view=analytics",
       icon: BarChart3,
       badge: null,
     },
     {
       label: "Audit Logs",
-      href: "/admin/dashboard?view=logs",
+      href: "/dashboard?view=logs",
       icon: ShieldCheck,
       badge: null,
     },
     {
       label: "Settings",
-      href: "/admin/dashboard/settings",
+      href: "/dashboard/settings",
       icon: Settings,
       badge: null,
     },
@@ -153,7 +153,7 @@ export function AdminSidebar({
           {/* Top Brand Header */}
           <div className="flex h-12 items-center justify-between px-2">
             <Link
-              href="/admin/dashboard"
+              href="/dashboard"
               className={`flex items-center gap-2.5 ${
                 isCollapsed ? "w-full justify-center" : ""
               }`}
@@ -164,10 +164,10 @@ export function AdminSidebar({
               {!isCollapsed && (
                 <div>
                   <span className="font-graphik block text-sm leading-tight font-bold text-black">
-                    GenZ Command
+                    GenZ Studio
                   </span>
                   <span className="font-graphik block text-[10px] text-[#73736E]">
-                    Enterprise Admin
+                    Studio Portal
                   </span>
                 </div>
               )}
@@ -346,7 +346,7 @@ export function AdminSidebar({
                     {adminUser?.full_name || "Admin User"}
                   </span>
                   <span className="block truncate text-[10px] font-medium text-[#73736E]">
-                    Admin
+                    Studio Manager
                   </span>
                 </div>
               )}

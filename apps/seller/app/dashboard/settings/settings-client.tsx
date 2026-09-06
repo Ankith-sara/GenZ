@@ -101,12 +101,10 @@ export function SellerSettingsClient({ userEmail }: SellerSettingsClientProps) {
         <div className="space-y-4 divide-y divide-[#F0F0EC] text-xs">
           <div className="flex items-center justify-between pt-2">
             <div>
-              <h4 className="font-bold text-[#1A1A18]">
-                Buyer Sourcing Inquiry Alerts
-              </h4>
+              <h4 className="font-bold text-[#1A1A18]">Customer Order Alerts</h4>
               <p className="text-[11px] text-[#73736E]">
-                Receive instant email notification whenever a wholesale buyer sends an
-                RFQ or message.
+                Receive instant email notification whenever a customer places an order
+                or requests tracking updates.
               </p>
             </div>
             <input

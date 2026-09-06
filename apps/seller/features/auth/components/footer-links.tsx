@@ -11,9 +11,8 @@ export function FooterLinks() {
         href="mailto:sellers@genz.in"
         className="text-[#8C8C85] transition-colors hover:text-black hover:underline"
       >
-        Supplier Compliance & Inquiries
+        Supplier Compliance & Support
       </a>
     </footer>
   );
 }
-

@@ -16,13 +16,14 @@ describe("Seller Actions & Verification Business Logic Specs", () => {
     } | null,
     application: {
       business_name?: string;
-      form_data?: Record<string, any>;
+      form_data?: Record<string, string | null | undefined>;
     } | null
   ) {
     const formData = application?.form_data || {};
     return {
       business_name:
-        existingProfile?.business_name && existingProfile.business_name !== "Factory Seller"
+        existingProfile?.business_name &&
+        existingProfile.business_name !== "Factory Seller"
           ? existingProfile.business_name
           : application?.business_name || formData.business_name || "Factory Seller",
       gst_number:
@@ -37,7 +38,8 @@ describe("Seller Actions & Verification Business Logic Specs", () => {
         null,
       city: existingProfile?.city || formData.city || null,
       state: existingProfile?.state || formData.state || null,
-      pincode: existingProfile?.pincode || formData.pincode || formData.pin_code || null,
+      pincode:
+        existingProfile?.pincode || formData.pincode || formData.pin_code || null,
     };
   }
 
