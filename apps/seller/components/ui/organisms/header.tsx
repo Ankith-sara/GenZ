@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@genz/ui";
 import { UserAvatar } from "@genz/ui";
+import { SITE_URL } from "@genz/utils";
 
 interface HeaderProps {
   isLoggedIn: boolean;
@@ -28,6 +29,13 @@ interface HeaderProps {
 
 const categoriesList = [
   {
+    name: "Etikoppaka Wooden Toys",
+    href: "/discover?category=Etikoppaka Wooden Toys",
+    image: "/etikoppaka_toys.png",
+    desc: "GI-certified eco-friendly lacquer wooden toys from Andhra Pradesh",
+    badge: "GI Tag",
+  },
+  {
     name: "Wooden Toys & Crafts",
     href: "/discover?category=Wooden Toys",
     image: "/cat_toys.png",
@@ -35,46 +43,11 @@ const categoriesList = [
     badge: "Popular",
   },
   {
-    name: "Electronics & Tech",
-    href: "/discover?category=Electronics",
-    image: "/cat_electronics.png",
-    desc: "Smart devices, chargers & custom circuit assemblies",
-    badge: "Trending",
-  },
-  {
-    name: "Fashion & Apparel",
-    href: "/discover?category=Fashion",
-    image: "/cat_fashion.png",
-    desc: "Organic cotton textiles, handcrafted apparel & accessories",
-    badge: "New",
-  },
-  {
     name: "Home & Furniture",
     href: "/discover?category=Furniture",
     image: "/cat_furniture.png",
     desc: "Solid wood furniture, handcrafted decor & living items",
     badge: null,
-  },
-  {
-    name: "Kitchen & Dining",
-    href: "/discover?category=Kitchen",
-    image: "/cat_kitchen.png",
-    desc: "Stainless steel utensils, cast iron cookware & appliances",
-    badge: null,
-  },
-  {
-    name: "Beauty & Wellness",
-    href: "/discover?category=Beauty",
-    image: "/cat_beauty.png",
-    desc: "Ayurvedic formulations, natural skincare & herbal wellness",
-    badge: null,
-  },
-  {
-    name: "Industrial & Tools",
-    href: "/discover?category=Industrial",
-    image: "/cat_industrial.png",
-    desc: "Precision components, machinery parts & fabrication tools",
-    badge: "B2B",
   },
   {
     name: "Sports & Fitness",
@@ -245,12 +218,12 @@ export function Header({
             </div>
 
             <div className="flex items-center gap-5 text-neutral-300">
-              <Link
-                href="/seller/signup"
+              <a
+                href={`${SITE_URL}/seller/signup`}
                 className="font-semibold text-white transition-colors hover:text-neutral-300 hover:underline"
               >
                 Sell on GenZ
-              </Link>
+              </a>
               <span className="text-neutral-700">|</span>
               <Link href="/contact" className="transition-colors hover:text-white">
                 Support
@@ -742,9 +715,9 @@ export function Header({
                 asChild
                 className="font-graphik mb-2 w-full rounded-xl bg-amber-400 text-xs font-bold text-black hover:bg-amber-300"
               >
-                <Link href="/seller/signup" onClick={() => setIsOpen(false)}>
+                <a href={`${SITE_URL}/seller/signup`} onClick={() => setIsOpen(false)}>
                   Sell on GenZ
-                </Link>
+                </a>
               </Button>
               {isLoggedIn ? (
                 <Button
@@ -776,7 +749,7 @@ export function Header({
                   className="font-graphik w-full rounded-xl border-neutral-700 bg-neutral-900 text-xs font-semibold text-white hover:bg-neutral-800 hover:text-amber-400"
                 >
                   <Link href="/login" onClick={() => setIsOpen(false)}>
-                    Login / Sign Up
+                    Seller Login
                   </Link>
                 </Button>
               )}

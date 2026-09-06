@@ -6,13 +6,23 @@ const IS_PRODUCTION = process.env.NODE_ENV === "production";
 export async function getClientIp(): Promise<string> {
   try {
     const headerList = await headers();
+
+    const cfIp = headerList.get("cf-connecting-ip");
+    if (cfIp) return cfIp.trim();
+
+    const vercelIp = headerList.get("x-vercel-forwarded-for");
+    if (vercelIp) return vercelIp.split(",")[0].trim();
+
+    const realIp = headerList.get("x-real-ip");
+    if (realIp) return realIp.trim();
+
     const forwarded = headerList.get("x-forwarded-for");
     if (forwarded) {
-      return forwarded.split(",")[0].trim();
-    }
-    const realIp = headerList.get("x-real-ip");
-    if (realIp) {
-      return realIp.trim();
+      const ips = forwarded.split(",").map((ip) => ip.trim()).filter(Boolean);
+      // Rightmost IP is appended by the nearest proxy (Vercel / Cloudflare / Nginx)
+      if (ips.length > 0) {
+        return ips[ips.length - 1];
+      }
     }
   } catch (e) {
     console.error("Failed to read headers for IP:", e);

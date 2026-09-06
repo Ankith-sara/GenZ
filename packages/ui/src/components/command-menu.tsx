@@ -8,7 +8,6 @@ import {
   Building2,
   Users,
   ShoppingBag,
-  MessageSquare,
   UserCheck,
   Mail,
   X,
@@ -68,12 +67,6 @@ export function CommandMenu({ isOpen, onClose, items }: CommandMenuProps) {
       label: "Product Catalog",
       href: "/dashboard/products",
       icon: ShoppingBag,
-      category: "Pages",
-    },
-    {
-      label: "Inquiry Stream",
-      href: "/dashboard/inquiries",
-      icon: MessageSquare,
       category: "Pages",
     },
     {

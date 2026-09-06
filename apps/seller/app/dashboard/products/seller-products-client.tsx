@@ -15,7 +15,6 @@ export interface SellerProductRecord {
   category: string;
   price_inr?: number | null;
   status: string;
-  age_group?: string | null;
   updated_at?: string | null;
 }
 
@@ -45,11 +44,11 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
         title="Factory Product Catalog"
         description="Manage your manufacturing catalog listings, prices, variants, and draft publications."
         breadcrumbs={[
-          { label: "Seller Desk", href: "/seller/dashboard" },
+          { label: "Seller Desk", href: "/dashboard" },
           { label: "Products" },
         ]}
         actions={
-          <Link href="/seller/dashboard/products/new">
+          <Link href="/dashboard/products/new">
             <Button className="font-graphik h-9 rounded-lg bg-black px-3.5 text-xs font-semibold text-white shadow-2xs hover:bg-neutral-800">
               <Plus className="mr-1.5 h-3.5 w-3.5" />
               <span>Add New Product</span>
@@ -97,7 +96,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
           description={`No product listing matches "${searchQuery || statusFilter}"`}
           primaryAction={{
             label: "Create New Product",
-            onClick: () => (window.location.href = "/seller/dashboard/products/new"),
+            onClick: () => (window.location.href = "/dashboard/products/new"),
           }}
         />
       ) : (
@@ -112,7 +111,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <Link
-                      href={`/seller/dashboard/products/${product.id}`}
+                      href={`/dashboard/products/${product.id}`}
                       className="text-sm font-bold text-[#1A1A18] hover:underline"
                     >
                       {product.name}
@@ -144,7 +143,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
                         label: "Edit Listing Details",
                         icon: <Edit className="h-3.5 w-3.5" />,
                         onClick: () =>
-                          (window.location.href = `/seller/dashboard/products/${product.id}`),
+                          (window.location.href = `/dashboard/products/${product.id}`),
                       },
                       {
                         label: "Preview Storefront Link",
@@ -167,7 +166,6 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
                     <th className="p-3.5 pl-4">Product Name</th>
                     <th className="p-3.5">Category</th>
                     <th className="p-3.5">Price (INR)</th>
-                    <th className="p-3.5">Target Demographic</th>
                     <th className="p-3.5">Status</th>
                     <th className="p-3.5 pr-4 text-right">Actions</th>
                   </tr>
@@ -180,7 +178,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
                     >
                       <td className="p-3.5 pl-4 font-bold text-[#1A1A18]">
                         <Link
-                          href={`/seller/dashboard/products/${product.id}`}
+                          href={`/dashboard/products/${product.id}`}
                           className="hover:underline"
                         >
                           {product.name}
@@ -194,10 +192,6 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
 
                       <td className="p-3.5 font-mono text-xs font-bold text-[#1A1A18]">
                         ₹{product.price_inr ? product.price_inr.toLocaleString() : "—"}
-                      </td>
-
-                      <td className="p-3.5 text-[#52524E]">
-                        {product.age_group || "All demographics"}
                       </td>
 
                       <td className="p-3.5">
@@ -214,7 +208,7 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
                               label: "Edit Listing Details",
                               icon: <Edit className="h-3.5 w-3.5" />,
                               onClick: () =>
-                                (window.location.href = `/seller/dashboard/products/${product.id}`),
+                                (window.location.href = `/dashboard/products/${product.id}`),
                             },
                             {
                               label: "Preview Storefront Link",

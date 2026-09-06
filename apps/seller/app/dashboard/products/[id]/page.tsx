@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, Film } from "lucide-react";
+import { Film } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { Button } from "@/components/ui/atoms/button";
@@ -54,8 +54,8 @@ export default async function SellerProductDetailPage({
         title={product.name}
         description={`Catalog Item ID: ${product.id}`}
         breadcrumbs={[
-          { label: "Seller Desk", href: "/seller/dashboard" },
-          { label: "Products", href: "/seller/dashboard/products" },
+          { label: "Seller Desk", href: "/dashboard" },
+          { label: "Products", href: "/dashboard/products" },
           { label: product.name },
         ]}
         actions={
@@ -138,7 +138,7 @@ export default async function SellerProductDetailPage({
           className="h-10 shrink-0 rounded-xl bg-black px-5 text-xs font-semibold text-white shadow-2xs transition-all hover:bg-neutral-800"
         >
           <Link
-            href={`/seller/dashboard/products/${product.id}/reels`}
+            href={`/dashboard/products/${product.id}/reels`}
             className="flex items-center gap-2"
           >
             <Film className="h-4 w-4 text-white" />

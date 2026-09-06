@@ -45,7 +45,6 @@ export function DiscoverFeed({
     const params = new URLSearchParams();
     if (filters.q) params.set("q", filters.q);
     if (filters.category) params.set("category", filters.category);
-    if (filters.age_group) params.set("age_group", filters.age_group);
     if (filters.min_price) params.set("min_price", filters.min_price);
     if (filters.max_price) params.set("max_price", filters.max_price);
     params.set("page", String(nextPage));

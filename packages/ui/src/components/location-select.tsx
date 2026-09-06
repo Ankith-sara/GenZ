@@ -6,13 +6,13 @@ import { Label } from "./label";
 import { Input } from "./input";
 import { ChevronDown, Search, Check } from "lucide-react";
 
-interface LocationSelectGroupProps {
+export interface LocationSelectGroupProps {
   addressValue?: string;
   countryValue?: string;
   stateValue?: string;
   cityValue?: string;
   pincodeValue?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   required?: boolean;
   showAddress?: boolean;
 }
@@ -23,28 +23,16 @@ export function LocationSelectGroup({
   stateValue = "Tamil Nadu",
   cityValue = "Coimbatore",
   pincodeValue = "",
-  onChange,
+  onChange = () => {},
   required = true,
   showAddress = true,
 }: LocationSelectGroupProps) {
   const majorIsos = useMemo(
     () => [
-      "IN",
-      "AE",
-      "SG",
-      "SA",
-      "MY",
-      "TH",
-      "VN",
-      "ID",
-      "BD",
-      "LK",
-      "NP",
-      "JP",
-      "KR",
-      "CN",
-      "HK",
-      "US",
+      "IN", "AE", "SG", "SA",
+      "MY", "TH", "VN", "ID",
+      "BD", "LK", "NP", "JP",
+      "KR", "CN", "HK", "US",
       "GB",
     ],
     []

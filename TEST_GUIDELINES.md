@@ -1,36 +1,41 @@
 # GenZ Platform Architecture & Test Guidelines
 
+> See [AI_AGENT_GUIDELINES.md](file:///c:/Users/sarav/Code%20Tutorial/Project_darkis/genz-app/AI_AGENT_GUIDELINES.md) for exhaustive platform documentation and AI rules.
+
 ## 1. Codebase & Test Architecture
 
-The codebase and test architecture are organized into **Atomic UI**, **Feature-Based Domains**, and **Spec Files**:
+The codebase and test architecture are organized into a **Turborepo Monorepo** featuring **Apps**, **Shared Packages**, and **Co-located Logic Spec Files**:
 
 ```
-src/
-├── components/
-│   └── ui/                            # Pure UI Component Design Tokens & Primitives
-│       ├── atoms/                     # Button, Input, Badge, Label, Textarea, Card, StatusBadge, UserAvatar, VerifiedBadge
-│       ├── molecules/                 # ActionDropdown, LocationSelectGroup, PhoneInput, SearchTriggerButton, CookieConsent
-│       └── organisms/                 # Header, Footer, PageHeader, MetricCard, CommandMenu, EmptyState, SkeletonLoaders, SlideOverDrawer, DashboardSidebar, PageViewTracker
+genz-app/
+├── apps/
+│   ├── web/                           # Buyer-facing Marketplace (Port 3000)
+│   │   ├── lib/                       # validation.spec.ts, file-validation.spec.ts, rate-limiter.spec.ts, resend.spec.ts
+│   │   └── features/                  # require-role.spec.ts, products.spec.ts, verification.spec.ts, seller-actions.spec.ts
+│   │
+│   ├── seller/                        # Verified Manufacturer Desk (Port 3001)
+│   │   ├── lib/                       # validation.spec.ts, file-validation.spec.ts, rate-limiter.spec.ts, resend.spec.ts
+│   │   └── features/                  # require-role.spec.ts, products.spec.ts, verification.spec.ts, seller-actions.spec.ts
+│   │
+│   └── admin/                         # Platform Administration Desk (Port 3002)
+│       ├── lib/                       # validation.spec.ts, file-validation.spec.ts, rate-limiter.spec.ts, resend.spec.ts
+│       └── features/                  # require-role.spec.ts, products.spec.ts, verification.spec.ts, seller-actions.spec.ts
 │
-├── features/                          # Domain Business Logic & Feature Modules
-│   ├── admin/                         # Admin Dashboard, Layout Shell, Vercel Analytics (vercel-analytics.spec.ts)
-│   ├── auth/                          # Authentication, Login/Signup, Role Auth (require-role.spec.ts)
-│   ├── seller/                        # Seller Verification & Actions (seller-actions.spec.ts)
-│   ├── products/                      # Product Catalog, Cover/Image Uploaders, Variant Editor (products.spec.ts)
-│   ├── documents/                     # Document List, Upload Wizard, Verification Logic (verification.spec.ts)
-│   ├── reels/                         # Reel Uploader & Video Management List
-│   ├── marketing/                     # Contact Form, Newsletter Form, Waitlist Form
-│   └── user/                          # User Profile & Avatar Uploader
-│
-├── lib/                               # Core Infrastructure & Cross-Cutting Utilities
-│   ├── validation.ts & validation.spec.ts
-│   ├── file-validation.ts & file-validation.spec.ts
-│   └── rate-limiter.ts & rate-limiter.spec.ts
-│
-└── __tests__/                         # Integration & Structural Test Suites
-    ├── atomic/                        # Atomic Component UI rendering tests (atoms, molecules, organisms)
-    ├── features/                      # Feature & Domain integration tests (admin, auth, products, orders)
-    └── utils/                         # System utility & rate limiting tests
+└── packages/
+    ├── database/                      # Supabase SSR clients & domain services
+    │   ├── src/orders.spec.ts         # Orders domain specs (GZ-ORD generation, tracking timeline, COD/paid, filtering)
+    │   └── src/storage/               # Local resilient store (orders-store.json)
+    │
+    ├── ui/                            # Shared Atomic UI (@genz/ui)
+    │   ├── atoms/                     # Button, Input, Badge, Label, Textarea, Card, StatusBadge, UserAvatar
+    │   ├── molecules/                 # ActionDropdown, LocationSelectGroup, PhoneInput, SearchTriggerButton
+    │   ├── organisms/                 # Header, Footer, PageHeader, MetricCard, CommandMenu, SlideOverDrawer
+    │   ├── orders/                    # OrdersManager & Tracking Modal
+    │   └── product-form/              # MediaCard, VariantsCard
+    │
+    ├── types/                         # Shared TypeScript types (@genz/types)
+    ├── utils/                         # Rate limiter, Resend client, config (@genz/utils)
+    └── validation/                    # Zod schemas (@genz/validation)
 ```
 
 ---

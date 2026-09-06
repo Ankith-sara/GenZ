@@ -13,7 +13,6 @@ import {
   Upload,
   Tag,
   FileText,
-  X,
   ChevronDown,
   Heading1,
   Heading2,

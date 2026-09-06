@@ -14,7 +14,7 @@ interface SellerSettingsClientProps {
 }
 
 export function SellerSettingsClient({ userEmail }: SellerSettingsClientProps) {
-  const [inquiryAlerts, setInquiryAlerts] = useState(true);
+  const [orderAlerts, setOrderAlerts] = useState(true);
   const [marketingEmails, setMarketingEmails] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [passwordMsg, setPasswordMsg] = useState<string | null>(null);
@@ -111,8 +111,8 @@ export function SellerSettingsClient({ userEmail }: SellerSettingsClientProps) {
             </div>
             <input
               type="checkbox"
-              checked={inquiryAlerts}
-              onChange={(e) => setInquiryAlerts(e.target.checked)}
+              checked={orderAlerts}
+              onChange={(e) => setOrderAlerts(e.target.checked)}
               className="h-4 w-4 cursor-pointer rounded accent-black"
             />
           </div>

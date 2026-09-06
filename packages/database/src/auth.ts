@@ -21,9 +21,17 @@ export async function getUserAndProfile(): Promise<{
   let supabase;
   try {
     supabase = await createClient();
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data?.user) return null;
-    user = data.user;
+    const { data } = await supabase.auth.getUser();
+    if (data?.user) {
+      user = data.user;
+    } else {
+      // Fallback to getSession if getUser token validation returns session missing
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData?.session?.user) {
+        user = sessionData.session.user;
+      }
+    }
+    if (!user) return null;
   } catch (err) {
     console.error("[auth] Failed to fetch authenticated user:", err);
     return null;
@@ -33,7 +41,7 @@ export async function getUserAndProfile(): Promise<{
     .from("profiles")
     .select("*")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
   if (profileError) {
     authDebug(`Profile query error for user ${user.id}: ${profileError.message}`);

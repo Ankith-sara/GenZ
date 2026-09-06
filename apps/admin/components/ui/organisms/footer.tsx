@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { NewsletterForm } from "@/features/marketing/components/newsletter-form";
+import { NewsletterForm } from "@/features/home/components/newsletter-form";
 import { Mail, Phone } from "lucide-react";
 
 function InstagramIcon({ className = "h-5 w-5" }: { className?: string }) {
@@ -76,7 +76,7 @@ const defaultSections: FooterSection[] = [
     links: [
       { name: "Seller Guide", href: "/seller/signup" },
       { name: "Verification", href: "/seller/signup" },
-      { name: "Buyer Inquiries", href: "/discover" },
+      { name: "Track Orders", href: "/dashboard/orders" },
       { name: "Partnerships", href: "/contact" },
     ],
   },

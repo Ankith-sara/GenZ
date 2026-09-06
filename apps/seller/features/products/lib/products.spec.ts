@@ -4,6 +4,8 @@ import {
   formatInr,
   PRODUCT_STATUS_LABEL,
   TOY_CATEGORIES,
+  DISCOVER_PAGE_SIZE,
+  productMediaUrl,
 } from "./products";
 
 describe("Products Domain Logic Specs", () => {
@@ -45,6 +47,25 @@ describe("Products Domain Logic Specs", () => {
     it("contains curated category list including Wooden Toys", () => {
       expect(TOY_CATEGORIES).toContain("Wooden Toys");
       expect(TOY_CATEGORIES).toContain("Educational Toys");
+      expect(TOY_CATEGORIES).toContain("Arts & Crafts");
+    });
+
+    it("defines default discover page size", () => {
+      expect(DISCOVER_PAGE_SIZE).toBe(12);
+    });
+  });
+
+  describe("productMediaUrl", () => {
+    it("returns null when path is null or empty", () => {
+      expect(productMediaUrl(null)).toBeNull();
+      expect(productMediaUrl("")).toBeNull();
+    });
+
+    it("constructs full public URL when path is provided", () => {
+      const url = productMediaUrl("products/cover.jpg");
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        expect(url).toContain("product-media/products/cover.jpg");
+      }
     });
   });
 });

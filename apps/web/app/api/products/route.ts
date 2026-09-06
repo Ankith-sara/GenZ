@@ -7,7 +7,6 @@ import { z } from "zod";
 const querySchema = z.object({
   q: z.string().max(100).optional().default(""),
   category: z.string().max(50).optional().default(""),
-  age_group: z.string().max(50).optional().default(""),
   min_price: z.preprocess(
     (val) => (val === null || val === "" ? undefined : Number(val)),
     z.number().nonnegative().optional()
@@ -40,7 +39,6 @@ export async function GET(request: NextRequest) {
   const rawParams = {
     q: searchParams.get("q") ?? "",
     category: searchParams.get("category") ?? "",
-    age_group: searchParams.get("age_group") ?? "",
     min_price: searchParams.get("min_price"),
     max_price: searchParams.get("max_price"),
     page: searchParams.get("page") ?? "0",
@@ -54,7 +52,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const { q, category, age_group, min_price, max_price, page } = validation.data;
+  const { q, category, min_price, max_price, page } = validation.data;
 
   const supabase = await createClient();
 
@@ -70,7 +68,6 @@ export async function GET(request: NextRequest) {
     });
   }
   if (category) query = query.eq("category", category);
-  if (age_group) query = query.eq("age_group", age_group);
   if (min_price !== undefined) query = query.gte("price_inr", min_price);
   if (max_price !== undefined) query = query.lte("price_inr", max_price);
 

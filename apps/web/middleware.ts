@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookieOptions: {
-        name: process.env.NEXT_PUBLIC_COOKIE_NAME || "sb-genz-web-auth",
+        name: process.env.NEXT_PUBLIC_COOKIE_NAME || "sb-genz-auth-token",
       },
       cookies: {
         getAll() {
@@ -32,21 +32,38 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const redirectWithCookies = (url: URL) => {
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      response.cookies.set(cookie.name, cookie.value, {
+        path: cookie.path,
+        domain: cookie.domain,
+        maxAge: cookie.maxAge,
+        expires: cookie.expires,
+        sameSite: cookie.sameSite,
+        secure: cookie.secure,
+        httpOnly: cookie.httpOnly,
+      });
+    });
+    return response;
+  };
+
   const path = request.nextUrl.pathname;
   const isAuthOnly = path.startsWith("/login") || path.startsWith("/signup");
-  const isProtected = path.startsWith("/profile") || path.startsWith("/orders");
+  const isProtected = path.startsWith("/profile");
+
 
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirectTo", path);
-    return NextResponse.redirect(url);
+    return redirectWithCookies(url);
   }
 
   if (user && isAuthOnly) {
     const url = request.nextUrl.clone();
     url.pathname = "/profile";
-    return NextResponse.redirect(url);
+    return redirectWithCookies(url);
   }
 
   return supabaseResponse;

@@ -2,20 +2,6 @@
 -- Seller Onboarding & Verification schema
 -- ============================================================
 
--- Helper function: check if caller is an admin (SECURITY DEFINER to prevent RLS infinite recursion)
-create or replace function public.is_admin()
-returns boolean
-language sql
-security definer
-set search_path = public
-stable
-as $$
-  select exists (
-    select 1 from public.profiles
-    where id = auth.uid() and role = 'admin'
-  );
-$$;
-
 do $$
 begin
   if not exists (select 1 from pg_type where typname = 'verification_status') then

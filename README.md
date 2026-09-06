@@ -82,7 +82,7 @@ The codebase strictly follows a three-pillar modular architecture:
      - `products/` — Product forms, variant editor, cover/image uploaders
      - `documents/` — Document list & verification wizard
      - `reels/` — Video reel uploaders & management list
-     - `marketing/` — Contact, newsletter, waitlist forms
+     - `home/` — Contact, newsletter, waitlist, and homepage showcase components
      - `user/` — User profile & avatar uploader
 
 3. **Logic-Only Spec Files (`*.spec.ts`)**:

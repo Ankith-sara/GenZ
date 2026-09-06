@@ -1,0 +1,98 @@
+[
+  {
+    "id": "GZ-ORD-366652",
+    "orderId": "GZ-ORD-366652",
+    "createdAt": "2026-09-06T16:14:19.851Z",
+    "updatedAt": "2026-09-06T16:14:19.851Z",
+    "customerId": null,
+    "customerName": "Aarav Sharma",
+    "customerEmail": "customer@example.com",
+    "customerPhone": "+91 98765 43210",
+    "shippingAddress": {
+      "recipientName": "Aarav Sharma",
+      "phone": "+91 98765 43210",
+      "addressLine": "104 Craft Lane, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 100,
+    "tax": 18,
+    "shippingFee": 80,
+    "totalAmount": 198,
+    "items": [
+      {
+        "id": "9703b8d9-9d82-40a5-9702-a5395f33b003",
+        "productId": "9703b8d9",
+        "product_id": "9703b8d9",
+        "name": "Test product",
+        "category": "Arts & Crafts",
+        "price": 100,
+        "quantity": 1,
+        "image": "https://grdvunheuhsrigcivllm.supabase.co/storage/v1/object/public/product-media/80b8f740-5b9b-455f-a03f-97dcbe533f13/products/9703b8d9-9d82-40a5-9702-a5395f33b003/test-product-1.jpeg",
+        "sellerId": "80b8f740-5b9b-455f-a03f-97dcbe533f13",
+        "sellerBusinessName": "Verified Indian Maker"
+      }
+    ],
+    "sellerIds": ["80b8f740-5b9b-455f-a03f-97dcbe533f13"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T16:14:19.851Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ]
+  },
+  {
+    "id": "GZ-ORD-893918",
+    "orderId": "GZ-ORD-893918",
+    "createdAt": "2026-09-06T15:47:22.441Z",
+    "updatedAt": "2026-09-06T15:47:22.441Z",
+    "customerId": null,
+    "customerName": "Aarav Test User",
+    "customerEmail": "customer@example.com",
+    "customerPhone": "+91 98765 43210",
+    "shippingAddress": {
+      "recipientName": "Aarav Test User",
+      "phone": "+91 98765 43210",
+      "addressLine": "104 Craft Lane, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 100,
+    "tax": 18,
+    "shippingFee": 80,
+    "totalAmount": 198,
+    "items": [
+      {
+        "id": "9703b8d9-9d82-40a5-9702-a5395f33b003",
+        "productId": "9703b8d9",
+        "product_id": "9703b8d9",
+        "name": "Test product",
+        "category": "Arts & Crafts",
+        "price": 100,
+        "quantity": 1,
+        "image": "https://grdvunheuhsrigcivllm.supabase.co/storage/v1/object/public/product-media/80b8f740-5b9b-455f-a03f-97dcbe533f13/products/9703b8d9-9d82-40a5-9702-a5395f33b003/test-product-1.jpeg",
+        "sellerId": "80b8f740-5b9b-455f-a03f-97dcbe533f13",
+        "sellerBusinessName": "Verified Indian Maker"
+      }
+    ],
+    "sellerIds": ["80b8f740-5b9b-455f-a03f-97dcbe533f13"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T15:47:22.441Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ]
+  }
+]

@@ -6,7 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { productMediaUrl, formatInr } from "@/features/products/lib/products";
 import { VerifiedBadge } from "@/components/ui/atoms/verified-badge";
 import { ProductWishlistButton } from "@/features/products/components/product-wishlist-button";
-import { InquiryForm } from "./inquiry-form";
+import { ProductPurchaseSection } from "./product-purchase-section";
+
 
 export async function generateMetadata({
   params,
@@ -57,11 +58,34 @@ export default async function PublicProductPage({
 
   if (!product) notFound();
 
-  const { data: seller } = await supabase
+  let { data: seller } = await supabase
     .from("seller_public_profiles")
     .select("business_name, city, state, established_year")
     .eq("id", product.seller_id)
     .maybeSingle();
+
+  if (!seller) {
+    const { data: sProf } = await supabase
+      .from("seller_profiles")
+      .select("business_name, city, state, established_year, description")
+      .eq("id", product.seller_id)
+      .maybeSingle();
+    if (sProf) {
+      let bName = sProf.business_name;
+      if (sProf.description && typeof sProf.description === "string" && sProf.description.startsWith("{")) {
+        try {
+          const meta = JSON.parse(sProf.description);
+          bName = (meta.business_name as string) || (meta.owner_name as string) || bName;
+        } catch {}
+      }
+      seller = {
+        business_name: bName,
+        city: sProf.city,
+        state: sProf.state,
+        established_year: sProf.established_year,
+      };
+    }
+  }
 
   const { data: reels } = await supabase
     .from("reels")
@@ -227,15 +251,21 @@ export default async function PublicProductPage({
                 </div>
               )}
 
-              <div className="mt-8">
-                <InquiryForm
-                  productId={product.id}
-                  sellerId={product.seller_id}
-                  productName={product.name}
-                />
-              </div>
+              <ProductPurchaseSection
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  price_inr: product.price_inr,
+                  category: product.category,
+                  coverUrl,
+                  seller_id: product.seller_id,
+                }}
+                seller={seller}
+                variants={variants ?? []}
+              />
             </div>
           </div>
+
 
           {(reels ?? []).length > 0 && (
             <div className="mt-16">

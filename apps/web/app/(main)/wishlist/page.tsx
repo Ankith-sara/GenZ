@@ -74,7 +74,7 @@ export default function WishlistPage() {
                 Your wishlist is empty
               </h2>
               <p className="text-muted-foreground mt-1 max-w-xs text-sm">
-                Save items you like to keep track of them and make inquiries later.
+                Save items you like to keep track of them and order them anytime.
               </p>
               <Link
                 href="/discover"

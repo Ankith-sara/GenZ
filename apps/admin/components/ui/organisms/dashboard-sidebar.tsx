@@ -29,7 +29,7 @@ interface NavGroup {
   }[];
 }
 
-function getNavGroups(role: Role): NavGroup[] {
+function getNavGroups(): NavGroup[] {
   return [
     {
       groupName: "ADMINISTRATION",
@@ -57,7 +57,7 @@ interface DashboardSidebarProps {
   };
 }
 
-export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
+export function DashboardSidebar({ user }: DashboardSidebarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -77,7 +77,7 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
     });
   };
 
-  const navGroups = getNavGroups(role);
+  const navGroups = getNavGroups();
   const userInitial = (user?.full_name || user?.email || "A")[0].toUpperCase();
 
   return (

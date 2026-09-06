@@ -49,6 +49,40 @@ export async function adminSetProductStatus(
   revalidatePath(`/products/${productId}`);
 }
 
+export async function adminUpdateProduct(
+  productId: string,
+  data: {
+    name: string;
+    category?: string | null;
+    price_inr?: number | null;
+    status?: string | null;
+    description?: string | null;
+  }
+) {
+  await requireRole("admin");
+  const supabase = createAdminClient();
+
+  const { error } = await supabase
+    .from("products")
+    .update({
+      name: data.name,
+      category: data.category,
+      price_inr: data.price_inr,
+      status: data.status,
+      description: data.description,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", productId);
+
+  if (error) {
+    console.error("Admin update product error:", error);
+    throw new Error(error.message || "Failed to update product");
+  }
+
+  revalidatePath("/admin/dashboard/products");
+  revalidatePath(`/products/${productId}`);
+}
+
 export async function adminDeleteProduct(productId: string) {
   await requireRole("admin");
 
@@ -83,7 +117,6 @@ export async function createProduct(
 
   const name = String(formData.get("name") ?? "").trim();
   const category = String(formData.get("category") ?? "toys").trim() || "toys";
-  const age_group = String(formData.get("age_group") ?? "").trim() || null;
   const description = String(formData.get("description") ?? "").trim();
   const priceRaw = String(formData.get("price_inr") ?? "").trim();
   const parsedPrice = priceRaw ? Number(priceRaw) : null;
@@ -99,7 +132,6 @@ export async function createProduct(
   const validation = productSchema.safeParse({
     name,
     category,
-    age_group,
     description,
     price_inr,
     materials,
@@ -119,7 +151,6 @@ export async function createProduct(
       seller_id: targetSellerId,
       name: validation.data.name,
       category: validation.data.category,
-      age_group: validation.data.age_group,
       description: validation.data.description || null,
       price_inr: validation.data.price_inr,
       materials: validation.data.materials,

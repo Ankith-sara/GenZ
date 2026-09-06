@@ -12,13 +12,15 @@ import {
   User,
   Menu,
   X,
-  MessageSquare,
   ChevronsUpDown,
   PanelLeftClose,
   PanelLeftOpen,
   LogOut,
   ShoppingBag,
   Settings,
+  Store,
+  Plus,
+  PlusCircle,
 } from "lucide-react";
 import type { Role } from "@genz/types";
 import { signOut } from "@/app/login/actions";
@@ -59,20 +61,29 @@ function getNavGroups(role: Role): NavGroup[] {
   return [
     {
       groupName: "FACTORY DESK",
-      items: [{ href: "/dashboard", label: "Seller Overview", icon: LayoutDashboard }],
+      items: [
+        { href: "/dashboard", label: "Seller Overview", icon: LayoutDashboard },
+        { href: "/dashboard/profile", label: "Public Profile", icon: Store },
+      ],
     },
     {
-      groupName: "CATALOG & RFQS",
+      groupName: "COMMERCE & CATALOG",
       items: [
+        {
+          href: "/dashboard/orders",
+          label: "Customer Orders",
+          icon: ShoppingBag,
+        },
+
         {
           href: "/dashboard/products",
           label: "Products",
           icon: Package,
         },
         {
-          href: "/dashboard/inquiries",
-          label: "Buyer Inquiries",
-          icon: MessageSquare,
+          href: "/dashboard/products/new",
+          label: "Add Product",
+          icon: PlusCircle,
         },
         {
           href: "/dashboard/documents",
@@ -218,6 +229,23 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
               </button>
             </div>
           </div>
+
+          {/* Quick Add Product CTA */}
+          {role === "seller" && (
+            <div className="pt-1 pb-1">
+              <Link
+                href="/dashboard/products/new"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center justify-center gap-2 rounded-xl bg-black px-3.5 py-2.5 font-graphik text-xs font-semibold text-white shadow-xs transition-all hover:bg-neutral-800 active:scale-98 ${
+                  isCollapsed ? "lg:px-0 lg:py-2.5" : ""
+                }`}
+                title="Add New Product"
+              >
+                <Plus className="h-4 w-4 shrink-0" />
+                <span className={isCollapsed ? "lg:hidden" : "inline"}>Add Product</span>
+              </Link>
+            </div>
+          )}
 
           {/* Navigation Groups */}
           <div className="space-y-5">

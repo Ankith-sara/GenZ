@@ -33,4 +33,4 @@ CREATE POLICY "Allow authenticated users to read page views"
   ON page_views
   FOR SELECT
   TO authenticated
-  USING (true);
+  USING (public.is_admin());

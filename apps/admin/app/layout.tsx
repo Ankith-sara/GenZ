@@ -22,11 +22,11 @@ const grenette = Fraunces({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Admin Portal | GenZ Platform",
-    template: "%s | GenZ Admin",
+    default: "GenZ Studio | GenZ Platform",
+    template: "%s | GenZ Studio",
   },
   description:
-    "Platform administration, verifications, user management, and system metrics.",
+    "GenZ Studio management, verifications, user management, and system metrics.",
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.ico",

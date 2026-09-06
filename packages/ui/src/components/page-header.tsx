@@ -23,7 +23,7 @@ export function PageHeader({
   actions,
 }: PageHeaderProps) {
   return (
-    <div className="mb-6 flex flex-col justify-between gap-4 border-b border-[#E5E5E0] pb-5 select-none sm:flex-row sm:items-center">
+    <div className="mb-6 flex flex-col justify-between gap-4 border-b border-[#E5E5E0] pb-5 sm:flex-row sm:items-center">
       <div className="space-y-1">
         {breadcrumbs && breadcrumbs.length > 0 && (
           <nav className="flex items-center gap-1.5 text-xs text-[#73736E]">

@@ -8,9 +8,11 @@ interface SlideOverDrawerProps {
   onClose: () => void;
   title: string;
   subtitle?: string;
+  description?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
   maxWidth?: "md" | "lg" | "xl" | "2xl";
+  size?: "md" | "lg" | "xl" | "2xl" | string;
 }
 
 export function SlideOverDrawer({
@@ -18,9 +20,11 @@ export function SlideOverDrawer({
   onClose,
   title,
   subtitle,
+  description,
   children,
   footer,
   maxWidth = "xl",
+  size,
 }: SlideOverDrawerProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -34,12 +38,14 @@ export function SlideOverDrawer({
 
   if (!isOpen) return null;
 
+  const resolvedWidth = ((size as "md" | "lg" | "xl" | "2xl") || maxWidth || "xl");
   const widthClasses = {
     md: "max-w-md",
     lg: "max-w-lg",
     xl: "max-w-xl",
     "2xl": "max-w-2xl",
-  }[maxWidth];
+  }[resolvedWidth] || "max-w-xl";
+  const displaySubtitle = subtitle || description;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -55,7 +61,7 @@ export function SlideOverDrawer({
           <div className="flex items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4] px-6 py-4">
             <div>
               <h2 className="text-lg font-bold text-[#1A1A18]">{title}</h2>
-              {subtitle && <p className="mt-0.5 text-xs text-[#73736E]">{subtitle}</p>}
+              {displaySubtitle && <p className="mt-0.5 text-xs text-[#73736E]">{displaySubtitle}</p>}
             </div>
 
             <button

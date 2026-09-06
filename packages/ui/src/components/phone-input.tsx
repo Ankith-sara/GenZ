@@ -6,24 +6,45 @@ import { Label } from "./label";
 import { Input } from "./input";
 import { ChevronDown, Search } from "lucide-react";
 
-interface PhoneInputWithCountryCodeProps {
+export interface PhoneInputWithCountryCodeProps {
+  id?: string;
+  name?: string;
+  countryCodeName?: string;
   countryCodeValue?: string;
   phoneValue?: string;
+  value?: string;
+  defaultValue?: string;
   onCountryCodeChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onPhoneChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
   required?: boolean;
+  className?: string;
+  label?: string | null;
 }
 
 export function PhoneInputWithCountryCode({
+  id = "phone",
+  name = "phone",
+  countryCodeName = "country_code",
   countryCodeValue = "+91",
-  phoneValue = "",
+  phoneValue,
+  value,
+  defaultValue,
   onCountryCodeChange,
   onPhoneChange,
+  onChange,
+  placeholder = "9876543210",
   required = true,
+  className,
+  label = null,
 }: PhoneInputWithCountryCodeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const activeValue = value !== undefined ? value : phoneValue;
+  const activeChange = onChange || onPhoneChange;
 
   const countryCodes = useMemo(() => {
     const majorIsos = [
@@ -90,26 +111,28 @@ export function PhoneInputWithCountryCode({
 
     if (onCountryCodeChange) {
       onCountryCodeChange({
-        target: { name: "country_code", value: code },
+        target: { name: countryCodeName, value: code },
       } as unknown as React.ChangeEvent<HTMLSelectElement>);
-    } else {
-      onPhoneChange({
-        target: { name: "country_code", value: code },
+    }
+    if (activeChange) {
+      activeChange({
+        target: { name: countryCodeName, value: code },
       } as unknown as React.ChangeEvent<HTMLInputElement>);
     }
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <Label htmlFor="phone">Mobile Number *</Label>
-      <input type="hidden" name="country_code" value={countryCodeValue} />
+    <div className={`relative ${className || ""}`} ref={dropdownRef}>
+      {label && <Label htmlFor={id}>{label}</Label>}
+      <input type="hidden" name={countryCodeName} value={countryCodeValue} />
 
-      <div className="mt-1 flex rounded-md border border-neutral-200 bg-white focus-within:ring-1 focus-within:ring-black">
+      <div className="mt-1 flex rounded-lg border border-neutral-300 bg-white shadow-2xs focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30">
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="flex h-10 shrink-0 items-center gap-1.5 rounded-l-md border-r border-neutral-200 bg-neutral-50 px-2.5 py-2 text-xs font-semibold text-neutral-900 transition-colors hover:bg-neutral-100"
+          className="flex h-11 shrink-0 items-center gap-1.5 rounded-l-lg border-r border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-semibold text-neutral-900 transition-colors hover:bg-neutral-100"
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`https://flagcdn.com/w20/${(activeCountry?.iso || "in").toLowerCase()}.png`}
             alt={activeCountry?.iso || "IN"}
@@ -122,22 +145,24 @@ export function PhoneInputWithCountryCode({
         </button>
 
         <Input
-          id="phone"
-          name="phone"
+          id={id}
+          name={name}
           type="tel"
           inputMode="numeric"
           pattern="[0-9]*"
           maxLength={15}
           required={required}
-          value={phoneValue}
-          onChange={onPhoneChange}
-          placeholder="9876543210"
-          className="h-10 rounded-l-none border-0 font-mono text-sm tracking-wide focus-visible:ring-0"
+          value={activeValue}
+          defaultValue={activeValue === undefined ? defaultValue : undefined}
+          onChange={activeChange}
+          readOnly={activeValue !== undefined && !activeChange ? true : undefined}
+          placeholder={placeholder}
+          className="h-11 rounded-l-none border-0 font-mono text-sm tracking-wide shadow-none focus-visible:border-0 focus-visible:ring-0"
         />
       </div>
 
       {isOpen && (
-        <div className="animate-fade-in absolute top-full left-0 z-50 mt-1 w-64 rounded-md border border-neutral-200 bg-white p-1.5 text-left shadow-lg">
+        <div className="animate-fade-in absolute top-full left-0 z-50 mt-1 w-64 rounded-xl border border-neutral-200 bg-white p-1.5 text-left shadow-lg">
           <div className="relative mb-1">
             <Search className="absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-neutral-400" />
             <input
@@ -145,7 +170,7 @@ export function PhoneInputWithCountryCode({
               placeholder="Search country or code..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded border border-neutral-200 bg-neutral-50 py-1.5 pr-2.5 pl-8 text-xs text-neutral-900 focus:ring-1 focus:ring-black focus:outline-none"
+              className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-1.5 pr-2.5 pl-8 text-xs text-neutral-900 focus:ring-1 focus:ring-black focus:outline-none"
               autoFocus
             />
           </div>
@@ -159,13 +184,14 @@ export function PhoneInputWithCountryCode({
                   key={`${c.iso}-${c.code}`}
                   type="button"
                   onClick={() => handleSelectCode(c.code)}
-                  className={`flex w-full items-center justify-between rounded px-2 py-1.5 text-xs transition-colors ${
+                  className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-xs transition-colors ${
                     c.code === countryCodeValue
                       ? "bg-black font-medium text-white"
                       : "text-neutral-900 hover:bg-neutral-100"
                   }`}
                 >
                   <div className="flex items-center gap-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`https://flagcdn.com/w20/${c.iso.toLowerCase()}.png`}
                       alt={c.iso}

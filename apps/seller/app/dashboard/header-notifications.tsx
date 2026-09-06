@@ -114,8 +114,8 @@ export function SellerHeaderNotifications({
           {!allComplete && (
             <div className="border-t border-[#F0F0EC] px-4 py-2.5">
               <p className="text-[10px] leading-relaxed text-[#73736E]">
-                Complete all steps to activate your storefront and start receiving buyer
-                inquiries.
+                Complete all steps to activate your storefront and start receiving customer
+                orders.
               </p>
             </div>
           )}

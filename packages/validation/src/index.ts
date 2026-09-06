@@ -120,7 +120,6 @@ export const newsletterSchema = z.object({
 export const productSchema = z.object({
   name: z.string().trim().min(1, "Product name is required").max(100),
   category: z.string().min(1, "Category is required").max(50).trim(),
-  age_group: z.string().max(50).trim().nullable().optional(),
   description: z.string().max(2000).trim().nullable().optional(),
   price_inr: z
     .number()
@@ -144,22 +143,6 @@ export const variantSchema = z.object({
     .nonnegative("Stock must be a non-negative integer")
     .nullable()
     .optional(),
-});
-
-export const inquirySchema = z.object({
-  name: fullNameSchema,
-  email: emailSchema,
-  phone: z
-    .string()
-    .regex(PHONE_PATTERN, "Invalid phone number format")
-    .nullable()
-    .optional()
-    .or(z.literal("")),
-  message: z
-    .string()
-    .min(1, "Message is required")
-    .max(2000, "Message is too long")
-    .trim(),
 });
 
 // --- Profile & Address Schemas ---

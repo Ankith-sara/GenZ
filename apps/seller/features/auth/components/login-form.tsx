@@ -191,13 +191,13 @@ export function LoginForm({ redirectTo, disableOtp = true }: LoginFormProps) {
           htmlFor="email"
           className="font-graphik mb-1.5 block text-xs font-medium text-[#262626]"
         >
-          Email Address
+          Factory / Business Email
         </label>
         <input
           id="email"
           type="email"
           autoComplete="email"
-          placeholder="name@company.com"
+          placeholder="factory@company.com"
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -225,12 +225,12 @@ export function LoginForm({ redirectTo, disableOtp = true }: LoginFormProps) {
           >
             Password
           </label>
-          <Link
-            href="/forgot-password"
+          <a
+            href="mailto:sellers@genz.in?subject=Seller%20Password%20Reset%20Assistance"
             className="font-graphik text-xs font-medium text-[#73736E] transition-colors hover:text-black hover:underline"
           >
-            Forgot Password?
-          </Link>
+            Reset Help
+          </a>
         </div>
         <div className="relative">
           <input
@@ -289,16 +289,16 @@ export function LoginForm({ redirectTo, disableOtp = true }: LoginFormProps) {
         {isPending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin text-white" />
-            <span>Signing in...</span>
+            <span>Verifying Credentials...</span>
           </>
         ) : isSuccess ? (
           <>
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-            <span>Authenticated! Redirecting...</span>
+            <span>Authenticated! Entering Desk...</span>
           </>
         ) : (
           <>
-            <span>Sign In</span>
+            <span>Sign In to Seller Desk</span>
             <ArrowRight className="h-4 w-4" />
           </>
         )}

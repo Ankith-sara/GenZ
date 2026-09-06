@@ -4,21 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutGrid,
-  Building2,
-  Users,
-  ShoppingBag,
-  MessageSquare,
-  UserCheck,
-  Mail,
-  BarChart3,
-  ShieldCheck,
-  Settings,
-  PanelLeftClose,
-  PanelLeftOpen,
-  ChevronsUpDown,
-  X,
-  LogOut,
+  LayoutGrid, Building2, Users, ShoppingBag, Package,
+  MessageSquare, UserCheck, Mail, BarChart3,
+  ShieldCheck, Settings, PanelLeftClose, PanelLeftOpen,
+  ChevronsUpDown, X, LogOut,
 } from "lucide-react";
 import { signOut } from "@/app/login/actions";
 
@@ -31,7 +20,7 @@ interface AdminSidebarProps {
     users?: number;
     pendingVerifications?: number;
     products?: number;
-    inquiries?: number;
+    orders?: number;
     waitlist?: number;
     contact?: number;
   };
@@ -75,17 +64,17 @@ export function AdminSidebar({
       exact: false,
     },
     {
-      label: "Products",
-      href: "/dashboard/products",
-      icon: ShoppingBag,
+      label: "Orders",
+      href: "/dashboard/orders",
+      icon: Package,
       badge: null,
       exact: false,
     },
     {
-      label: "Inquiries",
-      href: "/dashboard/inquiries",
-      icon: MessageSquare,
-      badge: counts?.inquiries ?? 0,
+      label: "Products",
+      href: "/dashboard/products",
+      icon: ShoppingBag,
+      badge: null,
       exact: false,
     },
   ];
@@ -164,10 +153,10 @@ export function AdminSidebar({
               {!isCollapsed && (
                 <div>
                   <span className="font-graphik block text-sm leading-tight font-bold text-black">
-                    GenZ Command
+                    GenZ Studio
                   </span>
                   <span className="font-graphik block text-[10px] text-[#73736E]">
-                    Enterprise Admin
+                    Studio Portal
                   </span>
                 </div>
               )}
@@ -346,7 +335,7 @@ export function AdminSidebar({
                     {adminUser?.full_name || "Admin User"}
                   </span>
                   <span className="block truncate text-[10px] font-medium text-[#73736E]">
-                    Admin
+                    Studio Manager
                   </span>
                 </div>
               )}

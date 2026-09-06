@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { PageHeader } from "@genz/ui";
 import { StatusBadge } from "@genz/ui";
-import { EmptyState } from "@genz/ui";
 import { SlideOverDrawer } from "@genz/ui";
 import { approveSeller, rejectSeller } from "./actions";
 import {
@@ -27,6 +25,8 @@ import {
   ChevronRight,
   AlertTriangle,
   ExternalLink,
+  ShieldCheck,
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "@genz/ui";
 
@@ -105,23 +105,18 @@ function getBusinessCategoryLabel(app: SellerAppRecord): string {
   return rawType || "Manufacturer / Factory";
 }
 
-// Icon stroke is standardized to 1.75 across the panel (Lucide defaults to 2,
-// which reads slightly heavy at these small sizes) — one deliberate choice
-// applied consistently rather than left to each icon's default.
 const ICON_STROKE = 1.75;
-
-// Shared button press/hover physics so every control in the panel feels
-// like the same material, not a grab-bag of default states.
 const PRESSABLE =
-  "transition-all duration-150 ease-out active:scale-[0.97] disabled:active:scale-100";
+  "cursor-pointer transition-all duration-150 ease-out active:scale-[0.98] disabled:active:scale-100 disabled:cursor-not-allowed";
 const FOCUS_RING =
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1A1A18]/15 focus-visible:ring-offset-1 focus-visible:ring-offset-white";
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#171717]/20 focus-visible:ring-offset-1 focus-visible:ring-offset-white";
 
 export function VerificationsSplitClient({
   initialList,
+  initialStatus = "pending",
 }: VerificationsSplitClientProps) {
   const [appsList, setAppsList] = useState<SellerAppRecord[]>(initialList);
-  const [activeStatusFilter, setActiveStatusFilter] = useState<string>("pending");
+  const [activeStatusFilter, setActiveStatusFilter] = useState<string>(initialStatus);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -154,10 +149,10 @@ export function VerificationsSplitClient({
   const [copiedAll, setCopiedAll] = useState(false);
 
   const counts = {
+    all: appsList.length,
     pending: appsList.filter((a) => a.status === "pending").length,
     approved: appsList.filter((a) => a.status === "approved").length,
     rejected: appsList.filter((a) => a.status === "rejected").length,
-    all: appsList.length,
   };
 
   const filteredList = appsList.filter((app) => {
@@ -201,7 +196,6 @@ export function VerificationsSplitClient({
       if (res.error) {
         setActionError(res.error);
       } else if (res.credentials) {
-        // Update local app list status instantly
         setAppsList((prev) =>
           prev.map((item) =>
             item.id === selectedApp.id ? { ...item, status: "approved" } : item
@@ -266,22 +260,29 @@ export function VerificationsSplitClient({
   };
 
   return (
-    <div className="font-graphik space-y-6">
-      <PageHeader
-        title="Seller Audit & Verification Center"
-        description="Review manufacturing verification applications, GST certificates, and clearance status."
-        breadcrumbs={[
-          { label: "Admin", href: "/admin/dashboard" },
-          { label: "Verifications" },
-        ]}
-      />
+    <div className="mx-auto max-w-[1440px] space-y-6 pb-12 text-[#171717]">
+      {/* COMPACT ENTERPRISE PAGE HEADER */}
+      <div className="flex flex-col justify-between gap-4 border-b border-[#E5E5E5] pb-5 sm:flex-row sm:items-end">
+        <div className="space-y-1">
+          <nav className="flex items-center gap-1.5 text-xs text-[#737373]">
+            <span>Admin</span>
+            <span>/</span>
+            <span className="font-medium text-[#171717]">Verifications</span>
+          </nav>
+          <h1 className="text-2xl font-semibold tracking-tight text-[#171717] sm:text-[30px] sm:leading-tight">
+            Seller Verification
+          </h1>
+          <p className="text-xs text-[#737373] sm:text-sm">
+            Review seller applications, manufacturing verification, GST documentation, and compliance status.
+          </p>
+        </div>
+      </div>
 
-      {/* Action Notification Banners — desaturated to sit inside the
-          cream/ink palette instead of stock Tailwind emerald/rose */}
+      {/* ACTION NOTIFICATION BANNERS */}
       {actionError && (
         <div
           role="alert"
-          className="flex items-center gap-2.5 rounded-xl border border-[#E3B9B2] bg-[#FBF1EF] p-3.5 text-xs font-semibold text-[#7A2E24] shadow-[0_1px_2px_rgba(122,46,36,0.06)]"
+          className="flex items-center gap-2.5 rounded-xl border border-[#FCA5A5]/60 bg-[#FEF2F2] px-4 py-3 text-xs font-medium text-[#991B1B]"
         >
           <AlertCircle className="h-4 w-4 shrink-0" strokeWidth={ICON_STROKE} />
           <span>{actionError}</span>
@@ -290,56 +291,44 @@ export function VerificationsSplitClient({
       {actionSuccess && (
         <div
           role="status"
-          className="flex items-center gap-2.5 rounded-xl border border-[#B9CDB6] bg-[#F1F5EF] p-3.5 text-xs font-semibold text-[#2F5233] shadow-[0_1px_2px_rgba(47,82,51,0.06)]"
+          className="flex items-center gap-2.5 rounded-xl border border-[#86EFAC]/60 bg-[#F0FDF4] px-4 py-3 text-xs font-medium text-[#166534]"
         >
           <CheckCircle2
-            className="h-4 w-4 shrink-0 text-[#3D6B45]"
+            className="h-4 w-4 shrink-0 text-[#15803D]"
             strokeWidth={ICON_STROKE}
           />
           <span>{actionSuccess}</span>
         </div>
       )}
 
-      {/* CONTROL TOOLBAR: SEARCH & STATUS TABS */}
-      <div className="flex flex-col gap-4 border-b border-[#E5E5E0] pb-4 sm:flex-row sm:items-center sm:justify-between">
-        {/* Search */}
-        <div className="relative max-w-md flex-1">
-          <Search
-            className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-[#73736E]"
-            strokeWidth={ICON_STROKE}
-          />
-          <input
-            type="text"
-            placeholder="Search business name, applicant, email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className={`h-9 w-full rounded-lg border border-[#E5E5E0] bg-white pr-3 pl-9 text-xs text-black transition-colors placeholder:text-[#A3A39D] focus:border-black ${FOCUS_RING}`}
-          />
-        </div>
-
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto">
+      {/* RESPONSIVE SEGMENTED STATUS NAVIGATION & SEARCH TOOLBAR */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        {/* Horizontal Scrollable Status Tabs on Mobile */}
+        <div className="inline-flex max-w-full overflow-x-auto whitespace-nowrap scrollbar-none items-center gap-1.5 rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-1">
           {[
+            { value: "all", label: "All", count: counts.all },
             { value: "pending", label: "Pending Review", count: counts.pending },
             { value: "approved", label: "Approved", count: counts.approved },
             { value: "rejected", label: "Rejected", count: counts.rejected },
-            { value: "all", label: "All Records", count: counts.all },
           ].map((tab) => {
             const isActive = activeStatusFilter === tab.value;
             return (
               <button
                 key={tab.value}
+                type="button"
                 onClick={() => setActiveStatusFilter(tab.value)}
-                className={`flex h-9 items-center gap-2 rounded-lg px-3.5 text-xs font-bold ${PRESSABLE} ${FOCUS_RING} ${
+                className={`flex h-8 shrink-0 items-center gap-2 rounded-lg px-3 text-xs font-medium ${PRESSABLE} ${FOCUS_RING} ${
                   isActive
-                    ? "bg-black text-white shadow-[0_1px_3px_rgba(0,0,0,0.25)]"
-                    : "border border-[#E5E5E0] bg-white text-[#52524E] hover:border-black/30 hover:bg-[#FAF8F4]"
+                    ? "bg-[#171717] text-white shadow-xs"
+                    : "bg-transparent text-[#525252] hover:bg-white hover:text-[#171717]"
                 }`}
               >
                 <span>{tab.label}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] tabular-nums ${
-                    isActive ? "bg-white/20 text-white" : "bg-[#E5E5E0] text-black"
+                  className={`rounded-md px-1.5 py-0.25 font-mono text-[10px] tabular-nums ${
+                    isActive
+                      ? "bg-white/20 text-white"
+                      : "bg-[#E5E5E5]/70 text-[#737373]"
                   }`}
                 >
                   {tab.count}
@@ -348,98 +337,140 @@ export function VerificationsSplitClient({
             );
           })}
         </div>
+
+        {/* Responsive Search Field */}
+        <div className="relative w-full lg:w-96">
+          <Search
+            className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#737373]"
+            strokeWidth={ICON_STROKE}
+          />
+          <input
+            type="text"
+            placeholder="Search business name, applicant, email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={`h-11 w-full rounded-xl border border-[#E5E5E5] bg-white pr-3.5 pl-10 text-xs text-[#171717] transition-all placeholder:text-[#A3A3A3] focus:border-[#171717] focus:bg-white ${FOCUS_RING}`}
+          />
+        </div>
       </div>
 
-      {/* FULL-WIDTH DATA TABLE VIEW */}
+      {/* RESULTS SECTION HEADER */}
+      <div className="flex items-center justify-between pt-1">
+        <h2 className="text-sm font-semibold text-[#171717] sm:text-base">
+          Seller Applications
+        </h2>
+        <span className="text-xs text-[#737373]">
+          {filteredList.length} {filteredList.length === 1 ? "result" : "results"}
+        </span>
+      </div>
+
+      {/* POPULATED RESULTS OR POLISHED COMPACT EMPTY STATE */}
       {filteredList.length === 0 ? (
-        <EmptyState
-          icon={
-            <Building2 className="h-7 w-7 text-[#73736E]" strokeWidth={ICON_STROKE} />
-          }
-          title="No applications found"
-          description={`No seller profiles listed under "${activeStatusFilter}" matching your search.`}
-          primaryAction={{
-            label: "Reset filters",
-            onClick: () => {
-              setSearchQuery("");
-              setActiveStatusFilter("all");
-            },
-          }}
-        />
+        <div className="flex min-h-[240px] flex-col items-center justify-center rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] px-6 py-10 text-center">
+          <div className="mb-3.5 flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E5E5] bg-white text-[#525252] shadow-xs">
+            <ShieldCheck className="h-5 w-5 text-[#737373]" strokeWidth={ICON_STROKE} />
+          </div>
+          <h3 className="text-sm font-semibold text-[#171717] sm:text-base">
+            No seller applications found
+          </h3>
+          <p className="mt-1 max-w-sm text-xs text-[#737373] sm:text-sm">
+            There are no applications matching the selected status or search criteria.
+          </p>
+          {(searchQuery || activeStatusFilter !== "all") && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery("");
+                setActiveStatusFilter("all");
+              }}
+              className={`mt-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#E5E5E5] bg-white px-3 text-xs font-medium text-[#171717] hover:bg-[#F5F5F4] ${PRESSABLE} ${FOCUS_RING}`}
+            >
+              <RotateCcw className="h-3.5 w-3.5 text-[#737373]" strokeWidth={ICON_STROKE} />
+              <span>Clear filters</span>
+            </button>
+          )}
+        </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-[#E5E5E0] bg-white shadow-[0_1px_2px_rgba(26,26,24,0.04)]">
+        /* RESPONSIVE VERIFICATION TABLE */
+        <div className="overflow-hidden rounded-xl border border-[#E5E5E5] bg-white shadow-xs">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="sticky top-0 z-10 border-b border-[#E5E5E0] bg-[#FAF8F4] text-[10px] font-bold tracking-wider text-[#73736E] uppercase shadow-[0_1px_0_rgba(26,26,24,0.04)]">
+            <table className="w-full min-w-[768px] text-left text-xs">
+              <thead className="border-b border-[#E5E5E5] bg-[#FAFAF9] text-[11px] font-semibold text-[#737373] uppercase tracking-wider">
                 <tr>
-                  <th className="p-3.5 pl-4">Factory / Business Name</th>
-                  <th className="p-3.5">Key Person & Contact</th>
-                  <th className="p-3.5">Location & Category</th>
-                  <th className="p-3.5">Clearance Status</th>
-                  <th className="p-3.5">Filing Date</th>
-                  <th className="p-3.5 pr-4 text-right">Audit Action</th>
+                  <th className="px-4 py-3">Business</th>
+                  <th className="px-4 py-3">Applicant</th>
+                  <th className="px-4 py-3">Verification & Location</th>
+                  <th className="px-4 py-3">GST / Tax ID</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Submitted</th>
+                  <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#F0F0EC] bg-white">
+              <tbody className="divide-y divide-[#E5E5E5] bg-white">
                 {filteredList.map((app) => {
                   const isSelected = selectedId === app.id;
+                  const gstVal = String(app.form_data?.gst_number || "Pending");
                   return (
                     <tr
                       key={app.id}
                       onClick={() => setSelectedId(app.id)}
-                      className={`group h-16 cursor-pointer transition-colors duration-150 ${
+                      className={`group cursor-pointer transition-colors duration-150 ${
                         isSelected
-                          ? "border-l-2 border-l-black bg-[#FAF7F0] font-medium"
-                          : "border-l-2 border-l-transparent hover:bg-[#FAF7F0]/70"
+                          ? "bg-[#FAFAF9]"
+                          : "hover:bg-[#FAFAF9]/80"
                       }`}
                     >
-                      <td className="p-3.5 pl-4">
+                      <td className="px-4 py-3.5">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#E5E5E0] bg-[#FAF7F0] font-bold text-black shadow-[0_1px_2px_rgba(26,26,24,0.05)]">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E5E5] bg-[#FAFAF9] text-[#171717]">
                             <Building2
-                              className="h-5 w-5 text-[#52524E]"
+                              className="h-4 w-4 text-[#525252]"
                               strokeWidth={ICON_STROKE}
                             />
                           </div>
-                          <div>
-                            <span className="block font-bold text-[#1A1A18] group-hover:underline">
+                          <div className="min-w-0">
+                            <span className="block font-semibold text-[#171717] group-hover:underline truncate">
                               {app.business_name}
                             </span>
-                            <span className="block font-mono text-[10px] text-[#73736E]">
-                              ID: {app.id.slice(0, 12)}…
+                            <span className="block font-mono text-[10px] text-[#737373]">
+                              ID: {app.id.slice(0, 8)}…
                             </span>
                           </div>
                         </div>
                       </td>
 
-                      <td className="p-3.5">
+                      <td className="px-4 py-3.5">
                         <div>
-                          <span className="block font-semibold text-[#1A1A18]">
+                          <span className="block font-medium text-[#171717]">
                             {app.full_name}
                           </span>
-                          <span className="block font-mono text-[11px] text-[#73736E]">
+                          <span className="block font-mono text-[11px] text-[#737373]">
                             {app.email}
                           </span>
                         </div>
                       </td>
 
-                      <td className="p-3.5 text-[#52524E]">
+                      <td className="px-4 py-3.5 text-[#525252]">
                         <div>
                           <span className="block font-medium">
                             {String(app.form_data?.city || "India")},{" "}
                             {String(app.form_data?.state || "")}
                           </span>
-                          <span className="block font-mono text-[10px] text-[#73736E]">
+                          <span className="block text-[11px] text-[#737373]">
                             {getBusinessCategoryLabel(app)}
                           </span>
                         </div>
                       </td>
 
-                      <td className="p-3.5">
+                      <td className="px-4 py-3.5 font-mono text-[11px] text-[#525252]">
+                        {gstVal}
+                      </td>
+
+                      <td className="px-4 py-3.5">
                         <StatusBadge status={app.status} />
                       </td>
 
-                      <td className="p-3.5 font-mono text-[11px] text-[#73736E] tabular-nums">
+                      <td className="px-4 py-3.5 font-mono text-[11px] text-[#737373] tabular-nums">
                         {new Date(app.created_at).toLocaleDateString("en-US", {
                           month: "short",
                           day: "2-digit",
@@ -447,7 +478,7 @@ export function VerificationsSplitClient({
                         })}
                       </td>
 
-                      <td className="p-3.5 pr-4 text-right">
+                      <td className="px-4 py-3.5 text-right">
                         <Button
                           type="button"
                           variant="outline"
@@ -455,11 +486,11 @@ export function VerificationsSplitClient({
                             e.stopPropagation();
                             setSelectedId(app.id);
                           }}
-                          className={`h-8 rounded-lg border-[#E5E5E0] bg-white px-3 text-xs font-bold text-black group-hover:border-black group-hover:bg-black group-hover:text-white ${PRESSABLE} ${FOCUS_RING}`}
+                          className={`h-8 rounded-lg border-[#E5E5E5] bg-white px-2.5 text-xs font-medium text-[#171717] hover:border-[#171717] hover:bg-[#171717] hover:text-white ${PRESSABLE} ${FOCUS_RING}`}
                         >
-                          <span>Review application</span>
+                          <span>Review</span>
                           <ChevronRight
-                            className="ml-1 h-3.5 w-3.5 text-[#73736E] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-white"
+                            className="ml-1 h-3.5 w-3.5 text-[#737373] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-white"
                             strokeWidth={ICON_STROKE}
                           />
                         </Button>
@@ -473,7 +504,7 @@ export function VerificationsSplitClient({
         </div>
       )}
 
-      {/* SIDE DRAWER FOR AUDIT & APPLICATION REVIEW */}
+      {/* RESPONSIVE AUDIT SLIDE-OVER DRAWER */}
       {selectedApp && (
         <SlideOverDrawer
           isOpen={!!selectedApp}
@@ -487,10 +518,10 @@ export function VerificationsSplitClient({
         >
           <div className="space-y-6">
             {/* Header Clearance Status & Actions */}
-            <div className="flex flex-col justify-between gap-4 rounded-2xl border border-[#E5E5E0] bg-[#FAF8F4] p-5 sm:flex-row sm:items-center">
-              <div className="space-y-1.5">
+            <div className="flex flex-col justify-between gap-4 rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-4 sm:flex-row sm:items-center">
+              <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                  <span className="text-[11px] font-semibold text-[#737373] uppercase tracking-wider">
                     Current Status:
                   </span>
                   <StatusBadge status={selectedApp.status} />
@@ -499,11 +530,11 @@ export function VerificationsSplitClient({
 
               {/* Clearance Action Buttons */}
               {selectedApp.status === "pending" && (
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Button
                     onClick={openApproveModal}
                     disabled={isPending}
-                    className={`h-9 rounded-lg bg-[#2F6B4F] px-4 text-xs font-semibold text-white shadow-[0_1px_2px_rgba(47,107,79,0.3)] hover:bg-[#28593F] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`h-8 flex-1 sm:flex-initial rounded-lg bg-[#166534] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#14532D] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
                   >
                     <FileCheck
                       className="mr-1.5 h-3.5 w-3.5"
@@ -515,7 +546,7 @@ export function VerificationsSplitClient({
                   <Button
                     onClick={() => setShowRejectForm(true)}
                     disabled={isPending}
-                    className={`h-9 rounded-lg border border-[#B3423A] bg-[#B3423A] px-4 text-xs font-semibold text-white shadow-[0_1px_2px_rgba(179,66,58,0.25)] hover:bg-[#963830] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`h-8 flex-1 sm:flex-initial rounded-lg border border-[#991B1B] bg-[#991B1B] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#7F1D1D] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
                   >
                     <XCircle className="mr-1.5 h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                     <span>Reject</span>
@@ -528,9 +559,9 @@ export function VerificationsSplitClient({
             {showRejectForm && (
               <form
                 onSubmit={handleRejectSubmit}
-                className="space-y-3 rounded-xl border border-[#E3B9B2] bg-[#FBF1EF] p-4"
+                className="space-y-3 rounded-xl border border-[#FCA5A5]/60 bg-[#FEF2F2] p-4"
               >
-                <h4 className="text-xs font-bold text-[#7A2E24]">
+                <h4 className="text-xs font-semibold text-[#991B1B]">
                   Reason for rejection
                 </h4>
                 <textarea
@@ -539,21 +570,21 @@ export function VerificationsSplitClient({
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}
                   required
-                  className={`w-full rounded-lg border border-[#E3B9B2] bg-white p-2.5 text-xs text-black transition-colors focus:border-[#7A2E24] ${FOCUS_RING}`}
+                  className={`w-full rounded-lg border border-[#FCA5A5] bg-white p-2.5 text-xs text-[#171717] transition-colors focus:border-[#991B1B] ${FOCUS_RING}`}
                 />
-                <div className="flex items-center justify-end gap-2">
+                <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => setShowRejectForm(false)}
-                    className={`h-8 text-xs font-semibold ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`h-8 w-full sm:w-auto text-xs font-medium ${PRESSABLE} ${FOCUS_RING}`}
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     disabled={isPending || !rejectionReason.trim()}
-                    className={`h-8 bg-[#B3423A] text-xs font-semibold text-white hover:bg-[#963830] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`h-8 w-full sm:w-auto bg-[#991B1B] text-xs font-medium text-white hover:bg-[#7F1D1D] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
                   >
                     Confirm rejection
                   </Button>
@@ -563,40 +594,40 @@ export function VerificationsSplitClient({
 
             {/* Applicant Metadata Cards */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-2.5 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
-                <h4 className="border-b border-[#E5E5E0] pb-1.5 text-[10px] font-bold tracking-wider text-[#1A1A18] uppercase">
+              <div className="space-y-2.5 rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-4 text-xs">
+                <h4 className="border-b border-[#E5E5E5] pb-1.5 text-[10px] font-semibold tracking-wider text-[#171717] uppercase">
                   Contact & Key Person
                 </h4>
-                <div className="flex items-center gap-2 font-semibold text-black">
+                <div className="flex items-center gap-2 font-medium text-[#171717]">
                   <Building2
-                    className="h-3.5 w-3.5 text-[#73736E]"
+                    className="h-3.5 w-3.5 text-[#737373]"
                     strokeWidth={ICON_STROKE}
                   />
                   <span>{selectedApp.full_name}</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#52524E]">
+                <div className="flex items-center gap-2 text-[#525252]">
                   <Mail
-                    className="h-3.5 w-3.5 text-[#73736E]"
+                    className="h-3.5 w-3.5 text-[#737373]"
                     strokeWidth={ICON_STROKE}
                   />
                   <span className="truncate">{selectedApp.email}</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#52524E]">
+                <div className="flex items-center gap-2 text-[#525252]">
                   <Phone
-                    className="h-3.5 w-3.5 text-[#73736E]"
+                    className="h-3.5 w-3.5 text-[#737373]"
                     strokeWidth={ICON_STROKE}
                   />
                   <span>{selectedApp.phone || "No phone provided"}</span>
                 </div>
               </div>
 
-              <div className="space-y-2.5 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
-                <h4 className="border-b border-[#E5E5E0] pb-1.5 text-[10px] font-bold tracking-wider text-[#1A1A18] uppercase">
+              <div className="space-y-2.5 rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-4 text-xs">
+                <h4 className="border-b border-[#E5E5E5] pb-1.5 text-[10px] font-semibold tracking-wider text-[#171717] uppercase">
                   Filing Timeline & Origin
                 </h4>
-                <div className="flex items-center gap-2 font-semibold text-black">
+                <div className="flex items-center gap-2 font-medium text-[#171717]">
                   <Calendar
-                    className="h-3.5 w-3.5 text-[#73736E]"
+                    className="h-3.5 w-3.5 text-[#737373]"
                     strokeWidth={ICON_STROKE}
                   />
                   <span>
@@ -605,18 +636,12 @@ export function VerificationsSplitClient({
                       month: "long",
                       day: "numeric",
                       year: "numeric",
-                    })}{" "}
-                    at{" "}
-                    {new Date(selectedApp.created_at).toLocaleTimeString("en-US", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
                     })}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-[#52524E]">
+                <div className="flex items-center gap-2 text-[#525252]">
                   <MapPin
-                    className="h-3.5 w-3.5 text-[#73736E]"
+                    className="h-3.5 w-3.5 text-[#737373]"
                     strokeWidth={ICON_STROKE}
                   />
                   <span>
@@ -624,9 +649,9 @@ export function VerificationsSplitClient({
                     {String(selectedApp.form_data?.state || "")}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-[#52524E]">
+                <div className="flex items-center gap-2 text-[#525252]">
                   <Clock
-                    className="h-3.5 w-3.5 text-[#73736E]"
+                    className="h-3.5 w-3.5 text-[#737373]"
                     strokeWidth={ICON_STROKE}
                   />
                   <span>Category: {getBusinessCategoryLabel(selectedApp)}</span>
@@ -636,8 +661,8 @@ export function VerificationsSplitClient({
 
             {/* Form Data Application Details View */}
             {selectedApp.form_data && (
-              <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-[0_1px_2px_rgba(26,26,24,0.04)]">
-                <h4 className="text-xs font-bold tracking-wider text-[#1A1A18] uppercase">
+              <div className="space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-4 sm:p-5 shadow-xs">
+                <h4 className="text-xs font-semibold tracking-wider text-[#171717] uppercase">
                   Submitted Application Details
                 </h4>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -678,16 +703,16 @@ export function VerificationsSplitClient({
                           key={key}
                           className={`space-y-1.5 ${isFullWidth ? "sm:col-span-2" : ""}`}
                         >
-                          <label className="block text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                          <label className="block text-[10px] font-semibold tracking-wider text-[#737373] uppercase">
                             {label}
                           </label>
-                          <div className="flex min-h-[40px] items-center rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] px-3.5 py-2 text-xs font-semibold text-[#1A1A18]">
+                          <div className="flex min-h-[38px] items-center rounded-lg border border-[#E5E5E5] bg-[#FAFAF9] px-3 py-2 text-xs font-medium text-[#171717]">
                             {isUrl ? (
                               <a
                                 href={stringVal}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`inline-flex items-center gap-1.5 rounded font-semibold break-all text-[#1A4B8C] hover:underline ${FOCUS_RING}`}
+                                className={`inline-flex items-center gap-1.5 font-medium break-all text-[#1D4ED8] hover:underline ${FOCUS_RING}`}
                               >
                                 <span>Open document / link</span>
                                 <ExternalLink
@@ -696,7 +721,7 @@ export function VerificationsSplitClient({
                                 />
                               </a>
                             ) : (
-                              <span className="font-sans text-xs break-words text-[#1A1A18]">
+                              <span className="font-sans text-xs break-words text-[#171717]">
                                 {stringVal}
                               </span>
                             )}
@@ -712,26 +737,26 @@ export function VerificationsSplitClient({
         </SlideOverDrawer>
       )}
 
-      {/* APPROVAL & CUSTOM CREDENTIALS MODAL */}
+      {/* RESPONSIVE APPROVAL & CUSTOM CREDENTIALS MODAL */}
       {showApproveModal && selectedApp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1A18]/60 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#171717]/50 p-4 backdrop-blur-xs">
           <form
             onSubmit={handleApproveSubmit}
-            className="animate-in fade-in-80 zoom-in-95 w-full max-w-md space-y-5 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-[0_20px_50px_-12px_rgba(26,26,24,0.35)]"
+            className="w-full max-w-md space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-5 sm:p-6 shadow-lg"
           >
             <div>
-              <h3 className="text-lg font-bold text-[#1A1A18]">
+              <h3 className="text-base font-semibold text-[#171717]">
                 Approve seller & set credentials
               </h3>
-              <p className="text-xs text-[#73736E]">
+              <p className="text-xs text-[#737373]">
                 Configure access for{" "}
-                <strong className="text-black">{selectedApp.business_name}</strong>
+                <strong className="text-[#171717]">{selectedApp.business_name}</strong>
               </p>
             </div>
 
-            <div className="space-y-3.5 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
+            <div className="space-y-3 rounded-lg border border-[#E5E5E5] bg-[#FAFAF9] p-3.5 text-xs">
               <div>
-                <label className="mb-1 block text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                <label className="mb-1 block text-[10px] font-semibold tracking-wider text-[#737373] uppercase">
                   Login Email Address
                 </label>
                 <div className="relative flex items-center">
@@ -740,21 +765,21 @@ export function VerificationsSplitClient({
                     required
                     value={approvalEmail}
                     onChange={(e) => setApprovalEmail(e.target.value)}
-                    className={`h-10 w-full rounded-xl border border-[#E5E5E0] bg-white pr-10 pl-3.5 font-mono text-xs text-black transition-colors focus:border-black ${FOCUS_RING}`}
+                    className={`h-9 w-full rounded-lg border border-[#E5E5E5] bg-white pr-9 pl-3 font-mono text-xs text-[#171717] transition-colors focus:border-[#171717] ${FOCUS_RING}`}
                   />
                   <button
                     type="button"
                     onClick={() => copyToClipboard(approvalEmail, "email")}
-                    className={`absolute right-2 flex h-7 w-7 items-center justify-center rounded-lg text-[#73736E] hover:bg-[#FAF8F4] hover:text-black ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`absolute right-1.5 flex h-6 w-6 items-center justify-center rounded text-[#737373] hover:bg-[#FAFAF9] hover:text-[#171717] ${PRESSABLE} ${FOCUS_RING}`}
                     title="Copy email address"
                   >
                     {copiedEmail ? (
                       <Check
-                        className="h-4 w-4 text-[#3D6B45]"
+                        className="h-3.5 w-3.5 text-[#166534]"
                         strokeWidth={ICON_STROKE}
                       />
                     ) : (
-                      <Copy className="h-4 w-4" strokeWidth={ICON_STROKE} />
+                      <Copy className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                     )}
                   </button>
                 </div>
@@ -762,13 +787,13 @@ export function VerificationsSplitClient({
 
               <div>
                 <div className="mb-1 flex items-center justify-between">
-                  <label className="block text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                  <label className="block text-[10px] font-semibold tracking-wider text-[#737373] uppercase">
                     Set Custom Password
                   </label>
                   <button
                     type="button"
                     onClick={() => setApprovalPassword(generateRandomPassword(14))}
-                    className={`flex items-center gap-1 rounded text-[11px] font-medium text-[#2F6B4F] hover:underline ${FOCUS_RING}`}
+                    className={`flex items-center gap-1 text-[11px] font-medium text-[#166534] hover:underline ${FOCUS_RING}`}
                   >
                     <RefreshCw className="h-3 w-3" strokeWidth={ICON_STROKE} />
                     <span>Generate random</span>
@@ -782,34 +807,34 @@ export function VerificationsSplitClient({
                     minLength={8}
                     value={approvalPassword}
                     onChange={(e) => setApprovalPassword(e.target.value)}
-                    className={`h-10 w-full rounded-xl border border-[#E5E5E0] bg-white pr-20 pl-3.5 font-mono text-xs text-black transition-colors focus:border-black ${FOCUS_RING}`}
+                    className={`h-9 w-full rounded-lg border border-[#E5E5E5] bg-white pr-16 pl-3 font-mono text-xs text-[#171717] transition-colors focus:border-[#171717] ${FOCUS_RING}`}
                   />
-                  <div className="absolute right-2 flex items-center gap-0.5">
+                  <div className="absolute right-1.5 flex items-center gap-0.5">
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[#73736E] hover:bg-[#FAF8F4] hover:text-black ${PRESSABLE} ${FOCUS_RING}`}
+                      className={`flex h-6 w-6 items-center justify-center rounded text-[#737373] hover:bg-[#FAFAF9] hover:text-[#171717] ${PRESSABLE} ${FOCUS_RING}`}
                       title={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? (
-                        <EyeOff className="h-4 w-4" strokeWidth={ICON_STROKE} />
+                        <EyeOff className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                       ) : (
-                        <Eye className="h-4 w-4" strokeWidth={ICON_STROKE} />
+                        <Eye className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                       )}
                     </button>
                     <button
                       type="button"
                       onClick={() => copyToClipboard(approvalPassword, "password")}
-                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[#73736E] hover:bg-[#FAF8F4] hover:text-black ${PRESSABLE} ${FOCUS_RING}`}
+                      className={`flex h-6 w-6 items-center justify-center rounded text-[#737373] hover:bg-[#FAFAF9] hover:text-[#171717] ${PRESSABLE} ${FOCUS_RING}`}
                       title="Copy password"
                     >
                       {copiedPassword ? (
                         <Check
-                          className="h-4 w-4 text-[#3D6B45]"
+                          className="h-3.5 w-3.5 text-[#166534]"
                           strokeWidth={ICON_STROKE}
                         />
                       ) : (
-                        <Copy className="h-4 w-4" strokeWidth={ICON_STROKE} />
+                        <Copy className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                       )}
                     </button>
                   </div>
@@ -818,27 +843,27 @@ export function VerificationsSplitClient({
 
               <label
                 htmlFor="sendEmailCheck"
-                className="flex cursor-pointer items-center gap-2 pt-1 select-none"
+                className="flex cursor-pointer items-center gap-2 pt-1"
               >
                 <input
                   type="checkbox"
                   id="sendEmailCheck"
                   checked={sendEmailOption}
                   onChange={(e) => setSendEmailOption(e.target.checked)}
-                  className={`h-4 w-4 rounded border-[#E5E5E0] text-black focus:ring-black ${FOCUS_RING}`}
+                  className={`h-4 w-4 rounded border-[#E5E5E5] text-[#171717] focus:ring-[#171717] ${FOCUS_RING}`}
                 />
-                <span className="text-xs text-[#52524E]">
+                <span className="text-xs text-[#525252]">
                   Dispatch email notification with credentials
                 </span>
               </label>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-1">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setShowApproveModal(false)}
-                className={`h-9 text-xs font-semibold ${PRESSABLE} ${FOCUS_RING}`}
+                className={`h-8 w-full sm:w-auto text-xs font-medium ${PRESSABLE} ${FOCUS_RING}`}
               >
                 Cancel
               </Button>
@@ -846,7 +871,7 @@ export function VerificationsSplitClient({
               <Button
                 type="submit"
                 disabled={isPending}
-                className={`h-9 bg-[#2F6B4F] text-xs font-semibold text-white hover:bg-[#28593F] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
+                className={`h-8 w-full sm:w-auto bg-[#166534] text-xs font-medium text-white hover:bg-[#14532D] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
               >
                 {isPending ? (
                   <Loader2
@@ -865,21 +890,21 @@ export function VerificationsSplitClient({
 
       {/* CREDENTIALS PROVISIONED SUMMARY MODAL */}
       {credentialsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1A18]/60 p-4 backdrop-blur-sm">
-          <div className="animate-in fade-in-80 zoom-in-95 w-full max-w-md space-y-5 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-[0_20px_50px_-12px_rgba(26,26,24,0.35)]">
-            <div className="border-b border-[#F0F0EC] pb-3">
-              <h3 className="text-base font-bold text-[#1A1A18]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#171717]/50 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-5 sm:p-6 shadow-lg">
+            <div className="border-b border-[#E5E5E5] pb-3">
+              <h3 className="text-base font-semibold text-[#171717]">
                 Seller credentials provisioned
               </h3>
-              <p className="text-xs text-[#73736E]">
+              <p className="text-xs text-[#737373]">
                 Account generated for{" "}
-                <strong className="text-black">{credentialsModal.businessName}</strong>
+                <strong className="text-[#171717]">{credentialsModal.businessName}</strong>
               </p>
             </div>
 
-            <div className="space-y-3 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
+            <div className="space-y-3 rounded-lg border border-[#E5E5E5] bg-[#FAFAF9] p-3.5 text-xs">
               <div>
-                <label className="mb-1 block text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                <label className="mb-1 block text-[10px] font-semibold tracking-wider text-[#737373] uppercase">
                   Login Email
                 </label>
                 <div className="relative flex items-center">
@@ -887,28 +912,28 @@ export function VerificationsSplitClient({
                     type="text"
                     readOnly
                     value={credentialsModal.email}
-                    className={`h-10 w-full rounded-xl border border-[#E5E5E0] bg-white pr-10 pl-3.5 font-mono text-xs text-black transition-colors focus:border-black ${FOCUS_RING}`}
+                    className={`h-9 w-full rounded-lg border border-[#E5E5E5] bg-white pr-9 pl-3 font-mono text-xs text-[#171717] ${FOCUS_RING}`}
                   />
                   <button
                     type="button"
                     onClick={() => copyToClipboard(credentialsModal.email, "email")}
-                    className={`absolute right-2 flex h-7 w-7 items-center justify-center rounded-lg text-[#73736E] hover:bg-[#FAF8F4] hover:text-black ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`absolute right-1.5 flex h-6 w-6 items-center justify-center rounded text-[#737373] hover:bg-[#FAFAF9] hover:text-[#171717] ${PRESSABLE} ${FOCUS_RING}`}
                     title="Copy email address"
                   >
                     {copiedEmail ? (
                       <Check
-                        className="h-4 w-4 text-[#3D6B45]"
+                        className="h-3.5 w-3.5 text-[#166534]"
                         strokeWidth={ICON_STROKE}
                       />
                     ) : (
-                      <Copy className="h-4 w-4" strokeWidth={ICON_STROKE} />
+                      <Copy className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                     )}
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="mb-1 block text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
+                <label className="mb-1 block text-[10px] font-semibold tracking-wider text-[#737373] uppercase">
                   Password Credentials
                 </label>
                 <div className="relative flex items-center">
@@ -916,19 +941,19 @@ export function VerificationsSplitClient({
                     type={showPassword ? "text" : "password"}
                     readOnly
                     value={credentialsModal.password}
-                    className={`h-10 w-full rounded-xl border border-[#E5E5E0] bg-white pr-20 pl-3.5 font-mono text-xs text-black transition-colors focus:border-black ${FOCUS_RING}`}
+                    className={`h-9 w-full rounded-lg border border-[#E5E5E5] bg-white pr-16 pl-3 font-mono text-xs text-[#171717] ${FOCUS_RING}`}
                   />
-                  <div className="absolute right-2 flex items-center gap-0.5">
+                  <div className="absolute right-1.5 flex items-center gap-0.5">
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[#73736E] hover:bg-[#FAF8F4] hover:text-black ${PRESSABLE} ${FOCUS_RING}`}
+                      className={`flex h-6 w-6 items-center justify-center rounded text-[#737373] hover:bg-[#FAFAF9] hover:text-[#171717] ${PRESSABLE} ${FOCUS_RING}`}
                       title={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? (
-                        <EyeOff className="h-4 w-4" strokeWidth={ICON_STROKE} />
+                        <EyeOff className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                       ) : (
-                        <Eye className="h-4 w-4" strokeWidth={ICON_STROKE} />
+                        <Eye className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                       )}
                     </button>
                     <button
@@ -936,16 +961,16 @@ export function VerificationsSplitClient({
                       onClick={() =>
                         copyToClipboard(credentialsModal.password, "password")
                       }
-                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[#73736E] hover:bg-[#FAF8F4] hover:text-black ${PRESSABLE} ${FOCUS_RING}`}
+                      className={`flex h-6 w-6 items-center justify-center rounded text-[#737373] hover:bg-[#FAFAF9] hover:text-[#171717] ${PRESSABLE} ${FOCUS_RING}`}
                       title="Copy password"
                     >
                       {copiedPassword ? (
                         <Check
-                          className="h-4 w-4 text-[#3D6B45]"
+                          className="h-3.5 w-3.5 text-[#166534]"
                           strokeWidth={ICON_STROKE}
                         />
                       ) : (
-                        <Copy className="h-4 w-4" strokeWidth={ICON_STROKE} />
+                        <Copy className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                       )}
                     </button>
                   </div>
@@ -954,13 +979,13 @@ export function VerificationsSplitClient({
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between text-[#73736E]">
+              <div className="flex items-center justify-between text-[#737373]">
                 <span>Email dispatch:</span>
                 <span
                   className={`rounded-md border px-2 py-0.5 font-semibold ${
                     credentialsModal.emailSent
-                      ? "border-[#B9CDB6] bg-[#F1F5EF] text-[#2F5233]"
-                      : "border-[#E6CBA0] bg-[#FBF3E7] text-[#8A5A1E]"
+                      ? "border-[#86EFAC] bg-[#F0FDF4] text-[#166534]"
+                      : "border-[#FDE68A] bg-[#FFFBEB] text-[#92400E]"
                   }`}
                 >
                   {credentialsModal.emailSent
@@ -969,10 +994,10 @@ export function VerificationsSplitClient({
                 </span>
               </div>
               {!credentialsModal.emailSent && (
-                <div className="mt-2 rounded-lg border border-[#E6CBA0] bg-[#FBF3E7] p-2.5 text-xs text-[#8A5A1E]">
+                <div className="mt-2 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] p-2.5 text-xs text-[#92400E]">
                   <div className="flex items-center gap-1.5 font-semibold">
                     <AlertTriangle
-                      className="h-4 w-4 shrink-0 text-[#B3822E]"
+                      className="h-4 w-4 shrink-0 text-[#D97706]"
                       strokeWidth={ICON_STROKE}
                     />
                     <span>Email dispatch failed</span>
@@ -981,14 +1006,13 @@ export function VerificationsSplitClient({
                     {credentialsModal.emailError
                       ? `Reason: ${credentialsModal.emailError}.`
                       : "Credentials were provisioned."}{" "}
-                    Copy and relay these credentials to the seller directly using the
-                    button below.
+                    Copy and relay these credentials to the seller directly.
                   </p>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-1">
               <Button
                 type="button"
                 variant="outline"
@@ -996,11 +1020,11 @@ export function VerificationsSplitClient({
                   const allText = `GenZ Seller Account Credentials\nBusiness: ${credentialsModal.businessName}\nLogin Email: ${credentialsModal.email}\nPassword: ${credentialsModal.password}`;
                   copyToClipboard(allText, "all");
                 }}
-                className={`h-9 text-xs font-semibold ${PRESSABLE} ${FOCUS_RING}`}
+                className={`h-8 w-full sm:w-auto text-xs font-medium ${PRESSABLE} ${FOCUS_RING}`}
               >
                 {copiedAll ? (
                   <Check
-                    className="mr-1.5 h-3.5 w-3.5 text-[#3D6B45]"
+                    className="mr-1.5 h-3.5 w-3.5 text-[#166534]"
                     strokeWidth={ICON_STROKE}
                   />
                 ) : (
@@ -1015,7 +1039,7 @@ export function VerificationsSplitClient({
                   setCredentialsModal(null);
                   setActiveStatusFilter("approved");
                 }}
-                className={`h-9 bg-black text-xs font-semibold text-white hover:bg-neutral-800 ${PRESSABLE} ${FOCUS_RING}`}
+                className={`h-8 w-full sm:w-auto bg-[#171717] text-xs font-medium text-white hover:bg-[#262626] ${PRESSABLE} ${FOCUS_RING}`}
               >
                 View approved sellers
               </Button>

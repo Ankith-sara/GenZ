@@ -30,9 +30,6 @@ export function AuthLayout({ redirectTo, error }: AuthLayoutProps) {
               <h2 className="font-graphik text-ink-black text-2xl font-bold tracking-tight sm:text-3xl">
                 Welcome Back
               </h2>
-              <p className="font-graphik mt-1.5 text-xs text-[#73736E] sm:text-sm">
-                Enter your credentials to access your enterprise dashboard.
-              </p>
             </div>
 
             {/* Error Query Banner */}

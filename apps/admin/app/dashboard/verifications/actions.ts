@@ -104,7 +104,7 @@ async function getOrCreateAuthUser(
   }
 
   try {
-    let { data: createdData, error: createError } =
+    const { data: createdData, error: createError } =
       await adminClient.auth.admin.createUser({
         email: normalizedEmail,
         password,
@@ -112,28 +112,8 @@ async function getOrCreateAuthUser(
         user_metadata: metadata,
       });
 
-    // If createUser failed (e.g. 500 DB trigger error on app_role enum cast), retry without raw role in metadata
     if (createError) {
-      console.warn(
-        `[getOrCreateAuthUser] Initial createUser failed (${createError.message}), retrying with safe metadata...`
-      );
-
-      const { role, ...safeMetadata } = metadata;
-      const retryResult = await adminClient.auth.admin.createUser({
-        email: normalizedEmail,
-        password,
-        email_confirm: true,
-        user_metadata: safeMetadata,
-      });
-
-      if (!retryResult.error && retryResult.data?.user) {
-        createdData = retryResult.data;
-        createError = null;
-      }
-    }
-
-    if (createError) {
-      // Fallback: check listUsers in case user was just inserted
+      // Fallback: check listUsers in case user was created despite response error
       const { data: retryList } = await adminClient.auth.admin.listUsers({
         page: 1,
         perPage: 1000,
@@ -173,27 +153,7 @@ async function getOrCreateAuthUser(
   } catch (err: unknown) {
     console.error(`[getOrCreateAuthUser] Exception caught during createUser:`, err);
 
-    // Fallback 1: Retry createUser with safe metadata (omitting role field to avoid PL/pgSQL trigger crashes)
-    try {
-      const { role, ...safeMetadata } = metadata;
-      const retryResult = await adminClient.auth.admin.createUser({
-        email: normalizedEmail,
-        password,
-        email_confirm: true,
-        user_metadata: safeMetadata,
-      });
-
-      if (!retryResult.error && retryResult.data?.user) {
-        return {
-          id: retryResult.data.user.id,
-          email: retryResult.data.user.email || normalizedEmail,
-        };
-      }
-    } catch {
-      // Fall through to listUsers check
-    }
-
-    // Fallback 2: search listUsers in case createUser created account before throwing exception
+    // Fallback search listUsers in case createUser created account before throwing exception
     const { data: retryList } = await adminClient.auth.admin.listUsers({
       page: 1,
       perPage: 1000,
@@ -389,16 +349,6 @@ export async function approveSeller(
         { onConflict: "id" }
       );
 
-      // Force explicit update on profiles table to guarantee role = seller
-      await adminClient.from("profiles").update({ role: "seller" }).eq("id", userId);
-
-      if (applicationId && applicationId !== userId) {
-        await adminClient
-          .from("profiles")
-          .update({ role: "seller" })
-          .eq("id", applicationId);
-      }
-
       await adminClient.from("seller_profiles").upsert({
         id: userId,
         business_name: application.business_name,
@@ -417,6 +367,11 @@ export async function approveSeller(
       });
 
       if (applicationId && applicationId !== userId) {
+        await adminClient
+          .from("profiles")
+          .update({ role: "seller" })
+          .eq("id", applicationId);
+
         await adminClient
           .from("seller_profiles")
           .update({

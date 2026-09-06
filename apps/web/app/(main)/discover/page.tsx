@@ -10,7 +10,6 @@ export default async function DiscoverPage({
   searchParams: Promise<{
     q?: string;
     category?: string;
-    age_group?: string;
     min_price?: string;
     max_price?: string;
   }>;
@@ -19,7 +18,6 @@ export default async function DiscoverPage({
   const filters: ProductFilters = {
     q: params.q ?? "",
     category: params.category ?? "",
-    age_group: params.age_group ?? "",
     min_price: params.min_price ?? "",
     max_price: params.max_price ?? "",
   };
@@ -38,7 +36,6 @@ export default async function DiscoverPage({
     });
   }
   if (filters.category) query = query.eq("category", filters.category);
-  if (filters.age_group) query = query.eq("age_group", filters.age_group);
   if (filters.min_price) query = query.gte("price_inr", Number(filters.min_price));
   if (filters.max_price) query = query.lte("price_inr", Number(filters.max_price));
 

@@ -820,6 +820,148 @@ export function AboutClient() {
         </div>
       </section>
 
+      {/* WHY TRUST GENZ SECTION */}
+      <section className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12 md:py-28">
+        <div className="mx-auto max-w-7xl">
+          <ScrollReveal className="mx-auto mb-14 max-w-3xl text-center">
+            <div className="tag border-ash mb-3 inline-block rounded-full border bg-white px-4 py-1.5 shadow-2xs">
+              <span className="font-graphik text-xs font-bold tracking-[0.2em] text-amber-700 uppercase">
+                Verification & Trust
+              </span>
+            </div>
+            <h2 className="font-nantes text-ink-black text-3xl font-normal sm:text-5xl">
+              Why Trust GenZ?
+            </h2>
+            <p className="font-graphik text-smoke mt-4 text-sm leading-relaxed sm:text-base">
+              We bridge buyers directly to genuine Indian sellers with zero middlemen,
+              on-site physical audits, and transparent live video proof.
+            </p>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                title: "100% Made in India Sourcing",
+                subtitle: "Authentic Domestic Craftsmanship",
+                desc: "Every listing on GenZ originates from verified Indian workshops and factories. We eliminate reliance on low-quality imports and connect you directly to Indian makers.",
+              },
+              {
+                title: "Rigorous Factory & GST Audits",
+                subtitle: "3-Tier Supplier Verification",
+                desc: "Before any seller lists a product, our team conducts physical site validation, GST registration verification, and MSME certification checks.",
+              },
+              {
+                title: "Live Production Video Reels",
+                subtitle: "Unfiltered Source Transparency",
+                desc: "Watch real factory production reels showing actual workers, machinery, raw materials, and quality tests before placing your wholesale or retail order.",
+              },
+              {
+                title: "Direct Pricing & Escrow Protection",
+                subtitle: "Zero Middleman Markup",
+                desc: "Buy directly from sellers with no price stacking. Payments are securely held in escrow until items are received and inspected.",
+              },
+            ].map((pillar, pIdx) => (
+              <ScrollReveal key={pillar.title} delay={pIdx * 100}>
+                <div className="flex h-full flex-col justify-between rounded-3xl border border-neutral-200/80 bg-white p-7 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/40 hover:shadow-lg">
+                  <div>
+                    <h3 className="font-nantes text-xl font-bold text-neutral-900">
+                      {pillar.title}
+                    </h3>
+                    <p className="font-graphik mt-1.5 text-xs font-semibold text-amber-700">
+                      {pillar.subtitle}
+                    </p>
+                    <p className="font-graphik mt-4 text-xs leading-relaxed text-neutral-600">
+                      {pillar.desc}
+                    </p>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* OUR COMMUNITY SECTION */}
+      <section className="border-ash border-b bg-white px-6 py-20 sm:px-12 md:py-28">
+        <div className="mx-auto max-w-7xl">
+          <ScrollReveal className="mb-14 text-left">
+            <div className="tag border-ash mb-3 inline-block rounded-full border bg-[#FAF7F0] px-4 py-1.5 shadow-2xs">
+              <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
+                Our Community
+              </span>
+            </div>
+            <h2 className="font-nantes text-ink-black max-w-xl text-3xl font-normal sm:text-5xl">
+              Built for all Indian stakeholders.
+            </h2>
+            <p className="font-graphik text-smoke mt-3 max-w-lg text-sm">
+              Connecting consumers, artisans, startups, and institutions in one unified domestic ecosystem.
+            </p>
+          </ScrollReveal>
+
+          {/* Stakeholders Grid */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                index: "01",
+                name: "Consumers",
+                image: "/consumers.png",
+                copy: "Trusted, high-quality Indian products, straight from the source. We connect you directly to the factory floor, ensuring verified quality and competitive pricing without middleman markups.",
+              },
+              {
+                index: "02",
+                name: "Sellers & Artisans",
+                image: "/sellers.png",
+                copy: "Visibility, market demand insights, and a direct line to national buyers. We help you digitize your profile, showcase catalogs, and build lasting business relationships.",
+              },
+              {
+                index: "03",
+                name: "Startups & Innovators",
+                image: "/startups.png",
+                copy: "Reliable manufacturing partners for products that don't exist yet. Discover local fabricators, request custom quotes, and turn prototypes into physical products.",
+              },
+              {
+                index: "04",
+                name: "Creators & Storytellers",
+                image: "/creators.png",
+                copy: "A stage to showcase process, not just the finished product. Share factory reels, tell your brand story, and build direct emotional and commercial trust with buyers.",
+              },
+              {
+                index: "05",
+                name: "Investors & Institutions",
+                image: "/investors.png",
+                copy: "Verified seller listings and regional innovation clusters worth backing. Gain access to transparent manufacturing metrics, production capacity data, and growth indicators.",
+              },
+            ].map((s, sIdx) => (
+              <ScrollReveal key={s.name} delay={sIdx * 80}>
+                <div className="group relative flex aspect-[4/3] flex-col justify-between overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-950 p-6 text-white shadow-xs transition-all duration-500 hover:shadow-xl sm:p-7">
+                  <div className="absolute inset-0 z-0">
+                    <Image
+                      src={s.image}
+                      alt={s.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/20" />
+                  </div>
+                  <div className="relative z-10 flex h-full flex-col justify-between">
+                    <span className="font-mono text-xs text-amber-400">{s.index}</span>
+                    <div className="mt-auto">
+                      <h3 className="font-nantes text-2xl font-normal text-white sm:text-3xl">
+                        For {s.name}
+                      </h3>
+                      <p className="font-graphik mt-2 text-xs leading-relaxed text-neutral-300 opacity-90">
+                        {s.copy}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 5. Call To Action & Institutional Verification Banner */}
       <section className="border-ash border-b bg-white py-20 sm:py-28">
         <ScrollReveal className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 text-center sm:px-12">

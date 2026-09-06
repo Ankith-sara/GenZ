@@ -18,13 +18,12 @@ export interface ProductFormState {
 function parseProductFields(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const category = String(formData.get("category") ?? "toys").trim() || "toys";
-  const age_group = String(formData.get("age_group") ?? "").trim() || null;
   const description = String(formData.get("description") ?? "").trim();
   const priceRaw = String(formData.get("price_inr") ?? "").trim();
   const parsedPrice = priceRaw ? Number(priceRaw) : null;
   const price_inr = parsedPrice !== null && !isNaN(parsedPrice) ? parsedPrice : null;
   const materials = parseMaterials(String(formData.get("materials") ?? ""));
-  return { name, category, age_group, description, price_inr, materials };
+  return { name, category, description, price_inr, materials };
 }
 
 /**
@@ -179,7 +178,6 @@ export async function createProduct(
       seller_id: targetSellerId,
       name: validation.data.name,
       category: validation.data.category,
-      age_group: validation.data.age_group,
       description: validation.data.description || null,
       price_inr: validation.data.price_inr,
       materials: validation.data.materials,
@@ -267,7 +265,7 @@ export async function createProduct(
     }
   }
 
-  revalidatePath("/seller/dashboard/products");
+  revalidatePath("/dashboard/products");
   revalidatePath("/admin/dashboard/products");
 
   const isAdminRedirect = String(formData.get("is_admin") ?? "") === "true";
@@ -275,7 +273,7 @@ export async function createProduct(
     redirect("/admin/dashboard/products");
   }
 
-  redirect(`/seller/dashboard/products/${data.id}`);
+  redirect(`/dashboard/products/${data.id}`);
 }
 
 export async function updateProduct(
@@ -322,7 +320,6 @@ export async function updateProduct(
     .update({
       name: validation.data.name,
       category: validation.data.category,
-      age_group: validation.data.age_group,
       description: validation.data.description || null,
       price_inr: validation.data.price_inr,
       materials: validation.data.materials,
@@ -341,8 +338,8 @@ export async function updateProduct(
     return { error: "Could not save changes. Please try again." };
   }
 
-  revalidatePath(`/seller/dashboard/products/${productId}`);
-  revalidatePath("/seller/dashboard/products");
+  revalidatePath(`/dashboard/products/${productId}`);
+  revalidatePath("/dashboard/products");
   return {};
 }
 
@@ -370,8 +367,8 @@ export async function setProductStatus(productId: string, status: ProductStatus)
     identifier: session.userId,
   });
 
-  revalidatePath(`/seller/dashboard/products/${productId}`);
-  revalidatePath("/seller/dashboard/products");
+  revalidatePath(`/dashboard/products/${productId}`);
+  revalidatePath("/dashboard/products");
 }
 
 export async function deleteProduct(productId: string) {
@@ -419,8 +416,8 @@ export async function deleteProduct(productId: string) {
     identifier: session.userId,
   });
 
-  revalidatePath("/seller/dashboard/products");
-  redirect("/seller/dashboard/products");
+  revalidatePath("/dashboard/products");
+  redirect("/dashboard/products");
 }
 
 export interface VariantFormState {
@@ -483,7 +480,7 @@ export async function addVariant(
     return { error: "Could not add the variant. Please try again." };
   }
 
-  revalidatePath(`/seller/dashboard/products/${productId}`);
+  revalidatePath(`/dashboard/products/${productId}`);
   return {};
 }
 
@@ -512,7 +509,7 @@ export async function deleteVariant(productId: string, variantId: string) {
     identifier: session.userId,
   });
 
-  revalidatePath(`/seller/dashboard/products/${productId}`);
+  revalidatePath(`/dashboard/products/${productId}`);
 }
 
 export async function uploadProductCoverAction(
@@ -596,7 +593,7 @@ export async function uploadProductCoverAction(
         await supabase.storage.from("product-media").remove([product.cover_image_path]);
       }
 
-      revalidatePath(`/seller/dashboard/products/${productId}`);
+      revalidatePath(`/dashboard/products/${productId}`);
       return { success: true };
     }
   );
@@ -694,7 +691,7 @@ export async function uploadProductImagesAction(
         imageIndex++;
       }
 
-      revalidatePath(`/seller/dashboard/products/${productId}`);
+      revalidatePath(`/dashboard/products/${productId}`);
       return { success: true };
     }
   );

@@ -28,6 +28,13 @@ interface HeaderProps {
 
 const categoriesList = [
   {
+    name: "Etikoppaka Wooden Toys",
+    href: "/discover?category=Etikoppaka Wooden Toys",
+    image: "/etikoppaka_toys.png",
+    desc: "GI-certified eco-friendly lacquer wooden toys from Andhra Pradesh",
+    badge: "GI Tag",
+  },
+  {
     name: "Wooden Toys & Crafts",
     href: "/discover?category=Wooden Toys",
     image: "/cat_toys.png",
@@ -35,46 +42,11 @@ const categoriesList = [
     badge: "Popular",
   },
   {
-    name: "Electronics & Tech",
-    href: "/discover?category=Electronics",
-    image: "/cat_electronics.png",
-    desc: "Smart devices, chargers & custom circuit assemblies",
-    badge: "Trending",
-  },
-  {
-    name: "Fashion & Apparel",
-    href: "/discover?category=Fashion",
-    image: "/cat_fashion.png",
-    desc: "Organic cotton textiles, handcrafted apparel & accessories",
-    badge: "New",
-  },
-  {
     name: "Home & Furniture",
     href: "/discover?category=Furniture",
     image: "/cat_furniture.png",
     desc: "Solid wood furniture, handcrafted decor & living items",
     badge: null,
-  },
-  {
-    name: "Kitchen & Dining",
-    href: "/discover?category=Kitchen",
-    image: "/cat_kitchen.png",
-    desc: "Stainless steel utensils, cast iron cookware & appliances",
-    badge: null,
-  },
-  {
-    name: "Beauty & Wellness",
-    href: "/discover?category=Beauty",
-    image: "/cat_beauty.png",
-    desc: "Ayurvedic formulations, natural skincare & herbal wellness",
-    badge: null,
-  },
-  {
-    name: "Industrial & Tools",
-    href: "/discover?category=Industrial",
-    image: "/cat_industrial.png",
-    desc: "Precision components, machinery parts & fabrication tools",
-    badge: "B2B",
   },
   {
     name: "Sports & Fitness",
@@ -388,7 +360,7 @@ export function Header({
                           className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          <Compass className="h-4 w-4 text-neutral-300" /> Admin Control
+                          <Compass className="h-4 w-4 text-neutral-300" /> Studio Control
                           Center
                         </a>
                       ) : role === "buyer" ? (
@@ -759,7 +731,7 @@ export function Header({
                     onClick={() => setIsOpen(false)}
                   >
                     {role === "admin"
-                      ? "Admin Dashboard"
+                      ? "Studio Portal"
                       : role === "seller"
                         ? "Seller Dashboard"
                         : "My Profile"}

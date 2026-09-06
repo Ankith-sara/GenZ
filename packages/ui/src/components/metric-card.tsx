@@ -45,7 +45,7 @@ export function MetricCard({
   return (
     <div
       className={clsx(
-        "group relative flex flex-col justify-between rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-2xs transition-all duration-200 select-none hover:border-black/30 hover:shadow-xs",
+        "group relative flex flex-col justify-between rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-2xs transition-all duration-200 hover:border-black/30 hover:shadow-xs",
         className
       )}
     >

@@ -1,7 +1,5 @@
-import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
-import { PageHeader } from "@genz/ui";
 import { AdminProductForm, type SellerOption } from "./admin-product-form";
 
 export default async function AdminNewProductPage() {
@@ -46,20 +44,8 @@ export default async function AdminNewProductPage() {
   }));
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Admin Product Dispatch & Creation"
-        description="Add a new catalog listing on behalf of a verified seller or directly to the platform portfolio."
-        breadcrumbs={[
-          { label: "Admin", href: "/admin/dashboard" },
-          { label: "Products", href: "/admin/dashboard/products" },
-          { label: "Add Product" },
-        ]}
-      />
-
-      <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-        <AdminProductForm sellers={sellersList} adminUserId={session.userId} />
-      </div>
+    <div className="mx-auto max-w-[1440px] pb-16">
+      <AdminProductForm sellers={sellersList} adminUserId={session.userId} />
     </div>
   );
 }

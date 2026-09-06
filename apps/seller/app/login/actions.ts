@@ -91,7 +91,7 @@ export async function directPasswordLogin(email: string, password: string) {
 
       const supabase = await createClient();
 
-      const { error } = await withRetry(() =>
+      const { data: authData, error } = await withRetry(() =>
         supabase.auth.signInWithPassword({
           email: validation.data.email,
           password: validation.data.password,
@@ -101,6 +101,23 @@ export async function directPasswordLogin(email: string, password: string) {
       if (error) {
         console.error("Direct password login failed:", error);
         return { error: "Invalid email or password." };
+      }
+
+      if (authData?.user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", authData.user.id)
+          .single();
+
+        const role = profile?.role || authData.user.user_metadata?.role || "buyer";
+        if (role !== "seller" && role !== "admin") {
+          await supabase.auth.signOut();
+          return {
+            error:
+              "Access denied. This portal is for registered sellers and manufacturers only. If you are a buyer, please visit the Buyer Storefront.",
+          };
+        }
       }
 
       return { success: true };
@@ -143,7 +160,7 @@ export async function verifyOtpLogin(email: string, token: string) {
       }
 
       const supabase = await createClient();
-      const { error } = await withRetry(() =>
+      const { data: authData, error } = await withRetry(() =>
         supabase.auth.verifyOtp({
           email: validation.data.email,
           token: validation.data.token,
@@ -154,6 +171,23 @@ export async function verifyOtpLogin(email: string, token: string) {
       if (error) {
         console.error("OTP verification failed:", error);
         return { error: "Invalid or expired verification code." };
+      }
+
+      if (authData?.user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", authData.user.id)
+          .single();
+
+        const role = profile?.role || authData.user.user_metadata?.role || "buyer";
+        if (role !== "seller" && role !== "admin") {
+          await supabase.auth.signOut();
+          return {
+            error:
+              "Access denied. This portal is for registered sellers and manufacturers only. If you are a buyer, please visit the Buyer Storefront.",
+          };
+        }
       }
 
       return { success: true };

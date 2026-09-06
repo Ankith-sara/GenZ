@@ -1,4 +1,6 @@
 import "server-only";
+import { redirect } from "next/navigation";
+import type { Role } from "@genz/types";
 import { getUserAndProfile } from "./auth";
 
 /**
@@ -53,3 +55,50 @@ export async function requireSellerOwnership(resourceSellerId: string) {
   }
   return session;
 }
+
+/**
+ * Shared RBAC guard for role-specific dashboard pages and server actions.
+ * Evaluates the required role against the user profile/metadata and redirects
+ * appropriately if unauthorized.
+ *
+ * Role hierarchy & permissions:
+ * - admin: access to all roles ('admin', 'seller', 'buyer')
+ * - seller: access to 'seller' and 'buyer'
+ * - buyer: access to 'buyer'
+ */
+export async function requireRole(
+  allowed: Role,
+  options?: { redirectOnUnauthenticated?: string; redirectOnForbidden?: string }
+) {
+  const session = await getUserAndProfile();
+  if (!session) {
+    redirect(options?.redirectOnUnauthenticated ?? "/login");
+  }
+
+  const user = session.user;
+  const role = (session.profile?.role ?? user?.user_metadata?.role ?? "buyer") as Role;
+
+  const isAllowed =
+    role === "admin" ||
+    (role === "seller" && (allowed === "seller" || allowed === "buyer")) ||
+    (role === "buyer" && allowed === "buyer");
+
+  if (!isAllowed) {
+    if (options?.redirectOnForbidden) {
+      redirect(options.redirectOnForbidden);
+    }
+    if (allowed === "admin") {
+      redirect("/login?error=forbidden_admin_only");
+    }
+    if (allowed === "seller") {
+      redirect("/login?error=forbidden_seller_only");
+    }
+    if (role === "seller") {
+      redirect("/seller/dashboard");
+    }
+    redirect("/profile");
+  }
+
+  return session;
+}
+

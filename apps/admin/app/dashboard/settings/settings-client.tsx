@@ -42,7 +42,7 @@ const DEFAULT_SETTINGS = {
   rateLimitingEnabled: true,
 
   // Email Notifications
-  notifyNewInquiry: true,
+  notifyNewOrder: true,
   notifyNewSellerSignup: true,
   notifyDocumentUpload: true,
   dailySummaryDigest: false,
@@ -454,7 +454,7 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
                   Notification & Email Preferences
                 </h3>
                 <p className="text-xs text-[#73736E]">
-                  Choose which platform updates and buyer inquiries trigger instant
+                  Choose which platform updates and customer orders trigger instant
                   email alerts.
                 </p>
               </div>
@@ -463,16 +463,16 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
                 <div className="flex items-center justify-between pt-2">
                   <div>
                     <h4 className="text-xs font-bold text-[#1A1A18]">
-                      New Buyer Inquiry Alerts
+                      New Customer Order Alerts
                     </h4>
                     <p className="text-[11px] text-[#73736E]">
-                      Receive immediate email notifications whenever a buyer submits a
-                      product inquiry.
+                      Receive immediate email notifications whenever a customer places an
+                      order.
                     </p>
                   </div>
                   <ToggleSwitch
-                    checked={settings.notifyNewInquiry}
-                    onChange={(checked) => handleChange("notifyNewInquiry", checked)}
+                    checked={settings.notifyNewOrder}
+                    onChange={(checked) => handleChange("notifyNewOrder", checked)}
                   />
                 </div>
 

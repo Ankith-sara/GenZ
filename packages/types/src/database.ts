@@ -7,8 +7,6 @@ export type DocType =
 
 export type ProductStatus = "draft" | "published" | "archived";
 
-export type InquiryStatus = "new" | "responded" | "closed";
-
 export type Profile = {
   id: string;
   role: Role;
@@ -71,9 +69,9 @@ export type Product = {
   seller_id: string;
   name: string;
   category: string;
-  age_group: string | null;
   description: string | null;
   price_inr: number | null;
+  original_mrp?: number | null;
   status: ProductStatus;
   cover_image_path: string | null;
   materials: string[];
@@ -99,19 +97,6 @@ export type ProductImage = {
   seller_id: string;
   image_path: string;
   position: number;
-  created_at: string;
-};
-
-export type Inquiry = {
-  id: string;
-  product_id: string;
-  seller_id: string;
-  buyer_id: string | null;
-  name: string;
-  email: string;
-  phone: string | null;
-  message: string;
-  status: InquiryStatus;
   created_at: string;
 };
 
@@ -184,6 +169,101 @@ export type SellerPublicProfile = {
   established_year: number | null;
 };
 
+export type OrderStatus =
+  | "placed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled";
+
+export interface ShippingAddress {
+  recipientName: string;
+  phone: string;
+  addressLine: string;
+  city: string;
+  state: string;
+  pincode: string;
+}
+
+export interface OrderTrackingEvent {
+  status: OrderStatus;
+  timestamp: string;
+  title: string;
+  description?: string;
+}
+
+export interface OrderItem {
+  id?: string;
+  order_id?: string;
+  product_id?: string;
+  productId?: string;
+  product_name?: string;
+  name?: string;
+  title?: string;
+  category?: string;
+  quantity: number;
+  unit_price?: number;
+  price: number;
+  image?: string;
+  seller_id?: string;
+  sellerId?: string;
+  sellerBusinessName?: string;
+  variantName?: string;
+  variantValue?: string;
+}
+
+export interface OrderRecord {
+  id: string; // e.g. GZ-ORD-2026-10492
+  orderId?: string;
+  createdAt: string;
+  updatedAt: string;
+  customerId?: string | null;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  shippingAddress: ShippingAddress;
+  paymentMethod: "cod" | "online" | string;
+  paymentStatus: "pending" | "paid" | "failed";
+  status: OrderStatus;
+  subtotal: number;
+  tax: number;
+  shippingFee: number;
+  totalAmount: number;
+  items: OrderItem[];
+  sellerIds: string[];
+  carrier?: string;
+  trackingNumber?: string;
+  trackingEvents: OrderTrackingEvent[];
+  notes?: string;
+}
+
+// Backward compatibility alias
+export type Order = OrderRecord;
+
+export type OrderDbRow = {
+  id: string;
+  customer_id: string | null;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string | null;
+  shipping_address: ShippingAddress | Record<string, unknown>;
+  payment_method: string;
+  payment_status: string;
+  status: OrderStatus;
+  subtotal: number;
+  tax: number;
+  shipping_fee: number;
+  total_amount: number;
+  items: OrderItem[] | Record<string, unknown>[];
+  seller_ids: string[];
+  carrier: string | null;
+  tracking_number: string | null;
+  tracking_events: OrderTrackingEvent[] | Record<string, unknown>[];
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -239,18 +319,6 @@ export type Database = {
         Update: Partial<ProductImage>;
         Relationships: [];
       };
-      inquiries: {
-        Row: Inquiry;
-        Insert: Partial<Inquiry> & {
-          product_id: string;
-          seller_id: string;
-          name: string;
-          email: string;
-          message: string;
-        };
-        Update: Partial<Inquiry>;
-        Relationships: [];
-      };
       contact_messages: {
         Row: ContactMessage;
         Insert: Partial<ContactMessage> & {
@@ -288,6 +356,16 @@ export type Database = {
         Update: Partial<SellerApplication>;
         Relationships: [];
       };
+      orders: {
+        Row: OrderDbRow;
+        Insert: Partial<OrderDbRow> & {
+          id: string;
+          customer_name: string;
+          customer_email: string;
+        };
+        Update: Partial<OrderDbRow>;
+        Relationships: [];
+      };
     };
     Views: {
       seller_public_profiles: {
@@ -300,7 +378,7 @@ export type Database = {
       app_role: Role;
       verification_status: VerificationStatus;
       product_status: ProductStatus;
-      inquiry_status: InquiryStatus;
+      order_status: OrderStatus;
     };
     CompositeTypes: Record<string, never>;
   };

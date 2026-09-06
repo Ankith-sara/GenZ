@@ -24,15 +24,15 @@ export function AdminRightPanel({
   const [selectedDate, setSelectedDate] = useState<number>(2);
 
   const getOnlineState = (dateStr: string | null) => {
-    if (!dateStr) return { label: "Offline", color: "bg-neutral-300 text-neutral-600" };
+    if (!dateStr) return { label: "Offline", color: "bg-rose-500 text-white" };
     const date = new Date(dateStr);
     const now = new Date();
     const diffMins = (now.getTime() - date.getTime()) / (1000 * 60);
-    if (diffMins <= 15)
-      return { label: "Online Now", color: "bg-emerald-500 text-white" };
+    if (diffMins <= 60)
+      return { label: "Online", color: "bg-emerald-500 text-white" };
     if (diffMins <= 1440)
       return { label: "Active Today", color: "bg-amber-400 text-amber-950" };
-    return { label: "Offline", color: "bg-neutral-300 text-neutral-600" };
+    return { label: "Offline", color: "bg-rose-500 text-white" };
   };
 
   const calendarDays = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -121,7 +121,7 @@ export function AdminRightPanel({
                       {usr.full_name || "Anonymous User"}
                     </span>
                     <span className="font-graphik text-smoke block text-[10px] capitalize">
-                      {usr.role} • {usr.city || "India"}
+                      {usr.role} • {usr.city || "-"}
                     </span>
                   </div>
                 </div>

@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookieOptions: {
-        name: process.env.NEXT_PUBLIC_COOKIE_NAME || "sb-genz-seller-auth",
+        name: process.env.NEXT_PUBLIC_COOKIE_NAME || "sb-genz-auth-token",
       },
       cookies: {
         getAll() {
@@ -32,8 +32,36 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const redirectWithCookies = (url: URL) => {
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      response.cookies.set(cookie.name, cookie.value, {
+        path: cookie.path,
+        domain: cookie.domain,
+        maxAge: cookie.maxAge,
+        expires: cookie.expires,
+        sameSite: cookie.sameSite,
+        secure: cookie.secure,
+        httpOnly: cookie.httpOnly,
+      });
+    });
+    return response;
+  };
+
   const path = request.nextUrl.pathname;
-  const isAuthOnly = path.startsWith("/login") || path.startsWith("/signup");
+
+  // Seller portal is strictly LOGIN ONLY. All registrations happen through the web marketplace.
+  if (path.startsWith("/signup")) {
+    const webUrl =
+      process.env.NEXT_PUBLIC_WEB_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://localhost:4151");
+    return NextResponse.redirect(new URL("/seller/signup", webUrl));
+  }
+
+  const isAuthOnly = path.startsWith("/login");
   const isAuthCallback = path.startsWith("/auth/");
 
   if (isAuthCallback) {
@@ -44,7 +72,7 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirectTo", path);
-    return NextResponse.redirect(url);
+    return redirectWithCookies(url);
   }
 
   if (user) {
@@ -52,27 +80,31 @@ export async function middleware(request: NextRequest) {
       .from("profiles")
       .select("role")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
 
-    const role = profile?.role || user.user_metadata?.role || "buyer";
+    const isAuthorized =
+      profile?.role === "seller" ||
+      profile?.role === "admin" ||
+      user.user_metadata?.role === "seller" ||
+      user.user_metadata?.role === "admin";
 
     if (isAuthOnly) {
-      if (role === "seller" || role === "admin") {
+      if (isAuthorized) {
         const url = request.nextUrl.clone();
         url.pathname = "/dashboard";
         if (url.pathname !== path) {
-          return NextResponse.redirect(url);
+          return redirectWithCookies(url);
         }
       }
       // If user is a buyer on /login, allow them to view /login without looping
       return supabaseResponse;
     }
 
-    if (!isAuthOnly && role !== "seller" && role !== "admin") {
+    if (!isAuthOnly && !isAuthorized) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       url.searchParams.set("error", "forbidden_seller_only");
-      return NextResponse.redirect(url);
+      return redirectWithCookies(url);
     }
   }
 

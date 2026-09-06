@@ -10,10 +10,15 @@ async function ensureProfileCreated(
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
       const meta = user.user_metadata ?? {};
-      const rawRole = (meta.role as Role) || "buyer";
-      const role: Role = rawRole === "admin" ? "buyer" : rawRole;
       const fullName = meta.full_name || meta.fullName || null;
+      const role: Role = existingProfile?.role || (meta.role as Role) || "admin";
 
       await supabase.from("profiles").upsert({
         id: user.id,

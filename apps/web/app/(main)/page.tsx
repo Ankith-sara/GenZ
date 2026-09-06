@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -11,8 +9,29 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@genz/ui";
+import { createAdminClient } from "@genz/database/admin";
+import { HomepageProducts } from "@/features/home/components/homepage-products";
+import { SuggestedSellers, type SuggestedSeller } from "@/features/home/components/suggested-sellers";
+import { productMediaUrl } from "@/features/products/lib/products";
+import type { Product } from "@genz/types";
+
+interface DbSeller {
+  id: string;
+  business_name: string;
+  city?: string | null;
+  state?: string | null;
+  description?: string | null;
+  established_year?: number | null;
+}
 
 const homepageCategories = [
+  {
+    name: "Etikoppaka Wooden Toys",
+    href: "/discover?category=Etikoppaka Wooden Toys",
+    image: "/etikoppaka_toys.png",
+    count: "GI-Certified Cluster",
+    desc: "Authentic non-toxic lacquer hand-turned wooden toys from Andhra Pradesh.",
+  },
   {
     name: "Wooden Toys & Crafts",
     href: "/discover?category=Wooden Toys",
@@ -21,200 +40,134 @@ const homepageCategories = [
     desc: "Eco-friendly, non-toxic traditional Indian toys & STEM blocks.",
   },
   {
-    name: "Electronics & Tech",
-    href: "/discover?category=Electronics",
-    image: "/cat_electronics.png",
-    count: "220+ Verified Products",
-    desc: "Smart devices, chargers & custom PCB assemblies.",
-  },
-  {
-    name: "Fashion & Apparel",
-    href: "/discover?category=Fashion",
-    image: "/cat_fashion.png",
-    count: "310+ Verified Products",
-    desc: "Organic cotton textiles, handcrafted apparel & accessories.",
-  },
-  {
     name: "Home & Furniture",
     href: "/discover?category=Furniture",
     image: "/cat_furniture.png",
     count: "180+ Verified Products",
     desc: "Solid wood furniture, handcrafted decor & living items.",
   },
-  {
-    name: "Kitchen & Dining",
-    href: "/discover?category=Kitchen",
-    image: "/cat_kitchen.png",
-    count: "200+ Verified Products",
-    desc: "Stainless steel utensils, cast iron cookware & appliances.",
-  },
-  {
-    name: "Beauty & Wellness",
-    href: "/discover?category=Beauty",
-    image: "/cat_beauty.png",
-    count: "140+ Verified Products",
-    desc: "Ayurvedic formulations, natural skincare & herbal wellness.",
-  },
-  {
-    name: "Industrial & Tools",
-    href: "/discover?category=Industrial",
-    image: "/cat_industrial.png",
-    count: "290+ Verified Products",
-    desc: "Precision components, machinery parts & fabrication tools.",
-  },
-  {
-    name: "Sports & Fitness",
-    href: "/discover?category=Sports",
-    image: "/cat_sports.png",
-    count: "110+ Verified Products",
-    desc: "Athletic gear, fitness equipment & outdoor play sets.",
-  },
 ];
 
-const homepageTrustPillars = [
-  {
-    title: "100% Made in India Sourcing",
-    subtitle: "Authentic Domestic Craftsmanship",
-    desc: "Every listing on GenZ originates from verified Indian workshops and factories. We eliminate reliance on low-quality imports and connect you directly to Indian makers.",
-  },
-  {
-    title: "Rigorous Factory & GST Audits",
-    subtitle: "3-Tier Supplier Verification",
-    desc: "Before any seller lists a product, our team conducts physical site validation, GST registration verification, and MSME certification checks.",
-  },
-  {
-    title: "Live Production Video Reels",
-    subtitle: "Unfiltered Source Transparency",
-    desc: "Watch real factory production reels showing actual workers, machinery, raw materials, and quality tests before placing your wholesale or retail order.",
-  },
-  {
-    title: "Direct Pricing & Escrow Protection",
-    subtitle: "Zero Middleman Markup",
-    desc: "Buy directly from sellers with no price stacking. Payments are securely held in escrow until items are received and inspected.",
-  },
-];
+export default async function HomePage() {
+  let products: Product[] = [];
+  let dbSellers: DbSeller[] = [];
+  const sellerMap: Record<string, { business_name?: string; city?: string; state?: string }> = {};
 
-const stakeholdersList = [
-  {
-    index: "01",
-    name: "Consumers",
-    image: "/consumers.png",
-    copy: "Trusted, high-quality Indian products, straight from the source. We connect you directly to the factory floor, ensuring verified quality and competitive pricing without middleman markups.",
-  },
-  {
-    index: "02",
-    name: "Sellers",
-    image: "/sellers.png",
-    copy: "Visibility, market demand insights, and a direct line to national buyers. We help you digitize your profile, showcase catalogs, and build lasting business relationships.",
-  },
-  {
-    index: "03",
-    name: "Startups",
-    image: "/startups.png",
-    copy: "Reliable manufacturing partners for products that don't exist yet. Discover local fabricators, request custom quotes, and turn prototypes into physical products.",
-  },
-  {
-    index: "04",
-    name: "Creators",
-    image: "/creators.png",
-    copy: "A stage to showcase process, not just the finished product. Share factory reels, tell your brand story, and build direct emotional and commercial trust with buyers.",
-  },
-  {
-    index: "05",
-    name: "Investors",
-    image: "/investors.png",
-    copy: "Verified seller listings and regional innovation clusters worth backing. Gain access to transparent manufacturing metrics, production capacity data, and growth indicators.",
-  },
-];
+  try {
+    const adminSupabase = createAdminClient();
 
-const stats = [
-  { value: "100+", label: "Verified sellers" },
-  { value: "1,000+", label: "Products & innovations" },
-  { value: "500+", label: "Import gaps identified" },
-  { value: "1K+", label: "Jobs & livelihoods" },
-];
+    const { data: pData } = await adminSupabase
+      .from("products")
+      .select("*")
+      .eq("status", "published")
+      .order("created_at", { ascending: false })
+      .limit(12);
 
-interface Stakeholder {
-  index: string;
-  name: string;
-  image: string;
-  copy: string;
-}
+    if (pData) products = pData as Product[];
 
-interface StakeholderCardProps {
-  s: Stakeholder;
-  tier: "xl" | "lg" | "md" | "sm";
-  className?: string;
-}
+    // Fetch all signed up sellers directly
+    const { data: sData } = await adminSupabase
+      .from("seller_profiles")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(12);
 
-function StakeholderCard({ s, tier, className = "" }: StakeholderCardProps) {
-  const paddingMap = {
-    xl: "p-8 sm:p-10",
-    lg: "p-6 sm:p-8",
-    md: "p-5 sm:p-6",
-    sm: "p-4 sm:p-5",
-  };
+    if (sData) {
+      dbSellers = sData as DbSeller[];
+      for (const s of sData) {
+        let name = s.business_name;
+        if (s.description && typeof s.description === "string" && s.description.startsWith("{")) {
+          try {
+            const meta = JSON.parse(s.description);
+            name = (meta.business_name as string) || (meta.owner_name as string) || name;
+          } catch {}
+        }
+        sellerMap[s.id] = {
+          business_name: name,
+          city: s.city || undefined,
+          state: s.state || undefined,
+        };
+      }
 
-  const titleMap = {
-    xl: "text-3xl sm:text-4xl lg:text-5xl",
-    lg: "text-2xl sm:text-3xl",
-    md: "text-xl sm:text-2xl",
-    sm: "text-lg sm:text-xl",
-  };
+      // Fetch real published products for all registered sellers
+      const sellerIds = sData.map((s) => s.id);
+      if (sellerIds.length > 0) {
+        const { data: prodData } = await adminSupabase
+          .from("products")
+          .select("*")
+          .in("seller_id", sellerIds)
+          .eq("status", "published");
+        if (prodData) {
+          // Merge or supplement
+          const existingIds = new Set(products.map((p) => p.id));
+          for (const p of prodData) {
+            if (!existingIds.has(p.id)) {
+              products.push(p as Product);
+            }
+          }
+        }
+      }
+    }
+  } catch {
+    // Graceful fallback if database connection is pending
+  }
 
-  const copyMap = {
-    xl: "text-sm sm:text-base max-w-md opacity-90",
-    lg: "text-xs sm:text-sm max-w-sm opacity-85",
-    md: "text-xs max-w-xs opacity-80",
-    sm: "hidden",
-  };
+  const liveSellersMapped: SuggestedSeller[] = dbSellers.map((s, idx) => {
+    let meta: Record<string, unknown> = {};
+    if (s.description && typeof s.description === "string" && s.description.startsWith("{")) {
+      try {
+        meta = JSON.parse(s.description);
+      } catch {
+        // use empty
+      }
+    }
 
-  return (
-    <div
-      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 text-white shadow-xs transition-all duration-500 hover:shadow-lg ${paddingMap[tier]} ${className}`}
-    >
-      {/* Background Image with zoom on hover */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={s.image}
-          alt={s.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 600px"
-        />
-        {/* Soft, high-end editorial gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20 transition-opacity duration-500 group-hover:opacity-95" />
-      </div>
+    const businessName =
+      (meta.business_name as string) ||
+      s.business_name ||
+      "Indian Artisan Workshop";
 
-      {/* Card Content */}
-      <div className="relative z-10 flex h-full w-full flex-col justify-between">
-        {/* Bottom Section */}
-        <div className="mt-auto pt-6">
-          <h3
-            className={`font-nantes mb-2 leading-tight font-normal text-white ${titleMap[tier]}`}
-          >
-            For {s.name}
-          </h3>
-          {tier !== "sm" && (
-            <p
-              className={`font-graphik leading-relaxed text-neutral-300 ${copyMap[tier]}`}
-            >
-              {s.copy}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+    const makerName =
+      (meta.owner_name as string) ||
+      (meta.maker_name as string) ||
+      (s.business_name !== businessName ? s.business_name : undefined);
 
-export default function HomePage() {
+    // Find actual published products for this seller
+    const sellerProds = products.filter((p) => p.seller_id === s.id);
+    const realThumbnails = sellerProds
+      .map((p) => productMediaUrl(p.cover_image_path))
+      .filter(Boolean) as string[];
+
+    const craft =
+      (meta.craft_title as string) ||
+      (meta.craft_category as string) ||
+      (sellerProds[0]?.category ? `${sellerProds[0].category} Workshop` : "Direct Indian Workshop");
+
+    const avatars = [
+      "/indian_craftsman.png",
+      "/sellers.png",
+      "/creators.png",
+      "/machine_work.png",
+    ];
+
+    return {
+      id: s.id,
+      business_name: businessName,
+      maker_name: makerName,
+      craft,
+      city: s.city || (meta.city as string) || null,
+      state: s.state || (meta.state as string) || null,
+      avatar: (meta.avatar_url as string) || avatars[idx % avatars.length] || "/sellers.png",
+      established_year: s.established_year || (meta.established_year ? Number(meta.established_year) : null),
+      thumbnails: realThumbnails,
+      products_count: sellerProds.length,
+    };
+  });
+
   return (
     <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
-      {/* HERO SECTION — Golden Ratio Aligned Editorial Layout */}
       <section className="relative w-full overflow-hidden border-b border-[#E5E5E0] bg-white">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-10 px-6 py-14 sm:px-12 sm:py-18 lg:grid-cols-12 lg:gap-12 lg:py-24">
-          {/* Left Text & CTA Column — 5 cols (~41.7% width, Golden Ratio minor section) */}
           <div className="flex flex-col justify-center gap-6 lg:col-span-5">
             <div className="inline-flex items-center gap-2">
               <span className="font-graphik text-xs font-semibold tracking-[0.25em] text-[#73736E] uppercase">
@@ -305,7 +258,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* DEDICATED SECTION: EXPLORE BY CATEGORIES */}
+      {/* DEDICATED SECTION: EXPLORE BY CATEGORIES (Now featuring Etikoppaka Wooden Toys) */}
       <section
         id="categories"
         className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12 md:py-28"
@@ -378,151 +331,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* DEDICATED SECTION: WHY TRUST GENZ */}
-      <section
-        id="why-trust-genz"
-        className="border-ash border-b bg-white px-6 py-20 sm:px-12 md:py-28"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto mb-14 max-w-3xl text-center">
-            <h2 className="font-nantes text-ink-black text-4xl font-normal sm:text-5xl">
-              Why Trust GenZ?
-            </h2>
-            <p className="font-graphik text-smoke mt-4 text-base leading-relaxed text-neutral-600">
-              We bridge buyers directly to genuine Indian sellers with zero middlemen,
-              on-site physical audits, and transparent live video proof.
-            </p>
-          </div>
+      {/* TRENDING PRODUCTS SHOWCASE (Directly on Homepage) */}
+      <HomepageProducts initialProducts={products} sellerMap={sellerMap} />
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {homepageTrustPillars.map((pillar) => (
-              <div
-                key={pillar.title}
-                className="flex flex-col justify-between rounded-3xl border border-neutral-200/80 bg-[#FAF7F0]/90 p-7 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/40 hover:shadow-lg"
-              >
-                <div>
-                  <h3 className="font-nantes text-2xl font-bold text-neutral-900">
-                    {pillar.title}
-                  </h3>
-                  <p className="font-graphik mt-1.5 text-xs font-semibold text-amber-700">
-                    {pillar.subtitle}
-                  </p>
-                  <p className="font-graphik mt-4 text-xs leading-relaxed text-neutral-600">
-                    {pillar.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* SUGGESTED INDIAN MAKERS & ARTISANS (Instagram-Style Cards) */}
+      <SuggestedSellers sellers={liveSellersMapped} />
 
-          <div className="relative mt-14 flex flex-col items-center justify-between gap-6 overflow-hidden rounded-3xl border border-neutral-800 bg-[#09090b] p-8 text-white shadow-2xl lg:flex-row lg:p-10">
-            <div className="pointer-events-none absolute top-0 right-0 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl" />
-            <div className="relative z-10 max-w-2xl">
-              <h3 className="font-nantes text-2xl text-white sm:text-3xl">
-                Backed by Institutional Trust & Government Initiatives
-              </h3>
-              <p className="font-graphik mt-2 text-xs leading-relaxed text-neutral-400 sm:text-sm">
-                GenZ aligns with national manufacturing initiatives like DPIIT, MSME,
-                and Make in India to empower domestic makers and eliminate import
-                dependencies.
-              </p>
-            </div>
-            <Button
-              asChild
-              size="lg"
-              className="font-graphik relative z-10 shrink-0 rounded-full bg-amber-400 px-8 text-xs font-bold text-black transition-all duration-300 hover:bg-amber-300 hover:shadow-lg active:scale-95"
-            >
-              <Link href="/about">Learn Our Story</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* COMMUNITY */}
-      <section className="border-ash border-b bg-white px-6 py-20 sm:px-12 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-16 text-left">
-            <div className="tag mb-4 inline-block rounded-full border border-neutral-300/80 bg-[#FAF7F0] px-4 py-1 shadow-2xs">
-              <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-                Our Community
-              </span>
-            </div>
-            <h2 className="font-nantes text-ink-black max-w-xl text-4xl font-normal sm:text-5xl">
-              Built for all Indian stakeholders.
-            </h2>
-          </div>
-
-          {/* Mobile/tablet */}
-          <div className="flex flex-col gap-5 lg:hidden">
-            {stakeholdersList.map((s) => (
-              <StakeholderCard
-                key={s.name}
-                s={s}
-                tier="lg"
-                className="aspect-[16/10]"
-              />
-            ))}
-          </div>
-
-          {/* Desktop */}
-          <div className="hidden lg:grid lg:h-[640px] lg:grid-cols-2 lg:gap-5">
-            <StakeholderCard s={stakeholdersList[0]} tier="xl" className="h-full" />
-
-            <div className="grid grid-cols-2 grid-rows-2 gap-5">
-              {stakeholdersList.slice(1).map((s) => (
-                <StakeholderCard key={s.name} s={s} tier="md" className="h-full" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* STATS & MISSION */}
-      <section className="bg-noise-dark border-b border-neutral-800 bg-[#09090b] px-6 py-20 text-white sm:px-12 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-3xl border border-neutral-800/90 bg-neutral-900/70 p-8 shadow-md backdrop-blur-xs transition-all duration-300 hover:border-amber-500/30 hover:shadow-xl"
-              >
-                <p className="font-nantes text-brand-yellow text-5xl font-normal tabular-nums sm:text-6xl">
-                  {stat.value}
-                </p>
-                <p className="font-graphik mt-3 text-xs font-semibold tracking-wider text-neutral-400 uppercase">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-pure-white mt-8 flex flex-col gap-6 rounded-3xl border border-neutral-800 bg-neutral-900/90 p-8 shadow-xl sm:p-10 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-xl">
-              <div className="tag mb-3 inline-block rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1 shadow-2xs">
-                <span className="font-graphik text-xs font-semibold tracking-[0.2em] text-amber-400 uppercase">
-                  The Mission
-                </span>
-              </div>
-              <h3 className="font-nantes mb-2 text-2xl text-white sm:text-3xl">
-                10 million Indian businesses by 2030.
-              </h3>
-              <p className="font-graphik text-sm leading-relaxed text-neutral-300">
-                Building the most trusted direct-discovery commerce engine for Indian
-                manufacturing.
-              </p>
-            </div>
-            <Button
-              asChild
-              size="lg"
-              className="bg-brand-yellow font-graphik h-12 shrink-0 rounded-full border-none px-8 text-xs font-bold tracking-[0.1em] text-black uppercase shadow-md transition-all duration-300 hover:bg-amber-300 hover:shadow-lg active:scale-95"
-            >
-              <Link href="/about">Read the vision</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* TRUST MARQUEE */}
+      {/* TRUST MARQUEE & INSTITUTIONAL VALIDATION */}
       <section className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12">
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 text-center">
           <div className="text-brand-yellow-dark flex gap-1">

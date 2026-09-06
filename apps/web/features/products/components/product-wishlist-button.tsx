@@ -2,16 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
+import { cn } from "@genz/utils";
 import type { Product } from "@genz/types";
 
 interface ProductWishlistButtonProps {
   product: Product;
   showText?: boolean;
+  className?: string;
 }
 
 export function ProductWishlistButton({
   product,
   showText = false,
+  className,
 }: ProductWishlistButtonProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -79,16 +82,24 @@ export function ProductWishlistButton({
 
   return (
     <button
+      type="button"
       onClick={toggleWishlist}
-      className="bg-pure-white border-ash/40 hover:bg-cream-paper flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-all focus:outline-none"
+      className={cn(
+        "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/85 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95 focus:outline-none",
+        isWishlisted
+          ? "bg-white text-rose-500 shadow-md"
+          : "text-neutral-700 hover:text-black",
+        className
+      )}
       aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
     >
       <Heart
-        className={`h-4.5 w-4.5 transition-colors duration-300 ${
+        className={cn(
+          "h-4 w-4 transition-colors duration-200",
           isWishlisted
-            ? "fill-brand-yellow text-brand-yellow-dark"
-            : "text-neutral-600 hover:text-neutral-900"
-        }`}
+            ? "fill-rose-500 text-rose-500"
+            : "text-neutral-700 hover:text-black"
+        )}
       />
     </button>
   );

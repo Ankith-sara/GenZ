@@ -14,7 +14,6 @@ import {
   Building2,
   Settings,
   ShoppingBag,
-  MessageSquare,
   HelpCircle,
 } from "lucide-react";
 
@@ -163,7 +162,7 @@ function SellerNotFound() {
           Seller Workspace Page Not Found
         </h1>
         <p className="mt-3 text-xs leading-relaxed text-[#73736E] sm:text-sm">
-          The seller workspace tool, product catalog item, or inquiry record you are
+          The seller workspace tool, product catalog item, or customer order you are
           trying to access is unavailable or has been removed.
         </p>
 
@@ -188,12 +187,12 @@ function SellerNotFound() {
           </Link>
 
           <Link
-            href="/seller/dashboard/inquiries"
+            href="/seller/dashboard/orders"
             className="flex flex-col items-center gap-2 rounded-xl border border-[#E5E5E0] bg-white p-4 text-center shadow-2xs transition-all hover:border-black hover:bg-[#FAF8F4]"
           >
-            <MessageSquare className="h-5 w-5 text-amber-600" />
-            <span className="text-xs font-bold text-[#1A1A18]">Inquiries</span>
-            <span className="text-[10px] text-[#73736E]">Buyer leads</span>
+            <ShoppingBag className="h-5 w-5 text-amber-600" />
+            <span className="text-xs font-bold text-[#1A1A18]">Orders</span>
+            <span className="text-[10px] text-[#73736E]">Customer orders</span>
           </Link>
         </div>
 

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { Button } from "@genz/ui";
 import { Input } from "@genz/ui";
-import { TOY_CATEGORIES, AGE_GROUPS } from "@/features/products/lib/products";
+import { TOY_CATEGORIES } from "@/features/products/lib/products";
 import type { ProductFilters } from "./types";
 
 const selectClass =
@@ -20,7 +20,6 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
     for (const key of [
       "q",
       "category",
-      "age_group",
       "min_price",
       "max_price",
     ] as const) {
@@ -33,7 +32,6 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   const hasActiveFilters =
     filters.q ||
     filters.category ||
-    filters.age_group ||
     filters.min_price ||
     filters.max_price;
 
@@ -44,7 +42,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
     >
       <div className="grid grid-cols-1 items-end gap-4 lg:grid-cols-12">
         {/* Search Query */}
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-6">
           <label
             htmlFor="q"
             className="text-ink-black font-graphik mb-2 block text-[10px] font-medium tracking-wider uppercase"
@@ -67,7 +65,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
         </div>
 
         {/* Category select */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-4">
           <label
             htmlFor="category"
             className="text-ink-black font-graphik mb-2 block text-[10px] font-medium tracking-wider uppercase"
@@ -84,29 +82,6 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
             {TOY_CATEGORIES.map((c) => (
               <option key={c} value={c}>
                 {c}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Age group select */}
-        <div className="lg:col-span-3">
-          <label
-            htmlFor="age_group"
-            className="text-ink-black font-graphik mb-2 block text-[10px] font-medium tracking-wider uppercase"
-          >
-            Age Group
-          </label>
-          <select
-            id="age_group"
-            name="age_group"
-            defaultValue={filters.age_group}
-            className={selectClass}
-          >
-            <option value="">Any Age Group</option>
-            {AGE_GROUPS.map((a) => (
-              <option key={a} value={a}>
-                {a}
               </option>
             ))}
           </select>

@@ -1,4 +1,3 @@
-import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { AdminLayoutShell } from "@/features/admin/components/admin-layout-shell";
@@ -28,7 +27,7 @@ export default async function AdminDashboardLayout({
     { data: rawApplications },
     { data: rawSellerProfiles },
     { count: productsCount },
-    { count: inquiriesCount },
+    { count: ordersCount },
     { count: waitlistCount },
     { count: contactCount },
     { count: usersCount },
@@ -36,7 +35,7 @@ export default async function AdminDashboardLayout({
     supabase.from("seller_applications").select("id, email, status"),
     supabase.from("seller_profiles").select("id, status"),
     supabase.from("products").select("*", { count: "exact", head: true }),
-    supabase.from("inquiries").select("*", { count: "exact", head: true }),
+    supabase.from("orders").select("*", { count: "exact", head: true }),
     supabase.from("waitlist").select("*", { count: "exact", head: true }),
     supabase.from("contact_messages").select("*", { count: "exact", head: true }),
     supabase.from("profiles").select("*", { count: "exact", head: true }),
@@ -100,7 +99,7 @@ export default async function AdminDashboardLayout({
     users: usersCount ?? 0,
     pendingVerifications: realPendingCount,
     products: productsCount ?? 0,
-    inquiries: inquiriesCount ?? 0,
+    orders: ordersCount ?? 0,
     waitlist: waitlistCount ?? 0,
     contact: contactCount ?? 0,
   };

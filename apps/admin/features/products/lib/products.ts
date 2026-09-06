@@ -20,15 +20,6 @@ export const TOY_CATEGORIES = [
   "Other",
 ] as const;
 
-export const AGE_GROUPS = [
-  "0-2 years",
-  "3-5 years",
-  "6-8 years",
-  "9-12 years",
-  "13+ years",
-  "All ages",
-] as const;
-
 export const DISCOVER_PAGE_SIZE = 12;
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";

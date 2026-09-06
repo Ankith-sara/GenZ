@@ -26,7 +26,7 @@ export default async function AdminDashboardOverviewPage() {
     { count: pendingCount },
     { count: verifiedCount },
     { count: productCount },
-    { count: inquiryCount },
+    { count: orderCount },
     { data: allProfiles },
     { data: recentSellers },
     analytics,
@@ -40,7 +40,7 @@ export default async function AdminDashboardOverviewPage() {
       .select("*", { count: "exact", head: true })
       .eq("status", "verified"),
     supabase.from("products").select("*", { count: "exact", head: true }),
-    supabase.from("inquiries").select("*", { count: "exact", head: true }),
+    supabase.from("orders").select("*", { count: "exact", head: true }),
     supabase
       .from("profiles")
       .select("*")
@@ -94,12 +94,12 @@ export default async function AdminDashboardOverviewPage() {
         />
 
         <MetricCard
-          title="Inquiry Messages"
-          value={inquiryCount ?? 0}
-          change="+21.5%"
+          title="Total Orders"
+          value={orderCount ?? 0}
+          change="+18.4%"
           changeType="increase"
-          description="Direct buyer RFQs"
-          icon={<MessageSquare className="h-4 w-4" />}
+          description="Customer direct orders"
+          icon={<ShoppingBag className="h-4 w-4" />}
           sparklineData={[8, 12, 16, 21, 28, 35, 42]}
         />
       </div>
@@ -240,7 +240,7 @@ export default async function AdminDashboardOverviewPage() {
               <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4 text-black" />
                 <span className="font-graphik text-sm font-bold text-[#1A1A18]">
-                  Admin Quick Desk
+                  Studio Quick Desk
                 </span>
               </div>
             </div>

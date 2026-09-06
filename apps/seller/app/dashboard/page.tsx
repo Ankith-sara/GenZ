@@ -6,18 +6,22 @@ import {
   Package,
   Building2,
   FileText,
-  MessageSquare,
+  ShoppingBag,
   Plus,
   ShieldCheck,
   ExternalLink,
   CheckCircle2,
   AlertTriangle,
+  User,
 } from "lucide-react";
+import { getOrders } from "@genz/database/orders";
 import { PRODUCT_STATUS_LABEL, formatInr } from "@/features/products/lib/products";
 import { MetricCard } from "@genz/ui";
 import { StatusBadge } from "@genz/ui";
 import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
 import { getSellerAnalyticsData } from "@/features/admin/lib/vercel-analytics";
+import { SITE_URL } from "@genz/utils";
+import { Button } from "@genz/ui";
 
 export default async function SellerDashboardPage() {
   const session = await requireRole("seller");
@@ -25,7 +29,7 @@ export default async function SellerDashboardPage() {
 
   const [
     { count: productCount },
-    { count: inquiryCount },
+    sellerOrders,
     { count: documentCount },
     { data: sellerProfile },
     { data: recentProducts },
@@ -35,10 +39,7 @@ export default async function SellerDashboardPage() {
       .from("products")
       .select("*", { count: "exact", head: true })
       .eq("seller_id", session.userId),
-    supabase
-      .from("inquiries")
-      .select("*", { count: "exact", head: true })
-      .eq("seller_id", session.userId),
+    getOrders({ sellerId: session.userId }).catch(() => []),
     supabase
       .from("seller_documents")
       .select("*", { count: "exact", head: true })
@@ -52,6 +53,8 @@ export default async function SellerDashboardPage() {
       .limit(5),
     getSellerAnalyticsData(session.userId),
   ]);
+
+  const orderCount = Array.isArray(sellerOrders) ? sellerOrders.length : 0;
 
   const isVerified = sellerProfile?.status === "verified";
   const verificationStatus = sellerProfile?.status || "pending";
@@ -189,6 +192,59 @@ export default async function SellerDashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* 0.5. PUBLIC STOREFRONT SPOTLIGHT */}
+      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs sm:flex-row sm:items-center">
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-amber-400 text-white shadow-md">
+            <User className="h-6 w-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-graphik text-sm font-bold text-[#1A1A18]">
+                Your Instagram-Style Public Storefront
+              </h3>
+              <span className="rounded-full bg-amber-100 px-2.5 py-0.5 font-mono text-[10px] font-bold text-amber-900">
+                Live on Marketplace
+              </span>
+            </div>
+            <p className="font-graphik mt-1 text-xs text-neutral-600">
+              National buyers can read your craft story &amp; journey narrative, browse your products, and watch live production reels.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 shrink-0">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="font-graphik rounded-xl border-neutral-300 text-xs font-bold text-neutral-800 hover:bg-neutral-50"
+          >
+            <a
+              href={`${SITE_URL}/sellers/${session.userId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5"
+            >
+              <span>View Storefront</span>
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </Button>
+
+          <Button
+            asChild
+            size="sm"
+            className="font-graphik rounded-xl bg-black text-xs font-bold text-white hover:bg-neutral-850"
+          >
+            <Link href="/dashboard/profile" className="flex items-center gap-1.5">
+              <span>Edit Profile</span>
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+
       {/* 1. KPI WIDGETS SECTION (4 Column Grid) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
@@ -206,15 +262,15 @@ export default async function SellerDashboardPage() {
         />
 
         <MetricCard
-          title="Buyer Inquiries"
-          value={inquiryCount ?? 0}
-          change={(inquiryCount ?? 0) > 0 ? `+${inquiryCount}` : "0 RFQs"}
-          changeType={(inquiryCount ?? 0) > 0 ? "increase" : "neutral"}
-          description="Direct buyer procurement RFQs"
-          icon={<MessageSquare className="h-4 w-4" />}
+          title="Customer Orders"
+          value={orderCount}
+          change={orderCount > 0 ? `+${orderCount}` : "0 Orders"}
+          changeType={orderCount > 0 ? "increase" : "neutral"}
+          description="Customer direct orders"
+          icon={<ShoppingBag className="h-4 w-4" />}
           sparklineData={
-            (inquiryCount ?? 0) > 0
-              ? [1, 2, 4, 6, inquiryCount ?? 8]
+            orderCount > 0
+              ? [1, 2, 4, 6, orderCount]
               : [0, 0, 0, 0, 0, 0, 0]
           }
         />
@@ -391,13 +447,13 @@ export default async function SellerDashboardPage() {
               </Link>
 
               <Link
-                href="/dashboard/inquiries"
+                href="/dashboard/orders"
                 className="group flex items-center justify-between rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-3 text-black transition-colors hover:bg-black hover:text-white"
               >
                 <div className="flex items-center gap-2.5">
-                  <MessageSquare className="h-4 w-4 text-[#52524E] group-hover:text-white" />
+                  <ShoppingBag className="h-4 w-4 text-[#52524E] group-hover:text-white" />
                   <span className="font-graphik text-xs font-semibold">
-                    Buyer Inquiries Queue ({inquiryCount ?? 0})
+                    Customer Orders Queue ({orderCount})
                   </span>
                 </div>
                 <ArrowUpRight className="h-3.5 w-3.5 text-[#8C8C85] group-hover:text-white" />

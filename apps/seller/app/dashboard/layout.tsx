@@ -4,7 +4,8 @@ import { DashboardSidebar } from "@/components/ui/organisms/dashboard-sidebar";
 import { signOut } from "@/app/login/actions";
 import { SearchTriggerButton } from "@genz/ui";
 import { SellerHeaderNotifications } from "./header-notifications";
-import { Calendar, LogOut, CheckCircle2, ShieldAlert } from "lucide-react";
+import Link from "next/link";
+import { Calendar, LogOut, CheckCircle2, ShieldAlert, Plus } from "lucide-react";
 
 export default async function SellerDashboardLayout({
   children,
@@ -46,25 +47,25 @@ export default async function SellerDashboardLayout({
   if (!hasProfileDetails) {
     pendingSteps.push({
       label: "Complete Business Profile & GSTIN",
-      href: "/seller/dashboard/account",
+      href: "/dashboard/account",
     });
   }
   if (!hasDocuments) {
     pendingSteps.push({
       label: "Upload GST / Trade License documents",
-      href: "/seller/dashboard/documents",
+      href: "/dashboard/documents",
     });
   }
   if (!hasProducts) {
     pendingSteps.push({
       label: "Publish your first product listing",
-      href: "/seller/dashboard/products/new",
+      href: "/dashboard/products/new",
     });
   }
   if (!isVerified) {
     pendingSteps.push({
       label: "Verification clearance pending admin audit",
-      href: "/seller/dashboard",
+      href: "/dashboard",
     });
   }
 
@@ -124,6 +125,14 @@ export default async function SellerDashboardLayout({
 
           {/* Controls: Search, Notifications, date badge, exit */}
           <div className="flex items-center gap-1.5 sm:gap-2">
+            <Link
+              href="/dashboard/products/new"
+              className="flex h-8 items-center gap-1.5 rounded-lg bg-black px-3 text-xs font-semibold text-white shadow-2xs transition-all hover:bg-neutral-800 active:scale-95"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Add Product</span>
+            </Link>
+
             <SearchTriggerButton placeholder="Search factory..." />
 
             <SellerHeaderNotifications pendingSteps={pendingSteps} />

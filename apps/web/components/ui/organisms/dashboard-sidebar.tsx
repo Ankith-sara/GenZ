@@ -12,7 +12,6 @@ import {
   User,
   Menu,
   X,
-  MessageSquare,
   ChevronsUpDown,
   PanelLeftClose,
   PanelLeftOpen,
@@ -62,17 +61,17 @@ function getNavGroups(role: Role): NavGroup[] {
       ],
     },
     {
-      groupName: "CATALOG & RFQS",
+      groupName: "COMMERCE & CATALOG",
       items: [
+        {
+          href: "/seller/dashboard/orders",
+          label: "Customer Orders",
+          icon: ShoppingBag,
+        },
         {
           href: "/seller/dashboard/products",
           label: "Products",
           icon: Package,
-        },
-        {
-          href: "/seller/dashboard/inquiries",
-          label: "Buyer Inquiries",
-          icon: MessageSquare,
         },
         {
           href: "/seller/dashboard/documents",

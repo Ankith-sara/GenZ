@@ -10,6 +10,7 @@ export const PRODUCT_STATUS_LABEL: Record<ProductStatus, string> = {
 // (rather than freeform text) so discovery filters have a fixed, sane set
 // of values to facet on.
 export const TOY_CATEGORIES = [
+  "Etikoppaka Wooden Toys",
   "Wooden Toys",
   "Educational Toys",
   "Soft Toys",
@@ -18,15 +19,6 @@ export const TOY_CATEGORIES = [
   "Building Blocks",
   "Arts & Crafts",
   "Other",
-] as const;
-
-export const AGE_GROUPS = [
-  "0-2 years",
-  "3-5 years",
-  "6-8 years",
-  "9-12 years",
-  "13+ years",
-  "All ages",
 ] as const;
 
 export const DISCOVER_PAGE_SIZE = 12;

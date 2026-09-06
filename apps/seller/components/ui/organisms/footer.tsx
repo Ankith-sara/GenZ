@@ -3,8 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { NewsletterForm } from "@/features/marketing/components/newsletter-form";
+import { NewsletterForm } from "@/features/home/components/newsletter-form";
 import { Mail, Phone } from "lucide-react";
+import { SITE_URL } from "@genz/utils";
 
 function InstagramIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
@@ -59,7 +60,7 @@ const defaultSections: FooterSection[] = [
       { name: "Vision 2030", href: "/about#vision" },
       { name: "Founder Story", href: "/about#story" },
       { name: "Contact Us", href: "/contact" },
-      { name: "For Sellers", href: "/seller/signup" },
+      { name: "For Sellers", href: `${SITE_URL}/seller/signup` },
     ],
   },
   {
@@ -74,9 +75,9 @@ const defaultSections: FooterSection[] = [
   {
     title: "Resources",
     links: [
-      { name: "Seller Guide", href: "/seller/signup" },
-      { name: "Verification", href: "/seller/signup" },
-      { name: "Buyer Inquiries", href: "/discover" },
+      { name: "Seller Guide", href: `${SITE_URL}/seller/signup` },
+      { name: "Verification", href: `${SITE_URL}/seller/signup` },
+      { name: "Track Orders", href: "/dashboard/orders" },
       { name: "Partnerships", href: "/contact" },
     ],
   },

@@ -2,20 +2,6 @@
 -- Products, Variants, & Reels schema
 -- ============================================================
 
--- Helper function: check if caller is an admin (SECURITY DEFINER to prevent RLS infinite recursion)
-create or replace function public.is_admin()
-returns boolean
-language sql
-security definer
-set search_path = public
-stable
-as $$
-  select exists (
-    select 1 from public.profiles
-    where id = auth.uid() and role = 'admin'
-  );
-$$;
-
 do $$
 begin
   if not exists (select 1 from pg_type where typname = 'product_status') then
@@ -33,7 +19,6 @@ create table if not exists public.products (
   price_inr numeric(10, 2),
   status public.product_status not null default 'draft',
   cover_image_path text,
-  age_group text,
   materials text[] not null default '{}',
   search_vector tsvector generated always as (
     setweight(to_tsvector('english', coalesce(name, '')), 'A') ||
@@ -67,7 +52,6 @@ alter table public.products enable row level security;
 create index if not exists products_seller_id_idx on public.products (seller_id);
 create index if not exists products_status_idx on public.products (status);
 create index if not exists products_category_idx on public.products (category);
-create index if not exists products_age_group_idx on public.products (age_group);
 create index if not exists products_price_idx on public.products (price_inr);
 create index if not exists products_search_vector_idx on public.products using gin (search_vector);
 
