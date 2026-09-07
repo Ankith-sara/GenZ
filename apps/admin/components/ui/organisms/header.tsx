@@ -5,15 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Menu,
-  X,
-  ChevronDown,
-  User,
-  LogOut,
-  Compass,
-  ShoppingBag,
-  Search,
-  Heart,
+  ShoppingBag, Search, Heart, Menu, X, 
+  ChevronDown, User, LogOut, Compass,
 } from "lucide-react";
 import { Button } from "@genz/ui";
 import { UserAvatar } from "@genz/ui";
@@ -35,24 +28,31 @@ const categoriesList = [
     badge: "GI Tag",
   },
   {
+    name: "Kondapalli Toys",
+    href: "/discover?category=Kondapalli Toys",
+    image: "/cat_toys.png",
+    desc: "Lightweight Tella Poniki wood toys depicting Indian folklore and village life",
+    badge: "GI Tag",
+  },
+  {
     name: "Wooden Toys & Crafts",
-    href: "/discover?category=Wooden Toys",
+    href: "/discover?category=Wooden Toys & Crafts",
     image: "/cat_toys.png",
     desc: "Eco-friendly, non-toxic traditional Indian toys & puzzle blocks",
     badge: "Popular",
   },
   {
     name: "Home & Furniture",
-    href: "/discover?category=Furniture",
+    href: "/discover?category=Home & Furniture",
     image: "/cat_furniture.png",
     desc: "Solid wood furniture, handcrafted decor & living items",
     badge: null,
   },
   {
-    name: "Sports & Fitness",
-    href: "/discover?category=Sports",
-    image: "/cat_sports.png",
-    desc: "Athletic gear, fitness equipment & outdoor play sets",
+    name: "Handicrafts",
+    href: "/discover?category=Handicrafts",
+    image: "/cat_furniture.png",
+    desc: "Heritage Indian craft, artisan woodwork & traditional decor",
     badge: null,
   },
 ];

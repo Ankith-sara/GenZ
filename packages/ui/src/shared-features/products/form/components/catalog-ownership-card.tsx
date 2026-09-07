@@ -7,9 +7,9 @@ export interface SellerOption {
   full_name?: string | null;
 }
 
-interface CatalogOwnershipCardProps {
+export interface CatalogOwnershipCardProps {
   sellers?: SellerOption[];
-  adminUserId: string;
+  adminUserId?: string;
   selectedSellerId: string;
   onChangeSellerId?: (id: string) => void;
   isSellerMode?: boolean;
@@ -21,7 +21,7 @@ const FOCUS_RING =
 
 export function CatalogOwnershipCard({
   sellers = [],
-  adminUserId,
+  adminUserId = "",
   selectedSellerId,
   onChangeSellerId,
   isSellerMode = false,
@@ -75,12 +75,14 @@ export function CatalogOwnershipCard({
                 onChange={(e) => onChangeSellerId && onChangeSellerId(e.target.value)}
                 className={`mt-1.5 h-9 w-full rounded-lg border border-[#E5E5E5] bg-white px-3 text-xs font-medium text-[#171717] ${FOCUS_RING}`}
               >
-                <option value={adminUserId}>
-                  ⭐ Direct Platform / Official Catalog (GenZ Official)
-                </option>
+                {adminUserId && (
+                  <option value={adminUserId}>
+                    Direct Platform / Official Catalog (GenZ Official)
+                  </option>
+                )}
                 {sellers.map((s) => (
                   <option key={s.id} value={s.id}>
-                    🏢 {s.business_name} {s.full_name ? `(${s.full_name})` : ""}
+                    {s.business_name} {s.full_name ? `(${s.full_name})` : ""}
                   </option>
                 ))}
               </select>

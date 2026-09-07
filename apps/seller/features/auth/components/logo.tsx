@@ -26,7 +26,7 @@ export function AuthLogo() {
           </span>
         </div>
         <span className="font-graphik text-[10px] font-medium text-[#73736E]">
-          Factory Desk
+          Seller Desk
         </span>
       </div>
     </Link>

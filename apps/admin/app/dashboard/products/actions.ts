@@ -7,10 +7,11 @@ import { requireRole } from "@/features/auth/lib/require-role";
 import { productSchema } from "@genz/validation";
 import { validateFileContentServer } from "@/lib/file-validation";
 import { withRateLimit } from "@/lib/rate-limiter";
-import type { ProductStatus } from "@genz/types";
+import type { Product, ProductStatus } from "@genz/types";
 
 export interface ProductFormState {
   error?: string;
+  success?: boolean;
 }
 
 export interface VariantFormState {
@@ -84,6 +85,87 @@ export async function adminUpdateProduct(
   revalidatePath(`/products/${productId}`);
 }
 
+export async function adminUpdateProductFormAction(
+  productId: string,
+  _prevState: ProductFormState,
+  formData: FormData
+): Promise<ProductFormState> {
+  await requireRole("admin");
+
+  const name = String(formData.get("name") ?? "").trim();
+  const category = String(formData.get("category") ?? "toys").trim() || "toys";
+  const description = String(formData.get("description") ?? "").trim();
+  const priceRaw = String(formData.get("price_inr") ?? "").trim();
+  const parsedPrice = priceRaw ? Number(priceRaw) : null;
+  const price_inr = parsedPrice !== null && !isNaN(parsedPrice) ? parsedPrice : null;
+  const seller_id = String(formData.get("seller_id") ?? "").trim();
+  const statusRaw = String(formData.get("status") ?? "").trim();
+  const status =
+    statusRaw === "published" || statusRaw === "draft" ? statusRaw : "published";
+
+  if (!name) {
+    return { error: "Product name is required" };
+  }
+  if (!price_inr || price_inr <= 0) {
+    return { error: "A valid positive price is required" };
+  }
+
+  const sku = String(formData.get("sku") ?? "").trim() || null;
+  const stockQtyRaw = String(formData.get("stock_qty") ?? "").trim();
+  const inventory_count =
+    stockQtyRaw !== "" && !isNaN(Number(stockQtyRaw)) ? Number(stockQtyRaw) : 0;
+  const lowStockRaw = String(formData.get("low_stock_threshold") ?? "").trim();
+  const low_stock_threshold =
+    lowStockRaw !== "" && !isNaN(Number(lowStockRaw)) ? Number(lowStockRaw) : 5;
+  const track_inventory = formData.get("track_inventory") !== null;
+  const is_featured = formData.get("is_featured") === "true";
+  const is_new_arrival =
+    formData.get("is_new_arrival") === null
+      ? true
+      : formData.get("is_new_arrival") === "true";
+  const is_best_seller =
+    formData.get("is_bestseller") === "true" ||
+    formData.get("is_best_seller") === "true";
+
+  const supabase = createAdminClient();
+
+  const updateData: Partial<Product> = {
+    name,
+    category,
+    description: description || null,
+    price_inr,
+    status,
+    updated_by: session.userId,
+    updated_at: new Date().toISOString(),
+    sku,
+    inventory_count,
+    low_stock_threshold,
+    track_inventory,
+    is_featured,
+    is_new_arrival,
+    is_best_seller,
+  };
+
+  if (seller_id) {
+    updateData.seller_id = seller_id;
+  }
+
+  const { error } = await supabase
+    .from("products")
+    .update(updateData)
+    .eq("id", productId);
+
+  if (error) {
+    console.error("Admin update product error:", error);
+    return { error: error.message || "Failed to update product" };
+  }
+
+  revalidatePath("/admin/dashboard/products");
+  revalidatePath(`/admin/dashboard/products/${productId}`);
+  revalidatePath(`/products/${productId}`);
+  return { success: true };
+}
+
 export async function adminDeleteProduct(productId: string) {
   await requireRole("admin");
 
@@ -145,6 +227,26 @@ export async function createProduct(
 
   const customSellerId = String(formData.get("seller_id") ?? "").trim();
   const targetSellerId = customSellerId || session.userId;
+  const statusRaw = String(formData.get("status") ?? "").trim();
+  const status: ProductStatus = statusRaw === "draft" ? "draft" : "published";
+  const cover_image_path = String(formData.get("cover_image_path") ?? "").trim() || null;
+
+  const sku = String(formData.get("sku") ?? "").trim() || null;
+  const stockQtyRaw = String(formData.get("stock_qty") ?? "").trim();
+  const inventory_count =
+    stockQtyRaw !== "" && !isNaN(Number(stockQtyRaw)) ? Number(stockQtyRaw) : 0;
+  const lowStockRaw = String(formData.get("low_stock_threshold") ?? "").trim();
+  const low_stock_threshold =
+    lowStockRaw !== "" && !isNaN(Number(lowStockRaw)) ? Number(lowStockRaw) : 5;
+  const track_inventory = formData.get("track_inventory") !== null;
+  const is_featured = formData.get("is_featured") === "true";
+  const is_new_arrival =
+    formData.get("is_new_arrival") === null
+      ? true
+      : formData.get("is_new_arrival") === "true";
+  const is_best_seller =
+    formData.get("is_bestseller") === "true" ||
+    formData.get("is_best_seller") === "true";
 
   const { error } = await supabase
     .from("products")
@@ -156,7 +258,17 @@ export async function createProduct(
       price_inr: validation.data.price_inr,
       materials: validation.data.materials,
       seller_verified: true,
-      status: "published",
+      status,
+      cover_image_path,
+      created_by: session.userId,
+      updated_by: session.userId,
+      sku,
+      inventory_count,
+      low_stock_threshold,
+      track_inventory,
+      is_featured,
+      is_new_arrival,
+      is_best_seller,
     })
     .select("id")
     .single();

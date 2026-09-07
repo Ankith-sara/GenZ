@@ -1,7 +1,7 @@
 import React from "react";
 import { Globe, Eye, EyeOff } from "lucide-react";
 
-interface PublishingCardProps {
+export interface PublishingCardProps {
   status: "published" | "draft";
   onChangeStatus: (val: "published" | "draft") => void;
 }
@@ -11,8 +11,8 @@ export function PublishingCard({
   onChangeStatus,
 }: PublishingCardProps) {
   return (
-    <div id="publishing" className="space-y-4 rounded-xl border border-[#E5E5E0] bg-white p-5 shadow-xs">
-      <div className="border-b border-[#E5E5E0] pb-3">
+    <div id="publishing" className="space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-5 shadow-xs">
+      <div className="border-b border-[#E5E5E5] pb-3">
         <h2 className="flex items-center gap-2 text-sm font-semibold text-[#171717]">
           <Globe className="h-4 w-4 text-[#737373]" />
           <span>Publishing Status</span>
@@ -34,7 +34,7 @@ export function PublishingCard({
             className={`flex items-center justify-between rounded-lg border p-3 text-left transition-all ${
               status === "published"
                 ? "border-[#10B981] bg-[#ECFDF5] text-[#047857]"
-                : "border-[#E5E5E0] bg-white text-[#171717] hover:bg-[#FAFAF9]"
+                : "border-[#E5E5E5] bg-white text-[#171717] hover:bg-[#FAFAF9]"
             }`}
           >
             <div>
@@ -50,7 +50,7 @@ export function PublishingCard({
             className={`flex items-center justify-between rounded-lg border p-3 text-left transition-all ${
               status === "draft"
                 ? "border-[#FCD34D] bg-[#FFFBEB] text-[#B45309]"
-                : "border-[#E5E5E0] bg-white text-[#171717] hover:bg-[#FAFAF9]"
+                : "border-[#E5E5E5] bg-white text-[#171717] hover:bg-[#FAFAF9]"
             }`}
           >
             <div>

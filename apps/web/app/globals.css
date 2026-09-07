@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../../packages/ui";
 
 :root {
   --radius: 0.75rem;

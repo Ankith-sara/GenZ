@@ -33,18 +33,32 @@ const homepageCategories = [
     desc: "Authentic non-toxic lacquer hand-turned wooden toys from Andhra Pradesh.",
   },
   {
+    name: "Kondapalli Toys",
+    href: "/discover?category=Kondapalli Toys",
+    image: "/cat_toys.png",
+    count: "GI Heritage Craft",
+    desc: "Lightweight Tella Poniki wood toys depicting Indian folklore and village life.",
+  },
+  {
     name: "Wooden Toys & Crafts",
-    href: "/discover?category=Wooden Toys",
+    href: "/discover?category=Wooden Toys & Crafts",
     image: "/cat_toys.png",
     count: "150+ Verified Products",
     desc: "Eco-friendly, non-toxic traditional Indian toys & STEM blocks.",
   },
   {
     name: "Home & Furniture",
-    href: "/discover?category=Furniture",
+    href: "/discover?category=Home & Furniture",
     image: "/cat_furniture.png",
     count: "180+ Verified Products",
     desc: "Solid wood furniture, handcrafted decor & living items.",
+  },
+  {
+    name: "Handicrafts",
+    href: "/discover?category=Handicrafts",
+    image: "/cat_furniture.png",
+    count: "Heritage Creations",
+    desc: "Master artisan woodwork, brass embellishments & traditional craft.",
   },
 ];
 
@@ -161,6 +175,14 @@ export default async function HomePage() {
       established_year: s.established_year || (meta.established_year ? Number(meta.established_year) : null),
       thumbnails: realThumbnails,
       products_count: sellerProds.length,
+      description: (meta.short_bio as string) || (meta.description as string) || s.description || null,
+      products: sellerProds.map((p) => ({
+        id: p.id,
+        name: p.name,
+        price_inr: p.price_inr,
+        category: p.category,
+        cover_image_path: p.cover_image_path,
+      })),
     };
   });
 

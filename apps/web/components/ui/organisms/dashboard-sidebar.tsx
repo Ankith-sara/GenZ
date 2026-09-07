@@ -55,7 +55,7 @@ function getNavGroups(role: Role): NavGroup[] {
 
   return [
     {
-      groupName: "FACTORY DESK",
+      groupName: "SELLER DESK",
       items: [
         { href: "/seller/dashboard", label: "Seller Overview", icon: LayoutDashboard },
       ],
@@ -192,7 +192,7 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
                   GenZ Seller
                 </span>
                 <span className="block font-mono text-[10px] text-[#73736E]">
-                  Factory Desk
+                  Seller Desk
                 </span>
               </div>
             </Link>

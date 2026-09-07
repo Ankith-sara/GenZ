@@ -76,6 +76,15 @@ export type Product = {
   cover_image_path: string | null;
   materials: string[];
   seller_verified?: boolean;
+  created_by?: string | null;
+  updated_by?: string | null;
+  sku?: string | null;
+  inventory_count?: number | null;
+  low_stock_threshold?: number | null;
+  track_inventory?: boolean;
+  is_featured?: boolean;
+  is_new_arrival?: boolean;
+  is_best_seller?: boolean;
   created_at: string;
   updated_at: string;
 };

@@ -216,7 +216,7 @@ export function ProductPurchaseSection({
           <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
           <span>
             Direct dispatch from{" "}
-            <strong>{seller?.business_name || "Verified Factory Desk"}</strong>.
+            <strong>{seller?.business_name || "Verified Seller Desk"}</strong>.
           </span>
         </div>
       </div>

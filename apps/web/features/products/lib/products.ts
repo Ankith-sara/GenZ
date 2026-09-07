@@ -9,17 +9,15 @@ export const PRODUCT_STATUS_LABEL: Record<ProductStatus, string> = {
 // Toys-first, per the platform's category roadmap — kept as a curated list
 // (rather than freeform text) so discovery filters have a fixed, sane set
 // of values to facet on.
-export const TOY_CATEGORIES = [
+export const DEFAULT_PRODUCT_CATEGORIES = [
   "Etikoppaka Wooden Toys",
-  "Wooden Toys",
-  "Educational Toys",
-  "Soft Toys",
-  "Outdoor & Ride-ons",
-  "Puzzles & Games",
-  "Building Blocks",
-  "Arts & Crafts",
-  "Other",
+  "Kondapalli Toys",
+  "Wooden Toys & Crafts",
+  "Home & Furniture",
+  "Handicrafts",
 ] as const;
+
+export const TOY_CATEGORIES = DEFAULT_PRODUCT_CATEGORIES;
 
 export const DISCOVER_PAGE_SIZE = 12;
 

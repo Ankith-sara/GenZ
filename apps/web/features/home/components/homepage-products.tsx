@@ -74,13 +74,13 @@ export function HomepageProducts({
   return (
     <section
       id="featured-products"
-      className="border-b border-[#E5E5E0] bg-white px-6 py-20 sm:px-12 md:py-28"
+      className="border-b border-[#E5E5E0] bg-white px-4 py-16 sm:px-8 md:px-12 md:py-24"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1440px]">
         {/* Section Header */}
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <h2 className="font-nantes text-ink-black text-4xl font-normal sm:text-5xl">
+            <h2 className="font-nantes text-ink-black text-3xl font-normal sm:text-4xl md:text-5xl">
               Trending Made in India Products
             </h2>
           </div>
@@ -99,7 +99,7 @@ export function HomepageProducts({
 
         {/* Dynamic Category Pill Filters */}
         {filterTabs.length > 1 && (
-          <div className="no-scrollbar mt-10 flex items-center gap-2.5 overflow-x-auto pb-2">
+          <div className="no-scrollbar mt-8 flex items-center gap-2 overflow-x-auto pb-2 sm:mt-10 sm:gap-2.5">
             {filterTabs.map((tab) => {
               const isActive = activeTab === tab;
               return (
@@ -107,7 +107,7 @@ export function HomepageProducts({
                   key={tab}
                   type="button"
                   onClick={() => setActiveTab(tab)}
-                  className={`font-graphik shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold tracking-wide transition-all duration-200 ${
+                  className={`font-graphik shrink-0 rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-all duration-200 sm:px-5 sm:py-2.5 ${
                     isActive
                       ? "bg-[#1A1A18] text-white shadow-sm"
                       : "border border-neutral-200 bg-[#FAF7F0] text-neutral-700 hover:border-black/30 hover:bg-white"
@@ -149,8 +149,8 @@ export function HomepageProducts({
             </div>
           </div>
         ) : (
-          /* Product Cards Grid */
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          /* Product Cards Grid: 2 columns on small screens, 5 columns on large screens */
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-5 md:gap-5">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}

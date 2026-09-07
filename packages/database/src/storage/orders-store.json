@@ -1,5 +1,6627 @@
 [
   {
+    "id": "GZ-ORD-419249",
+    "orderId": "GZ-ORD-419249",
+    "createdAt": "2026-09-07T19:55:41.202Z",
+    "updatedAt": "2026-09-07T19:55:41.202Z",
+    "customerId": "cust-filter-test-1788810941202",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:55:41.202Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-716599",
+    "orderId": "GZ-ORD-716599",
+    "createdAt": "2026-09-07T19:55:41.175Z",
+    "updatedAt": "2026-09-07T19:55:41.175Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788810941174"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788810941174"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:55:41.175Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-928897",
+    "orderId": "GZ-ORD-928897",
+    "createdAt": "2026-09-07T19:55:41.138Z",
+    "updatedAt": "2026-09-07T19:55:41.138Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:55:41.138Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-354056",
+    "orderId": "GZ-ORD-354056",
+    "createdAt": "2026-09-07T19:55:41.115Z",
+    "updatedAt": "2026-09-07T19:55:41.132Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:55:41.115Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T19:55:41.132Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-911085",
+    "orderId": "GZ-ORD-911085",
+    "createdAt": "2026-09-07T19:55:41.060Z",
+    "updatedAt": "2026-09-07T19:55:41.105Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:55:41.060Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T19:55:41.105Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-527316",
+    "orderId": "GZ-ORD-527316",
+    "createdAt": "2026-09-07T19:55:41.025Z",
+    "updatedAt": "2026-09-07T19:55:41.053Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:55:41.025Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T19:55:41.053Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-641727",
+    "orderId": "GZ-ORD-641727",
+    "createdAt": "2026-09-07T19:55:41.013Z",
+    "updatedAt": "2026-09-07T19:55:41.013Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:55:41.013Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-680945",
+    "orderId": "GZ-ORD-680945",
+    "createdAt": "2026-09-07T19:55:40.913Z",
+    "updatedAt": "2026-09-07T19:55:40.913Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:55:40.913Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-157885",
+    "orderId": "GZ-ORD-157885",
+    "createdAt": "2026-09-07T19:52:19.063Z",
+    "updatedAt": "2026-09-07T19:52:19.063Z",
+    "customerId": "cust-filter-test-1788810739063",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:52:19.063Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-987686",
+    "orderId": "GZ-ORD-987686",
+    "createdAt": "2026-09-07T19:52:18.907Z",
+    "updatedAt": "2026-09-07T19:52:18.907Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788810738907"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788810738907"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:52:18.907Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-311188",
+    "orderId": "GZ-ORD-311188",
+    "createdAt": "2026-09-07T19:52:18.720Z",
+    "updatedAt": "2026-09-07T19:52:18.720Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:52:18.720Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-925922",
+    "orderId": "GZ-ORD-925922",
+    "createdAt": "2026-09-07T19:52:18.650Z",
+    "updatedAt": "2026-09-07T19:52:18.688Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:52:18.650Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T19:52:18.688Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-140424",
+    "orderId": "GZ-ORD-140424",
+    "createdAt": "2026-09-07T19:52:18.491Z",
+    "updatedAt": "2026-09-07T19:52:18.639Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:52:18.491Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T19:52:18.639Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-135307",
+    "orderId": "GZ-ORD-135307",
+    "createdAt": "2026-09-07T19:52:18.172Z",
+    "updatedAt": "2026-09-07T19:52:18.480Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:52:18.172Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T19:52:18.480Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-995533",
+    "orderId": "GZ-ORD-995533",
+    "createdAt": "2026-09-07T19:52:18.089Z",
+    "updatedAt": "2026-09-07T19:52:18.089Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:52:18.089Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-508359",
+    "orderId": "GZ-ORD-508359",
+    "createdAt": "2026-09-07T19:52:18.064Z",
+    "updatedAt": "2026-09-07T19:52:18.064Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:52:18.064Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-826270",
+    "orderId": "GZ-ORD-826270",
+    "createdAt": "2026-09-07T19:47:53.350Z",
+    "updatedAt": "2026-09-07T19:47:53.350Z",
+    "customerId": "cust-filter-test-1788810473350",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:47:53.350Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-326502",
+    "orderId": "GZ-ORD-326502",
+    "createdAt": "2026-09-07T19:47:53.315Z",
+    "updatedAt": "2026-09-07T19:47:53.315Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788810473314"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788810473314"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:47:53.315Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-294614",
+    "orderId": "GZ-ORD-294614",
+    "createdAt": "2026-09-07T19:47:53.269Z",
+    "updatedAt": "2026-09-07T19:47:53.269Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:47:53.269Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-782624",
+    "orderId": "GZ-ORD-782624",
+    "createdAt": "2026-09-07T19:47:53.236Z",
+    "updatedAt": "2026-09-07T19:47:53.263Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:47:53.236Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T19:47:53.263Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-154772",
+    "orderId": "GZ-ORD-154772",
+    "createdAt": "2026-09-07T19:47:53.197Z",
+    "updatedAt": "2026-09-07T19:47:53.229Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:47:53.197Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T19:47:53.229Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-969393",
+    "orderId": "GZ-ORD-969393",
+    "createdAt": "2026-09-07T19:47:53.028Z",
+    "updatedAt": "2026-09-07T19:47:53.184Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:47:53.028Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T19:47:53.184Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-814654",
+    "orderId": "GZ-ORD-814654",
+    "createdAt": "2026-09-07T19:47:52.934Z",
+    "updatedAt": "2026-09-07T19:47:52.934Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:47:52.934Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-778025",
+    "orderId": "GZ-ORD-778025",
+    "createdAt": "2026-09-07T19:47:52.912Z",
+    "updatedAt": "2026-09-07T19:47:52.912Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:47:52.912Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-801953",
+    "orderId": "GZ-ORD-801953",
+    "createdAt": "2026-09-07T19:33:25.684Z",
+    "updatedAt": "2026-09-07T19:33:25.684Z",
+    "customerId": "cust-filter-test-1788809605684",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:33:25.684Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-230953",
+    "orderId": "GZ-ORD-230953",
+    "createdAt": "2026-09-07T19:33:25.361Z",
+    "updatedAt": "2026-09-07T19:33:25.361Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788809605361"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788809605361"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:33:25.361Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-751598",
+    "orderId": "GZ-ORD-751598",
+    "createdAt": "2026-09-07T19:33:25.066Z",
+    "updatedAt": "2026-09-07T19:33:25.066Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:33:25.066Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-619402",
+    "orderId": "GZ-ORD-619402",
+    "createdAt": "2026-09-07T19:33:24.607Z",
+    "updatedAt": "2026-09-07T19:33:24.923Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:33:24.607Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T19:33:24.923Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-373115",
+    "orderId": "GZ-ORD-373115",
+    "createdAt": "2026-09-07T19:33:23.992Z",
+    "updatedAt": "2026-09-07T19:33:24.437Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:33:23.992Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T19:33:24.437Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-319137",
+    "orderId": "GZ-ORD-319137",
+    "createdAt": "2026-09-07T19:33:23.764Z",
+    "updatedAt": "2026-09-07T19:33:23.956Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:33:23.764Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T19:33:23.956Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-388698",
+    "orderId": "GZ-ORD-388698",
+    "createdAt": "2026-09-07T19:33:23.728Z",
+    "updatedAt": "2026-09-07T19:33:23.728Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:33:23.728Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-716835",
+    "orderId": "GZ-ORD-716835",
+    "createdAt": "2026-09-07T19:33:23.386Z",
+    "updatedAt": "2026-09-07T19:33:23.386Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:33:23.386Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-405062",
+    "orderId": "GZ-ORD-405062",
+    "createdAt": "2026-09-07T19:28:17.151Z",
+    "updatedAt": "2026-09-07T19:28:17.151Z",
+    "customerId": "cust-filter-test-1788809297151",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:28:17.151Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-899151",
+    "orderId": "GZ-ORD-899151",
+    "createdAt": "2026-09-07T19:28:17.093Z",
+    "updatedAt": "2026-09-07T19:28:17.093Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788809297093"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788809297093"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:28:17.093Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-163137",
+    "orderId": "GZ-ORD-163137",
+    "createdAt": "2026-09-07T19:28:16.941Z",
+    "updatedAt": "2026-09-07T19:28:16.941Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:28:16.941Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-173027",
+    "orderId": "GZ-ORD-173027",
+    "createdAt": "2026-09-07T19:28:16.913Z",
+    "updatedAt": "2026-09-07T19:28:16.935Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:28:16.913Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T19:28:16.935Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-412780",
+    "orderId": "GZ-ORD-412780",
+    "createdAt": "2026-09-07T19:28:16.873Z",
+    "updatedAt": "2026-09-07T19:28:16.906Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:28:16.873Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T19:28:16.906Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-119280",
+    "orderId": "GZ-ORD-119280",
+    "createdAt": "2026-09-07T19:28:16.820Z",
+    "updatedAt": "2026-09-07T19:28:16.865Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:28:16.820Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T19:28:16.865Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-497091",
+    "orderId": "GZ-ORD-497091",
+    "createdAt": "2026-09-07T19:28:16.802Z",
+    "updatedAt": "2026-09-07T19:28:16.802Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:28:16.802Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-520964",
+    "orderId": "GZ-ORD-520964",
+    "createdAt": "2026-09-07T19:28:16.781Z",
+    "updatedAt": "2026-09-07T19:28:16.781Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:28:16.781Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-196551",
+    "orderId": "GZ-ORD-196551",
+    "createdAt": "2026-09-07T19:24:29.415Z",
+    "updatedAt": "2026-09-07T19:24:29.415Z",
+    "customerId": "cust-filter-test-1788809069415",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:24:29.415Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-220331",
+    "orderId": "GZ-ORD-220331",
+    "createdAt": "2026-09-07T19:24:29.358Z",
+    "updatedAt": "2026-09-07T19:24:29.358Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788809069358"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788809069358"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:24:29.358Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-442098",
+    "orderId": "GZ-ORD-442098",
+    "createdAt": "2026-09-07T19:24:29.317Z",
+    "updatedAt": "2026-09-07T19:24:29.317Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:24:29.317Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-741857",
+    "orderId": "GZ-ORD-741857",
+    "createdAt": "2026-09-07T19:24:29.280Z",
+    "updatedAt": "2026-09-07T19:24:29.306Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:24:29.280Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T19:24:29.306Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-400074",
+    "orderId": "GZ-ORD-400074",
+    "createdAt": "2026-09-07T19:24:29.234Z",
+    "updatedAt": "2026-09-07T19:24:29.270Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:24:29.234Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T19:24:29.270Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-975847",
+    "orderId": "GZ-ORD-975847",
+    "createdAt": "2026-09-07T19:24:29.153Z",
+    "updatedAt": "2026-09-07T19:24:29.207Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:24:29.153Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T19:24:29.207Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-543246",
+    "orderId": "GZ-ORD-543246",
+    "createdAt": "2026-09-07T19:24:29.115Z",
+    "updatedAt": "2026-09-07T19:24:29.115Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:24:29.115Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-595724",
+    "orderId": "GZ-ORD-595724",
+    "createdAt": "2026-09-07T19:24:29.021Z",
+    "updatedAt": "2026-09-07T19:24:29.021Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:24:29.021Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-811704",
+    "orderId": "GZ-ORD-811704",
+    "createdAt": "2026-09-07T19:08:34.861Z",
+    "updatedAt": "2026-09-07T19:08:34.861Z",
+    "customerId": "cust-filter-test-1788808114861",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:08:34.861Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-218265",
+    "orderId": "GZ-ORD-218265",
+    "createdAt": "2026-09-07T19:08:34.843Z",
+    "updatedAt": "2026-09-07T19:08:34.843Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788808114843"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788808114843"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:08:34.843Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-950942",
+    "orderId": "GZ-ORD-950942",
+    "createdAt": "2026-09-07T19:08:34.799Z",
+    "updatedAt": "2026-09-07T19:08:34.799Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:08:34.799Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-246817",
+    "orderId": "GZ-ORD-246817",
+    "createdAt": "2026-09-07T19:08:34.730Z",
+    "updatedAt": "2026-09-07T19:08:34.794Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:08:34.730Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T19:08:34.794Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-245849",
+    "orderId": "GZ-ORD-245849",
+    "createdAt": "2026-09-07T19:08:34.689Z",
+    "updatedAt": "2026-09-07T19:08:34.723Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:08:34.689Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T19:08:34.723Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-688003",
+    "orderId": "GZ-ORD-688003",
+    "createdAt": "2026-09-07T19:08:34.624Z",
+    "updatedAt": "2026-09-07T19:08:34.679Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:08:34.624Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T19:08:34.679Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-165546",
+    "orderId": "GZ-ORD-165546",
+    "createdAt": "2026-09-07T19:08:34.614Z",
+    "updatedAt": "2026-09-07T19:08:34.614Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:08:34.614Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-862165",
+    "orderId": "GZ-ORD-862165",
+    "createdAt": "2026-09-07T19:08:34.600Z",
+    "updatedAt": "2026-09-07T19:08:34.600Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:08:34.600Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-810054",
+    "orderId": "GZ-ORD-810054",
+    "createdAt": "2026-09-07T19:07:47.892Z",
+    "updatedAt": "2026-09-07T19:07:47.892Z",
+    "customerId": "cust-filter-test-1788808067892",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:07:47.892Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-677240",
+    "orderId": "GZ-ORD-677240",
+    "createdAt": "2026-09-07T19:07:47.872Z",
+    "updatedAt": "2026-09-07T19:07:47.872Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788808067872"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788808067872"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:07:47.872Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-860156",
+    "orderId": "GZ-ORD-860156",
+    "createdAt": "2026-09-07T19:07:47.857Z",
+    "updatedAt": "2026-09-07T19:07:47.857Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:07:47.857Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-575322",
+    "orderId": "GZ-ORD-575322",
+    "createdAt": "2026-09-07T19:07:47.810Z",
+    "updatedAt": "2026-09-07T19:07:47.851Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:07:47.810Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T19:07:47.851Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-562423",
+    "orderId": "GZ-ORD-562423",
+    "createdAt": "2026-09-07T19:07:47.781Z",
+    "updatedAt": "2026-09-07T19:07:47.804Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:07:47.781Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T19:07:47.804Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-248381",
+    "orderId": "GZ-ORD-248381",
+    "createdAt": "2026-09-07T19:07:47.750Z",
+    "updatedAt": "2026-09-07T19:07:47.774Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:07:47.750Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T19:07:47.774Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-335220",
+    "orderId": "GZ-ORD-335220",
+    "createdAt": "2026-09-07T19:07:47.740Z",
+    "updatedAt": "2026-09-07T19:07:47.740Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:07:47.740Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-144788",
+    "orderId": "GZ-ORD-144788",
+    "createdAt": "2026-09-07T19:07:47.724Z",
+    "updatedAt": "2026-09-07T19:07:47.724Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T19:07:47.724Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-809658",
+    "orderId": "GZ-ORD-809658",
+    "createdAt": "2026-09-07T18:58:34.891Z",
+    "updatedAt": "2026-09-07T18:58:34.891Z",
+    "customerId": "cust-filter-test-1788807514891",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:58:34.891Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-450170",
+    "orderId": "GZ-ORD-450170",
+    "createdAt": "2026-09-07T18:58:34.694Z",
+    "updatedAt": "2026-09-07T18:58:34.694Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788807514694"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788807514694"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:58:34.694Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-430667",
+    "orderId": "GZ-ORD-430667",
+    "createdAt": "2026-09-07T18:58:34.567Z",
+    "updatedAt": "2026-09-07T18:58:34.567Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:58:34.567Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-400278",
+    "orderId": "GZ-ORD-400278",
+    "createdAt": "2026-09-07T18:58:34.505Z",
+    "updatedAt": "2026-09-07T18:58:34.555Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:58:34.505Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T18:58:34.555Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-284349",
+    "orderId": "GZ-ORD-284349",
+    "createdAt": "2026-09-07T18:58:34.488Z",
+    "updatedAt": "2026-09-07T18:58:34.499Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:58:34.488Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T18:58:34.499Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-689497",
+    "orderId": "GZ-ORD-689497",
+    "createdAt": "2026-09-07T18:58:34.468Z",
+    "updatedAt": "2026-09-07T18:58:34.481Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:58:34.468Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T18:58:34.481Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-275573",
+    "orderId": "GZ-ORD-275573",
+    "createdAt": "2026-09-07T18:58:34.459Z",
+    "updatedAt": "2026-09-07T18:58:34.459Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:58:34.459Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-199284",
+    "orderId": "GZ-ORD-199284",
+    "createdAt": "2026-09-07T18:58:34.443Z",
+    "updatedAt": "2026-09-07T18:58:34.443Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:58:34.443Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-969562",
+    "orderId": "GZ-ORD-969562",
+    "createdAt": "2026-09-07T18:47:12.772Z",
+    "updatedAt": "2026-09-07T18:47:12.772Z",
+    "customerId": "cust-filter-test-1788806832772",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:47:12.772Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-213916",
+    "orderId": "GZ-ORD-213916",
+    "createdAt": "2026-09-07T18:47:12.760Z",
+    "updatedAt": "2026-09-07T18:47:12.760Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788806832760"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788806832760"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:47:12.760Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-554628",
+    "orderId": "GZ-ORD-554628",
+    "createdAt": "2026-09-07T18:47:12.735Z",
+    "updatedAt": "2026-09-07T18:47:12.735Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:47:12.735Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-727805",
+    "orderId": "GZ-ORD-727805",
+    "createdAt": "2026-09-07T18:47:12.702Z",
+    "updatedAt": "2026-09-07T18:47:12.710Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:47:12.702Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T18:47:12.710Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-857778",
+    "orderId": "GZ-ORD-857778",
+    "createdAt": "2026-09-07T18:47:12.689Z",
+    "updatedAt": "2026-09-07T18:47:12.698Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:47:12.689Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T18:47:12.698Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-170377",
+    "orderId": "GZ-ORD-170377",
+    "createdAt": "2026-09-07T18:47:12.610Z",
+    "updatedAt": "2026-09-07T18:47:12.684Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:47:12.610Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T18:47:12.684Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-545528",
+    "orderId": "GZ-ORD-545528",
+    "createdAt": "2026-09-07T18:47:12.598Z",
+    "updatedAt": "2026-09-07T18:47:12.598Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:47:12.598Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-755613",
+    "orderId": "GZ-ORD-755613",
+    "createdAt": "2026-09-07T18:47:12.556Z",
+    "updatedAt": "2026-09-07T18:47:12.556Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:47:12.556Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-488818",
+    "orderId": "GZ-ORD-488818",
+    "createdAt": "2026-09-07T18:35:30.779Z",
+    "updatedAt": "2026-09-07T18:35:30.779Z",
+    "customerId": "cust-filter-test-1788806130779",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:35:30.779Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-909814",
+    "orderId": "GZ-ORD-909814",
+    "createdAt": "2026-09-07T18:35:30.762Z",
+    "updatedAt": "2026-09-07T18:35:30.762Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788806130762"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788806130762"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:35:30.762Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-751490",
+    "orderId": "GZ-ORD-751490",
+    "createdAt": "2026-09-07T18:35:30.733Z",
+    "updatedAt": "2026-09-07T18:35:30.733Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:35:30.733Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-299278",
+    "orderId": "GZ-ORD-299278",
+    "createdAt": "2026-09-07T18:35:30.704Z",
+    "updatedAt": "2026-09-07T18:35:30.727Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:35:30.704Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T18:35:30.727Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-595322",
+    "orderId": "GZ-ORD-595322",
+    "createdAt": "2026-09-07T18:35:30.640Z",
+    "updatedAt": "2026-09-07T18:35:30.696Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:35:30.640Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T18:35:30.696Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-269625",
+    "orderId": "GZ-ORD-269625",
+    "createdAt": "2026-09-07T18:35:30.598Z",
+    "updatedAt": "2026-09-07T18:35:30.634Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:35:30.598Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T18:35:30.634Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-975269",
+    "orderId": "GZ-ORD-975269",
+    "createdAt": "2026-09-07T18:35:30.578Z",
+    "updatedAt": "2026-09-07T18:35:30.578Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:35:30.578Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-825655",
+    "orderId": "GZ-ORD-825655",
+    "createdAt": "2026-09-07T18:35:30.560Z",
+    "updatedAt": "2026-09-07T18:35:30.560Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:35:30.560Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-434370",
+    "orderId": "GZ-ORD-434370",
+    "createdAt": "2026-09-07T18:30:36.411Z",
+    "updatedAt": "2026-09-07T18:30:36.411Z",
+    "customerId": "cust-filter-test-1788805836411",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:30:36.411Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-774014",
+    "orderId": "GZ-ORD-774014",
+    "createdAt": "2026-09-07T18:30:36.317Z",
+    "updatedAt": "2026-09-07T18:30:36.317Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788805836317"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788805836317"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:30:36.317Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-951538",
+    "orderId": "GZ-ORD-951538",
+    "createdAt": "2026-09-07T18:30:36.214Z",
+    "updatedAt": "2026-09-07T18:30:36.214Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:30:36.214Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-660671",
+    "orderId": "GZ-ORD-660671",
+    "createdAt": "2026-09-07T18:30:35.798Z",
+    "updatedAt": "2026-09-07T18:30:36.115Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:30:35.798Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T18:30:36.115Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-593923",
+    "orderId": "GZ-ORD-593923",
+    "createdAt": "2026-09-07T18:30:35.771Z",
+    "updatedAt": "2026-09-07T18:30:35.790Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:30:35.771Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T18:30:35.790Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-604583",
+    "orderId": "GZ-ORD-604583",
+    "createdAt": "2026-09-07T18:30:35.335Z",
+    "updatedAt": "2026-09-07T18:30:35.465Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:30:35.335Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T18:30:35.465Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-567310",
+    "orderId": "GZ-ORD-567310",
+    "createdAt": "2026-09-07T18:30:35.256Z",
+    "updatedAt": "2026-09-07T18:30:35.256Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:30:35.256Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-527068",
+    "orderId": "GZ-ORD-527068",
+    "createdAt": "2026-09-07T18:30:35.151Z",
+    "updatedAt": "2026-09-07T18:30:35.151Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:30:35.151Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-910905",
+    "orderId": "GZ-ORD-910905",
+    "createdAt": "2026-09-07T18:25:29.555Z",
+    "updatedAt": "2026-09-07T18:25:29.555Z",
+    "customerId": "cust-filter-test-1788805529555",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:25:29.555Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-923148",
+    "orderId": "GZ-ORD-923148",
+    "createdAt": "2026-09-07T18:25:29.532Z",
+    "updatedAt": "2026-09-07T18:25:29.532Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788805529531"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788805529531"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:25:29.532Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-311630",
+    "orderId": "GZ-ORD-311630",
+    "createdAt": "2026-09-07T18:25:29.496Z",
+    "updatedAt": "2026-09-07T18:25:29.496Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:25:29.496Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-100311",
+    "orderId": "GZ-ORD-100311",
+    "createdAt": "2026-09-07T18:25:29.427Z",
+    "updatedAt": "2026-09-07T18:25:29.467Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:25:29.427Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T18:25:29.467Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-116570",
+    "orderId": "GZ-ORD-116570",
+    "createdAt": "2026-09-07T18:25:29.309Z",
+    "updatedAt": "2026-09-07T18:25:29.331Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:25:29.309Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T18:25:29.331Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-989988",
+    "orderId": "GZ-ORD-989988",
+    "createdAt": "2026-09-07T18:25:29.273Z",
+    "updatedAt": "2026-09-07T18:25:29.298Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:25:29.273Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T18:25:29.298Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-987209",
+    "orderId": "GZ-ORD-987209",
+    "createdAt": "2026-09-07T18:25:29.204Z",
+    "updatedAt": "2026-09-07T18:25:29.204Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:25:29.204Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-829327",
+    "orderId": "GZ-ORD-829327",
+    "createdAt": "2026-09-07T18:25:29.183Z",
+    "updatedAt": "2026-09-07T18:25:29.183Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T18:25:29.183Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-348509",
+    "orderId": "GZ-ORD-348509",
+    "createdAt": "2026-09-06T19:40:33.813Z",
+    "updatedAt": "2026-09-06T19:40:33.813Z",
+    "customerId": "cust-filter-test-1788723633813",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T19:40:33.813Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-851032",
+    "orderId": "GZ-ORD-851032",
+    "createdAt": "2026-09-06T19:40:33.799Z",
+    "updatedAt": "2026-09-06T19:40:33.799Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788723633799"
+      }
+    ],
+    "sellerIds": [
+      "seller-unique-1788723633799"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T19:40:33.799Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-425678",
+    "orderId": "GZ-ORD-425678",
+    "createdAt": "2026-09-06T19:40:33.784Z",
+    "updatedAt": "2026-09-06T19:40:33.784Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T19:40:33.784Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-409704",
+    "orderId": "GZ-ORD-409704",
+    "createdAt": "2026-09-06T19:40:33.771Z",
+    "updatedAt": "2026-09-06T19:40:33.780Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T19:40:33.771Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-06T19:40:33.780Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-526777",
+    "orderId": "GZ-ORD-526777",
+    "createdAt": "2026-09-06T19:40:33.758Z",
+    "updatedAt": "2026-09-06T19:40:33.766Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T19:40:33.758Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-06T19:40:33.766Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-710734",
+    "orderId": "GZ-ORD-710734",
+    "createdAt": "2026-09-06T19:40:33.743Z",
+    "updatedAt": "2026-09-06T19:40:33.752Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T19:40:33.743Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-06T19:40:33.752Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-334576",
+    "orderId": "GZ-ORD-334576",
+    "createdAt": "2026-09-06T19:40:33.737Z",
+    "updatedAt": "2026-09-06T19:40:33.737Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T19:40:33.737Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-759213",
+    "orderId": "GZ-ORD-759213",
+    "createdAt": "2026-09-06T19:40:33.725Z",
+    "updatedAt": "2026-09-06T19:40:33.725Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": [
+      "seller-alpha",
+      "seller-beta"
+    ],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-06T19:40:33.725Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
     "id": "GZ-ORD-881764",
     "orderId": "GZ-ORD-881764",
     "createdAt": "2026-09-06T19:21:48.967Z",

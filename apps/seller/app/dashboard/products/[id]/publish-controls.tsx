@@ -72,7 +72,7 @@ export function PublishControls({
                 asChild
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-xl border-[#E5E5E0] bg-white text-xs font-semibold text-black hover:bg-[#FAF8F4]"
+                className="h-10 rounded-xl border-[#E5E5E0] bg-white text-xs font-semibold text-black hover:bg-[#FAF8F4] hover:text-black"
               >
                 <Link
                   href="/discover"
@@ -88,7 +88,7 @@ export function PublishControls({
                 <Button
                   type="submit"
                   variant="outline"
-                  className="flex h-10 items-center gap-2 rounded-xl border-[#E5E5E0] bg-white px-4 text-xs font-semibold text-black transition-all hover:bg-[#FAF8F4]"
+                  className="flex h-10 items-center gap-2 rounded-xl border-[#E5E5E0] bg-white px-4 text-xs font-semibold text-black transition-all hover:bg-[#FAF8F4] hover:text-black"
                 >
                   <FileEdit className="h-3.5 w-3.5 text-[#73736E]" />
                   <span>Unpublish to Draft</span>
@@ -102,7 +102,7 @@ export function PublishControls({
               <Button
                 type="submit"
                 variant="outline"
-                className="flex h-10 items-center gap-2 rounded-xl border-[#E5E5E0] bg-white px-4 text-xs font-medium text-[#52524E] transition-all hover:bg-[#FAF8F4]"
+                className="flex h-10 items-center gap-2 rounded-xl border-[#E5E5E0] bg-white px-4 text-xs font-medium text-[#52524E] transition-all hover:bg-[#FAF8F4] hover:text-[#1A1A18]"
               >
                 <Archive className="h-3.5 w-3.5 text-[#73736E]" />
                 <span>Archive</span>
@@ -114,7 +114,7 @@ export function PublishControls({
             type="button"
             variant="outline"
             onClick={() => setConfirmingDelete((prev) => !prev)}
-            className="flex h-10 items-center gap-1.5 rounded-xl border-rose-200 bg-white px-3 text-xs font-semibold text-rose-600 transition-all hover:bg-rose-50"
+            className="flex h-10 items-center gap-1.5 rounded-xl border-rose-200 bg-white px-3 text-xs font-semibold text-rose-600 transition-all hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300"
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>Delete</span>

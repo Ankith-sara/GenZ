@@ -3,15 +3,8 @@
 import { useActionState, useState } from "react";
 import Image from "next/image";
 import {
-  MapPin,
-  Calendar,
-  BadgeCheck,
-  Globe,
-  ExternalLink,
-  Save,
-  CheckCircle2,
-  AlertCircle,
-  BookOpen,
+  MapPin, Calendar, BadgeCheck, Globe, ExternalLink, 
+  Save, CheckCircle2, AlertCircle, BookOpen,
 } from "lucide-react";
 import { Button, Input, Label, Textarea } from "@genz/ui";
 import { AvatarUploader } from "@/features/user/components/avatar-uploader";
@@ -54,10 +47,10 @@ interface ProfileStudioProps {
 
 const CRAFT_CATEGORIES = [
   "Etikoppaka Wooden Toys",
+  "Kondapalli Toys",
   "Wooden Toys & Crafts",
-  "Handloom & Textiles",
   "Home & Furniture",
-  "Pottery & Terracotta",
+  "Handicrafts",
 ];
 
 export function SellerInstagramProfileStudio({

@@ -34,7 +34,7 @@ export default async function SellerDashboardLayout({
 
   const isVerified = sellerProfile?.status === "verified";
   const businessName =
-    sellerProfile?.business_name || session.profile?.full_name || "Factory Desk";
+    sellerProfile?.business_name || session.profile?.full_name || "Seller Desk";
 
   // Calculate incomplete onboarding steps for notification badge
   const hasProfileDetails =

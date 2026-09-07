@@ -43,7 +43,7 @@ export function AuthHero() {
             <span className="h-2 w-2 rounded-full bg-[#C89D32]" />
             <span>GenZ Manufacturer & Supplier Network</span>
           </div>
-          <span className="font-mono text-xs text-white/50">Factory Desk</span>
+          <span className="font-mono text-xs text-white/50">Seller Desk</span>
         </div>
 
         {/* Center / Bottom Features & Copy */}
@@ -58,7 +58,7 @@ export function AuthHero() {
             </p>
           </div>
 
-          {/* 3 Real Factory Desk Feature Cards */}
+          {/* 3 Seller Desk Feature Cards */}
           <div className="space-y-2.5">
             {factoryFeatures.map((item, idx) => {
               const Icon = item.icon;

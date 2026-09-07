@@ -1,7 +1,7 @@
 import React from "react";
 import { ShieldCheck, FileCheck } from "lucide-react";
 
-interface TaxComplianceCardProps {
+export interface TaxComplianceCardProps {
   gstRate: string;
   onChangeGstRate: (val: string) => void;
   hsnCode: string;
@@ -35,10 +35,12 @@ export function TaxComplianceCard({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <label className="block text-xs font-medium text-[#171717]">
-            GST Tax SlaB (%)
+          <label htmlFor="gst_rate" className="block text-xs font-medium text-[#171717]">
+            GST Tax Slab (%)
           </label>
           <select
+            id="gst_rate"
+            name="gst_rate"
             value={gstRate}
             onChange={(e) => onChangeGstRate(e.target.value)}
             className={`mt-1.5 h-9 w-full rounded-lg border border-[#E5E5E5] bg-white px-3 text-xs text-[#171717] ${FOCUS_RING}`}
@@ -52,10 +54,12 @@ export function TaxComplianceCard({
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[#171717]">
+          <label htmlFor="hsn_code" className="block text-xs font-medium text-[#171717]">
             HSN / SAC Code
           </label>
           <input
+            id="hsn_code"
+            name="hsn_code"
             type="text"
             value={hsnCode}
             onChange={(e) => onChangeHsnCode(e.target.value)}
@@ -65,10 +69,12 @@ export function TaxComplianceCard({
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[#171717]">
+          <label htmlFor="country_of_origin" className="block text-xs font-medium text-[#171717]">
             Country of Origin
           </label>
           <input
+            id="country_of_origin"
+            name="country_of_origin"
             type="text"
             value={countryOfOrigin}
             onChange={(e) => onChangeCountryOfOrigin(e.target.value)}

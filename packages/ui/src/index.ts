@@ -20,3 +20,4 @@ export * from "./components/command-menu";
 export * from "./components/cookie-consent";
 export * from "./components/orders/orders-manager";
 export * from "./components/product-form";
+export * from "./shared-features";

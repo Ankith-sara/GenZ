@@ -175,17 +175,22 @@ export function SellerAccountClient({
           <Button
             type="button"
             variant="outline"
+            size="sm"
             onClick={() => setIsEditingBusiness((prev) => !prev)}
-            className="h-8 border-[#E5E5E0] text-xs font-semibold hover:bg-[#FAF8F4]"
+            className="h-8 rounded-lg border-[#E5E5E0] bg-white px-3 text-xs font-semibold text-[#1A1A18] transition-colors hover:border-[#1A1A18]/40 hover:bg-[#FAF8F4] hover:text-[#1A1A18]"
           >
-            <Edit3 className="mr-1.5 h-3.5 w-3.5" />
+            <Edit3 className="mr-1.5 h-3.5 w-3.5 text-current" />
             <span>{isEditingBusiness ? "Close Editor" : "Edit Business Profile"}</span>
           </Button>
         </div>
 
         {isEditingBusiness ? (
           <div className="pt-2">
-            <OnboardingForm profile={sellerProfile} />
+            <OnboardingForm
+              profile={sellerProfile}
+              onSuccess={() => setIsEditingBusiness(false)}
+              onCancel={() => setIsEditingBusiness(false)}
+            />
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 text-xs sm:grid-cols-2 lg:grid-cols-3">

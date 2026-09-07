@@ -16,3 +16,14 @@ export interface User {
   avatar_url?: string | null;
 }
 
+export const DEFAULT_PRODUCT_CATEGORIES = [
+  "Etikoppaka Wooden Toys",
+  "Kondapalli Toys",
+  "Wooden Toys & Crafts",
+  "Home & Furniture",
+  "Handicrafts",
+] as const;
+
+export type ProductCategory = (typeof DEFAULT_PRODUCT_CATEGORIES)[number];
+
+

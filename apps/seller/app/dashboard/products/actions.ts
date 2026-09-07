@@ -6,13 +6,14 @@ import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { parseMaterials } from "@/features/products/lib/products";
-import type { ProductStatus, Role } from "@genz/types";
+import type { Product, ProductStatus, Role } from "@genz/types";
 import { checkRateLimit, logRateLimitAttempt, withRateLimit } from "@/lib/rate-limiter";
 import { productSchema, variantSchema } from "@/lib/validation";
 import { validateFileContentServer } from "@/lib/file-validation";
 
 export interface ProductFormState {
   error?: string;
+  success?: boolean;
 }
 
 function parseProductFields(formData: FormData) {
@@ -24,6 +25,39 @@ function parseProductFields(formData: FormData) {
   const price_inr = parsedPrice !== null && !isNaN(parsedPrice) ? parsedPrice : null;
   const materials = parseMaterials(String(formData.get("materials") ?? ""));
   return { name, category, description, price_inr, materials };
+}
+
+function parseCommerceFields(formData: FormData) {
+  const sku = String(formData.get("sku") ?? "").trim() || null;
+
+  const stockQtyRaw = String(formData.get("stock_qty") ?? "").trim();
+  const inventory_count =
+    stockQtyRaw !== "" && !isNaN(Number(stockQtyRaw)) ? Number(stockQtyRaw) : 0;
+
+  const lowStockRaw = String(formData.get("low_stock_threshold") ?? "").trim();
+  const low_stock_threshold =
+    lowStockRaw !== "" && !isNaN(Number(lowStockRaw)) ? Number(lowStockRaw) : 5;
+
+  const track_inventory = formData.get("track_inventory") !== null;
+
+  const is_featured = formData.get("is_featured") === "true";
+  const is_new_arrival =
+    formData.get("is_new_arrival") === null
+      ? true
+      : formData.get("is_new_arrival") === "true";
+  const is_best_seller =
+    formData.get("is_bestseller") === "true" ||
+    formData.get("is_best_seller") === "true";
+
+  return {
+    sku,
+    inventory_count,
+    low_stock_threshold,
+    track_inventory,
+    is_featured,
+    is_new_arrival,
+    is_best_seller,
+  };
 }
 
 /**
@@ -80,9 +114,17 @@ export async function createProduct(
     return { error: validation.error.issues[0].message };
   }
 
-  // Cover image server-side validation
+  // Images are now uploaded client-side to Supabase Storage.
+  // The client sends storage paths (strings) instead of raw File bytes.
+  const coverImagePath = String(formData.get("cover_image_path") ?? "").trim();
+  const galleryImagePaths = formData.getAll("gallery_image_paths")
+    .map((v) => String(v).trim())
+    .filter(Boolean);
+
+  // Legacy fallback: if raw files were sent (e.g. from admin form), validate them
   const coverImage = formData.get("cover_image") as File | null;
-  if (coverImage && coverImage.size > 0) {
+  const hasCoverFile = coverImage && coverImage.size > 0;
+  if (hasCoverFile) {
     if (!coverImage.type.startsWith("image/")) {
       return { error: "Cover file must be an image." };
     }
@@ -91,15 +133,17 @@ export async function createProduct(
     }
   }
 
-  // Gallery images server-side validation
   const galleryImages = formData.getAll("gallery_images") as File[];
-  for (const img of galleryImages) {
-    if (img && img.size > 0) {
-      if (!img.type.startsWith("image/")) {
-        return { error: "All gallery files must be images." };
-      }
-      if (img.size > 5 * 1024 * 1024) {
-        return { error: "All gallery files must be under 5MB." };
+  const hasGalleryFiles = galleryImages.some((img) => img && img.size > 0);
+  if (hasGalleryFiles) {
+    for (const img of galleryImages) {
+      if (img && img.size > 0) {
+        if (!img.type.startsWith("image/")) {
+          return { error: "All gallery files must be images." };
+        }
+        if (img.size > 5 * 1024 * 1024) {
+          return { error: "All gallery files must be under 5MB." };
+        }
       }
     }
   }
@@ -172,6 +216,10 @@ export async function createProduct(
 
   const isSellerVerified = sellerProfile?.status === "verified";
 
+  const statusRaw = String(formData.get("status") ?? "").trim();
+  const productStatus: ProductStatus = statusRaw === "draft" ? "draft" : "published";
+  const commerceFields = parseCommerceFields(formData);
+
   const { data, error } = await supabase
     .from("products")
     .insert({
@@ -182,6 +230,10 @@ export async function createProduct(
       price_inr: validation.data.price_inr,
       materials: validation.data.materials,
       seller_verified: isSellerVerified,
+      status: productStatus,
+      created_by: session.userId,
+      updated_by: session.userId,
+      ...commerceFields,
     })
     .select("id")
     .single();
@@ -201,8 +253,44 @@ export async function createProduct(
 
   const productSlug = slugifyProductName(validation.data.name);
 
-  // Upload cover image if provided (named <productSlug>-1.<ext>)
-  if (coverImage && coverImage.size > 0) {
+  // === IMAGE HANDLING ===
+  // Primary path: client-side pre-uploaded storage paths (no file bytes in server action)
+  // Fallback path: legacy raw File uploads (e.g. from admin form)
+
+  if (coverImagePath) {
+    // Client already uploaded to storage — just move/copy to final location and update DB
+    const ext = coverImagePath.split(".").pop() || "jpg";
+    const fileName = `${productSlug}-1.${ext}`;
+    const finalPath = `${targetSellerId}/products/${data.id}/${fileName}`;
+
+    try {
+      const { error: moveError } = await supabase.storage
+        .from("product-media")
+        .move(coverImagePath, finalPath);
+
+      if (moveError) {
+        // If move fails (e.g. different buckets), use the original path directly
+        console.warn("Cover image move warning (using original path):", moveError);
+        await supabase
+          .from("products")
+          .update({ cover_image_path: coverImagePath })
+          .eq("id", data.id);
+      } else {
+        await supabase
+          .from("products")
+          .update({ cover_image_path: finalPath })
+          .eq("id", data.id);
+      }
+    } catch (err) {
+      console.error("Exception handling cover image path:", err);
+      // Still try to use the original path
+      await supabase
+        .from("products")
+        .update({ cover_image_path: coverImagePath })
+        .eq("id", data.id);
+    }
+  } else if (hasCoverFile) {
+    // Legacy fallback: raw file upload from admin or older form
     const ext = getFileExtension(coverImage);
     const fileName = `${productSlug}-1.${ext}`;
     const path = `${targetSellerId}/products/${data.id}/${fileName}`;
@@ -229,8 +317,38 @@ export async function createProduct(
     }
   }
 
-  // Upload gallery images if provided (named <productSlug>-2.<ext>, <productSlug>-3.<ext>, etc.)
-  if (galleryImages.length > 0) {
+  // Gallery images from client-side pre-upload
+  if (galleryImagePaths.length > 0) {
+    let position = 0;
+    let imageIndex = 2;
+    for (const srcPath of galleryImagePaths) {
+      const ext = srcPath.split(".").pop() || "jpg";
+      const fileName = `${productSlug}-${imageIndex}.${ext}`;
+      const finalPath = `${targetSellerId}/products/${data.id}/${fileName}`;
+
+      try {
+        const { error: moveError } = await supabase.storage
+          .from("product-media")
+          .move(srcPath, finalPath);
+
+        const recordPath = moveError ? srcPath : finalPath;
+        if (moveError) {
+          console.warn("Gallery image move warning (using original path):", moveError);
+        }
+
+        await supabase.from("product_images").insert({
+          product_id: data.id,
+          seller_id: targetSellerId,
+          image_path: recordPath,
+          position: position++,
+        });
+      } catch (err) {
+        console.error("Exception handling gallery image path:", err);
+      }
+      imageIndex++;
+    }
+  } else if (hasGalleryFiles) {
+    // Legacy fallback: raw file uploads
     let position = 0;
     let imageIndex = 2;
     for (const img of galleryImages) {
@@ -315,15 +433,36 @@ export async function updateProduct(
     };
   }
 
+  const statusRaw = String(formData.get("status") ?? "").trim();
+  const statusUpdate =
+    statusRaw === "published" || statusRaw === "draft"
+      ? (statusRaw as ProductStatus)
+      : undefined;
+
+  const coverImagePath = String(formData.get("cover_image_path") ?? "").trim();
+  const commerceFields = parseCommerceFields(formData);
+
+  const updatePayload: Partial<Product> = {
+    name: validation.data.name,
+    category: validation.data.category,
+    description: validation.data.description || null,
+    price_inr: validation.data.price_inr,
+    materials: validation.data.materials,
+    updated_by: session.userId,
+    updated_at: new Date().toISOString(),
+    ...commerceFields,
+  };
+
+  if (statusUpdate) {
+    updatePayload.status = statusUpdate;
+  }
+  if (coverImagePath) {
+    updatePayload.cover_image_path = coverImagePath;
+  }
+
   const { error } = await supabase
     .from("products")
-    .update({
-      name: validation.data.name,
-      category: validation.data.category,
-      description: validation.data.description || null,
-      price_inr: validation.data.price_inr,
-      materials: validation.data.materials,
-    })
+    .update(updatePayload)
     .eq("id", productId)
     .eq("seller_id", session.userId);
 
@@ -340,7 +479,8 @@ export async function updateProduct(
 
   revalidatePath(`/dashboard/products/${productId}`);
   revalidatePath("/dashboard/products");
-  return {};
+  revalidatePath(`/products/${productId}`);
+  return { success: true };
 }
 
 export async function setProductStatus(productId: string, status: ProductStatus) {
@@ -368,6 +508,97 @@ export async function setProductStatus(productId: string, status: ProductStatus)
   });
 
   revalidatePath(`/dashboard/products/${productId}`);
+  revalidatePath("/dashboard/products");
+}
+
+export async function quickUpdateProduct(
+  productId: string,
+  data: {
+    name: string;
+    category?: string | null;
+    price_inr?: number | null;
+    status?: string | null;
+    description?: string | null;
+  }
+) {
+  const session = await requireRole("seller");
+
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "quick_update_product",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) {
+    throw new Error(rateLimit.error || "Rate limit exceeded");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("products")
+    .update({
+      name: data.name,
+      category: data.category ?? undefined,
+      price_inr: data.price_inr,
+      status: (data.status as ProductStatus) ?? undefined,
+      description: data.description,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", productId)
+    .eq("seller_id", session.userId);
+
+  if (error) {
+    console.error("Seller quick update error:", error);
+    throw new Error(error.message || "Failed to update product");
+  }
+
+  revalidatePath(`/dashboard/products/${productId}`);
+  revalidatePath("/dashboard/products");
+}
+
+export async function sellerDeleteProductAction(productId: string) {
+  const session = await requireRole("seller");
+
+  const rateLimit = await checkRateLimit({
+    endpointType: "user",
+    actionName: "delete_product",
+    identifier: session.userId,
+  });
+  if (rateLimit.blocked) return;
+
+  const supabase = await createClient();
+
+  const { data: reels } = await supabase
+    .from("reels")
+    .select("video_path, thumbnail_path")
+    .eq("product_id", productId);
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("cover_image_path")
+    .eq("id", productId)
+    .single();
+
+  await supabase
+    .from("products")
+    .delete()
+    .eq("id", productId)
+    .eq("seller_id", session.userId);
+
+  const paths = [
+    product?.cover_image_path,
+    ...(reels ?? []).flatMap((r) => [r.video_path, r.thumbnail_path]),
+  ].filter((p): p is string => !!p);
+
+  if (paths.length > 0) {
+    await supabase.storage.from("product-media").remove(paths);
+  }
+
+  await logRateLimitAttempt({
+    endpointType: "user",
+    actionName: "delete_product",
+    identifier: session.userId,
+  });
+
   revalidatePath("/dashboard/products");
 }
 
