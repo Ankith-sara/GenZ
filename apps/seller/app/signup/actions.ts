@@ -1,6 +1,5 @@
 "use server";
 
-import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
 import { sellerSignupSchema } from "@/lib/validation";

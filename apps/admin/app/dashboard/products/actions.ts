@@ -90,7 +90,7 @@ export async function adminUpdateProductFormAction(
   _prevState: ProductFormState,
   formData: FormData
 ): Promise<ProductFormState> {
-  await requireRole("admin");
+  const session = await requireRole("admin");
 
   const name = String(formData.get("name") ?? "").trim();
   const category = String(formData.get("category") ?? "toys").trim() || "toys";
@@ -229,7 +229,8 @@ export async function createProduct(
   const targetSellerId = customSellerId || session.userId;
   const statusRaw = String(formData.get("status") ?? "").trim();
   const status: ProductStatus = statusRaw === "draft" ? "draft" : "published";
-  const cover_image_path = String(formData.get("cover_image_path") ?? "").trim() || null;
+  const cover_image_path =
+    String(formData.get("cover_image_path") ?? "").trim() || null;
 
   const sku = String(formData.get("sku") ?? "").trim() || null;
   const stockQtyRaw = String(formData.get("stock_qty") ?? "").trim();

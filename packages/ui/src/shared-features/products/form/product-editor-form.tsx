@@ -3,8 +3,13 @@
 import React, { useState, startTransition } from "react";
 import Link from "next/link";
 import {
-  ArrowLeft, Eye, Save, Send,
-  Loader2, X, Film,
+  ArrowLeft,
+  Eye,
+  Save,
+  Send,
+  Loader2,
+  X,
+  Film,
   Image as ImageIcon,
   CheckCircle2,
 } from "lucide-react";
@@ -117,7 +122,9 @@ export function ProductEditorForm({
   // 5. Merchandising State
   const [isFeatured, setIsFeatured] = useState(initialValues?.isFeatured ?? false);
   const [isNewArrival, setIsNewArrival] = useState(initialValues?.isNewArrival ?? true);
-  const [isBestSeller, setIsBestSeller] = useState(initialValues?.isBestSeller ?? false);
+  const [isBestSeller, setIsBestSeller] = useState(
+    initialValues?.isBestSeller ?? false
+  );
 
   // 7. Publishing State
   const [status, setStatus] = useState<"published" | "draft">(
@@ -195,7 +202,7 @@ export function ProductEditorForm({
             </Link>
             <span>/</span>
             <span className="font-semibold text-[#171717]">
-              {mode === "edit" ? (initialValues?.name || "Edit Listing") : "New Listing"}
+              {mode === "edit" ? initialValues?.name || "Edit Listing" : "New Listing"}
             </span>
           </div>
           <h1 className="text-xl font-semibold tracking-tight text-[#171717]">
@@ -220,13 +227,11 @@ export function ProductEditorForm({
               type="button"
               variant="outline"
               asChild
-              className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:bg-[#F5F5F4] hover:text-[#171717] hover:border-[#171717]/30 ${PRESSABLE}`}
+              className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE}`}
             >
               <Link href={manageReelsHref}>
                 <Film className="h-3.5 w-3.5 text-[#737373]" />
-                <span>
-                  Reels {reelsCount !== undefined ? `(${reelsCount})` : ""}
-                </span>
+                <span>Reels {reelsCount !== undefined ? `(${reelsCount})` : ""}</span>
               </Link>
             </Button>
           )}
@@ -239,7 +244,7 @@ export function ProductEditorForm({
               executeSubmit("draft");
             }}
             disabled={isPending || isUploading}
-            className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:bg-[#F5F5F4] hover:text-[#171717] hover:border-[#171717]/30 ${PRESSABLE}`}
+            className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE}`}
           >
             <Save className="h-3.5 w-3.5 text-[#737373]" />
             <span>Save Draft</span>
@@ -249,7 +254,7 @@ export function ProductEditorForm({
             type="button"
             variant="outline"
             onClick={() => setShowPreviewModal(true)}
-            className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:bg-[#F5F5F4] hover:text-[#171717] hover:border-[#171717]/30 ${PRESSABLE}`}
+            className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE}`}
           >
             <Eye className="h-3.5 w-3.5 text-[#737373]" />
             <span>Preview</span>
@@ -273,7 +278,8 @@ export function ProductEditorForm({
               <>
                 <Send className="h-3.5 w-3.5" />
                 <span>
-                  {submitLabel || (mode === "edit" ? "Save Changes" : "Publish Product")}
+                  {submitLabel ||
+                    (mode === "edit" ? "Save Changes" : "Publish Product")}
                 </span>
               </>
             )}
@@ -317,7 +323,10 @@ export function ProductEditorForm({
         {productId && <input type="hidden" name="id" value={productId} />}
         {productId && <input type="hidden" name="productId" value={productId} />}
 
-        {/* 1. Basic Info */}
+        {/* 1. Media Uploader */}
+        <MediaCard images={images} onImagesChange={setImages} />
+
+        {/* 2. Basic Info */}
         <BasicInfoCard
           name={name}
           onChangeName={setName}
@@ -332,7 +341,7 @@ export function ProductEditorForm({
           categories={categories}
         />
 
-        {/* 2. Catalog Ownership */}
+        {/* 3. Catalog Ownership */}
         <CatalogOwnershipCard
           sellers={sellers}
           adminUserId={adminUserId}
@@ -341,9 +350,6 @@ export function ProductEditorForm({
           isSellerMode={role === "seller"}
           sellerBusinessName={sellerBusinessName}
         />
-
-        {/* 3. Unified Media Uploader */}
-        <MediaCard images={images} onImagesChange={setImages} />
 
         {/* 4. Product Variants */}
         <VariantsCard basePrice={priceInr} productName={name} />
@@ -370,7 +376,7 @@ export function ProductEditorForm({
           onToggleBestSeller={setIsBestSeller}
         />
 
-        {/* 8. Publishing Status */}
+        {/* 7. Publishing Status */}
         <PublishingCard status={status} onChangeStatus={setStatus} />
 
         {/* BOTTOM ACTION BAR */}
@@ -387,7 +393,7 @@ export function ProductEditorForm({
                 executeSubmit("draft");
               }}
               disabled={isPending || isUploading}
-              className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:bg-[#F5F5F4] hover:text-[#171717] hover:border-[#171717]/30 ${PRESSABLE}`}
+              className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE}`}
             >
               <Save className="h-3.5 w-3.5 text-[#737373]" />
               <span>Save as Draft</span>
@@ -407,7 +413,8 @@ export function ProductEditorForm({
                 <>
                   <Send className="h-3.5 w-3.5" />
                   <span>
-                    {submitLabel || (mode === "edit" ? "Save Changes" : "Publish Product")}
+                    {submitLabel ||
+                      (mode === "edit" ? "Save Changes" : "Publish Product")}
                   </span>
                 </>
               )}
@@ -425,7 +432,7 @@ export function ProductEditorForm({
           />
           <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
             <div className="flex items-center justify-between border-b border-[#E5E5E0] pb-3">
-              <span className="font-mono text-xs font-semibold text-[#737373] uppercase tracking-wider">
+              <span className="font-mono text-xs font-semibold tracking-wider text-[#737373] uppercase">
                 Storefront Buyer Preview
               </span>
               <button
@@ -448,7 +455,7 @@ export function ProductEditorForm({
                   />
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center text-[#A3A3A3]">
-                    <ImageIcon className="h-10 w-10 mb-2" />
+                    <ImageIcon className="mb-2 h-10 w-10" />
                     <span className="text-xs">No cover image uploaded</span>
                   </div>
                 )}
@@ -468,10 +475,10 @@ export function ProductEditorForm({
 
               {description && (
                 <div className="border-t border-[#E5E5E0] pt-3">
-                  <span className="block text-xs font-semibold text-[#171717] mb-1">
+                  <span className="mb-1 block text-xs font-semibold text-[#171717]">
                     Craft Story
                   </span>
-                  <p className="text-xs leading-relaxed text-[#52524E] whitespace-pre-wrap">
+                  <p className="text-xs leading-relaxed whitespace-pre-wrap text-[#52524E]">
                     {description}
                   </p>
                 </div>

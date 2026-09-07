@@ -9,18 +9,65 @@ import {
 import type { Product } from "@genz/types";
 
 // Curated artisan profiles for featured craft clusters
+const POLUMURI_NAGESWARA_RAO_PROFILE: SellerProfileData = {
+  id: "etikoppaka-lacquer-crafts",
+  business_name: "Etikoppaka Heritage Lacquer Toys",
+  maker_name: "Polumuri Nageswara Rao",
+  craft_title: "Second-Generation Master Artisan & GI Craft Custodian",
+  city: "Etikoppaka",
+  state: "Andhra Pradesh",
+  established_year: 1984,
+  avatar_url: "/indian_craftsman.png",
+  description:
+    "Born in Etikoppaka. Shaped by generations. Along the Varaha River in Andhra Pradesh, second-generation artisan Polumuri Nageswara Rao carries forward 400-year-old GI-certified turned-wood lacquer craft using native Ankudi Karra wood and non-toxic natural dyes.",
+  story: {
+    how_it_started:
+      "Along the banks of the Varaha River in Andhra Pradesh lies the village of Etikoppaka, a place where turned-wood lacquer craft has been passed from one generation to the next for more than 400 years. Polumuri Nageswara Rao is a second-generation artisan, born into a family deeply connected to the craft as the son of senior artisan Polumuri Talla Chari. For him, making toys isn't simply a profession—it is an inheritance that comes with both pride and responsibility.",
+    generations_heritage:
+      "Preserving an ancient craft doesn't mean freezing it in the past. Nageswara Rao represents artisans who innovate with new forms—from traditional dolls and animal figurines to educational STEM toys, games, and contemporary lifestyle products, including a toy design inspired by the COVID-19 pandemic. He was an artisan participant in The India Toy Fair 2021 and conducted toy-making masterclasses at FDDI Hyderabad, helping transfer a living cultural language to future generations.",
+    materials_and_technique:
+      "Turned exclusively from soft Ankudi Karra wood on a traditional lathe. Pure lac is applied by hand while the wood turns, using natural friction heat to melt and bind the lacquer. Vibrant, lead-free colors derived from seeds, bark, roots, and leaves give the toys their distinctive non-toxic character, officially protected under India's Geographical Indications (GI) Registry (2017).",
+    vision:
+      "To build a direct bridge from the artisan's workshop in Etikoppaka to homes across the world via etikoppakatoys.store and GenZ—ensuring the maker receives fair value for lifelong heritage knowledge without intermediary markups.",
+    milestones: [
+      {
+        year: "1984",
+        title: "Ancestral Inheritance",
+        desc: "Trained under father & senior artisan Polumuri Talla Chari in traditional turned-wood lathe techniques.",
+      },
+      {
+        year: "2017",
+        title: "Official GI Registration",
+        desc: "Etikoppaka Toys granted Geographical Indication (GI) registration by Government of India (App #482).",
+      },
+      {
+        year: "2021",
+        title: "The India Toy Fair",
+        desc: "Artisan participant representing Etikoppaka in the national action & toy-figure category.",
+      },
+      {
+        year: "2023",
+        title: "FDDI Hyderabad Masterclass",
+        desc: "Invited by FDDI Hyderabad to conduct traditional toy-making workshops for footwear and design students.",
+      },
+      {
+        year: "2024",
+        title: "Digital Direct Verification",
+        desc: "Featured on GenZ marketplace connecting the Varaha River workshop directly to global buyers.",
+      },
+    ],
+  },
+};
+
 const CURATED_ARTISANS: Record<string, SellerProfileData> = {
-  "etikoppaka-lacquer-crafts": {
-    id: "etikoppaka-lacquer-crafts",
-    business_name: "Etikoppaka Heritage Lacquer Toys",
-    maker_name: "Rameshwar Rao & Family",
-    craft_title: "National Awardee & GI-Tag Craft Custodian",
-    city: "Etikoppaka",
-    state: "Andhra Pradesh",
-    established_year: 1984,
-    avatar_url: "/indian_craftsman.png",
-    description:
-      "Preserving the 400-year-old tradition of hand-turned Ankudu softwood toys finished with edible, natural vegetable-dyed lacquer. Chemical-free, non-toxic, and safe for infants.",
+  "etikoppaka-lacquer-crafts": POLUMURI_NAGESWARA_RAO_PROFILE,
+  "polumuri-nageswara-rao": {
+    ...POLUMURI_NAGESWARA_RAO_PROFILE,
+    id: "polumuri-nageswara-rao",
+  },
+  "fab03143-9d65-47cf-bdc0-53db548b1005": {
+    ...POLUMURI_NAGESWARA_RAO_PROFILE,
+    id: "fab03143-9d65-47cf-bdc0-53db548b1005",
   },
   "kondapalli-artisan-guild": {
     id: "kondapalli-artisan-guild",
@@ -67,8 +114,10 @@ interface ParsedSellerMeta {
   craft_category?: string;
   craft_title?: string;
   how_it_started?: string;
+  generations_heritage?: string;
   materials_and_technique?: string;
   vision?: string;
+  milestones?: Array<{ year: string; title: string; desc: string }>;
   whatsapp?: string;
   instagram?: string;
   website?: string;
@@ -87,7 +136,8 @@ export async function generateMetadata({
     const a = CURATED_ARTISANS[id];
     return {
       title: `${a.business_name} — Indian Artisan Profile | GenZ`,
-      description: a.description ?? `Explore handcrafted creations from ${a.business_name}.`,
+      description:
+        a.description ?? `Explore handcrafted creations from ${a.business_name}.`,
     };
   }
 
@@ -167,8 +217,12 @@ export default async function SellerPublicProfilePage({
         }
       }
 
-      const makerName = meta.maker_name || userProfile?.full_name || dbSeller.business_name;
-      const craftTitle = meta.craft_title || meta.craft_category || "Verified Indian Manufacturer & Artisan";
+      const makerName =
+        meta.maker_name || userProfile?.full_name || dbSeller.business_name;
+      const craftTitle =
+        meta.craft_title ||
+        meta.craft_category ||
+        "Verified Indian Manufacturer & Artisan";
       const locationCity = dbSeller.city || "India";
       const locationState = dbSeller.state || "";
 
@@ -182,13 +236,17 @@ export default async function SellerPublicProfilePage({
         description:
           plainBio ||
           `${dbSeller.business_name} is an authentic Indian manufacturing and craft studio operating out of ${locationCity}, producing high-quality verified goods with direct provenance.`,
-        established_year: dbSeller.established_year || (meta.established_year ? Number(meta.established_year) : 2018),
-        avatar_url: userProfile?.avatar_url || meta.avatar_url || "/indian_craftsman.png",
+        established_year:
+          dbSeller.established_year ||
+          (meta.established_year ? Number(meta.established_year) : 2018),
+        avatar_url:
+          userProfile?.avatar_url || meta.avatar_url || "/indian_craftsman.png",
         story: {
           how_it_started:
             meta.how_it_started ||
             `Our journey began with a clear mission: to build dependable, authentic Indian products directly from the workshop floor. Over the years, we have refined our manufacturing process, combining regional craft traditions with modern quality standards.`,
           generations_heritage:
+            meta.generations_heritage ||
             meta.materials_and_technique ||
             `Operating from ${locationCity}, our team is dedicated to ethical manufacturing, sourcing regional materials responsibly, and delivering uncompromised quality without middleman markups.`,
           materials_and_technique:
@@ -197,18 +255,25 @@ export default async function SellerPublicProfilePage({
           vision:
             meta.vision ||
             `To make Indian manufacturing a globally respected benchmark of reliability, craft pride, and direct-to-consumer value.`,
-          milestones: [
-            {
-              year: dbSeller.established_year ? `${dbSeller.established_year}` : "2018",
-              title: "Workshop Established",
-              desc: `Founded operations in ${locationCity} focusing on dedicated craftsmanship.`,
-            },
-            {
-              year: "2024",
-              title: "Digital Verification on GenZ",
-              desc: "Joined GenZ marketplace with GST audit and direct factory discovery.",
-            },
-          ],
+          milestones:
+            meta.milestones &&
+            Array.isArray(meta.milestones) &&
+            meta.milestones.length > 0
+              ? meta.milestones
+              : [
+                  {
+                    year: dbSeller.established_year
+                      ? `${dbSeller.established_year}`
+                      : "2018",
+                    title: "Workshop Established",
+                    desc: `Founded operations in ${locationCity} focusing on dedicated craftsmanship.`,
+                  },
+                  {
+                    year: "2024",
+                    title: "Digital Verification on GenZ",
+                    desc: "Joined GenZ marketplace with GST audit and direct factory discovery.",
+                  },
+                ],
         },
       };
 
@@ -242,7 +307,11 @@ export default async function SellerPublicProfilePage({
   if (!sellerProfile && CURATED_ARTISANS[id]) {
     sellerProfile = CURATED_ARTISANS[id];
 
-    if (id === "etikoppaka-lacquer-crafts") {
+    if (
+      id === "etikoppaka-lacquer-crafts" ||
+      id === "polumuri-nageswara-rao" ||
+      id === "fab03143-9d65-47cf-bdc0-53db548b1005"
+    ) {
       products = [
         {
           id: "etikoppaka-top-set",
@@ -304,16 +373,12 @@ export default async function SellerPublicProfilePage({
   };
 
   return (
-    <main className="bg-[#FAF8F5] text-[#1A1A18] flex-1 font-sans antialiased">
+    <main className="flex-1 bg-[#FAF8F5] font-sans text-[#1A1A18] antialiased">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(sellerJsonLd) }}
       />
-      <SellerStoryProfile
-        seller={sellerProfile}
-        products={products}
-        reels={reels}
-      />
+      <SellerStoryProfile seller={sellerProfile} products={products} reels={reels} />
     </main>
   );
 }

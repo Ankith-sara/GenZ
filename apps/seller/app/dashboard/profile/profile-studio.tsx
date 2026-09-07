@@ -3,8 +3,15 @@
 import { useActionState, useState } from "react";
 import Image from "next/image";
 import {
-  MapPin, Calendar, BadgeCheck, Globe, ExternalLink, 
-  Save, CheckCircle2, AlertCircle, BookOpen,
+  MapPin,
+  Calendar,
+  BadgeCheck,
+  Globe,
+  ExternalLink,
+  Save,
+  CheckCircle2,
+  AlertCircle,
+  BookOpen,
 } from "lucide-react";
 import { Button, Input, Label, Textarea } from "@genz/ui";
 import { AvatarUploader } from "@/features/user/components/avatar-uploader";
@@ -77,34 +84,37 @@ export function SellerInstagramProfileStudio({
 
   // Interactive local state for live Instagram-style preview
   const [businessName, setBusinessName] = useState(
-    sellerProfile?.business_name || fullName || "My Artisan Studio"
+    sellerProfile?.business_name || fullName || "Etikoppaka Heritage Lacquer Toys"
   );
   const [makerName, setMakerName] = useState(
-    parsedMeta.maker_name || fullName || "Master Maker"
+    parsedMeta.maker_name || fullName || "Polumuri Nageswara Rao"
   );
   const [handle, setHandle] = useState(
-    parsedMeta.handle || (businessName ? businessName.toLowerCase().replace(/[^a-z0-9]/g, "_") : "artisan_crafts")
+    parsedMeta.handle ||
+      (businessName
+        ? businessName.toLowerCase().replace(/[^a-z0-9]/g, "_")
+        : "etikoppakatoys")
   );
   const [craftCategory, setCraftCategory] = useState(
     parsedMeta.craft_category || "Etikoppaka Wooden Toys"
   );
   const [craftTitle, setCraftTitle] = useState(
-    parsedMeta.craft_title || "Master Artisan & GI Craft Custodian"
+    parsedMeta.craft_title || "Second-Generation Master Artisan & GI Craft Custodian"
   );
   const [city, setCity] = useState(sellerProfile?.city || "Etikoppaka");
   const [state, setState] = useState(sellerProfile?.state || "Andhra Pradesh");
   const [shortBio, setShortBio] = useState(
     parsedMeta.short_bio ||
-      "Preserving generations of authentic Indian hand-turned wooden toys and natural vegetable lacquer crafts. 100% non-toxic & direct from the workshop."
+      "Born in Etikoppaka. Shaped by generations. Along the Varaha River in Andhra Pradesh, second-generation artisan Polumuri Nageswara Rao carries forward 400-year-old GI-certified turned-wood lacquer craft using Ankudi Karra wood."
   );
   const [establishedYear, setEstablishedYear] = useState<string>(
-    sellerProfile?.established_year ? String(sellerProfile.established_year) : "1992"
+    sellerProfile?.established_year ? String(sellerProfile.established_year) : "1984"
   );
 
-  const [formState, formAction, isPending] = useActionState<ProfileUpdateState, FormData>(
-    updateSellerInstagramProfile,
-    {}
-  );
+  const [formState, formAction, isPending] = useActionState<
+    ProfileUpdateState,
+    FormData
+  >(updateSellerInstagramProfile, {});
 
   const liveStorefrontUrl = `${SITE_URL}/sellers/${userId}`;
   const isVerified = sellerProfile?.status === "verified";
@@ -126,7 +136,8 @@ export function SellerInstagramProfileStudio({
             Maker Profile & Public Storefront
           </h1>
           <p className="font-graphik mt-1 text-xs text-neutral-600 sm:text-sm">
-            Customize how national buyers discover your workshop, read your journey, and view your catalog.
+            Customize how national buyers discover your workshop, read your journey, and
+            view your catalog.
           </p>
         </div>
 
@@ -137,7 +148,12 @@ export function SellerInstagramProfileStudio({
             size="sm"
             className="font-graphik rounded-xl border-black bg-white px-4 text-xs font-bold text-black transition-all hover:bg-black hover:text-white"
           >
-            <a href={liveStorefrontUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
+            <a
+              href={liveStorefrontUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5"
+            >
               <span>View Public Profile</span>
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
@@ -148,13 +164,13 @@ export function SellerInstagramProfileStudio({
       {/* Success / Error notification */}
       {formState?.success && (
         <div className="flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-medium text-emerald-800">
-          <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
           <p>{formState.message || "Profile successfully updated!"}</p>
         </div>
       )}
       {formState?.error && (
         <div className="flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs font-medium text-rose-800">
-          <AlertCircle className="h-4 w-4 text-rose-600 shrink-0" />
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
           <p>{formState.error}</p>
         </div>
       )}
@@ -170,7 +186,8 @@ export function SellerInstagramProfileStudio({
                 1. Artisan Profile Picture
               </h2>
               <p className="font-graphik mt-1 text-xs text-neutral-500">
-                Upload a genuine photo of you or your master craftsperson at work in the workshop.
+                Upload a genuine photo of you or your master craftsperson at work in the
+                workshop.
               </p>
 
               <div className="mt-4">
@@ -183,14 +200,17 @@ export function SellerInstagramProfileStudio({
             </div>
 
             {/* 2. Identity, Handle & Category */}
-            <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs space-y-4">
+            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
               <h2 className="font-graphik text-sm font-bold text-neutral-900">
                 2. Maker Identity & Handle
               </h2>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label htmlFor="business_name" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="business_name"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Workshop / Business Name *
                   </Label>
                   <Input
@@ -205,7 +225,10 @@ export function SellerInstagramProfileStudio({
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="maker_name" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="maker_name"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Master Artisan / Founder Name *
                   </Label>
                   <Input
@@ -221,24 +244,36 @@ export function SellerInstagramProfileStudio({
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label htmlFor="handle" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="handle"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Storefront Handle (@username) *
                   </Label>
                   <div className="relative flex items-center">
-                    <span className="absolute left-3 font-mono text-xs text-neutral-400">@</span>
+                    <span className="absolute left-3 font-mono text-xs text-neutral-400">
+                      @
+                    </span>
                     <Input
                       id="handle"
                       name="handle"
                       value={handle}
-                      onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+                      onChange={(e) =>
+                        setHandle(
+                          e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "")
+                        )
+                      }
                       placeholder="etikoppaka_crafts"
-                      className="h-10 pl-7 rounded-lg text-xs font-mono"
+                      className="h-10 rounded-lg pl-7 font-mono text-xs"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="craft_category" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="craft_category"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Craft Category *
                   </Label>
                   <select
@@ -259,7 +294,10 @@ export function SellerInstagramProfileStudio({
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label htmlFor="craft_title" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="craft_title"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Artisan Craft Title
                   </Label>
                   <Input
@@ -273,7 +311,10 @@ export function SellerInstagramProfileStudio({
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="established_year" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="established_year"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Year Established
                   </Label>
                   <Input
@@ -283,14 +324,14 @@ export function SellerInstagramProfileStudio({
                     value={establishedYear}
                     onChange={(e) => setEstablishedYear(e.target.value)}
                     placeholder="e.g. 1988"
-                    className="h-10 rounded-lg text-xs font-mono"
+                    className="h-10 rounded-lg font-mono text-xs"
                   />
                 </div>
               </div>
             </div>
 
             {/* 3. Short Bio & Story Narrative */}
-            <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs space-y-4">
+            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-4 w-4 text-amber-700" />
                 <h2 className="font-graphik text-sm font-bold text-neutral-900">
@@ -298,15 +339,21 @@ export function SellerInstagramProfileStudio({
                 </h2>
               </div>
               <p className="font-graphik text-xs text-neutral-500">
-                This personal story will be showcased under the &quot;Story &amp; Journey&quot; tab on your public profile.
+                This personal story will be showcased under the &quot;Story &amp;
+                Journey&quot; tab on your public profile.
               </p>
 
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="short_bio" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="short_bio"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Headline Bio (Instagram-Style)
                   </Label>
-                  <span className="text-[10px] text-neutral-400">{shortBio.length}/200 chars</span>
+                  <span className="text-[10px] text-neutral-400">
+                    {shortBio.length}/200 chars
+                  </span>
                 </div>
                 <Textarea
                   id="short_bio"
@@ -321,7 +368,10 @@ export function SellerInstagramProfileStudio({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="how_it_started" className="text-xs font-semibold text-neutral-700">
+                <Label
+                  htmlFor="how_it_started"
+                  className="text-xs font-semibold text-neutral-700"
+                >
                   How My Journey Started (In Depth Narrative)
                 </Label>
                 <Textarea
@@ -330,7 +380,7 @@ export function SellerInstagramProfileStudio({
                   rows={4}
                   defaultValue={
                     parsedMeta.how_it_started ||
-                    `My journey began nearly four decades ago in our ancestral workshop. As a child, I learned by watching master lathe turners carve raw seasoned wood and finish with friction lacquer.`
+                    `Along the banks of the Varaha River in Andhra Pradesh lies the village of Etikoppaka, where turned-wood lacquer craft has been passed down for over 400 years. As the son of senior artisan Polumuri Talla Chari, making toys is an inheritance carrying pride and responsibility.`
                   }
                   placeholder="Share your personal story of learning the craft, ancestral roots, and workshop dedication..."
                   className="rounded-lg text-xs"
@@ -338,7 +388,10 @@ export function SellerInstagramProfileStudio({
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="materials_and_technique" className="text-xs font-semibold text-neutral-700">
+                <Label
+                  htmlFor="materials_and_technique"
+                  className="text-xs font-semibold text-neutral-700"
+                >
                   Materials, Wood Species & Lathe Technique
                 </Label>
                 <Textarea
@@ -347,7 +400,7 @@ export function SellerInstagramProfileStudio({
                   rows={3}
                   defaultValue={
                     parsedMeta.materials_and_technique ||
-                    `We use indigenous seasoned softwood and 100% natural, chemical-free lacquer dyed with edible vegetable and mineral pigments.`
+                    `Shaped exclusively from soft Ankudi Karra wood on a traditional lathe. Pure lac is applied by hand while the wood turns, using natural friction heat to melt and bind the lacquer. Finished with 100% natural, non-toxic colors derived from seeds, bark, roots, and leaves (Registered GI Craft, 2017).`
                   }
                   placeholder="Describe your raw materials, sustainability standards, and artisan techniques..."
                   className="rounded-lg text-xs"
@@ -356,7 +409,7 @@ export function SellerInstagramProfileStudio({
             </div>
 
             {/* 4. Location & Workshop Details */}
-            <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs space-y-4">
+            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-neutral-700" />
                 <h2 className="font-graphik text-sm font-bold text-neutral-900">
@@ -366,7 +419,10 @@ export function SellerInstagramProfileStudio({
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label htmlFor="city" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="city"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     City / Craft Cluster *
                   </Label>
                   <Input
@@ -380,7 +436,10 @@ export function SellerInstagramProfileStudio({
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="state" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="state"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     State *
                   </Label>
                   <Input
@@ -396,7 +455,10 @@ export function SellerInstagramProfileStudio({
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label htmlFor="gst_number" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="gst_number"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     GSTIN / Tax ID
                   </Label>
                   <Input
@@ -404,12 +466,15 @@ export function SellerInstagramProfileStudio({
                     name="gst_number"
                     defaultValue={sellerProfile?.gst_number || ""}
                     placeholder="22AAAAA0000A1Z5"
-                    className="h-10 rounded-lg text-xs uppercase font-mono"
+                    className="h-10 rounded-lg font-mono text-xs uppercase"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="pincode" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="pincode"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Pincode
                   </Label>
                   <Input
@@ -417,13 +482,16 @@ export function SellerInstagramProfileStudio({
                     name="pincode"
                     defaultValue={sellerProfile?.pincode || ""}
                     placeholder="531055"
-                    className="h-10 rounded-lg text-xs font-mono"
+                    className="h-10 rounded-lg font-mono text-xs"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="factory_address" className="text-xs font-semibold text-neutral-700">
+                <Label
+                  htmlFor="factory_address"
+                  className="text-xs font-semibold text-neutral-700"
+                >
                   Workshop / Factory Physical Address
                 </Label>
                 <Input
@@ -437,7 +505,7 @@ export function SellerInstagramProfileStudio({
             </div>
 
             {/* 5. Contact & Social Channels */}
-            <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs space-y-4">
+            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
               <div className="flex items-center gap-2">
                 <Globe className="h-4 w-4 text-neutral-700" />
                 <h2 className="font-graphik text-sm font-bold text-neutral-900">
@@ -447,7 +515,10 @@ export function SellerInstagramProfileStudio({
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="whatsapp" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="whatsapp"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     WhatsApp Business
                   </Label>
                   <Input
@@ -460,7 +531,10 @@ export function SellerInstagramProfileStudio({
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="instagram" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="instagram"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Instagram Handle
                   </Label>
                   <Input
@@ -473,7 +547,10 @@ export function SellerInstagramProfileStudio({
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="website" className="text-xs font-semibold text-neutral-700">
+                  <Label
+                    htmlFor="website"
+                    className="text-xs font-semibold text-neutral-700"
+                  >
                     Official Website
                   </Label>
                   <Input
@@ -493,10 +570,12 @@ export function SellerInstagramProfileStudio({
                 type="submit"
                 size="lg"
                 disabled={isPending}
-                className="font-graphik h-12 rounded-xl bg-black px-8 text-xs font-bold text-white shadow-md transition-all hover:bg-neutral-850 active:scale-[0.98]"
+                className="font-graphik hover:bg-neutral-850 h-12 rounded-xl bg-black px-8 text-xs font-bold text-white shadow-md transition-all active:scale-[0.98]"
               >
                 <Save className="mr-2 h-4 w-4" />
-                <span>{isPending ? "Saving Profile..." : "Save & Publish Profile"}</span>
+                <span>
+                  {isPending ? "Saving Profile..." : "Save & Publish Profile"}
+                </span>
               </Button>
             </div>
           </form>
@@ -506,11 +585,11 @@ export function SellerInstagramProfileStudio({
         <div className="lg:col-span-5">
           <div className="sticky top-20 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-xs font-bold text-neutral-500 uppercase tracking-wider">
+              <span className="font-mono text-xs font-bold tracking-wider text-neutral-500 uppercase">
                 Live Storefront Preview
               </span>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
                 Live Sync
               </span>
             </div>
@@ -519,14 +598,14 @@ export function SellerInstagramProfileStudio({
             <div className="overflow-hidden rounded-3xl border border-[#E5E5E0] bg-white shadow-lg">
               {/* Cover Banner */}
               <div className="relative h-28 w-full bg-gradient-to-r from-amber-900 via-stone-900 to-amber-950">
-                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+                <div className="absolute inset-0 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] opacity-20" />
                 <div className="absolute top-3 right-3 rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-xs">
                   Public Storefront
                 </div>
               </div>
 
               {/* Profile Body */}
-              <div className="relative px-6 pb-6 pt-0">
+              <div className="relative px-6 pt-0 pb-6">
                 {/* Avatar (clean frame, no story ring) */}
                 <div className="-mt-12 flex items-end justify-between">
                   <div className="relative h-20 w-20 overflow-hidden rounded-2xl border-4 border-white bg-neutral-100 shadow-md">
@@ -559,7 +638,7 @@ export function SellerInstagramProfileStudio({
 
                 {/* Name & Handle */}
                 <div className="mt-3">
-                  <h3 className="font-nantes text-lg font-bold text-[#1A1A18] line-clamp-1">
+                  <h3 className="font-nantes line-clamp-1 text-lg font-bold text-[#1A1A18]">
                     {businessName}
                   </h3>
                   <div className="flex items-center gap-1 text-xs text-neutral-500">
@@ -567,7 +646,7 @@ export function SellerInstagramProfileStudio({
                     <span>·</span>
                     <span className="font-medium text-amber-800">{craftCategory}</span>
                   </div>
-                  <p className="mt-1 font-graphik text-xs font-semibold text-neutral-700">
+                  <p className="font-graphik mt-1 text-xs font-semibold text-neutral-700">
                     {craftTitle}
                   </p>
                 </div>
@@ -587,12 +666,12 @@ export function SellerInstagramProfileStudio({
                 </div>
 
                 {/* Bio */}
-                <p className="mt-3 font-graphik text-xs leading-relaxed text-neutral-600 line-clamp-3">
+                <p className="font-graphik mt-3 line-clamp-3 text-xs leading-relaxed text-neutral-600">
                   {shortBio}
                 </p>
 
                 {/* Instagram-Style Profile Metrics */}
-                <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl bg-[#FAF8F5] p-3 text-center border border-neutral-100">
+                <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-neutral-100 bg-[#FAF8F5] p-3 text-center">
                   <div>
                     <p className="font-graphik text-sm font-extrabold text-[#1A1A18]">
                       {productCount}
@@ -601,7 +680,9 @@ export function SellerInstagramProfileStudio({
                   </div>
                   <div>
                     <p className="font-graphik text-sm font-extrabold text-amber-800">
-                      {establishedYear ? `${new Date().getFullYear() - Number(establishedYear)}+` : "25+"}
+                      {establishedYear
+                        ? `${new Date().getFullYear() - Number(establishedYear)}+`
+                        : "25+"}
                     </p>
                     <p className="text-[10px] text-neutral-500">Years Craft</p>
                   </div>
@@ -615,18 +696,12 @@ export function SellerInstagramProfileStudio({
 
                 {/* Structured Tabs Preview */}
                 <div className="mt-4 flex border-b border-neutral-100 pb-2 text-[11px] font-bold text-neutral-500">
-                  <span className="border-b-2 border-black pb-2 text-black flex-1 text-center">
+                  <span className="flex-1 border-b-2 border-black pb-2 text-center text-black">
                     🛍️ Catalog
                   </span>
-                  <span className="flex-1 text-center pb-2">
-                    📖 Journey
-                  </span>
-                  <span className="flex-1 text-center pb-2">
-                    🎬 Reels
-                  </span>
-                  <span className="flex-1 text-center pb-2">
-                    🏛️ Trust
-                  </span>
+                  <span className="flex-1 pb-2 text-center">📖 Journey</span>
+                  <span className="flex-1 pb-2 text-center">🎬 Reels</span>
+                  <span className="flex-1 pb-2 text-center">🏛️ Trust</span>
                 </div>
 
                 {/* CTA Action */}
@@ -637,7 +712,12 @@ export function SellerInstagramProfileStudio({
                     variant="outline"
                     className="font-graphik w-full rounded-xl border-[#1A1A18] text-xs font-bold text-[#1A1A18] hover:bg-[#1A1A18] hover:text-white"
                   >
-                    <a href={liveStorefrontUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1.5">
+                    <a
+                      href={liveStorefrontUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5"
+                    >
                       <span>Preview Live on Marketplace</span>
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>

@@ -12,7 +12,7 @@ import {
 } from "./actions";
 import type { ProductStatus } from "@genz/types";
 
-export interface SellerProductRecord extends SharedProductRecord {}
+export type SellerProductRecord = SharedProductRecord;
 
 interface SellerProductsClientProps {
   initialProducts: SellerProductRecord[];

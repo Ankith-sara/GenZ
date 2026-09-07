@@ -11,7 +11,7 @@ import {
   adminUpdateProduct,
 } from "./actions";
 
-export interface ProductRecord extends SharedProductRecord {}
+export type ProductRecord = SharedProductRecord;
 
 interface ProductsTableClientProps {
   initialProducts: ProductRecord[];

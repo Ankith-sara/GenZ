@@ -11,7 +11,10 @@ import {
 import { Button } from "@genz/ui";
 import { createAdminClient } from "@genz/database/admin";
 import { HomepageProducts } from "@/features/home/components/homepage-products";
-import { SuggestedSellers, type SuggestedSeller } from "@/features/home/components/suggested-sellers";
+import {
+  SuggestedSellers,
+  type SuggestedSeller,
+} from "@/features/home/components/suggested-sellers";
 import { productMediaUrl } from "@/features/products/lib/products";
 import type { Product } from "@genz/types";
 
@@ -65,7 +68,10 @@ const homepageCategories = [
 export default async function HomePage() {
   let products: Product[] = [];
   let dbSellers: DbSeller[] = [];
-  const sellerMap: Record<string, { business_name?: string; city?: string; state?: string }> = {};
+  const sellerMap: Record<
+    string,
+    { business_name?: string; city?: string; state?: string }
+  > = {};
 
   try {
     const adminSupabase = createAdminClient();
@@ -90,10 +96,15 @@ export default async function HomePage() {
       dbSellers = sData as DbSeller[];
       for (const s of sData) {
         let name = s.business_name;
-        if (s.description && typeof s.description === "string" && s.description.startsWith("{")) {
+        if (
+          s.description &&
+          typeof s.description === "string" &&
+          s.description.startsWith("{")
+        ) {
           try {
             const meta = JSON.parse(s.description);
-            name = (meta.business_name as string) || (meta.owner_name as string) || name;
+            name =
+              (meta.business_name as string) || (meta.owner_name as string) || name;
           } catch {}
         }
         sellerMap[s.id] = {
@@ -128,7 +139,11 @@ export default async function HomePage() {
 
   const liveSellersMapped: SuggestedSeller[] = dbSellers.map((s, idx) => {
     let meta: Record<string, unknown> = {};
-    if (s.description && typeof s.description === "string" && s.description.startsWith("{")) {
+    if (
+      s.description &&
+      typeof s.description === "string" &&
+      s.description.startsWith("{")
+    ) {
       try {
         meta = JSON.parse(s.description);
       } catch {
@@ -137,9 +152,7 @@ export default async function HomePage() {
     }
 
     const businessName =
-      (meta.business_name as string) ||
-      s.business_name ||
-      "Indian Artisan Workshop";
+      (meta.business_name as string) || s.business_name || "Indian Artisan Workshop";
 
     const makerName =
       (meta.owner_name as string) ||
@@ -155,7 +168,9 @@ export default async function HomePage() {
     const craft =
       (meta.craft_title as string) ||
       (meta.craft_category as string) ||
-      (sellerProds[0]?.category ? `${sellerProds[0].category} Workshop` : "Direct Indian Workshop");
+      (sellerProds[0]?.category
+        ? `${sellerProds[0].category} Workshop`
+        : "Direct Indian Workshop");
 
     const avatars = [
       "/indian_craftsman.png",
@@ -171,11 +186,18 @@ export default async function HomePage() {
       craft,
       city: s.city || (meta.city as string) || null,
       state: s.state || (meta.state as string) || null,
-      avatar: (meta.avatar_url as string) || avatars[idx % avatars.length] || "/sellers.png",
-      established_year: s.established_year || (meta.established_year ? Number(meta.established_year) : null),
+      avatar:
+        (meta.avatar_url as string) || avatars[idx % avatars.length] || "/sellers.png",
+      established_year:
+        s.established_year ||
+        (meta.established_year ? Number(meta.established_year) : null),
       thumbnails: realThumbnails,
       products_count: sellerProds.length,
-      description: (meta.short_bio as string) || (meta.description as string) || s.description || null,
+      description:
+        (meta.short_bio as string) ||
+        (meta.description as string) ||
+        s.description ||
+        null,
       products: sellerProds.map((p) => ({
         id: p.id,
         name: p.name,
@@ -185,6 +207,26 @@ export default async function HomePage() {
       })),
     };
   });
+
+  const displaySellers: SuggestedSeller[] =
+    liveSellersMapped.length > 0
+      ? liveSellersMapped
+      : [
+          {
+            id: "etikoppaka-lacquer-crafts",
+            business_name: "Etikoppaka Heritage Lacquer Toys",
+            maker_name: "Polumuri Nageswara Rao",
+            craft: "Second-Generation Master Artisan & GI Craft Custodian",
+            city: "Etikoppaka",
+            state: "Andhra Pradesh",
+            avatar: "/indian_craftsman.png",
+            established_year: 1984,
+            thumbnails: ["/etikoppaka_toys.png"],
+            products_count: 5,
+            description:
+              "Born in Etikoppaka. Shaped by generations. Along the Varaha River in Andhra Pradesh, second-generation artisan Polumuri Nageswara Rao carries forward 400-year-old GI-certified turned-wood lacquer craft.",
+          },
+        ];
 
   return (
     <main className="bg-cream-paper text-ink-black flex-1 font-sans antialiased">
@@ -357,7 +399,7 @@ export default async function HomePage() {
       <HomepageProducts initialProducts={products} sellerMap={sellerMap} />
 
       {/* SUGGESTED INDIAN MAKERS & ARTISANS (Instagram-Style Cards) */}
-      <SuggestedSellers sellers={liveSellersMapped} />
+      <SuggestedSellers sellers={displaySellers} />
 
       {/* TRUST MARQUEE & INSTITUTIONAL VALIDATION */}
       <section className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12">

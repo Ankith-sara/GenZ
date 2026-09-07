@@ -1,5 +1,455 @@
 [
   {
+    "id": "GZ-ORD-400179",
+    "orderId": "GZ-ORD-400179",
+    "createdAt": "2026-09-07T20:53:38.688Z",
+    "updatedAt": "2026-09-07T20:53:38.688Z",
+    "customerId": "cust-filter-test-1788814418688",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T20:53:38.688Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-861700",
+    "orderId": "GZ-ORD-861700",
+    "createdAt": "2026-09-07T20:53:38.661Z",
+    "updatedAt": "2026-09-07T20:53:38.661Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-special",
+        "title": "Special Clay Figurine",
+        "name": "Special Clay Figurine",
+        "price": 500,
+        "quantity": 1,
+        "sellerId": "seller-unique-1788814418661"
+      }
+    ],
+    "sellerIds": ["seller-unique-1788814418661"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T20:53:38.661Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-606144",
+    "orderId": "GZ-ORD-606144",
+    "createdAt": "2026-09-07T20:53:38.636Z",
+    "updatedAt": "2026-09-07T20:53:38.636Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T20:53:38.636Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-579582",
+    "orderId": "GZ-ORD-579582",
+    "createdAt": "2026-09-07T20:53:38.608Z",
+    "updatedAt": "2026-09-07T20:53:38.626Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T20:53:38.608Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "delivered",
+        "timestamp": "2026-09-07T20:53:38.626Z",
+        "title": "Order Delivered",
+        "description": "Package successfully delivered to the customer address."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-337023",
+    "orderId": "GZ-ORD-337023",
+    "createdAt": "2026-09-07T20:53:38.586Z",
+    "updatedAt": "2026-09-07T20:53:38.602Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T20:53:38.586Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "shipped",
+        "timestamp": "2026-09-07T20:53:38.602Z",
+        "title": "Shipped / In Transit",
+        "description": "Package handed over to BlueDart Express. Tracking AWB: BD99283741IN"
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap",
+    "carrier": "BlueDart Express",
+    "trackingNumber": "BD99283741IN"
+  },
+  {
+    "id": "GZ-ORD-638314",
+    "orderId": "GZ-ORD-638314",
+    "createdAt": "2026-09-07T20:53:38.553Z",
+    "updatedAt": "2026-09-07T20:53:38.574Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "processing",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T20:53:38.553Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      },
+      {
+        "status": "processing",
+        "timestamp": "2026-09-07T20:53:38.574Z",
+        "title": "Order in Processing",
+        "description": "The maker is preparing and packing the ordered items."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-501241",
+    "orderId": "GZ-ORD-501241",
+    "createdAt": "2026-09-07T20:53:38.541Z",
+    "updatedAt": "2026-09-07T20:53:38.541Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "online",
+    "paymentStatus": "paid",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T20:53:38.541Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
+    "id": "GZ-ORD-455840",
+    "orderId": "GZ-ORD-455840",
+    "createdAt": "2026-09-07T20:53:38.461Z",
+    "updatedAt": "2026-09-07T20:53:38.461Z",
+    "customerId": "cust-123",
+    "customerName": "Ankith Sharma",
+    "customerEmail": "ankith@example.com",
+    "customerPhone": "+91 9876543210",
+    "shippingAddress": {
+      "recipientName": "Ankith Sharma",
+      "phone": "+91 9876543210",
+      "addressLine": "123 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "placed",
+    "subtotal": 2999,
+    "tax": 360,
+    "shippingFee": 0,
+    "totalAmount": 3359,
+    "items": [
+      {
+        "productId": "prod-1",
+        "title": "Channapatna Wooden Rocking Horse",
+        "name": "Channapatna Wooden Rocking Horse",
+        "price": 1299,
+        "quantity": 1,
+        "sellerId": "seller-alpha",
+        "image": "https://example.com/horse.jpg"
+      },
+      {
+        "productId": "prod-2",
+        "title": "Kondapalli Dancing Doll",
+        "name": "Kondapalli Dancing Doll",
+        "price": 850,
+        "quantity": 2,
+        "sellerId": "seller-beta",
+        "image": "https://example.com/doll.jpg"
+      }
+    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
+    "trackingEvents": [
+      {
+        "status": "placed",
+        "timestamp": "2026-09-07T20:53:38.461Z",
+        "title": "Order Placed",
+        "description": "Customer successfully placed the order via Cash on Delivery."
+      }
+    ],
+    "notes": "Please pack with extra bubble wrap"
+  },
+  {
     "id": "GZ-ORD-419249",
     "orderId": "GZ-ORD-419249",
     "createdAt": "2026-09-07T19:55:41.202Z",
@@ -43,10 +493,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -91,9 +538,7 @@
         "sellerId": "seller-unique-1788810941174"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788810941174"
-    ],
+    "sellerIds": ["seller-unique-1788810941174"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -148,10 +593,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -206,10 +648,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -270,10 +709,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -336,10 +772,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -400,10 +833,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -458,10 +888,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -516,10 +943,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -564,9 +988,7 @@
         "sellerId": "seller-unique-1788810738907"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788810738907"
-    ],
+    "sellerIds": ["seller-unique-1788810738907"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -621,10 +1043,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -679,10 +1098,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -743,10 +1159,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -809,10 +1222,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -873,10 +1283,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -931,10 +1338,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -989,10 +1393,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1037,9 +1438,7 @@
         "sellerId": "seller-unique-1788810473314"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788810473314"
-    ],
+    "sellerIds": ["seller-unique-1788810473314"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1094,10 +1493,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1152,10 +1548,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1216,10 +1609,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1282,10 +1672,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1346,10 +1733,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1404,10 +1788,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1462,10 +1843,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1510,9 +1888,7 @@
         "sellerId": "seller-unique-1788809605361"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788809605361"
-    ],
+    "sellerIds": ["seller-unique-1788809605361"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1567,10 +1943,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1625,10 +1998,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1689,10 +2059,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1755,10 +2122,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1819,10 +2183,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1877,10 +2238,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1935,10 +2293,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -1983,9 +2338,7 @@
         "sellerId": "seller-unique-1788809297093"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788809297093"
-    ],
+    "sellerIds": ["seller-unique-1788809297093"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2040,10 +2393,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2098,10 +2448,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2162,10 +2509,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2228,10 +2572,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2292,10 +2633,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2350,10 +2688,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2408,10 +2743,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2456,9 +2788,7 @@
         "sellerId": "seller-unique-1788809069358"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788809069358"
-    ],
+    "sellerIds": ["seller-unique-1788809069358"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2513,10 +2843,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2571,10 +2898,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2635,10 +2959,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2701,10 +3022,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2765,10 +3083,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2823,10 +3138,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2881,10 +3193,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2929,9 +3238,7 @@
         "sellerId": "seller-unique-1788808114843"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788808114843"
-    ],
+    "sellerIds": ["seller-unique-1788808114843"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -2986,10 +3293,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3044,10 +3348,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3108,10 +3409,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3174,10 +3472,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3238,10 +3533,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3296,10 +3588,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3354,10 +3643,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3402,9 +3688,7 @@
         "sellerId": "seller-unique-1788808067872"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788808067872"
-    ],
+    "sellerIds": ["seller-unique-1788808067872"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3459,10 +3743,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3517,10 +3798,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3581,10 +3859,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3647,10 +3922,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3711,10 +3983,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3769,10 +4038,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3827,10 +4093,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3875,9 +4138,7 @@
         "sellerId": "seller-unique-1788807514694"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788807514694"
-    ],
+    "sellerIds": ["seller-unique-1788807514694"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3932,10 +4193,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -3990,10 +4248,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4054,10 +4309,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4120,10 +4372,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4184,10 +4433,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4242,10 +4488,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4300,10 +4543,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4348,9 +4588,7 @@
         "sellerId": "seller-unique-1788806832760"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788806832760"
-    ],
+    "sellerIds": ["seller-unique-1788806832760"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4405,10 +4643,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4463,10 +4698,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4527,10 +4759,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4593,10 +4822,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4657,10 +4883,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4715,10 +4938,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4773,10 +4993,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4821,9 +5038,7 @@
         "sellerId": "seller-unique-1788806130762"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788806130762"
-    ],
+    "sellerIds": ["seller-unique-1788806130762"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4878,10 +5093,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -4936,10 +5148,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5000,10 +5209,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5066,10 +5272,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5130,10 +5333,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5188,10 +5388,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5246,10 +5443,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5294,9 +5488,7 @@
         "sellerId": "seller-unique-1788805836317"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788805836317"
-    ],
+    "sellerIds": ["seller-unique-1788805836317"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5351,10 +5543,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5409,10 +5598,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5473,10 +5659,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5539,10 +5722,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5603,10 +5783,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5661,10 +5838,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5719,10 +5893,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5767,9 +5938,7 @@
         "sellerId": "seller-unique-1788805529531"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788805529531"
-    ],
+    "sellerIds": ["seller-unique-1788805529531"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5824,10 +5993,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5882,10 +6048,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -5946,10 +6109,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6012,10 +6172,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6076,10 +6233,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6134,10 +6288,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6192,10 +6343,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6240,9 +6388,7 @@
         "sellerId": "seller-unique-1788723633799"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788723633799"
-    ],
+    "sellerIds": ["seller-unique-1788723633799"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6297,10 +6443,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6355,10 +6498,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6419,10 +6559,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6485,10 +6622,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6549,10 +6683,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6607,10 +6738,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6665,10 +6793,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6713,9 +6838,7 @@
         "sellerId": "seller-unique-1788722508945"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788722508945"
-    ],
+    "sellerIds": ["seller-unique-1788722508945"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6770,10 +6893,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6828,10 +6948,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6892,10 +7009,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -6958,10 +7072,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7022,10 +7133,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7080,10 +7188,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7138,10 +7243,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7186,9 +7288,7 @@
         "sellerId": "seller-unique-1788720553583"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788720553583"
-    ],
+    "sellerIds": ["seller-unique-1788720553583"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7243,10 +7343,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7301,10 +7398,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7365,10 +7459,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7431,10 +7522,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7495,10 +7583,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7553,10 +7638,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7611,10 +7693,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7659,9 +7738,7 @@
         "sellerId": "seller-unique-1788720154597"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788720154597"
-    ],
+    "sellerIds": ["seller-unique-1788720154597"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7716,10 +7793,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7774,10 +7848,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7838,10 +7909,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7904,10 +7972,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -7968,10 +8033,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8026,10 +8088,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8084,10 +8143,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8132,9 +8188,7 @@
         "sellerId": "seller-unique-1788719957054"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788719957054"
-    ],
+    "sellerIds": ["seller-unique-1788719957054"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8189,10 +8243,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8247,10 +8298,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8311,10 +8359,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8377,10 +8422,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8441,10 +8483,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8499,10 +8538,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8557,10 +8593,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8605,9 +8638,7 @@
         "sellerId": "seller-unique-1788716988903"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788716988903"
-    ],
+    "sellerIds": ["seller-unique-1788716988903"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8662,10 +8693,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8720,10 +8748,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8784,10 +8809,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8850,10 +8872,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8914,10 +8933,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -8972,10 +8988,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9030,10 +9043,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9078,9 +9088,7 @@
         "sellerId": "seller-unique-1788715977858"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788715977858"
-    ],
+    "sellerIds": ["seller-unique-1788715977858"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9135,10 +9143,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9193,10 +9198,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9257,10 +9259,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9323,10 +9322,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9387,10 +9383,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9445,10 +9438,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9503,10 +9493,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9551,9 +9538,7 @@
         "sellerId": "seller-unique-1788715796023"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788715796023"
-    ],
+    "sellerIds": ["seller-unique-1788715796023"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9608,10 +9593,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9666,10 +9648,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9730,10 +9709,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9796,10 +9772,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9860,10 +9833,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9918,10 +9888,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -9976,10 +9943,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10024,9 +9988,7 @@
         "sellerId": "seller-unique-1788715443273"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788715443273"
-    ],
+    "sellerIds": ["seller-unique-1788715443273"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10081,10 +10043,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10139,10 +10098,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10203,10 +10159,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10269,10 +10222,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10333,10 +10283,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10391,10 +10338,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10449,10 +10393,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10497,9 +10438,7 @@
         "sellerId": "seller-unique-1788715265089"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788715265089"
-    ],
+    "sellerIds": ["seller-unique-1788715265089"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10554,10 +10493,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10612,10 +10548,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10676,10 +10609,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10742,10 +10672,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10806,10 +10733,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10864,10 +10788,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10920,10 +10841,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -10967,9 +10885,7 @@
         "sellerId": "seller-unique-1788715193605"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788715193605"
-    ],
+    "sellerIds": ["seller-unique-1788715193605"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11022,10 +10938,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11078,10 +10991,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11140,10 +11050,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11204,10 +11111,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11266,10 +11170,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11322,10 +11223,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11378,10 +11276,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11425,9 +11320,7 @@
         "sellerId": "seller-unique-1788714769749"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788714769749"
-    ],
+    "sellerIds": ["seller-unique-1788714769749"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11480,10 +11373,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11536,10 +11426,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11598,10 +11485,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11662,10 +11546,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11724,10 +11605,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11780,10 +11658,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11836,10 +11711,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11883,9 +11755,7 @@
         "sellerId": "seller-unique-1788714624483"
       }
     ],
-    "sellerIds": [
-      "seller-unique-1788714624483"
-    ],
+    "sellerIds": ["seller-unique-1788714624483"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11938,10 +11808,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -11994,10 +11861,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -12056,10 +11920,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -12120,10 +11981,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -12182,10 +12040,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -12238,10 +12093,7 @@
         "image": "https://example.com/doll.jpg"
       }
     ],
-    "sellerIds": [
-      "seller-alpha",
-      "seller-beta"
-    ],
+    "sellerIds": ["seller-alpha", "seller-beta"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -12291,9 +12143,7 @@
         "sellerBusinessName": "Channapatna Craft Collective"
       }
     ],
-    "sellerIds": [
-      "c85d85fe-ae31-419b-a3d5-e3b97b09335f"
-    ],
+    "sellerIds": ["c85d85fe-ae31-419b-a3d5-e3b97b09335f"],
     "trackingEvents": [
       {
         "status": "placed",
@@ -12342,9 +12192,7 @@
         "sellerBusinessName": "Channapatna Craft Collective"
       }
     ],
-    "sellerIds": [
-      "c85d85fe-ae31-419b-a3d5-e3b97b09335f"
-    ],
+    "sellerIds": ["c85d85fe-ae31-419b-a3d5-e3b97b09335f"],
     "carrier": "Delhivery",
     "trackingNumber": "DLH8923019842",
     "trackingEvents": [

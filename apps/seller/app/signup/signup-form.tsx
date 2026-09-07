@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import { Check, ShieldCheck, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Button } from "@genz/ui";
 import { Input } from "@genz/ui";
 import { Label } from "@genz/ui";

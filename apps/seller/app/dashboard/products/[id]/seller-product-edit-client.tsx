@@ -26,12 +26,10 @@ async function uploadImageToStorage(
   const safeName = `upload-${Date.now()}-${index}.${ext}`;
   const path = `${sellerId}/products/pending/${safeName}`;
 
-  const { error } = await supabase.storage
-    .from("product-media")
-    .upload(path, file, {
-      contentType: file.type,
-      upsert: true,
-    });
+  const { error } = await supabase.storage.from("product-media").upload(path, file, {
+    contentType: file.type,
+    upsert: true,
+  });
 
   if (error) {
     console.error(`Client upload error for image ${index}:`, error);
@@ -43,7 +41,7 @@ async function uploadImageToStorage(
 export function SellerProductEditClient({
   product,
   images,
-  variants,
+  variants: _variants,
   reelCount,
   sellerId,
   sellerBusinessName,
@@ -103,7 +101,8 @@ export function SellerProductEditClient({
             ? String(product.inventory_count)
             : "0",
         lowStockThreshold:
-          product.low_stock_threshold !== null && product.low_stock_threshold !== undefined
+          product.low_stock_threshold !== null &&
+          product.low_stock_threshold !== undefined
             ? String(product.low_stock_threshold)
             : "5",
         trackInventory: product.track_inventory ?? true,
