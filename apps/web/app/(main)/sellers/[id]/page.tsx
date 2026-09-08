@@ -17,7 +17,8 @@ const POLUMURI_NAGESWARA_RAO_PROFILE: SellerProfileData = {
   city: "Etikoppaka",
   state: "Andhra Pradesh",
   established_year: 1984,
-  avatar_url: "/indian_craftsman.png",
+  avatar_url: "/polumuri_nageswara_rao.jpg",
+  cover_url: "/machine_work.png",
   description:
     "Born in Etikoppaka. Shaped by generations. Along the Varaha River in Andhra Pradesh, second-generation artisan Polumuri Nageswara Rao carries forward 400-year-old GI-certified turned-wood lacquer craft using native Ankudi Karra wood and non-toxic natural dyes.",
   story: {
@@ -107,12 +108,42 @@ const CURATED_ARTISANS: Record<string, SellerProfileData> = {
   },
 };
 
+const ETIKOPPAKA_CURATED_REELS: SellerReel[] = [
+  {
+    id: "reel-lathe-turning-nageswara-rao",
+    video_url: "/reels/etikoppaka-lathe-woodturning-mastery.mp4",
+    video_path: "fab03143-9d65-47cf-bdc0-53db548b1005/reels/etikoppaka-lathe-woodturning-mastery.mp4",
+    thumbnail_path: "/polumuri_nageswara_rao.jpg",
+    thumbnail_url: "/polumuri_nageswara_rao.jpg",
+    caption: "Master Artisan Polumuri Nageswara Rao demonstrating authentic Etikoppaka lathe-turning and natural lacquer application.",
+    views_count: 24500,
+    duration: "0:30",
+  },
+  {
+    id: "reel-lacquer-color",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+    thumbnail_path: "/etikoppaka_toys.png",
+    caption: "Natural friction lacquering: applying lead-free vegetable dyes extracted from seeds & roots.",
+    views_count: 9800,
+    duration: "0:45",
+  },
+  {
+    id: "reel-master-inspection",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+    thumbnail_path: "/cat_toys.png",
+    caption: "Master craftsman final quality check: smooth non-toxic finish safe for all generations.",
+    views_count: 18500,
+    duration: "0:25",
+  },
+];
+
 interface ParsedSellerMeta {
   short_bio?: string;
   maker_name?: string;
   handle?: string;
   craft_category?: string;
   craft_title?: string;
+  cover_url?: string;
   how_it_started?: string;
   generations_heritage?: string;
   materials_and_technique?: string;
@@ -241,6 +272,7 @@ export default async function SellerPublicProfilePage({
           (meta.established_year ? Number(meta.established_year) : 2018),
         avatar_url:
           userProfile?.avatar_url || meta.avatar_url || "/indian_craftsman.png",
+        cover_url: meta.cover_url || "/machine_work.png",
         story: {
           how_it_started:
             meta.how_it_started ||
@@ -260,20 +292,7 @@ export default async function SellerPublicProfilePage({
             Array.isArray(meta.milestones) &&
             meta.milestones.length > 0
               ? meta.milestones
-              : [
-                  {
-                    year: dbSeller.established_year
-                      ? `${dbSeller.established_year}`
-                      : "2018",
-                    title: "Workshop Established",
-                    desc: `Founded operations in ${locationCity} focusing on dedicated craftsmanship.`,
-                  },
-                  {
-                    year: "2024",
-                    title: "Digital Verification on GenZ",
-                    desc: "Joined GenZ marketplace with GST audit and direct factory discovery.",
-                  },
-                ],
+              : undefined,
         },
       };
 
@@ -296,61 +315,93 @@ export default async function SellerPublicProfilePage({
         .order("created_at", { ascending: false });
 
       if (dbReels && dbReels.length > 0) {
-        reels = dbReels as SellerReel[];
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+        reels = dbReels.map((r: any) => ({
+          id: r.id,
+          video_path: r.video_path,
+          video_url: r.video_path?.startsWith("http")
+            ? r.video_path
+            : supabaseUrl
+              ? `${supabaseUrl}/storage/v1/object/public/product-media/${r.video_path}`
+              : null,
+          thumbnail_path: r.thumbnail_path,
+          thumbnail_url: r.thumbnail_path?.startsWith("http")
+            ? r.thumbnail_path
+            : r.thumbnail_path && supabaseUrl
+              ? `${supabaseUrl}/storage/v1/object/public/product-media/${r.thumbnail_path}`
+              : null,
+          caption: r.caption,
+          views_count: r.views_count,
+          duration: r.duration || "0:30",
+        })) as SellerReel[];
       }
     }
   } catch (err) {
     console.error("[SellerPublicProfilePage] Error querying seller:", err);
   }
 
-  // Fallback to curated mock profiles if ID matches
+  // Fallback to curated profiles if ID matches
   if (!sellerProfile && CURATED_ARTISANS[id]) {
     sellerProfile = CURATED_ARTISANS[id];
 
-    if (
-      id === "etikoppaka-lacquer-crafts" ||
-      id === "polumuri-nageswara-rao" ||
-      id === "fab03143-9d65-47cf-bdc0-53db548b1005"
-    ) {
-      products = [
-        {
-          id: "etikoppaka-top-set",
-          seller_id: id,
-          name: "GI-Certified Etikoppaka Lacquer Spinning Tops (Set of 4)",
-          category: "Wooden Toys",
-          price_inr: 650,
-          description: "Turned wood with natural vegetable dyes and palm lac finish.",
-          status: "published",
-          cover_image_path: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        } as unknown as Product,
-        {
-          id: "etikoppaka-stacker",
-          seller_id: id,
-          name: "Ankudu Wood Eco Stacking Toy",
-          category: "Wooden Toys",
-          price_inr: 520,
-          description: "Safe for toddlers, polished with natural lac.",
-          status: "published",
-          cover_image_path: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        } as unknown as Product,
-        {
-          id: "etikoppaka-bird-whistle",
-          seller_id: id,
-          name: "Traditional Handcrafted Wooden Bird Whistle",
-          category: "Wooden Toys",
-          price_inr: 340,
-          description: "Charming traditional acoustic bird whistle toy.",
-          status: "published",
-          cover_image_path: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        } as unknown as Product,
-      ];
+    // Fetch real live products from database for the corresponding registered seller ID
+    const targetSellerId =
+      id === "etikoppaka-lacquer-crafts" || id === "polumuri-nageswara-rao"
+        ? "fab03143-9d65-47cf-bdc0-53db548b1005"
+        : id;
+
+    try {
+      const adminSupabase = createAdminClient();
+      const { data: dbProducts } = await adminSupabase
+        .from("products")
+        .select("*")
+        .eq("seller_id", targetSellerId)
+        .order("created_at", { ascending: false });
+
+      if (dbProducts && dbProducts.length > 0) {
+        products = dbProducts as Product[];
+      }
+
+      const { data: dbReels } = await adminSupabase
+        .from("reels")
+        .select("*")
+        .eq("seller_id", targetSellerId)
+        .order("created_at", { ascending: false });
+
+      if (dbReels && dbReels.length > 0) {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+        reels = dbReels.map((r: any) => ({
+          id: r.id,
+          video_path: r.video_path,
+          video_url: r.video_path?.startsWith("http")
+            ? r.video_path
+            : supabaseUrl
+              ? `${supabaseUrl}/storage/v1/object/public/product-media/${r.video_path}`
+              : null,
+          thumbnail_path: r.thumbnail_path,
+          thumbnail_url: r.thumbnail_path?.startsWith("http")
+            ? r.thumbnail_path
+            : r.thumbnail_path && supabaseUrl
+              ? `${supabaseUrl}/storage/v1/object/public/product-media/${r.thumbnail_path}`
+              : null,
+          caption: r.caption,
+          views_count: r.views_count,
+          duration: r.duration || "0:30",
+        })) as SellerReel[];
+      }
+    } catch {
+      // Keep products empty if query fails
     }
+  }
+
+  // If reels is still empty for the primary Etikoppaka master artisan, provide curated interactive reels
+  if (
+    reels.length === 0 &&
+    (id === "etikoppaka-lacquer-crafts" ||
+      id === "polumuri-nageswara-rao" ||
+      id === "fab03143-9d65-47cf-bdc0-53db548b1005")
+  ) {
+    reels = ETIKOPPAKA_CURATED_REELS;
   }
 
   if (!sellerProfile) {

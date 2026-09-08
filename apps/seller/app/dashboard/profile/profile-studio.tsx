@@ -2,20 +2,16 @@
 
 import { useActionState, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
-  MapPin,
-  Calendar,
-  BadgeCheck,
-  Globe,
-  ExternalLink,
-  Save,
-  CheckCircle2,
-  AlertCircle,
-  BookOpen,
+  MapPin, Calendar, BadgeCheck, Globe, ExternalLink, 
+  Save, CheckCircle2, AlertCircle, BookOpen, Film, 
+  ArrowRight,
 } from "lucide-react";
 import { Button, Input, Label, Textarea } from "@genz/ui";
 import { AvatarUploader } from "@/features/user/components/avatar-uploader";
-import { updateSellerInstagramProfile, type ProfileUpdateState } from "./actions";
+import { CoverUploader } from "@/features/user/components/cover-uploader";
+import { updateSellerProfileStudio, type ProfileUpdateState } from "./actions";
 import { SITE_URL } from "@genz/utils";
 
 interface SellerMetadata {
@@ -24,6 +20,7 @@ interface SellerMetadata {
   handle?: string;
   craft_category?: string;
   craft_title?: string;
+  cover_url?: string;
   how_it_started?: string;
   materials_and_technique?: string;
   vision?: string;
@@ -60,7 +57,7 @@ const CRAFT_CATEGORIES = [
   "Handicrafts",
 ];
 
-export function SellerInstagramProfileStudio({
+export function SellerProfileStudio({
   userId,
   fullName,
   avatarUrl,
@@ -82,7 +79,7 @@ export function SellerInstagramProfileStudio({
     }
   }
 
-  // Interactive local state for live Instagram-style preview
+  // Interactive local state for live storefront preview
   const [businessName, setBusinessName] = useState(
     sellerProfile?.business_name || fullName || "Etikoppaka Heritage Lacquer Toys"
   );
@@ -110,11 +107,13 @@ export function SellerInstagramProfileStudio({
   const [establishedYear, setEstablishedYear] = useState<string>(
     sellerProfile?.established_year ? String(sellerProfile.established_year) : "1984"
   );
+  const [coverUrl, setCoverUrl] = useState<string | null>(parsedMeta.cover_url || null);
+  const [liveAvatarUrl, setLiveAvatarUrl] = useState<string | null>(avatarUrl);
 
   const [formState, formAction, isPending] = useActionState<
     ProfileUpdateState,
     FormData
-  >(updateSellerInstagramProfile, {});
+  >(updateSellerProfileStudio, {});
 
   const liveStorefrontUrl = `${SITE_URL}/sellers/${userId}`;
   const isVerified = sellerProfile?.status === "verified";
@@ -129,7 +128,7 @@ export function SellerInstagramProfileStudio({
               STOREFRONT CREATOR STUDIO
             </span>
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900">
-              Instagram-Style Profile
+              Atelier Storefront
             </span>
           </div>
           <h1 className="font-nantes text-2xl font-bold text-[#1A1A18] sm:text-3xl">
@@ -180,22 +179,42 @@ export function SellerInstagramProfileStudio({
         {/* LEFT COLUMN: Profile Customization Form (7 cols) */}
         <div className="space-y-6 lg:col-span-7">
           <form action={formAction} className="space-y-6">
-            {/* 1. Profile Picture & Avatar */}
-            <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-              <h2 className="font-graphik text-sm font-bold text-neutral-900">
-                1. Artisan Profile Picture
-              </h2>
-              <p className="font-graphik mt-1 text-xs text-neutral-500">
-                Upload a genuine photo of you or your master craftsperson at work in the
-                workshop.
-              </p>
+            <input type="hidden" name="cover_url" value={coverUrl || ""} />
 
-              <div className="mt-4">
-                <AvatarUploader
-                  userId={userId}
-                  fullName={makerName || businessName}
-                  currentUrl={avatarUrl}
-                />
+            {/* 1. Profile Avatar & Atelier Cover Banner */}
+            <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs space-y-6">
+              <div>
+                <h2 className="font-graphik text-sm font-bold text-neutral-900">
+                  1. Artisan Profile Photo
+                </h2>
+                <p className="font-graphik mt-1 text-xs text-neutral-500">
+                  Upload a genuine portrait of you or your master craftsperson at work in the workshop.
+                </p>
+
+                <div className="mt-3">
+                  <AvatarUploader
+                    userId={userId}
+                    fullName={makerName || businessName}
+                    currentUrl={liveAvatarUrl}
+                    onUploaded={(url) => setLiveAvatarUrl(url)}
+                  />
+                </div>
+              </div>
+
+              <div className="border-t border-[#F0EFEA] pt-5">
+                <h2 className="font-graphik text-sm font-bold text-neutral-900">
+                  Atelier Cover Banner
+                </h2>
+                <p className="font-graphik mt-1 text-xs text-neutral-500">
+                  Upload a panoramic photo of your workshop, lathe machinery, raw timber, or craft showroom.
+                </p>
+
+                <div className="mt-3">
+                  <CoverUploader
+                    currentUrl={coverUrl}
+                    onUploaded={(url) => setCoverUrl(url)}
+                  />
+                </div>
               </div>
             </div>
 
@@ -349,7 +368,7 @@ export function SellerInstagramProfileStudio({
                     htmlFor="short_bio"
                     className="text-xs font-semibold text-neutral-700"
                   >
-                    Headline Bio (Instagram-Style)
+                    Headline Bio (Storefront Pitch)
                   </Label>
                   <span className="text-[10px] text-neutral-400">
                     {shortBio.length}/200 chars
@@ -564,6 +583,38 @@ export function SellerInstagramProfileStudio({
               </div>
             </div>
 
+            {/* 6. Workshop Process Reels */}
+            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Film className="h-4 w-4 text-amber-700" />
+                  <h2 className="font-graphik text-sm font-bold text-neutral-900">
+                    6. Workshop Process Reels
+                  </h2>
+                </div>
+                <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-900">
+                  {reelCount} Published
+                </span>
+              </div>
+              <p className="font-graphik text-xs text-neutral-500 leading-relaxed">
+                Video reels appear directly under the &quot;Reels&quot; tab on your public profile. Upload raw video footage of woodturning, organic lacquering, or carving.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="rounded-xl border-[#E5E5E0] bg-white text-xs font-semibold text-[#1A1A18] hover:bg-[#FAF8F5]"
+                >
+                  <Link href="/dashboard/products">
+                    <span>Manage & Upload Reels to Products</span>
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
             {/* Submit Button */}
             <div className="flex items-center justify-end gap-3 pt-2">
               <Button
@@ -581,7 +632,7 @@ export function SellerInstagramProfileStudio({
           </form>
         </div>
 
-        {/* RIGHT COLUMN: Live Instagram-Style Profile Card Preview (5 cols) */}
+        {/* RIGHT COLUMN: Live Storefront Profile Card Preview (5 cols) */}
         <div className="lg:col-span-5">
           <div className="sticky top-20 space-y-4">
             <div className="flex items-center justify-between">
@@ -594,11 +645,18 @@ export function SellerInstagramProfileStudio({
               </span>
             </div>
 
-            {/* Instagram-Style Profile Frame */}
+            {/* Storefront Profile Frame */}
             <div className="overflow-hidden rounded-3xl border border-[#E5E5E0] bg-white shadow-lg">
               {/* Cover Banner */}
-              <div className="relative h-28 w-full bg-gradient-to-r from-amber-900 via-stone-900 to-amber-950">
-                <div className="absolute inset-0 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] opacity-20" />
+              <div className="relative h-28 w-full overflow-hidden bg-neutral-900">
+                <Image
+                  src={coverUrl || "/machine_work.png"}
+                  alt="Cover preview"
+                  fill
+                  className="object-cover opacity-75"
+                  unoptimized
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                 <div className="absolute top-3 right-3 rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-xs">
                   Public Storefront
                 </div>
@@ -610,11 +668,12 @@ export function SellerInstagramProfileStudio({
                 <div className="-mt-12 flex items-end justify-between">
                   <div className="relative h-20 w-20 overflow-hidden rounded-2xl border-4 border-white bg-neutral-100 shadow-md">
                     <Image
-                      src={avatarUrl || "/indian_craftsman.png"}
+                      src={liveAvatarUrl || "/indian_craftsman.png"}
                       alt={businessName}
                       fill
                       className="object-cover"
                       sizes="80px"
+                      unoptimized
                     />
                   </div>
 
@@ -670,7 +729,7 @@ export function SellerInstagramProfileStudio({
                   {shortBio}
                 </p>
 
-                {/* Instagram-Style Profile Metrics */}
+                {/* Storefront Profile Metrics */}
                 <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-neutral-100 bg-[#FAF8F5] p-3 text-center">
                   <div>
                     <p className="font-graphik text-sm font-extrabold text-[#1A1A18]">
@@ -690,18 +749,8 @@ export function SellerInstagramProfileStudio({
                     <p className="font-graphik text-sm font-extrabold text-rose-600">
                       {reelCount > 0 ? reelCount : "4+"}
                     </p>
-                    <p className="text-[10px] text-neutral-500">Reels</p>
+                    <p className="text-[10px] text-neutral-500">Video Reels</p>
                   </div>
-                </div>
-
-                {/* Structured Tabs Preview */}
-                <div className="mt-4 flex border-b border-neutral-100 pb-2 text-[11px] font-bold text-neutral-500">
-                  <span className="flex-1 border-b-2 border-black pb-2 text-center text-black">
-                    🛍️ Catalog
-                  </span>
-                  <span className="flex-1 pb-2 text-center">📖 Journey</span>
-                  <span className="flex-1 pb-2 text-center">🎬 Reels</span>
-                  <span className="flex-1 pb-2 text-center">🏛️ Trust</span>
                 </div>
 
                 {/* CTA Action */}
@@ -731,3 +780,5 @@ export function SellerInstagramProfileStudio({
     </div>
   );
 }
+
+export const SellerInstagramProfileStudio = SellerProfileStudio;

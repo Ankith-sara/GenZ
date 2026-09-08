@@ -4,8 +4,9 @@ import React, { useActionState } from "react";
 import { ProductEditorForm, type ProductImageItem } from "@genz/ui/shared-features";
 import { updateProduct, type ProductFormState } from "@/app/dashboard/products/actions";
 import { createBrowserClient } from "@genz/database";
-import type { Product, ProductVariant } from "@genz/types";
+import type { Product, ProductVariant, ProductStatus } from "@genz/types";
 import { productMediaUrl } from "@/features/products/lib/products";
+import { PublishControls } from "./publish-controls";
 
 interface SellerProductEditClientProps {
   product: Product;
@@ -73,43 +74,49 @@ export function SellerProductEditClient({
   });
 
   return (
-    <ProductEditorForm
-      role="seller"
-      mode="edit"
-      productId={product.id}
-      sellerId={sellerId}
-      sellerBusinessName={sellerBusinessName}
-      action={formAction}
-      state={state}
-      isPending={isPending}
-      cancelHref="/dashboard/products"
-      manageReelsHref={`/dashboard/products/${product.id}/reels`}
-      reelsCount={reelCount}
-      submitLabel="Save Changes"
-      onUploadImage={(file, index) => uploadImageToStorage(file, sellerId, index)}
-      initialValues={{
-        name: product.name,
-        priceInr: product.price_inr !== null ? String(product.price_inr) : "",
-        category: product.category || "Wooden Toys & Crafts",
-        description: product.description || "",
-        materials: Array.isArray(product.materials) ? product.materials.join(", ") : "",
-        status: (product.status as "published" | "draft") || "published",
-        images: initialImages,
-        sku: product.sku || "",
-        stockQty:
-          product.inventory_count !== null && product.inventory_count !== undefined
-            ? String(product.inventory_count)
-            : "0",
-        lowStockThreshold:
-          product.low_stock_threshold !== null &&
-          product.low_stock_threshold !== undefined
-            ? String(product.low_stock_threshold)
-            : "5",
-        trackInventory: product.track_inventory ?? true,
-        isFeatured: product.is_featured ?? false,
-        isNewArrival: product.is_new_arrival ?? true,
-        isBestSeller: product.is_best_seller ?? false,
-      }}
-    />
+    <div className="space-y-6">
+      <PublishControls
+        productId={product.id}
+        status={product.status as ProductStatus}
+      />
+      <ProductEditorForm
+        role="seller"
+        mode="edit"
+        productId={product.id}
+        sellerId={sellerId}
+        sellerBusinessName={sellerBusinessName}
+        action={formAction}
+        state={state}
+        isPending={isPending}
+        cancelHref="/dashboard/products"
+        manageReelsHref={`/dashboard/products/${product.id}/reels`}
+        reelsCount={reelCount}
+        submitLabel="Save Changes"
+        onUploadImage={(file, index) => uploadImageToStorage(file, sellerId, index)}
+        initialValues={{
+          name: product.name,
+          priceInr: product.price_inr !== null ? String(product.price_inr) : "",
+          category: product.category || "Wooden Toys & Crafts",
+          description: product.description || "",
+          materials: Array.isArray(product.materials) ? product.materials.join(", ") : "",
+          status: (product.status as "published" | "draft") || "published",
+          images: initialImages,
+          sku: product.sku || "",
+          stockQty:
+            product.inventory_count !== null && product.inventory_count !== undefined
+              ? String(product.inventory_count)
+              : "0",
+          lowStockThreshold:
+            product.low_stock_threshold !== null &&
+            product.low_stock_threshold !== undefined
+              ? String(product.low_stock_threshold)
+              : "5",
+          trackInventory: product.track_inventory ?? true,
+          isFeatured: product.is_featured ?? false,
+          isNewArrival: product.is_new_arrival ?? true,
+          isBestSeller: product.is_best_seller ?? false,
+        }}
+      />
+    </div>
   );
 }

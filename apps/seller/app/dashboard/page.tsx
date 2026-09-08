@@ -202,7 +202,7 @@ export default async function SellerDashboardPage() {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-graphik text-sm font-bold text-[#1A1A18]">
-                Your Instagram-Style Public Storefront
+                Your Public Artisan Storefront
               </h3>
               <span className="rounded-full bg-amber-100 px-2.5 py-0.5 font-mono text-[10px] font-bold text-amber-900">
                 Live on Marketplace

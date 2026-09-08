@@ -2,11 +2,11 @@ import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import type { SellerProfile, SellerApplication, VerificationStatus } from "@genz/types";
-import { SellerInstagramProfileStudio } from "./profile-studio";
+import { SellerProfileStudio } from "./profile-studio";
 
 export const metadata = {
   title: "Maker Profile & Storefront Studio — GenZ Seller Portal",
-  description: "Customize your Instagram-style artisan profile, journey narrative, and catalog showcase.",
+  description: "Customize your artisan profile, journey narrative, and catalog showcase.",
 };
 
 interface ApplicationFormData {
@@ -154,7 +154,7 @@ export default async function SellerProfilePage() {
   }
 
   return (
-    <SellerInstagramProfileStudio
+    <SellerProfileStudio
       userId={session.userId}
       fullName={userProfile?.full_name || applicationData?.full_name || "Factory Seller"}
       avatarUrl={userProfile?.avatar_url || null}

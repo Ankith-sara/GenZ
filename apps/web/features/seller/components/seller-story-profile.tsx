@@ -30,13 +30,11 @@ export function SellerStoryProfile({
     category: p.category,
     cover_image_path: p.cover_image_path,
     status: p.status,
+    original_mrp: p.original_mrp,
   }));
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] pb-24 text-[#1A1A18]">
-      {/* Subtle Top Accent Banner */}
-      <div className="h-3 w-full bg-gradient-to-r from-[#F58529] via-[#DD2A7B] to-[#8134AF]" />
-
       <div className="mx-auto max-w-4xl pt-6 sm:pt-10">
         <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-[#E5E5E0] bg-white shadow-xs">
           <SellerProfileView

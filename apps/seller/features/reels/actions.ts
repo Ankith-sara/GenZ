@@ -127,7 +127,10 @@ export async function uploadReelAction(
         return { error: "Failed to record reel in database." };
       }
 
-      revalidatePath(`/seller/dashboard/products/${productId}`);
+      revalidatePath(`/dashboard/products/${productId}`);
+      revalidatePath(`/dashboard/products/${productId}/reels`);
+      revalidatePath("/dashboard/profile");
+      revalidatePath(`/sellers/${product.seller_id}`);
       return { success: true, reelId: reel.id };
     }
   );

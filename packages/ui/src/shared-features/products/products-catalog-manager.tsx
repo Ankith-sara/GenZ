@@ -2,24 +2,11 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import {
-  Search,
-  ShoppingBag,
-  Edit,
-  EyeOff,
-  Eye,
-  CheckCircle2,
-  Trash2,
-  Plus,
-  ChevronRight,
-  Tag,
-  RotateCcw,
-  Save,
-  Loader2,
-  ExternalLink,
-  Copy,
-  Check,
-  Package,
+  Search, ShoppingBag, Edit, EyeOff, CheckCircle2, 
+  Trash2, Plus, ChevronRight, Tag, RotateCcw, 
+  Save, Loader2, ExternalLink, Copy, Check,
 } from "lucide-react";
 import { Button } from "../../components/button";
 import { StatusBadge } from "../../components/status-badge";
@@ -251,10 +238,13 @@ export function ProductsCatalogManager({
         });
       }
       setEditingProduct(null);
-    } catch (err) {
+      toast.success("Product changes saved successfully!");
+    } catch (err: any) {
       console.error("Failed to save product:", err);
       setProducts(initialProducts);
-      alert("Failed to save product changes. Please try again.");
+      toast.error("Failed to save product changes", {
+        description: err?.message || "Please try again.",
+      });
     } finally {
       setIsSaving(false);
     }
@@ -275,7 +265,18 @@ export function ProductsCatalogManager({
       if (onUpdateStatus) {
         await onUpdateStatus(product.id, nextStatus);
       }
-    } catch (err) {
+      toast.success(
+        nextStatus === "published"
+          ? `"${product.name}" published to live storefront!`
+          : `"${product.name}" moved to draft`,
+        {
+          description:
+            nextStatus === "published"
+              ? "Product is now live and visible to all shoppers."
+              : "Product is now hidden from the marketplace.",
+        }
+      );
+    } catch (err: any) {
       console.error("Failed to update status:", err);
       setProducts((prev) =>
         prev.map((p) => (p.id === product.id ? { ...p, status: product.status } : p))
@@ -283,7 +284,9 @@ export function ProductsCatalogManager({
       if (selectedProduct?.id === product.id) {
         setSelectedProduct(product);
       }
-      alert("Failed to update product status. Please try again.");
+      toast.error("Failed to update product status", {
+        description: err?.message || "Please try again.",
+      });
     } finally {
       setLoadingId(null);
     }
@@ -310,10 +313,13 @@ export function ProductsCatalogManager({
       if (onDeleteProduct) {
         await onDeleteProduct(product.id);
       }
-    } catch (err) {
+      toast.success(`"${product.name}" deleted successfully.`);
+    } catch (err: any) {
       console.error("Failed to delete product:", err);
       setProducts(previousProducts);
-      alert("Failed to delete product. Please try again.");
+      toast.error("Failed to delete product", {
+        description: err?.message || "Please try again.",
+      });
     } finally {
       setLoadingId(null);
     }
@@ -322,6 +328,7 @@ export function ProductsCatalogManager({
   const handleCopyId = (id: string) => {
     navigator.clipboard.writeText(id);
     setCopiedId(true);
+    toast.success("Product ID copied to clipboard");
     setTimeout(() => setCopiedId(false), 2000);
   };
 

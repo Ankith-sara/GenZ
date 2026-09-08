@@ -2,8 +2,9 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@genz/ui";
-import { UserAvatar } from "@genz/ui";
+import { Upload, CheckCircle2, AlertCircle } from "lucide-react";
 import { validateFileContent } from "@/lib/file-validation";
 import { uploadAvatarAction } from "@/features/user/actions";
 
@@ -11,25 +12,39 @@ export function AvatarUploader({
   userId: _userId,
   fullName,
   currentUrl,
+  onUploaded,
 }: {
   userId: string;
   fullName: string | null;
   currentUrl: string | null;
+  onUploaded?: (url: string) => void;
 }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [status, setStatus] = useState<"idle" | "uploading" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(currentUrl);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  async function handleUpload(e: React.FormEvent) {
-    e.preventDefault();
-    const file = fileInputRef.current?.files?.[0];
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
     if (!file) return;
+
+    setError(null);
+    setSelectedFile(file);
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+  }
+
+  async function handleUpload(e?: React.FormEvent | React.MouseEvent) {
+    if (e) e.preventDefault();
+    if (!selectedFile) return;
+
     setStatus("uploading");
     setError(null);
 
     // Fast client-side check
-    const validation = await validateFileContent(file, ["image"]);
+    const validation = await validateFileContent(selectedFile, ["image"]);
     if (!validation.valid) {
       setStatus("error");
       setError(validation.error || "Invalid file content.");
@@ -37,7 +52,7 @@ export function AvatarUploader({
     }
 
     const formData = new FormData();
-    formData.append("avatar", file);
+    formData.append("avatar", selectedFile);
 
     const result = await uploadAvatarAction(formData);
 
@@ -47,33 +62,65 @@ export function AvatarUploader({
       return;
     }
 
-    setStatus("idle");
+    setStatus("success");
+    if (result.url) {
+      setPreviewUrl(result.url);
+      if (onUploaded) onUploaded(result.url);
+    }
+    setSelectedFile(null);
     router.refresh();
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-4">
-      <UserAvatar name={fullName} avatarUrl={currentUrl} size={56} />
-      <form onSubmit={handleUpload} className="flex flex-wrap items-center gap-3">
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="file:border-foreground text-sm file:mr-3 file:h-10 file:rounded-[4px] file:border file:bg-transparent file:px-3 file:text-sm"
-        />
-        <Button
-          type="submit"
-          variant="outline"
-          size="sm"
-          disabled={status === "uploading"}
-        >
-          {status === "uploading" ? "Uploading…" : "Update photo"}
-        </Button>
-      </form>
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Avatar Circle with live preview */}
+        <div className="relative h-20 w-20 overflow-hidden rounded-2xl border-2 border-[#E5E5E0] bg-neutral-100 shadow-xs ring-2 ring-amber-500/20">
+          <Image
+            src={previewUrl || "/indian_craftsman.png"}
+            alt={fullName || "Artisan avatar"}
+            fill
+            className="object-cover object-center"
+            unoptimized
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="file:border-[#1A1A18] file:bg-white text-xs file:mr-3 file:h-9 file:rounded-lg file:border file:px-3 file:font-medium file:cursor-pointer text-neutral-600"
+          />
+
+          {selectedFile && (
+            <Button
+              type="button"
+              onClick={handleUpload}
+              size="sm"
+              disabled={status === "uploading"}
+              className="bg-black hover:bg-neutral-850 text-white text-xs h-9 rounded-lg font-semibold px-4 shadow-sm"
+            >
+              <Upload className="mr-1.5 h-3.5 w-3.5" />
+              {status === "uploading" ? "Uploading…" : "Save Photo"}
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {status === "success" && (
+        <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+          <span>Profile photo updated successfully!</span>
+        </div>
+      )}
+
       {error && (
-        <p role="alert" className="text-destructive w-full text-sm">
-          {error}
-        </p>
+        <div className="flex items-center gap-1.5 text-xs text-rose-700 font-medium">
+          <AlertCircle className="h-4 w-4 text-rose-600" />
+          <span>{error}</span>
+        </div>
       )}
     </div>
   );

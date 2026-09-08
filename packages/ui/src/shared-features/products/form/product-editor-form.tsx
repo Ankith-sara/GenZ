@@ -1,17 +1,12 @@
 "use client";
 
-import React, { useState, startTransition } from "react";
+import React, { useState, useEffect, useRef, startTransition } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import {
-  ArrowLeft,
-  Eye,
-  Save,
-  Send,
-  Loader2,
-  X,
-  Film,
+  ArrowLeft, Eye, Save, Send,
+  CheckCircle2, Loader2, X, Film, 
   Image as ImageIcon,
-  CheckCircle2,
 } from "lucide-react";
 import { Button } from "../../../components/button";
 import {
@@ -131,11 +126,67 @@ export function ProductEditorForm({
     initialValues?.status || "published"
   );
 
+  const submittedStatusRef = useRef<"published" | "draft" | null>(null);
+  const prevSuccessRef = useRef(false);
+
+  // Toast feedback on form completion
+  useEffect(() => {
+    if (state?.success && !prevSuccessRef.current) {
+      prevSuccessRef.current = true;
+      const target = submittedStatusRef.current || status;
+      if (target === "draft") {
+        toast.success("Listing saved as Draft", {
+          description: "Your product has been saved privately in your workshop catalog.",
+        });
+      } else {
+        toast.success(
+          mode === "edit" ? "Product Changes Saved" : "Product Published Successfully!",
+          {
+            description: "Your product listing is active and live on the storefront.",
+          }
+        );
+      }
+    } else if (!state?.success) {
+      prevSuccessRef.current = false;
+    }
+
+    if (state?.error) {
+      toast.error("Failed to save product", {
+        description: state.error,
+      });
+    }
+  }, [state, status, mode]);
+
+  // Toast feedback on initial redirect from creation
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("created") === "true") {
+      const createdStatus = params.get("status");
+      if (createdStatus === "draft") {
+        toast.success("Product Created as Draft!", {
+          description: "Your new listing is saved privately in your catalog.",
+        });
+      } else {
+        toast.success("Product Published Successfully!", {
+          description: "Your new listing is live and discoverable on the marketplace.",
+        });
+      }
+      const url = new URL(window.location.href);
+      url.searchParams.delete("created");
+      url.searchParams.delete("status");
+      window.history.replaceState({}, "", url.pathname + (url.search ? url.search : ""));
+    }
+  }, []);
+
   const executeSubmit = async (targetStatus?: "published" | "draft") => {
     const formElement = document.getElementById(
       "shared-product-editor-form"
     ) as HTMLFormElement | null;
     if (!formElement) return;
+
+    const effectiveStatus = targetStatus || status || "published";
+    submittedStatusRef.current = effectiveStatus;
 
     const formData = new FormData(formElement);
 
@@ -179,7 +230,6 @@ export function ProductEditorForm({
       }
     }
 
-    const effectiveStatus = targetStatus || status || "published";
     formData.set("status", effectiveStatus);
 
     startTransition(() => {
@@ -244,10 +294,19 @@ export function ProductEditorForm({
               executeSubmit("draft");
             }}
             disabled={isPending || isUploading}
-            className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE}`}
+            className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] disabled:opacity-60 ${PRESSABLE}`}
           >
-            <Save className="h-3.5 w-3.5 text-[#737373]" />
-            <span>Save Draft</span>
+            {(isPending || isUploading) && submittedStatusRef.current === "draft" ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-[#737373]" />
+                <span>Saving Draft...</span>
+              </>
+            ) : (
+              <>
+                <Save className="h-3.5 w-3.5 text-[#737373]" />
+                <span>Save Draft</span>
+              </>
+            )}
           </Button>
 
           <Button
@@ -267,12 +326,20 @@ export function ProductEditorForm({
               executeSubmit(target);
             }}
             disabled={isPending || isUploading}
-            className={`h-9 items-center gap-1.5 rounded-lg bg-[#171717] px-4 text-xs font-medium text-white shadow-xs hover:bg-[#262626] ${PRESSABLE}`}
+            className={`h-9 items-center gap-1.5 rounded-lg bg-[#171717] px-4 text-xs font-medium text-white shadow-xs hover:bg-[#262626] disabled:opacity-60 ${PRESSABLE}`}
           >
             {isPending || isUploading ? (
               <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                <span>{isUploading ? "Uploading Media..." : "Saving..."}</span>
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                <span>
+                  {isUploading
+                    ? "Uploading Media..."
+                    : submittedStatusRef.current === "draft"
+                      ? "Saving..."
+                      : mode === "edit"
+                        ? "Saving Changes..."
+                        : "Publishing..."}
+                </span>
               </>
             ) : (
               <>
@@ -393,21 +460,38 @@ export function ProductEditorForm({
                 executeSubmit("draft");
               }}
               disabled={isPending || isUploading}
-              className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE}`}
+              className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] disabled:opacity-60 ${PRESSABLE}`}
             >
-              <Save className="h-3.5 w-3.5 text-[#737373]" />
-              <span>Save as Draft</span>
+              {(isPending || isUploading) && submittedStatusRef.current === "draft" ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-[#737373]" />
+                  <span>Saving Draft...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="h-3.5 w-3.5 text-[#737373]" />
+                  <span>Save as Draft</span>
+                </>
+              )}
             </Button>
 
             <Button
               type="submit"
               disabled={isPending || isUploading}
-              className={`h-9 items-center gap-1.5 rounded-lg bg-[#171717] px-4 text-xs font-medium text-white shadow-xs hover:bg-[#262626] ${PRESSABLE}`}
+              className={`h-9 items-center gap-1.5 rounded-lg bg-[#171717] px-4 text-xs font-medium text-white shadow-xs hover:bg-[#262626] disabled:opacity-60 ${PRESSABLE}`}
             >
               {isPending || isUploading ? (
                 <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  <span>{isUploading ? "Uploading Media..." : "Saving..."}</span>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                  <span>
+                    {isUploading
+                      ? "Uploading Media..."
+                      : submittedStatusRef.current === "draft"
+                        ? "Saving..."
+                        : mode === "edit"
+                          ? "Saving Changes..."
+                          : "Publishing..."}
+                  </span>
                 </>
               ) : (
                 <>

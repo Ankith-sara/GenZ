@@ -54,7 +54,6 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [isManualAddress, setIsManualAddress] = useState<boolean>(userAddresses.length === 0);
-  const [paymentMethod, setPaymentMethod] = useState("cod");
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showItemsReview, setShowItemsReview] = useState(false);
@@ -96,9 +95,8 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
   }, [userAddresses, router]);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const tax = Math.round(subtotal * 0.18); // 18% GST
   const shipping = subtotal > 1500 || subtotal === 0 ? 0 : 80;
-  const total = subtotal + tax + shipping;
+  const total = subtotal + shipping;
 
   async function handlePlaceOrder(e: React.FormEvent) {
     e.preventDefault();
@@ -174,7 +172,7 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
         paymentMethod: "cod",
         items: orderItems,
         subtotal,
-        tax,
+        tax: 0,
         shippingFee: shipping,
         totalAmount: total,
       });
@@ -377,25 +375,12 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
                 <h3 className="font-serif text-lg text-[#1A1A18]">Payment Method</h3>
               </div>
 
-              {/* Cash on Delivery option (Selected) */}
-              <div
-                onClick={() => setPaymentMethod("cod")}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                  paymentMethod === "cod"
-                    ? "border-[#D97706] bg-[#FAF8F4] ring-2 ring-[#D97706]/20"
-                    : "border-[#E5E5E0] bg-white hover:border-[#1A1A18]"
-                }`}
-              >
+              {/* Cash on Delivery option */}
+              <div className="p-4 rounded-xl border border-[#D97706] bg-[#FAF8F4] ring-2 ring-[#D97706]/20">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        paymentMethod === "cod"
-                          ? "border-[#D97706] bg-[#D97706] text-white"
-                          : "border-[#E5E5E0] bg-white"
-                      }`}
-                    >
-                      {paymentMethod === "cod" && <Check className="w-3 h-3 stroke-[3]" />}
+                    <div className="w-5 h-5 rounded-full border border-[#D97706] bg-[#D97706] text-white flex items-center justify-center">
+                      <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -403,46 +388,15 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
                           Cash on Delivery (COD)
                         </h4>
                         <span className="bg-[#FEF3C7] text-[#92400E] text-[10px] font-bold px-2 py-0.5 rounded-full">
-                          Preferred Option
+                          Standard Delivery
                         </span>
                       </div>
                       <p className="text-xs text-[#73736E] mt-1">
-                        Pay in cash or via UPI to the delivery courier when your order arrives.
+                        Pay in cash to the delivery courier when your order arrives.
                       </p>
                     </div>
                   </div>
                   <CreditCard className="w-5 h-5 text-[#D97706]" />
-                </div>
-              </div>
-
-              {/* UPI / Card alternative */}
-              <div
-                onClick={() => setPaymentMethod("online")}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                  paymentMethod === "online"
-                    ? "border-[#D97706] bg-[#FAF8F4] ring-2 ring-[#D97706]/20"
-                    : "border-[#E5E5E0] bg-white hover:border-[#1A1A18]"
-                }`}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        paymentMethod === "online"
-                          ? "border-[#D97706] bg-[#D97706] text-white"
-                          : "border-[#E5E5E0] bg-white"
-                      }`}
-                    >
-                      {paymentMethod === "online" && <Check className="w-3 h-3 stroke-[3]" />}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-sm text-[#1A1A18]">UPI / Online Cards</h4>
-                      <p className="text-xs text-[#73736E] mt-1">
-                        Pay via Google Pay, PhonePe, Paytm, or Credit/Debit Cards.
-                      </p>
-                    </div>
-                  </div>
-                  <CreditCard className="w-5 h-5 text-[#73736E]" />
                 </div>
               </div>
             </div>
@@ -521,12 +475,6 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
                 </dd>
               </div>
 
-              <div className="flex justify-between">
-                <dt className="text-[#73736E]">GST (18%)</dt>
-                <dd className="text-[#1A1A18] font-mono font-medium">
-                  ₹{tax.toLocaleString("en-IN")}
-                </dd>
-              </div>
 
               <div className="flex justify-between">
                 <dt className="text-[#73736E]">Shipping Fee</dt>

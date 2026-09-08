@@ -23,7 +23,10 @@ export function SellerProductsClient({ initialProducts }: SellerProductsClientPr
     productId: string,
     nextStatus: "published" | "draft"
   ) => {
-    await setProductStatus(productId, nextStatus as ProductStatus);
+    const res = await setProductStatus(productId, nextStatus as ProductStatus);
+    if (res && "error" in res && res.error) {
+      throw new Error(res.error);
+    }
   };
 
   const handleUpdateProduct = async (

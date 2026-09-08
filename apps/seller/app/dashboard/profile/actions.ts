@@ -10,7 +10,7 @@ export interface ProfileUpdateState {
   message?: string;
 }
 
-export async function updateSellerInstagramProfile(
+export async function updateSellerProfileStudio(
   _prevState: ProfileUpdateState,
   formData: FormData
 ): Promise<ProfileUpdateState> {
@@ -34,6 +34,7 @@ export async function updateSellerInstagramProfile(
   const gst_number = String(formData.get("gst_number") ?? "")
     .trim()
     .toUpperCase();
+  const cover_url = String(formData.get("cover_url") ?? "").trim();
 
   // Social & Contact Channels
   const whatsapp = String(formData.get("whatsapp") ?? "").trim();
@@ -52,26 +53,45 @@ export async function updateSellerInstagramProfile(
     return { error: "Business name or Artisan Studio name is required." };
   }
 
-  // Construct structured metadata JSON to store inside description column
-  const profileMetadata = {
-    short_bio: short_bio || `Authentic Indian craft studio based in ${city || "India"}.`,
-    maker_name: maker_name || business_name,
-    handle: handle || business_name.toLowerCase().replace(/[^a-z0-9]/g, "_"),
-    craft_category: craft_category || "Wooden Toys & Crafts",
-    craft_title: craft_title || "Master Artisan & Manufacturer",
-    how_it_started,
-    materials_and_technique,
-    vision,
-    whatsapp,
-    instagram,
-    website,
-    updated_at: new Date().toISOString(),
-  };
-
-  const description = JSON.stringify(profileMetadata);
-
   try {
     const adminSupabase = createAdminClient();
+
+    // Fetch existing profile metadata to preserve cover_url or other fields
+    const { data: existingProf } = await adminSupabase
+      .from("seller_profiles")
+      .select("description")
+      .eq("id", userId)
+      .maybeSingle();
+
+    let existingMeta: Record<string, any> = {};
+    if (existingProf?.description) {
+      try {
+        if (existingProf.description.startsWith("{")) {
+          existingMeta = JSON.parse(existingProf.description);
+        }
+      } catch {}
+    }
+
+    const effectiveCoverUrl = cover_url || existingMeta.cover_url || null;
+
+    // Construct structured metadata JSON to store inside description column
+    const profileMetadata = {
+      short_bio: short_bio || `Authentic Indian craft studio based in ${city || "India"}.`,
+      maker_name: maker_name || business_name,
+      handle: handle || business_name.toLowerCase().replace(/[^a-z0-9]/g, "_"),
+      craft_category: craft_category || "Wooden Toys & Crafts",
+      craft_title: craft_title || "Master Artisan & Manufacturer",
+      cover_url: effectiveCoverUrl,
+      how_it_started,
+      materials_and_technique,
+      vision,
+      whatsapp,
+      instagram,
+      website,
+      updated_at: new Date().toISOString(),
+    };
+
+    const description = JSON.stringify(profileMetadata);
 
     // 1. Update or upsert seller_profiles
     const { error: profileError } = await adminSupabase.from("seller_profiles").upsert({
@@ -88,7 +108,7 @@ export async function updateSellerInstagramProfile(
     });
 
     if (profileError) {
-      console.error("[updateSellerInstagramProfile] Error updating seller_profiles:", profileError);
+      console.error("[updateSellerProfileStudio] Error updating seller_profiles:", profileError);
       return { error: profileError.message || "Failed to save seller profile." };
     }
 
@@ -105,14 +125,17 @@ export async function updateSellerInstagramProfile(
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/profile");
     revalidatePath("/dashboard/account");
+    revalidatePath(`/sellers/${userId}`);
 
     return {
       success: true,
-      message: "Your Instagram-style maker profile has been successfully updated!",
+      message: "Your artisan maker profile has been successfully updated!",
     };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "An unexpected error occurred.";
-    console.error("[updateSellerInstagramProfile] Exception:", err);
+    console.error("[updateSellerProfileStudio] Exception:", err);
     return { error: msg };
   }
 }
+
+export const updateSellerInstagramProfile = updateSellerProfileStudio;

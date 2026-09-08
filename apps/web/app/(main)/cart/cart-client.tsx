@@ -87,9 +87,8 @@ export function CartClient() {
   }
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const tax = Math.round(subtotal * 0.18); // 18% GST
   const shipping = subtotal > 1500 || subtotal === 0 ? 0 : 80;
-  const total = subtotal + tax + shipping;
+  const total = subtotal + shipping;
 
   if (!isMounted) return null;
 
@@ -234,12 +233,6 @@ export function CartClient() {
             <dt className="text-[#73736E]">Subtotal</dt>
             <dd className="text-[#1A1A18] font-mono font-medium">
               ₹{subtotal.toLocaleString("en-IN")}
-            </dd>
-          </div>
-          <div className="flex justify-between">
-            <dt className="text-[#73736E]">GST (18%)</dt>
-            <dd className="text-[#1A1A18] font-mono font-medium">
-              ₹{tax.toLocaleString("en-IN")}
             </dd>
           </div>
           <div className="flex justify-between">

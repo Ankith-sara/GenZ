@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { BadgeCheck, ArrowRight, Store, Eye, ExternalLink } from "lucide-react";
+import { ArrowRight, Store } from "lucide-react";
 import { Button } from "@genz/ui";
-import { SellerProfileModal } from "@genz/ui/shared-features";
 
 export interface SuggestedSellerProduct {
   id: string;
@@ -36,18 +35,10 @@ interface SuggestedSellersProps {
 }
 
 export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
-  const [modalSeller, setModalSeller] = useState<SuggestedSeller | null>(null);
-
-  const handleOpenModal = (e: React.MouseEvent, seller: SuggestedSeller) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setModalSeller(seller);
-  };
-
   return (
     <section
       id="suggested-sellers"
-      className="border-b border-[#E5E5E0] bg-[#FAF8F5] px-6 py-20 sm:px-12 md:py-28"
+      className="border-b border-[#E5E5E0] bg-[#FAF8F5] px-4 py-16 sm:px-8 sm:py-20 md:py-28"
     >
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
@@ -56,7 +47,7 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
             <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-amber-100/70 px-3 py-0.5 text-[11px] font-semibold text-amber-900">
               <span>Authentic Regional Makers</span>
             </div>
-            <h2 className="font-nantes text-ink-black text-4xl font-normal sm:text-5xl">
+            <h2 className="font-nantes text-ink-black text-3xl font-normal sm:text-4xl md:text-5xl">
               Suggested Indian Makers
             </h2>
           </div>
@@ -75,7 +66,7 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
 
         {/* Empty State */}
         {sellers.length === 0 ? (
-          <div className="mt-12 flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#D4D4CE] bg-white p-12 text-center sm:p-16">
+          <div className="mt-12 flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#D4D4CE] bg-white p-8 text-center sm:p-16">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-900 shadow-xs">
               <Store className="h-8 w-8" />
             </div>
@@ -97,8 +88,8 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
             </div>
           </div>
         ) : (
-          /* Real Makers Cards Grid — Authentic Instagram Profile Suggest Card Style */
-          <div className="mt-8 flex flex-wrap gap-6">
+          /* Real Makers Cards Grid — Responsive for Mobile & Desktop */
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6">
             {sellers.map((seller) => {
               const location = [seller.city, seller.state]
                 .filter(Boolean)
@@ -108,94 +99,81 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
               return (
                 <div
                   key={seller.id}
-                  className="group block w-full max-w-[300px] text-left transition-all duration-300"
+                  className="group flex w-full flex-col text-left transition-all duration-300"
                 >
-                  <div className="relative flex flex-col items-center rounded-2xl border border-[#E5E5E0] bg-white p-6 text-center shadow-xs transition-all duration-300 hover:border-neutral-300 hover:shadow-md">
-                    {/* Top Bar: Suggested for you & Verified Badge */}
-                    <div className="flex w-full items-center justify-between text-[11px] font-medium font-graphik text-neutral-400">
-                      <span className="rounded-full bg-[#FAF8F5] px-2.5 py-0.5 text-[10px] font-semibold text-neutral-600">
-                        Suggested for you
-                      </span>
-                      <span className="flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-[#0095F6]">
-                        <BadgeCheck className="h-3.5 w-3.5 fill-[#0095F6]/10 text-[#0095F6]" />
-                        Verified
-                      </span>
-                    </div>
-
-                    {/* Centered Circular Profile Avatar with Instagram-Style Story Ring */}
-                    <button
-                      type="button"
-                      onClick={(e) => handleOpenModal(e, seller)}
-                      title="View Instagram Profile Preview"
-                      className="relative mx-auto my-4 h-24 w-24 sm:h-28 sm:w-28 rounded-full p-[2.5px] bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] shadow-xs transition-transform duration-300 hover:scale-105 cursor-pointer"
-                    >
-                      <div className="h-full w-full rounded-full bg-white p-[2px]">
-                        <div className="relative h-full w-full overflow-hidden rounded-full bg-neutral-100">
-                          <Image
-                            src={sellerImage}
-                            alt={seller.maker_name || seller.business_name}
-                            fill
-                            unoptimized
-                            className="object-cover object-center"
-                            sizes="112px"
-                          />
-                        </div>
+                  <div className="relative flex h-full flex-col items-center justify-between rounded-2xl border border-[#E5E5E0] bg-white p-5 sm:p-6 text-center shadow-xs transition-all duration-300 hover:border-neutral-300 hover:shadow-md">
+                    {/* Top Content */}
+                    <div className="flex w-full flex-col items-center">
+                      {/* Top Bar: Suggested for you & Verified Badge */}
+                      <div className="flex w-full items-center justify-between font-graphik text-[11px] font-medium text-neutral-400">
+                        <span className="rounded-full bg-[#FAF8F5] px-2.5 py-0.5 text-[10px] font-semibold text-neutral-600">
+                          Suggested for you
+                        </span>
+                        <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-[10px] font-semibold text-neutral-700">
+                          Verified
+                        </span>
                       </div>
-                    </button>
 
-                    {/* Profile Details: Business Name with Verified Checkmark */}
-                    <h3 className="font-graphik text-base font-bold text-neutral-900 flex items-center justify-center gap-1.5 transition-colors group-hover:text-black">
+                      {/* Centered Circular Profile Avatar */}
                       <Link
                         href={`/sellers/${seller.id}`}
-                        className="hover:underline"
+                        title={`View ${seller.business_name} Profile`}
+                        className="relative mx-auto my-4 h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden border-2 border-[#E5E5E0] bg-neutral-100 shadow-xs block cursor-pointer transition-transform duration-200 hover:scale-105"
                       >
-                        {seller.business_name}
+                        <Image
+                          src={sellerImage}
+                          alt={seller.maker_name || seller.business_name}
+                          fill
+                          unoptimized
+                          className="object-cover object-center"
+                          sizes="(max-width: 640px) 96px, 112px"
+                        />
                       </Link>
-                      <BadgeCheck className="h-4 w-4 text-[#0095F6] fill-[#0095F6]/10 shrink-0" />
-                    </h3>
 
-                    {/* Maker Handle / Name */}
-                    <p className="font-graphik text-xs text-neutral-400 mt-0.5 font-mono">
-                      by {seller.maker_name || "Verified Indian Artisan"}
-                    </p>
+                      {/* Profile Details: Business Name (Without Blue Tick) */}
+                      <h3 className="font-graphik text-base font-bold text-neutral-900 transition-colors group-hover:text-black">
+                        <Link
+                          href={`/sellers/${seller.id}`}
+                          className="hover:underline"
+                        >
+                          {seller.business_name}
+                        </Link>
+                      </h3>
 
-                    {/* Craft & Bio */}
-                    <p className="font-graphik text-xs font-medium text-neutral-600 mt-2 line-clamp-2 px-1 leading-relaxed">
-                      {seller.craft}
-                    </p>
+                      {/* Maker Handle / Name */}
+                      <p className="font-graphik text-xs text-neutral-400 mt-0.5 font-mono">
+                        by {seller.maker_name || "Verified Indian Artisan"}
+                      </p>
 
-                    {/* Location & Provenance */}
-                    <div className="mt-2.5 flex items-center justify-center gap-1.5 text-[11px] text-neutral-400 font-graphik font-normal">
-                      {location && <span>{location}</span>}
-                      {location && <span>•</span>}
-                      <span>
-                        {seller.products_count
-                          ? `${seller.products_count} ${
-                              seller.products_count === 1
-                                ? "Live Listing"
-                                : "Live Listings"
-                            }`
-                          : "Direct Workshop"}
-                      </span>
+                      {/* Craft & Bio */}
+                      <p className="font-graphik text-xs font-medium text-neutral-600 mt-2 line-clamp-2 px-1 leading-relaxed">
+                        {seller.craft}
+                      </p>
+
+                      {/* Location & Provenance */}
+                      <div className="mt-2.5 flex items-center justify-center gap-1.5 text-[11px] text-neutral-400 font-graphik font-normal">
+                        {location && <span>{location}</span>}
+                        {location && <span>•</span>}
+                        <span>
+                          {seller.products_count
+                            ? `${seller.products_count} ${
+                                seller.products_count === 1
+                                  ? "Live Listing"
+                                  : "Live Listings"
+                              }`
+                            : "Direct Workshop"}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Instagram-Style "View Profile" Buttons */}
-                    <div className="mt-5 flex w-full gap-2">
-                      <button
-                        type="button"
-                        onClick={(e) => handleOpenModal(e, seller)}
-                        className="flex-1 rounded-xl bg-[#171717] py-2.5 text-center font-graphik text-xs font-semibold text-white transition-all duration-200 hover:bg-neutral-800 shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                        <span>View Profile</span>
-                      </button>
-
+                    {/* Direct Page Navigation "View Profile" Button */}
+                    <div className="mt-5 w-full">
                       <Link
                         href={`/sellers/${seller.id}`}
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E5E5E0] bg-white text-[#737373] hover:bg-[#F5F5F4] hover:text-[#171717] transition-colors shadow-2xs"
-                        title="Visit Workshop Page"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#171717] py-2.5 px-4 text-center font-graphik text-xs font-semibold text-white transition-all duration-200 hover:bg-neutral-800 shadow-xs"
                       >
-                        <ExternalLink className="h-3.5 w-3.5" />
+                        <span>View Profile</span>
+                        <ArrowRight className="h-3.5 w-3.5 opacity-70 transition-transform group-hover:translate-x-0.5" />
                       </Link>
                     </div>
                   </div>
@@ -205,40 +183,6 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
           </div>
         )}
       </div>
-
-      {/* INSTAGRAM SELLER PROFILE MODAL */}
-      <SellerProfileModal
-        isOpen={!!modalSeller}
-        onClose={() => setModalSeller(null)}
-        seller={
-          modalSeller
-            ? {
-                id: modalSeller.id,
-                business_name: modalSeller.business_name,
-                maker_name: modalSeller.maker_name,
-                craft_title: modalSeller.craft,
-                city: modalSeller.city,
-                state: modalSeller.state,
-                established_year: modalSeller.established_year,
-                avatar_url: modalSeller.avatar,
-                description: modalSeller.description,
-              }
-            : null
-        }
-        products={
-          modalSeller?.products && modalSeller.products.length > 0
-            ? modalSeller.products
-            : modalSeller
-            ? (modalSeller.thumbnails || []).map((t, idx) => ({
-                id: `prod-${modalSeller.id}-${idx}`,
-                name: `${modalSeller.craft} Craft Item ${idx + 1}`,
-                image_url: t,
-                price_inr: 650 + idx * 200,
-                category: modalSeller.craft,
-              }))
-            : []
-        }
-      />
     </section>
   );
 }

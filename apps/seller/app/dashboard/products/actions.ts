@@ -388,10 +388,10 @@ export async function createProduct(
 
   const isAdminRedirect = String(formData.get("is_admin") ?? "") === "true";
   if (isAdminRedirect) {
-    redirect("/admin/dashboard/products");
+    redirect(`/admin/dashboard/products?created=true&status=${productStatus}`);
   }
 
-  redirect(`/dashboard/products/${data.id}`);
+  redirect(`/dashboard/products/${data.id}?created=true&status=${productStatus}`);
 }
 
 export async function updateProduct(
@@ -492,14 +492,21 @@ export async function setProductStatus(productId: string, status: ProductStatus)
     actionName: "set_product_status",
     identifier: session.userId,
   });
-  if (rateLimit.blocked) return;
+  if (rateLimit.blocked) {
+    return { error: rateLimit.error || "Too many requests. Please slow down." };
+  }
 
   const supabase = await createClient();
-  await supabase
+  const { error } = await supabase
     .from("products")
     .update({ status })
     .eq("id", productId)
     .eq("seller_id", session.userId);
+
+  if (error) {
+    console.error("Set product status error:", error);
+    return { error: "Failed to update product status." };
+  }
 
   await logRateLimitAttempt({
     endpointType: "user",
@@ -509,6 +516,8 @@ export async function setProductStatus(productId: string, status: ProductStatus)
 
   revalidatePath(`/dashboard/products/${productId}`);
   revalidatePath("/dashboard/products");
+  revalidatePath(`/products/${productId}`);
+  return { success: true, status };
 }
 
 export async function quickUpdateProduct(
