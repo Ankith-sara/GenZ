@@ -8,6 +8,15 @@ import {
 } from "@/features/seller/components/seller-story-profile";
 import type { Product } from "@genz/types";
 
+interface DbReelRow {
+  id: string;
+  video_path?: string | null;
+  thumbnail_path?: string | null;
+  caption?: string | null;
+  views_count?: number | null;
+  duration?: string | null;
+}
+
 // Curated artisan profiles for featured craft clusters
 const POLUMURI_NAGESWARA_RAO_PROFILE: SellerProfileData = {
   id: "etikoppaka-lacquer-crafts",
@@ -112,26 +121,32 @@ const ETIKOPPAKA_CURATED_REELS: SellerReel[] = [
   {
     id: "reel-lathe-turning-nageswara-rao",
     video_url: "/reels/etikoppaka-lathe-woodturning-mastery.mp4",
-    video_path: "fab03143-9d65-47cf-bdc0-53db548b1005/reels/etikoppaka-lathe-woodturning-mastery.mp4",
+    video_path:
+      "fab03143-9d65-47cf-bdc0-53db548b1005/reels/etikoppaka-lathe-woodturning-mastery.mp4",
     thumbnail_path: "/polumuri_nageswara_rao.jpg",
     thumbnail_url: "/polumuri_nageswara_rao.jpg",
-    caption: "Master Artisan Polumuri Nageswara Rao demonstrating authentic Etikoppaka lathe-turning and natural lacquer application.",
+    caption:
+      "Master Artisan Polumuri Nageswara Rao demonstrating authentic Etikoppaka lathe-turning and natural lacquer application.",
     views_count: 24500,
     duration: "0:30",
   },
   {
     id: "reel-lacquer-color",
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+    video_url:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
     thumbnail_path: "/etikoppaka_toys.png",
-    caption: "Natural friction lacquering: applying lead-free vegetable dyes extracted from seeds & roots.",
+    caption:
+      "Natural friction lacquering: applying lead-free vegetable dyes extracted from seeds & roots.",
     views_count: 9800,
     duration: "0:45",
   },
   {
     id: "reel-master-inspection",
-    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+    video_url:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
     thumbnail_path: "/cat_toys.png",
-    caption: "Master craftsman final quality check: smooth non-toxic finish safe for all generations.",
+    caption:
+      "Master craftsman final quality check: smooth non-toxic finish safe for all generations.",
     views_count: 18500,
     duration: "0:25",
   },
@@ -316,7 +331,7 @@ export default async function SellerPublicProfilePage({
 
       if (dbReels && dbReels.length > 0) {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-        reels = dbReels.map((r: any) => ({
+        reels = (dbReels as DbReelRow[]).map((r) => ({
           id: r.id,
           video_path: r.video_path,
           video_url: r.video_path?.startsWith("http")
@@ -331,7 +346,7 @@ export default async function SellerPublicProfilePage({
               ? `${supabaseUrl}/storage/v1/object/public/product-media/${r.thumbnail_path}`
               : null,
           caption: r.caption,
-          views_count: r.views_count,
+          views_count: r.views_count ?? undefined,
           duration: r.duration || "0:30",
         })) as SellerReel[];
       }
@@ -370,7 +385,7 @@ export default async function SellerPublicProfilePage({
 
       if (dbReels && dbReels.length > 0) {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-        reels = dbReels.map((r: any) => ({
+        reels = (dbReels as DbReelRow[]).map((r) => ({
           id: r.id,
           video_path: r.video_path,
           video_url: r.video_path?.startsWith("http")
@@ -385,7 +400,7 @@ export default async function SellerPublicProfilePage({
               ? `${supabaseUrl}/storage/v1/object/public/product-media/${r.thumbnail_path}`
               : null,
           caption: r.caption,
-          views_count: r.views_count,
+          views_count: r.views_count ?? undefined,
           duration: r.duration || "0:30",
         })) as SellerReel[];
       }

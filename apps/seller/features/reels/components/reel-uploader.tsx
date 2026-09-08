@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { Upload, Film, Image as ImageIcon, AlertCircle, CheckCircle2, Play } from "lucide-react";
+import { Upload, AlertCircle, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@genz/ui";
 import { Label } from "@genz/ui";
@@ -12,23 +12,27 @@ import { uploadReelAction } from "@/features/reels/actions";
 
 export function ReelUploader({
   productId,
-  sellerId: _sellerId,
   onUploaded,
 }: {
   productId: string;
-  sellerId: string;
+  sellerId?: string;
   onUploaded?: () => void;
 }) {
   const router = useRouter();
   const videoRef = useRef<HTMLInputElement>(null);
   const thumbRef = useRef<HTMLInputElement>(null);
   const captionRef = useRef<HTMLInputElement>(null);
-  const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">(
+    "idle"
+  );
   const [error, setError] = useState<string | null>(null);
 
   // Live client-side previews
   const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
-  const [videoFileInfo, setVideoFileInfo] = useState<{ name: string; sizeMb: string } | null>(null);
+  const [videoFileInfo, setVideoFileInfo] = useState<{
+    name: string;
+    sizeMb: string;
+  } | null>(null);
   const [thumbPreviewUrl, setThumbPreviewUrl] = useState<string | null>(null);
 
   function handleVideoSelect(e: React.ChangeEvent<HTMLInputElement>) {
@@ -118,9 +122,14 @@ export function ReelUploader({
     <form onSubmit={handleUpload} className="space-y-4">
       {/* 1. Video File Input with Live Player Preview */}
       <div>
-        <Label htmlFor="video" className="text-xs font-semibold text-neutral-800 flex items-center justify-between">
+        <Label
+          htmlFor="video"
+          className="flex items-center justify-between text-xs font-semibold text-neutral-800"
+        >
           <span>1. Workshop Video File *</span>
-          <span className="text-[10px] text-neutral-500 font-mono">MP4, WebM, MOV (Up to 50MB)</span>
+          <span className="font-mono text-[10px] text-neutral-500">
+            MP4, WebM, MOV (Up to 50MB)
+          </span>
         </Label>
 
         <div className="mt-1.5">
@@ -130,14 +139,14 @@ export function ReelUploader({
             type="file"
             accept="video/mp4,video/webm,video/quicktime,video/*"
             onChange={handleVideoSelect}
-            className="file:border-[#1A1A18] file:bg-white text-xs file:mr-3 file:h-9 file:rounded-lg file:border file:px-3 file:font-medium file:cursor-pointer text-neutral-600 block w-full"
+            className="block w-full text-xs text-neutral-600 file:mr-3 file:h-9 file:cursor-pointer file:rounded-lg file:border file:border-[#1A1A18] file:bg-white file:px-3 file:font-medium"
           />
         </div>
 
         {/* Video Preview Box */}
         {videoPreviewUrl && (
           <div className="mt-3 overflow-hidden rounded-2xl border border-neutral-200 bg-black p-1 shadow-xs">
-            <div className="relative aspect-[9/16] max-h-56 mx-auto rounded-xl overflow-hidden bg-neutral-900 flex items-center justify-center">
+            <div className="relative mx-auto flex aspect-[9/16] max-h-56 items-center justify-center overflow-hidden rounded-xl bg-neutral-900">
               <video
                 src={videoPreviewUrl}
                 controls
@@ -146,9 +155,9 @@ export function ReelUploader({
               />
             </div>
             {videoFileInfo && (
-              <div className="p-2 text-center text-white text-[11px] font-mono flex items-center justify-between px-3">
-                <span className="truncate max-w-[200px]">{videoFileInfo.name}</span>
-                <span className="text-amber-400 font-bold">{videoFileInfo.sizeMb}</span>
+              <div className="flex items-center justify-between p-2 px-3 text-center font-mono text-[11px] text-white">
+                <span className="max-w-[200px] truncate">{videoFileInfo.name}</span>
+                <span className="font-bold text-amber-400">{videoFileInfo.sizeMb}</span>
               </div>
             )}
           </div>
@@ -157,9 +166,15 @@ export function ReelUploader({
 
       {/* 2. Optional Thumbnail Image */}
       <div>
-        <Label htmlFor="thumbnail" className="text-xs font-semibold text-neutral-800 flex items-center justify-between">
-          <span>2. Poster Thumbnail <span className="text-neutral-400 font-normal">(optional)</span></span>
-          <span className="text-[10px] text-neutral-500 font-mono">JPG, PNG, WebP</span>
+        <Label
+          htmlFor="thumbnail"
+          className="flex items-center justify-between text-xs font-semibold text-neutral-800"
+        >
+          <span>
+            2. Poster Thumbnail{" "}
+            <span className="font-normal text-neutral-400">(optional)</span>
+          </span>
+          <span className="font-mono text-[10px] text-neutral-500">JPG, PNG, WebP</span>
         </Label>
 
         <div className="mt-1.5 flex items-center gap-3">
@@ -169,12 +184,18 @@ export function ReelUploader({
             type="file"
             accept="image/*"
             onChange={handleThumbSelect}
-            className="file:border-[#1A1A18] file:bg-white text-xs file:mr-3 file:h-9 file:rounded-lg file:border file:px-3 file:font-medium file:cursor-pointer text-neutral-600 block w-full"
+            className="block w-full text-xs text-neutral-600 file:mr-3 file:h-9 file:cursor-pointer file:rounded-lg file:border file:border-[#1A1A18] file:bg-white file:px-3 file:font-medium"
           />
 
           {thumbPreviewUrl && (
             <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-[#E5E5E0]">
-              <Image src={thumbPreviewUrl} alt="Thumbnail preview" fill className="object-cover" unoptimized />
+              <Image
+                src={thumbPreviewUrl}
+                alt="Thumbnail preview"
+                fill
+                className="object-cover"
+                unoptimized
+              />
             </div>
           )}
         </div>
@@ -183,7 +204,8 @@ export function ReelUploader({
       {/* 3. Caption Input */}
       <div>
         <Label htmlFor="caption" className="text-xs font-semibold text-neutral-800">
-          3. Caption / Process Story <span className="text-neutral-400 font-normal">(optional)</span>
+          3. Caption / Process Story{" "}
+          <span className="font-normal text-neutral-400">(optional)</span>
         </Label>
         <Input
           ref={captionRef}
@@ -195,15 +217,15 @@ export function ReelUploader({
       </div>
 
       {error && (
-        <div className="flex items-center gap-1.5 text-xs text-rose-700 font-medium">
-          <AlertCircle className="h-4 w-4 text-rose-600 shrink-0" />
+        <div className="flex items-center gap-1.5 text-xs font-medium text-rose-700">
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
           <span>{error}</span>
         </div>
       )}
 
       {status === "success" && (
-        <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
-          <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+        <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-700">
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
           <span>Workshop reel uploaded and published to your storefront!</span>
         </div>
       )}
@@ -211,10 +233,14 @@ export function ReelUploader({
       <Button
         type="submit"
         disabled={status === "uploading"}
-        className="w-full h-11 rounded-xl bg-black hover:bg-neutral-850 text-white font-semibold text-xs shadow-md"
+        className="hover:bg-neutral-850 h-11 w-full rounded-xl bg-black text-xs font-semibold text-white shadow-md"
       >
         <Upload className="mr-2 h-4 w-4" />
-        <span>{status === "uploading" ? "Uploading Video Reel (Please wait)…" : "Upload Video Reel"}</span>
+        <span>
+          {status === "uploading"
+            ? "Uploading Video Reel (Please wait)…"
+            : "Upload Video Reel"}
+        </span>
       </Button>
     </form>
   );

@@ -1,12 +1,24 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  Search, ShoppingBag, Edit, EyeOff, CheckCircle2, 
-  Trash2, Plus, ChevronRight, Tag, RotateCcw, 
-  Save, Loader2, ExternalLink, Copy, Check,
+  Search,
+  ShoppingBag,
+  Edit,
+  EyeOff,
+  CheckCircle2,
+  Trash2,
+  Plus,
+  ChevronRight,
+  Tag,
+  RotateCcw,
+  Save,
+  Loader2,
+  ExternalLink,
+  Copy,
+  Check,
 } from "lucide-react";
 import { Button } from "../../components/button";
 import { StatusBadge } from "../../components/status-badge";
@@ -67,12 +79,21 @@ const FOCUS_RING =
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#171717]/20 focus-visible:ring-offset-1 focus-visible:ring-offset-white";
 
 function resolveProductImage(p: SharedProductRecord): string | null {
-  if (p.image_url && (p.image_url.startsWith("http://") || p.image_url.startsWith("https://") || p.image_url.startsWith("/"))) {
+  if (
+    p.image_url &&
+    (p.image_url.startsWith("http://") ||
+      p.image_url.startsWith("https://") ||
+      p.image_url.startsWith("/"))
+  ) {
     return p.image_url;
   }
   if (p.images && p.images.length > 0 && p.images[0]) {
     const first = p.images[0];
-    if (first.startsWith("http://") || first.startsWith("https://") || first.startsWith("/")) {
+    if (
+      first.startsWith("http://") ||
+      first.startsWith("https://") ||
+      first.startsWith("/")
+    ) {
       return first;
     }
   }
@@ -106,22 +127,26 @@ export function ProductsCatalogManager({
     ? "/admin/dashboard/products/new"
     : "/dashboard/products/new",
   editProductHref = (id) =>
-    role === "admin"
-      ? `/admin/dashboard/products/${id}`
-      : `/dashboard/products/${id}`,
+    role === "admin" ? `/admin/dashboard/products/${id}` : `/dashboard/products/${id}`,
   storefrontHref = (id) => `/products/${id}`,
 }: ProductsCatalogManagerProps) {
   const [products, setProducts] = useState<SharedProductRecord[]>(initialProducts);
+  const [prevInitialProducts, setPrevInitialProducts] = useState(initialProducts);
 
-  useEffect(() => {
+  if (initialProducts !== prevInitialProducts) {
+    setPrevInitialProducts(initialProducts);
     setProducts(initialProducts);
-  }, [initialProducts]);
+  }
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [selectedProduct, setSelectedProduct] = useState<SharedProductRecord | null>(null);
-  const [editingProduct, setEditingProduct] = useState<SharedProductRecord | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<SharedProductRecord | null>(
+    null
+  );
+  const [editingProduct, setEditingProduct] = useState<SharedProductRecord | null>(
+    null
+  );
 
   const [editForm, setEditForm] = useState<{
     name: string;
@@ -184,8 +209,7 @@ export function ProductsCatalogManager({
         (statusFilter === "published" && isPublished) ||
         (statusFilter === "draft" && !isPublished);
 
-      const matchesCategory =
-        categoryFilter === "all" || p.category === categoryFilter;
+      const matchesCategory = categoryFilter === "all" || p.category === categoryFilter;
 
       return matchesSearch && matchesStatus && matchesCategory;
     });
@@ -239,11 +263,11 @@ export function ProductsCatalogManager({
       }
       setEditingProduct(null);
       toast.success("Product changes saved successfully!");
-    } catch (err: any) {
+    } catch (err) {
       console.error("Failed to save product:", err);
       setProducts(initialProducts);
       toast.error("Failed to save product changes", {
-        description: err?.message || "Please try again.",
+        description: err instanceof Error ? err.message : "Please try again.",
       });
     } finally {
       setIsSaving(false);
@@ -276,7 +300,7 @@ export function ProductsCatalogManager({
               : "Product is now hidden from the marketplace.",
         }
       );
-    } catch (err: any) {
+    } catch (err) {
       console.error("Failed to update status:", err);
       setProducts((prev) =>
         prev.map((p) => (p.id === product.id ? { ...p, status: product.status } : p))
@@ -285,7 +309,7 @@ export function ProductsCatalogManager({
         setSelectedProduct(product);
       }
       toast.error("Failed to update product status", {
-        description: err?.message || "Please try again.",
+        description: err instanceof Error ? err.message : "Please try again.",
       });
     } finally {
       setLoadingId(null);
@@ -314,11 +338,11 @@ export function ProductsCatalogManager({
         await onDeleteProduct(product.id);
       }
       toast.success(`"${product.name}" deleted successfully.`);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Failed to delete product:", err);
       setProducts(previousProducts);
       toast.error("Failed to delete product", {
-        description: err?.message || "Please try again.",
+        description: err instanceof Error ? err.message : "Please try again.",
       });
     } finally {
       setLoadingId(null);
@@ -373,7 +397,7 @@ export function ProductsCatalogManager({
       {/* SEGMENTED TAB NAVIGATION & SEARCH TOOLBAR */}
       <div className="space-y-3">
         {/* Navigation Tabs */}
-        <div className="flex items-center overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex scrollbar-none items-center overflow-x-auto pb-1">
           <div className="inline-flex items-center gap-1 rounded-xl border border-[#E5E5E5] bg-[#F5F5F4] p-1">
             {tabs.map((tab) => {
               const isActive = statusFilter === tab.value;
@@ -406,9 +430,9 @@ export function ProductsCatalogManager({
 
         {/* Filter Toolbar */}
         <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative flex-1 max-w-md">
+          <div className="relative max-w-md flex-1">
             <Search
-              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#737373]"
+              className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#737373]"
               strokeWidth={ICON_STROKE}
             />
             <input
@@ -416,7 +440,7 @@ export function ProductsCatalogManager({
               placeholder="Search by product name, category, or ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`h-9 w-full rounded-lg border border-[#E5E5E5] bg-white pl-9 pr-3 text-xs text-[#171717] placeholder-[#A3A3A3] hover:border-[#D4D4D4] ${FOCUS_RING}`}
+              className={`h-9 w-full rounded-lg border border-[#E5E5E5] bg-white pr-3 pl-9 text-xs text-[#171717] placeholder-[#A3A3A3] hover:border-[#D4D4D4] ${FOCUS_RING}`}
             />
           </div>
 
@@ -479,7 +503,8 @@ export function ProductsCatalogManager({
               No products found
             </h3>
             <p className="mt-1 max-w-sm text-xs text-[#737373] sm:text-sm">
-              There are no catalog products matching the selected status, category, or search term.
+              There are no catalog products matching the selected status, category, or
+              search term.
             </p>
             {(searchQuery || statusFilter !== "all" || categoryFilter !== "all") && (
               <button
@@ -502,10 +527,10 @@ export function ProductsCatalogManager({
         ) : (
           <>
             {/* DESKTOP TABLE VIEW */}
-            <div className="hidden sm:block overflow-hidden rounded-xl border border-[#E5E5E5] bg-white shadow-xs">
+            <div className="hidden overflow-hidden rounded-xl border border-[#E5E5E5] bg-white shadow-xs sm:block">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[768px] text-left text-xs">
-                  <thead className="border-b border-[#E5E5E5] bg-[#FAFAF9] text-[11px] font-semibold text-[#737373] uppercase tracking-wider">
+                  <thead className="border-b border-[#E5E5E5] bg-[#FAFAF9] text-[11px] font-semibold tracking-wider text-[#737373] uppercase">
                     <tr>
                       <th className="px-4 py-3">Product Details</th>
                       <th className="px-4 py-3">Category</th>
@@ -527,9 +552,7 @@ export function ProductsCatalogManager({
                           key={p.id}
                           onClick={() => setSelectedProduct(p)}
                           className={`group cursor-pointer transition-colors duration-150 ${
-                            isSelected
-                              ? "bg-[#FAFAF9]"
-                              : "hover:bg-[#FAFAF9]/80"
+                            isSelected ? "bg-[#FAFAF9]" : "hover:bg-[#FAFAF9]/80"
                           } ${isLoadingThis ? "pointer-events-none opacity-50" : ""}`}
                         >
                           <td className="px-4 py-3.5">
@@ -552,7 +575,7 @@ export function ProductsCatalogManager({
                                 )}
                               </div>
                               <div className="min-w-0">
-                                <span className="block font-semibold text-[#171717] group-hover:underline truncate">
+                                <span className="block truncate font-semibold text-[#171717] group-hover:underline">
                                   {p.name}
                                 </span>
                                 <span className="block font-mono text-[10px] text-[#737373]">
@@ -603,9 +626,15 @@ export function ProductsCatalogManager({
                                 {isLoadingThis ? (
                                   <Loader2 className="h-3.5 w-3.5 animate-spin text-[#737373]" />
                                 ) : isPublished ? (
-                                  <EyeOff className="h-3.5 w-3.5 text-[#737373]" strokeWidth={ICON_STROKE} />
+                                  <EyeOff
+                                    className="h-3.5 w-3.5 text-[#737373]"
+                                    strokeWidth={ICON_STROKE}
+                                  />
                                 ) : (
-                                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" strokeWidth={ICON_STROKE} />
+                                  <CheckCircle2
+                                    className="h-3.5 w-3.5 text-emerald-600"
+                                    strokeWidth={ICON_STROKE}
+                                  />
                                 )}
                               </button>
 
@@ -616,7 +645,10 @@ export function ProductsCatalogManager({
                                 onClick={() => handleOpenEdit(p)}
                                 className={`flex h-7 w-7 items-center justify-center rounded-md border border-[#E5E5E5] bg-white text-[#525252] hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE} ${FOCUS_RING}`}
                               >
-                                <Edit className="h-3.5 w-3.5 text-[#737373]" strokeWidth={ICON_STROKE} />
+                                <Edit
+                                  className="h-3.5 w-3.5 text-[#737373]"
+                                  strokeWidth={ICON_STROKE}
+                                />
                               </button>
 
                               {/* Delete */}
@@ -627,7 +659,10 @@ export function ProductsCatalogManager({
                                 disabled={isLoadingThis}
                                 className={`flex h-7 w-7 items-center justify-center rounded-md border border-[#E5E5E5] bg-white text-rose-600 hover:border-rose-200 hover:bg-rose-50 ${PRESSABLE} ${FOCUS_RING}`}
                               >
-                                <Trash2 className="h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
+                                <Trash2
+                                  className="h-3.5 w-3.5"
+                                  strokeWidth={ICON_STROKE}
+                                />
                               </button>
 
                               {/* View Details Drawer */}
@@ -637,7 +672,10 @@ export function ProductsCatalogManager({
                                 onClick={() => setSelectedProduct(p)}
                                 className={`flex h-7 w-7 items-center justify-center rounded-md border border-[#E5E5E5] bg-white text-[#525252] hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE} ${FOCUS_RING}`}
                               >
-                                <ChevronRight className="h-3.5 w-3.5 text-[#737373]" strokeWidth={ICON_STROKE} />
+                                <ChevronRight
+                                  className="h-3.5 w-3.5 text-[#737373]"
+                                  strokeWidth={ICON_STROKE}
+                                />
                               </button>
                             </div>
                           </td>
@@ -675,7 +713,10 @@ export function ProductsCatalogManager({
                               }}
                             />
                           ) : (
-                            <ShoppingBag className="h-5 w-5 text-[#A3A3A3]" strokeWidth={ICON_STROKE} />
+                            <ShoppingBag
+                              className="h-5 w-5 text-[#A3A3A3]"
+                              strokeWidth={ICON_STROKE}
+                            />
                           )}
                         </div>
                         <div>
@@ -820,7 +861,7 @@ export function ProductsCatalogManager({
 
             {/* Specifications Card */}
             <div className="space-y-3 rounded-xl border border-[#E5E5E5] bg-white p-4">
-              <h4 className="text-xs font-semibold text-[#171717] uppercase tracking-wider">
+              <h4 className="text-xs font-semibold tracking-wider text-[#171717] uppercase">
                 Product Specifications
               </h4>
 
@@ -835,15 +876,22 @@ export function ProductsCatalogManager({
                 <div>
                   <span className="block text-[#737373]">Price (INR)</span>
                   <span className="font-mono font-semibold text-[#171717]">
-                    ₹{selectedProduct.price_inr ? selectedProduct.price_inr.toLocaleString() : "—"}
+                    ₹
+                    {selectedProduct.price_inr
+                      ? selectedProduct.price_inr.toLocaleString()
+                      : "—"}
                   </span>
                 </div>
 
                 <div>
                   <span className="block text-[#737373]">Status</span>
                   <StatusBadge
-                    status={selectedProduct.status === "published" ? "published" : "draft"}
-                    label={selectedProduct.status === "published" ? "Published" : "Draft"}
+                    status={
+                      selectedProduct.status === "published" ? "published" : "draft"
+                    }
+                    label={
+                      selectedProduct.status === "published" ? "Published" : "Draft"
+                    }
                   />
                 </div>
 
@@ -877,15 +925,15 @@ export function ProductsCatalogManager({
                   </div>
                 )}
 
-                {selectedProduct.inventory_count !== null && selectedProduct.inventory_count !== undefined && (
-                  <div>
-                    <span className="block text-[#737373]">Stock Level</span>
-                    <span className="font-mono font-medium text-[#171717]">
-                      {selectedProduct.inventory_count} units
-                    </span>
-                  </div>
-                )}
-
+                {selectedProduct.inventory_count !== null &&
+                  selectedProduct.inventory_count !== undefined && (
+                    <div>
+                      <span className="block text-[#737373]">Stock Level</span>
+                      <span className="font-mono font-medium text-[#171717]">
+                        {selectedProduct.inventory_count} units
+                      </span>
+                    </div>
+                  )}
 
                 {selectedProduct.created_by && (
                   <div>
@@ -907,7 +955,7 @@ export function ProductsCatalogManager({
 
                 {selectedProduct.materials && selectedProduct.materials.length > 0 && (
                   <div className="col-span-2">
-                    <span className="block text-[#737373] mb-1">Materials</span>
+                    <span className="mb-1 block text-[#737373]">Materials</span>
                     <div className="flex flex-wrap gap-1">
                       {selectedProduct.materials.map((m, i) => (
                         <span
@@ -925,11 +973,12 @@ export function ProductsCatalogManager({
 
             {/* Description */}
             <div className="space-y-2 rounded-xl border border-[#E5E5E5] bg-white p-4">
-              <h4 className="text-xs font-semibold text-[#171717] uppercase tracking-wider">
+              <h4 className="text-xs font-semibold tracking-wider text-[#171717] uppercase">
                 Craft Story & Description
               </h4>
-              <p className="text-xs leading-relaxed text-[#525252] whitespace-pre-wrap">
-                {selectedProduct.description || "No description provided for this listing."}
+              <p className="text-xs leading-relaxed whitespace-pre-wrap text-[#525252]">
+                {selectedProduct.description ||
+                  "No description provided for this listing."}
               </p>
             </div>
 
@@ -938,7 +987,7 @@ export function ProductsCatalogManager({
               <button
                 type="button"
                 onClick={() => handleDelete(selectedProduct)}
-                className={`w-full flex items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50/50 p-2.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 ${PRESSABLE}`}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50/50 p-2.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 ${PRESSABLE}`}
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 <span>Delete This Product</span>
@@ -957,11 +1006,12 @@ export function ProductsCatalogManager({
         {editingProduct && (
           <form onSubmit={handleSaveEdit} className="space-y-5 pb-6">
             <p className="text-xs text-[#737373]">
-              Update basic listing details quickly without navigating to the full editor studio.
+              Update basic listing details quickly without navigating to the full editor
+              studio.
             </p>
 
             <div>
-              <label className="block text-xs font-semibold text-[#171717] mb-1">
+              <label className="mb-1 block text-xs font-semibold text-[#171717]">
                 Product Title *
               </label>
               <input
@@ -976,7 +1026,7 @@ export function ProductsCatalogManager({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#171717] mb-1">
+              <label className="mb-1 block text-xs font-semibold text-[#171717]">
                 Category
               </label>
               <select
@@ -995,7 +1045,7 @@ export function ProductsCatalogManager({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#171717] mb-1">
+              <label className="mb-1 block text-xs font-semibold text-[#171717]">
                 Wholesale Price (INR ₹)
               </label>
               <input
@@ -1011,7 +1061,7 @@ export function ProductsCatalogManager({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#171717] mb-1">
+              <label className="mb-1 block text-xs font-semibold text-[#171717]">
                 Status
               </label>
               <select
@@ -1027,7 +1077,7 @@ export function ProductsCatalogManager({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#171717] mb-1">
+              <label className="mb-1 block text-xs font-semibold text-[#171717]">
                 Description
               </label>
               <textarea
@@ -1040,7 +1090,7 @@ export function ProductsCatalogManager({
               />
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#E5E5E5]">
+            <div className="flex items-center justify-end gap-2 border-t border-[#E5E5E5] pt-4">
               <Button
                 type="button"
                 variant="outline"

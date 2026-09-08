@@ -4,10 +4,22 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MapPin, Grid3X3, Film, BookOpen, Share2, 
-  ExternalLink, ShoppingBag, Play, Pause, Volume2,
-  VolumeX, CheckCircle2, Award, Sparkles, ShieldCheck,
-  Calendar, X, ArrowRight,
+  MapPin,
+  Grid3X3,
+  Film,
+  BookOpen,
+  Share2,
+  ExternalLink,
+  ShoppingBag,
+  Play,
+  Volume2,
+  VolumeX,
+  CheckCircle2,
+  Award,
+  Sparkles,
+  Calendar,
+  X,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "../../components/button";
 
@@ -72,7 +84,7 @@ export function SellerProfileView({
 }: SellerProfileViewProps) {
   const [activeTab, setActiveTab] = useState<"story" | "posts" | "reels">("story");
   const [copiedLink, setCopiedLink] = useState(false);
-  
+
   // Interactive Reel Video Player state
   const [activeReel, setActiveReel] = useState<SellerReelItem | null>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
@@ -82,7 +94,8 @@ export function SellerProfileView({
   const location = [seller.city, seller.state].filter(Boolean).join(", ");
   const avatarSrc = seller.avatar_url || "/indian_craftsman.png";
   const coverSrc = seller.cover_url || "/machine_work.png";
-  const craftTitle = seller.craft_title || "Second-Generation Master Artisan & GI Craft Custodian";
+  const craftTitle =
+    seller.craft_title || "Second-Generation Master Artisan & GI Craft Custodian";
   const established = seller.established_year || 1984;
   const yearsActive = established ? new Date().getFullYear() - established : null;
 
@@ -151,9 +164,9 @@ export function SellerProfileView({
   };
 
   return (
-    <div className="w-full bg-white text-[#1A1A18] font-sans">
+    <div className="w-full bg-white font-sans text-[#1A1A18]">
       {/* 1. MAJESTIC HERITAGE COVER BANNER */}
-      <div className="relative h-48 sm:h-64 md:h-72 w-full overflow-hidden bg-neutral-900">
+      <div className="relative h-48 w-full overflow-hidden bg-neutral-900 sm:h-64 md:h-72">
         <Image
           src={coverSrc}
           alt={seller.business_name}
@@ -166,9 +179,9 @@ export function SellerProfileView({
         <div className="absolute inset-0 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] opacity-10" />
 
         {/* Top Badges & Actions */}
-        <div className="absolute top-4 inset-x-4 sm:inset-x-8 flex items-center justify-between z-10">
+        <div className="absolute inset-x-4 top-4 z-10 flex items-center justify-between sm:inset-x-8">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-[11px] font-semibold text-amber-200 border border-amber-500/30 backdrop-blur-md">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-black/60 px-3 py-1 text-[11px] font-semibold text-amber-200 backdrop-blur-md">
               <Award className="h-3.5 w-3.5 text-amber-400" />
               <span>GI Craft Custodian • Govt of India Reg.</span>
             </span>
@@ -179,7 +192,7 @@ export function SellerProfileView({
               variant="outline"
               size="sm"
               onClick={handleShare}
-              className="h-8 rounded-full border-white/20 bg-black/40 px-3.5 text-xs font-medium text-white backdrop-blur-md hover:bg-white/20 hover:text-white transition-all"
+              className="h-8 rounded-full border-white/20 bg-black/40 px-3.5 text-xs font-medium text-white backdrop-blur-md transition-all hover:bg-white/20 hover:text-white"
             >
               <Share2 className="mr-1.5 h-3.5 w-3.5" />
               <span>{copiedLink ? "Copied!" : "Share Atelier"}</span>
@@ -189,7 +202,7 @@ export function SellerProfileView({
               <Link href={fullProfileHref}>
                 <Button
                   size="sm"
-                  className="h-8 rounded-full bg-amber-600 px-3.5 text-xs font-semibold text-white hover:bg-amber-700 shadow-md"
+                  className="h-8 rounded-full bg-amber-600 px-3.5 text-xs font-semibold text-white shadow-md hover:bg-amber-700"
                 >
                   <span>Full Atelier</span>
                   <ExternalLink className="ml-1.5 h-3 w-3" />
@@ -201,7 +214,7 @@ export function SellerProfileView({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full bg-black/50 p-2 text-white/80 hover:text-white hover:bg-black/80 backdrop-blur-md"
+                className="rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-md hover:bg-black/80 hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -210,8 +223,8 @@ export function SellerProfileView({
         </div>
 
         {/* Master Artisan Avatar Floating Over Bottom Edge */}
-        <div className="absolute -bottom-14 sm:-bottom-16 left-6 sm:left-10 z-20">
-          <div className="relative h-28 w-28 sm:h-36 sm:w-36 rounded-2xl sm:rounded-3xl overflow-hidden border-4 border-white bg-white shadow-xl ring-2 ring-amber-900/20">
+        <div className="absolute -bottom-14 left-6 z-20 sm:-bottom-16 sm:left-10">
+          <div className="relative h-28 w-28 overflow-hidden rounded-2xl border-4 border-white bg-white shadow-xl ring-2 ring-amber-900/20 sm:h-36 sm:w-36 sm:rounded-3xl">
             <Image
               src={avatarSrc}
               alt={seller.business_name}
@@ -225,8 +238,8 @@ export function SellerProfileView({
       </div>
 
       {/* 2. ARTISAN ATELIER IDENTITY HEADER */}
-      <div className="pt-18 sm:pt-20 px-6 sm:px-10 pb-6 border-b border-[#F0EFEA]">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+      <div className="border-b border-[#F0EFEA] px-6 pt-18 pb-6 sm:px-10 sm:pt-20">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="rounded-md bg-amber-100/80 px-2 py-0.5 font-mono text-[11px] font-bold tracking-wider text-amber-900 uppercase">
@@ -238,19 +251,21 @@ export function SellerProfileView({
               </span>
             </div>
 
-            <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-[#1A1A18] tracking-tight">
+            <h1 className="font-serif text-2xl font-normal tracking-tight text-[#1A1A18] sm:text-3xl lg:text-4xl">
               {seller.business_name}
             </h1>
 
-            <p className="font-serif text-sm sm:text-base text-amber-900 font-medium italic">
+            <p className="font-serif text-sm font-medium text-amber-900 italic sm:text-base">
               {craftTitle}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs text-[#52524E] pt-1">
+            <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-[#52524E]">
               {seller.maker_name && (
                 <div className="flex items-center gap-1.5 font-medium">
                   <span className="text-[#8C8C85]">Master Craftsman:</span>
-                  <span className="text-[#1A1A18] font-semibold">{seller.maker_name}</span>
+                  <span className="font-semibold text-[#1A1A18]">
+                    {seller.maker_name}
+                  </span>
                 </div>
               )}
 
@@ -264,13 +279,15 @@ export function SellerProfileView({
               {yearsActive != null && (
                 <div className="flex items-center gap-1 text-[#52524E]">
                   <Calendar className="h-3.5 w-3.5 text-amber-700" />
-                  <span>Est. {established} ({yearsActive}+ Years Heritage)</span>
+                  <span>
+                    Est. {established} ({yearsActive}+ Years Heritage)
+                  </span>
                 </div>
               )}
             </div>
 
             {seller.description && (
-              <p className="text-xs sm:text-sm text-[#52524E] max-w-2xl leading-relaxed pt-2">
+              <p className="max-w-2xl pt-2 text-xs leading-relaxed text-[#52524E] sm:text-sm">
                 {seller.description}
               </p>
             )}
@@ -278,51 +295,51 @@ export function SellerProfileView({
         </div>
 
         {/* Prestige Heritage Credentials Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-[#F0EFEA]">
+        <div className="mt-6 grid grid-cols-2 gap-3 border-t border-[#F0EFEA] pt-5 sm:grid-cols-4">
           <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
-            <span className="block font-mono text-[10px] font-bold uppercase tracking-wider text-[#8C8C85]">
+            <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
               Atelier Provenance
             </span>
-            <span className="font-serif text-base sm:text-lg font-bold text-[#1A1A18] block mt-0.5">
+            <span className="mt-0.5 block font-serif text-base font-bold text-[#1A1A18] sm:text-lg">
               100% Direct
             </span>
-            <span className="text-[11px] text-[#73736E] block mt-0.5">
+            <span className="mt-0.5 block text-[11px] text-[#73736E]">
               Zero middleman markups
             </span>
           </div>
 
           <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
-            <span className="block font-mono text-[10px] font-bold uppercase tracking-wider text-[#8C8C85]">
+            <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
               Craft Heritage
             </span>
-            <span className="font-serif text-base sm:text-lg font-bold text-amber-900 block mt-0.5">
+            <span className="mt-0.5 block font-serif text-base font-bold text-amber-900 sm:text-lg">
               {yearsActive ? `${yearsActive}+ Yrs` : "Ancestral"}
             </span>
-            <span className="text-[11px] text-[#73736E] block mt-0.5">
+            <span className="mt-0.5 block text-[11px] text-[#73736E]">
               2nd-Gen Living Tradition
             </span>
           </div>
 
           <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
-            <span className="block font-mono text-[10px] font-bold uppercase tracking-wider text-[#8C8C85]">
+            <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
               Sourcing Integrity
             </span>
-            <span className="font-serif text-base sm:text-lg font-bold text-emerald-800 block mt-0.5">
+            <span className="mt-0.5 block font-serif text-base font-bold text-emerald-800 sm:text-lg">
               Organic Lac
             </span>
-            <span className="text-[11px] text-[#73736E] block mt-0.5">
+            <span className="mt-0.5 block text-[11px] text-[#73736E]">
               Natural vegetable dyes
             </span>
           </div>
 
           <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
-            <span className="block font-mono text-[10px] font-bold uppercase tracking-wider text-[#8C8C85]">
+            <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
               Verified Catalog
             </span>
-            <span className="font-serif text-base sm:text-lg font-bold text-[#1A1A18] block mt-0.5">
+            <span className="mt-0.5 block font-serif text-base font-bold text-[#1A1A18] sm:text-lg">
               {products.length} Products
             </span>
-            <span className="text-[11px] text-[#73736E] block mt-0.5">
+            <span className="mt-0.5 block text-[11px] text-[#73736E]">
               Hand-turned on lathe
             </span>
           </div>
@@ -330,12 +347,12 @@ export function SellerProfileView({
       </div>
 
       {/* 3. LUXURY EDITORIAL TAB NAVIGATION */}
-      <div className="px-6 sm:px-10 border-b border-[#E5E5E0] bg-[#FAF9F5]/60 sticky top-0 z-10 backdrop-blur-md">
+      <div className="sticky top-0 z-10 border-b border-[#E5E5E0] bg-[#FAF9F5]/60 px-6 backdrop-blur-md sm:px-10">
         <div className="flex items-center justify-start gap-4 sm:gap-8">
           <button
             type="button"
             onClick={() => setActiveTab("story")}
-            className={`flex items-center gap-2 py-4 text-xs sm:text-sm font-semibold tracking-wider transition-all border-b-2 -mb-[1px] ${
+            className={`-mb-[1px] flex items-center gap-2 border-b-2 py-4 text-xs font-semibold tracking-wider transition-all sm:text-sm ${
               activeTab === "story"
                 ? "border-[#D97706] text-[#B45309]"
                 : "border-transparent text-[#73736E] hover:text-[#1A1A18]"
@@ -348,7 +365,7 @@ export function SellerProfileView({
           <button
             type="button"
             onClick={() => setActiveTab("posts")}
-            className={`flex items-center gap-2 py-4 text-xs sm:text-sm font-semibold tracking-wider transition-all border-b-2 -mb-[1px] ${
+            className={`-mb-[1px] flex items-center gap-2 border-b-2 py-4 text-xs font-semibold tracking-wider transition-all sm:text-sm ${
               activeTab === "posts"
                 ? "border-[#D97706] text-[#B45309]"
                 : "border-transparent text-[#73736E] hover:text-[#1A1A18]"
@@ -364,7 +381,7 @@ export function SellerProfileView({
           <button
             type="button"
             onClick={() => setActiveTab("reels")}
-            className={`flex items-center gap-2 py-4 text-xs sm:text-sm font-semibold tracking-wider transition-all border-b-2 -mb-[1px] ${
+            className={`-mb-[1px] flex items-center gap-2 border-b-2 py-4 text-xs font-semibold tracking-wider transition-all sm:text-sm ${
               activeTab === "reels"
                 ? "border-[#D97706] text-[#B45309]"
                 : "border-transparent text-[#73736E] hover:text-[#1A1A18]"
@@ -385,48 +402,53 @@ export function SellerProfileView({
         {activeTab === "story" && (
           <div className="space-y-8">
             {/* Master's Voice Quote Callout */}
-            <div className="relative overflow-hidden rounded-2xl border border-amber-200/80 bg-gradient-to-br from-[#FFFDF9] via-[#FAF7F0] to-[#F5EFE1] p-6 sm:p-8 shadow-xs">
-              <div className="absolute top-2 right-4 font-serif text-7xl font-bold text-amber-200/50 select-none pointer-events-none">
+            <div className="relative overflow-hidden rounded-2xl border border-amber-200/80 bg-gradient-to-br from-[#FFFDF9] via-[#FAF7F0] to-[#F5EFE1] p-6 shadow-xs sm:p-8">
+              <div className="pointer-events-none absolute top-2 right-4 font-serif text-7xl font-bold text-amber-200/50 select-none">
                 “
               </div>
               <div className="relative z-10 max-w-3xl space-y-3">
                 <span className="font-mono text-[10px] font-bold tracking-widest text-amber-800 uppercase">
                   MASTER CRAFTSMAN&apos;S VOICE
                 </span>
-                <blockquote className="font-serif text-lg sm:text-xl text-[#1A1A18] leading-relaxed italic">
-                  &ldquo;Along the Varaha River, turning wood is not merely an occupation—it is a four-century cultural inheritance. Each lacquer layer applied by hand on the turning lathe seals living organic history safe for children across generations.&rdquo;
+                <blockquote className="font-serif text-lg leading-relaxed text-[#1A1A18] italic sm:text-xl">
+                  &ldquo;Along the Varaha River, turning wood is not merely an
+                  occupation—it is a four-century cultural inheritance. Each lacquer
+                  layer applied by hand on the turning lathe seals living organic
+                  history safe for children across generations.&rdquo;
                 </blockquote>
                 <div className="flex items-center gap-2 pt-1">
-                  <span className="text-xs font-bold text-[#1A1A18]">{seller.maker_name || seller.business_name}</span>
+                  <span className="text-xs font-bold text-[#1A1A18]">
+                    {seller.maker_name || seller.business_name}
+                  </span>
                   <span className="text-xs text-[#8C8C85]">• Master GI Artisan</span>
                 </div>
               </div>
             </div>
 
             {/* Narrative Sections Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs space-y-3">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="space-y-3 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs">
                 <div className="flex items-center gap-2 text-amber-900">
                   <BookOpen className="h-4 w-4" />
                   <h3 className="font-serif text-base font-bold text-[#1A1A18]">
                     Ancestral Roots & Varaha River Origins
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-[#52524E] leading-relaxed">
+                <p className="text-xs leading-relaxed text-[#52524E] sm:text-sm">
                   {seller.story?.how_it_started ||
                     seller.description ||
                     "Along the banks of the Varaha River in Andhra Pradesh lies the village of Etikoppaka, where turned-wood lacquer craft has flourished across families for more than 400 years. Born into a household of generational carvers, our workshop upholds traditional woodturning methods, ensuring every artifact carries authentic cultural roots."}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs space-y-3">
+              <div className="space-y-3 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs">
                 <div className="flex items-center gap-2 text-amber-900">
                   <Sparkles className="h-4 w-4" />
                   <h3 className="font-serif text-base font-bold text-[#1A1A18]">
                     Materials & Natural Lathe Technique
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-[#52524E] leading-relaxed">
+                <p className="text-xs leading-relaxed text-[#52524E] sm:text-sm">
                   {seller.story?.materials_and_technique ||
                     "Turned exclusively from indigenous Ankudi Karra wood on traditional woodturning lathes. Pure botanical lac is applied while the wood spins, using natural friction heat to fuse non-toxic, lead-free colors extracted from seeds, bark, roots, and leaves—making every toy safe for infants and collectors alike."}
                 </p>
@@ -435,31 +457,31 @@ export function SellerProfileView({
 
             {/* Living Milestones Timeline */}
             {seller.story?.milestones && seller.story.milestones.length > 0 && (
-              <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 sm:p-8 shadow-xs">
+              <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs sm:p-8">
                 <div className="mb-6">
-                  <span className="font-mono text-[10px] font-bold tracking-widest text-amber-800 uppercase block">
+                  <span className="block font-mono text-[10px] font-bold tracking-widest text-amber-800 uppercase">
                     CHRONOLOGY OF EXCELLENCE
                   </span>
-                  <h3 className="font-serif text-lg font-bold text-[#1A1A18] mt-1">
+                  <h3 className="mt-1 font-serif text-lg font-bold text-[#1A1A18]">
                     Atelier Heritage & National Recognition
                   </h3>
                 </div>
 
-                <div className="relative pl-6 sm:pl-8 border-l-2 border-amber-200 space-y-6">
+                <div className="relative space-y-6 border-l-2 border-amber-200 pl-6 sm:pl-8">
                   {seller.story.milestones.map((m, idx) => (
                     <div key={idx} className="relative">
                       {/* Node circle */}
-                      <div className="absolute -left-[31px] sm:-left-[39px] top-0.5 h-4 w-4 rounded-full border-2 border-amber-600 bg-white" />
+                      <div className="absolute top-0.5 -left-[31px] h-4 w-4 rounded-full border-2 border-amber-600 bg-white sm:-left-[39px]" />
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded">
+                          <span className="rounded bg-amber-100 px-2 py-0.5 font-mono text-xs font-bold text-amber-900">
                             {m.year}
                           </span>
-                          <h4 className="font-semibold text-xs sm:text-sm text-[#1A1A18]">
+                          <h4 className="text-xs font-semibold text-[#1A1A18] sm:text-sm">
                             {m.title}
                           </h4>
                         </div>
-                        <p className="text-xs text-[#52524E] leading-relaxed">
+                        <p className="text-xs leading-relaxed text-[#52524E]">
                           {m.desc}
                         </p>
                       </div>
@@ -475,17 +497,18 @@ export function SellerProfileView({
         {activeTab === "posts" && (
           <div>
             {products.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center text-[#73736E] bg-[#FAF9F5] rounded-2xl border border-dashed border-[#E5E5E0] p-10">
-                <ShoppingBag className="h-10 w-10 text-[#A3A3A3] mb-3" />
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E5E5E0] bg-[#FAF9F5] p-10 py-16 text-center text-[#73736E]">
+                <ShoppingBag className="mb-3 h-10 w-10 text-[#A3A3A3]" />
                 <h4 className="font-serif text-base font-semibold text-[#1A1A18]">
                   Handmade Inventory in Preparation
                 </h4>
-                <p className="text-xs text-[#73736E] mt-1 max-w-sm">
-                  This artisan workshop is currently finishing their hand-lathe batch. Check back shortly for new catalog releases.
+                <p className="mt-1 max-w-sm text-xs text-[#73736E]">
+                  This artisan workshop is currently finishing their hand-lathe batch.
+                  Check back shortly for new catalog releases.
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-6">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
                 {products.map((p) => {
                   const img = getProductImage(p);
                   const isGI =
@@ -497,7 +520,7 @@ export function SellerProfileView({
                     <Link
                       key={p.id}
                       href={`/products/${p.id}`}
-                      className="group flex flex-col w-full text-left transition-all duration-300"
+                      className="group flex w-full flex-col text-left transition-all duration-300"
                     >
                       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-[#E5E5E0] bg-[#F6F5F2]">
                         <Image
@@ -511,7 +534,7 @@ export function SellerProfileView({
 
                         {isGI && (
                           <div className="absolute top-2.5 left-2.5 z-10">
-                            <span className="rounded-md bg-black/85 px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase text-amber-300 shadow-xs backdrop-blur-xs">
+                            <span className="rounded-md bg-black/85 px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider text-amber-300 uppercase shadow-xs backdrop-blur-xs">
                               GI Certified
                             </span>
                           </div>
@@ -526,18 +549,21 @@ export function SellerProfileView({
 
                       <div className="mt-3 space-y-1">
                         {p.category && (
-                          <p className="text-[10px] font-semibold text-amber-800 uppercase tracking-wider truncate">
+                          <p className="truncate text-[10px] font-semibold tracking-wider text-amber-800 uppercase">
                             {p.category}
                           </p>
                         )}
 
-                        <h4 className="font-serif text-xs sm:text-sm font-semibold tracking-tight text-[#1A1A18] group-hover:text-amber-800 transition-colors line-clamp-2 leading-snug">
+                        <h4 className="line-clamp-2 font-serif text-xs leading-snug font-semibold tracking-tight text-[#1A1A18] transition-colors group-hover:text-amber-800 sm:text-sm">
                           {p.name}
                         </h4>
 
-                        <div className="pt-0.5 flex items-baseline gap-1.5">
-                          <span className="font-mono text-xs sm:text-sm font-bold tracking-tight text-[#1A1A18]">
-                            ₹{p.price_inr != null ? p.price_inr.toLocaleString("en-IN") : "—"}
+                        <div className="flex items-baseline gap-1.5 pt-0.5">
+                          <span className="font-mono text-xs font-bold tracking-tight text-[#1A1A18] sm:text-sm">
+                            ₹
+                            {p.price_inr != null
+                              ? p.price_inr.toLocaleString("en-IN")
+                              : "—"}
                           </span>
                           {p.original_mrp && (
                             <span className="font-mono text-[10px] text-[#A3A3A3] line-through sm:text-xs">
@@ -558,17 +584,18 @@ export function SellerProfileView({
         {activeTab === "reels" && (
           <div>
             {reels.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center text-[#73736E] bg-[#FAF9F5] rounded-2xl border border-dashed border-[#E5E5E0] p-10">
-                <Film className="h-10 w-10 text-[#A3A3A3] mb-3" />
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E5E5E0] bg-[#FAF9F5] p-10 py-16 text-center text-[#73736E]">
+                <Film className="mb-3 h-10 w-10 text-[#A3A3A3]" />
                 <h4 className="font-serif text-base font-semibold text-[#1A1A18]">
                   Workshop Videos in Production
                 </h4>
-                <p className="text-xs text-[#73736E] mt-1 max-w-sm">
-                  Raw hand-lathe footage and organic lacquer demonstrations will be available here soon.
+                <p className="mt-1 max-w-sm text-xs text-[#73736E]">
+                  Raw hand-lathe footage and organic lacquer demonstrations will be
+                  available here soon.
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4">
                 {reels.map((reel) => {
                   const videoUrl = getReelVideoUrl(reel);
                   const thumbUrl = getReelThumbUrl(reel);
@@ -580,7 +607,7 @@ export function SellerProfileView({
                         setActiveReel(reel);
                         setIsVideoPlaying(true);
                       }}
-                      className="group relative aspect-[9/16] w-full overflow-hidden rounded-2xl bg-neutral-900 shadow-md cursor-pointer ring-1 ring-black/10 transition-transform duration-300 hover:scale-[1.02]"
+                      className="group relative aspect-[9/16] w-full cursor-pointer overflow-hidden rounded-2xl bg-neutral-900 shadow-md ring-1 ring-black/10 transition-transform duration-300 hover:scale-[1.02]"
                     >
                       {/* Video or Thumbnail preview */}
                       {videoUrl ? (
@@ -609,7 +636,7 @@ export function SellerProfileView({
                         />
                       )}
 
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30 pointer-events-none" />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30" />
 
                       {/* Video Indicator / Duration badge */}
                       <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 font-mono text-[10px] text-white backdrop-blur-md">
@@ -618,16 +645,17 @@ export function SellerProfileView({
                       </div>
 
                       {/* Play Button Overlay on Hover */}
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="h-12 w-12 rounded-full bg-amber-500/90 text-white flex items-center justify-center shadow-lg backdrop-blur-xs">
-                          <Play className="h-5 w-5 fill-white ml-0.5" />
+                      <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/90 text-white shadow-lg backdrop-blur-xs">
+                          <Play className="ml-0.5 h-5 w-5 fill-white" />
                         </div>
                       </div>
 
                       {/* Caption & Views Count */}
-                      <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white pointer-events-none">
-                        <p className="text-xs font-semibold leading-snug line-clamp-2 drop-shadow-md">
-                          {reel.caption || "Traditional Turned-Wood Craft Lathe Demonstration"}
+                      <div className="pointer-events-none absolute right-3.5 bottom-3.5 left-3.5 text-white">
+                        <p className="line-clamp-2 text-xs leading-snug font-semibold drop-shadow-md">
+                          {reel.caption ||
+                            "Traditional Turned-Wood Craft Lathe Demonstration"}
                         </p>
                         <div className="mt-1 flex items-center justify-between font-mono text-[10px] text-white/80">
                           <span>
@@ -635,7 +663,9 @@ export function SellerProfileView({
                               ? `${(reel.views_count / 1000).toFixed(1)}k views`
                               : "Verified Craft"}
                           </span>
-                          <span className="text-amber-300 font-semibold">Tap to play</span>
+                          <span className="font-semibold text-amber-300">
+                            Tap to play
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -649,8 +679,8 @@ export function SellerProfileView({
 
       {/* 5. INTERACTIVE FULLSCREEN REEL VIDEO PLAYER MODAL */}
       {activeReel && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 sm:p-6 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-sm sm:max-w-md aspect-[9/16] max-h-[90vh] overflow-hidden rounded-3xl bg-black shadow-2xl border border-white/10 flex flex-col justify-between">
+        <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md duration-200 sm:p-6">
+          <div className="relative flex aspect-[9/16] max-h-[90vh] w-full max-w-sm flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl sm:max-w-md">
             {/* Video Stream */}
             {getReelVideoUrl(activeReel) ? (
               <video
@@ -662,7 +692,7 @@ export function SellerProfileView({
                 loop
                 muted={isMuted}
                 onClick={togglePlayPause}
-                className="absolute inset-0 h-full w-full object-cover cursor-pointer"
+                className="absolute inset-0 h-full w-full cursor-pointer object-cover"
               />
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-white">
@@ -673,29 +703,38 @@ export function SellerProfileView({
                   className="object-cover opacity-60"
                   unoptimized
                 />
-                <div className="relative z-10 bg-black/70 p-4 rounded-2xl backdrop-blur-md">
-                  <Film className="h-8 w-8 text-amber-400 mx-auto mb-2" />
+                <div className="relative z-10 rounded-2xl bg-black/70 p-4 backdrop-blur-md">
+                  <Film className="mx-auto mb-2 h-8 w-8 text-amber-400" />
                   <p className="text-xs text-white/90">
-                    Workshop demonstration footage is being synced with high-definition storage.
+                    Workshop demonstration footage is being synced with high-definition
+                    storage.
                   </p>
                 </div>
               </div>
             )}
 
             {/* Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/60 pointer-events-none" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/60" />
 
             {/* Top Controls Bar */}
             <div className="relative z-20 flex items-center justify-between p-4">
               <div className="flex items-center gap-2">
-                <div className="relative h-8 w-8 rounded-full overflow-hidden border border-white/40">
-                  <Image src={avatarSrc} alt={seller.business_name} fill className="object-cover" unoptimized />
+                <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/40">
+                  <Image
+                    src={avatarSrc}
+                    alt={seller.business_name}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white leading-tight">
+                  <h4 className="text-xs leading-tight font-bold text-white">
                     {seller.business_name}
                   </h4>
-                  <span className="text-[10px] text-amber-300 font-mono">Verified Reel</span>
+                  <span className="font-mono text-[10px] text-amber-300">
+                    Verified Reel
+                  </span>
                 </div>
               </div>
 
@@ -703,15 +742,19 @@ export function SellerProfileView({
                 <button
                   type="button"
                   onClick={toggleMute}
-                  className="rounded-full bg-black/50 p-2 text-white hover:bg-black/80 backdrop-blur-md transition-colors"
+                  className="rounded-full bg-black/50 p-2 text-white backdrop-blur-md transition-colors hover:bg-black/80"
                 >
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveReel(null)}
-                  className="rounded-full bg-black/50 p-2 text-white hover:bg-black/80 backdrop-blur-md transition-colors"
+                  className="rounded-full bg-black/50 p-2 text-white backdrop-blur-md transition-colors hover:bg-black/80"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -721,23 +764,24 @@ export function SellerProfileView({
             {/* Center Play/Pause Overlay indicator on click */}
             <div
               onClick={togglePlayPause}
-              className="relative z-10 flex-1 flex items-center justify-center cursor-pointer"
+              className="relative z-10 flex flex-1 cursor-pointer items-center justify-center"
             >
               {!isVideoPlaying && (
-                <div className="h-16 w-16 rounded-full bg-black/60 text-white flex items-center justify-center backdrop-blur-md">
-                  <Play className="h-8 w-8 fill-white ml-1" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md">
+                  <Play className="ml-1 h-8 w-8 fill-white" />
                 </div>
               )}
             </div>
 
             {/* Bottom Caption & Product Interaction Bar */}
-            <div className="relative z-20 p-5 space-y-3">
-              <p className="text-xs text-white/95 leading-relaxed drop-shadow-md">
-                {activeReel.caption || "Master artisan turning Ankudi Karra wood on the lathe and applying non-toxic natural lacquer."}
+            <div className="relative z-20 space-y-3 p-5">
+              <p className="text-xs leading-relaxed text-white/95 drop-shadow-md">
+                {activeReel.caption ||
+                  "Master artisan turning Ankudi Karra wood on the lathe and applying non-toxic natural lacquer."}
               </p>
 
               <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center gap-2 text-xs text-white/80 font-mono">
+                <div className="flex items-center gap-2 font-mono text-xs text-white/80">
                   <span>{activeReel.duration || "0:30"}</span>
                   <span>•</span>
                   <span>
@@ -753,7 +797,7 @@ export function SellerProfileView({
                     setActiveReel(null);
                     setActiveTab("posts");
                   }}
-                  className="h-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white px-3.5 text-xs font-semibold shadow-lg"
+                  className="h-8 rounded-full bg-amber-500 px-3.5 text-xs font-semibold text-white shadow-lg hover:bg-amber-600"
                 >
                   <span>Explore Catalog</span>
                   <ArrowRight className="ml-1 h-3 w-3" />

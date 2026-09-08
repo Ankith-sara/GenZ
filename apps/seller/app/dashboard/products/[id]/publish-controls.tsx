@@ -7,8 +7,13 @@ import { setProductStatus, deleteProduct } from "../actions";
 import type { ProductStatus } from "@/types/database";
 import { toast } from "sonner";
 import {
-  Globe, Archive, Trash2, FileEdit,
-  AlertTriangle, ExternalLink, Loader2,
+  Globe,
+  Archive,
+  Trash2,
+  FileEdit,
+  AlertTriangle,
+  ExternalLink,
+  Loader2,
 } from "lucide-react";
 
 export function PublishControls({
@@ -36,8 +41,7 @@ export function PublishControls({
           setCurrentStatus(nextStatus);
           if (nextStatus === "published") {
             toast.success("Product published to live storefront!", {
-              description:
-                "Your product is now live and discoverable by all shoppers.",
+              description: "Your product is now live and discoverable by all shoppers.",
             });
           } else if (nextStatus === "draft") {
             toast.success("Product moved to draft", {
@@ -50,9 +54,9 @@ export function PublishControls({
             });
           }
         }
-      } catch (err: any) {
+      } catch (err) {
         toast.error("Error updating status", {
-          description: err?.message || "Please try again.",
+          description: err instanceof Error ? err.message : "Please try again.",
         });
       } finally {
         setActiveAction(null);
@@ -67,10 +71,10 @@ export function PublishControls({
         toast.loading("Deleting product listing...", { id: "delete-prod" });
         await deleteProduct(productId);
         toast.success("Product deleted successfully", { id: "delete-prod" });
-      } catch (err: any) {
+      } catch (err) {
         toast.error("Failed to delete product", {
           id: "delete-prod",
-          description: err?.message || "Please try again.",
+          description: err instanceof Error ? err.message : "Please try again.",
         });
         setActiveAction(null);
       }
@@ -120,9 +124,7 @@ export function PublishControls({
               ) : (
                 <Globe className="h-3.5 w-3.5" />
               )}
-              <span>
-                {activeAction === "published" ? "Publishing..." : "Publish"}
-              </span>
+              <span>{activeAction === "published" ? "Publishing..." : "Publish"}</span>
             </Button>
           )}
 
@@ -178,9 +180,7 @@ export function PublishControls({
               ) : (
                 <Archive className="h-3.5 w-3.5 text-[#73736E]" />
               )}
-              <span>
-                {activeAction === "archived" ? "Archiving..." : "Archive"}
-              </span>
+              <span>{activeAction === "archived" ? "Archiving..." : "Archive"}</span>
             </Button>
           )}
 
@@ -189,7 +189,7 @@ export function PublishControls({
             variant="outline"
             disabled={isPending}
             onClick={() => setConfirmingDelete((prev) => !prev)}
-            className="flex h-10 items-center gap-1.5 rounded-xl border-rose-200 bg-white px-3 text-xs font-semibold text-rose-600 transition-all hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300 disabled:opacity-60"
+            className="flex h-10 items-center gap-1.5 rounded-xl border-rose-200 bg-white px-3 text-xs font-semibold text-rose-600 transition-all hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700 disabled:opacity-60"
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>Delete</span>

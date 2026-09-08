@@ -9,19 +9,20 @@ import { validateFileContent } from "@/lib/file-validation";
 import { uploadAvatarAction } from "@/features/user/actions";
 
 export function AvatarUploader({
-  userId: _userId,
   fullName,
   currentUrl,
   onUploaded,
 }: {
-  userId: string;
+  userId?: string;
   fullName: string | null;
   currentUrl: string | null;
   onUploaded?: (url: string) => void;
 }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">(
+    "idle"
+  );
   const [error, setError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentUrl);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -91,7 +92,7 @@ export function AvatarUploader({
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="file:border-[#1A1A18] file:bg-white text-xs file:mr-3 file:h-9 file:rounded-lg file:border file:px-3 file:font-medium file:cursor-pointer text-neutral-600"
+            className="text-xs text-neutral-600 file:mr-3 file:h-9 file:cursor-pointer file:rounded-lg file:border file:border-[#1A1A18] file:bg-white file:px-3 file:font-medium"
           />
 
           {selectedFile && (
@@ -100,7 +101,7 @@ export function AvatarUploader({
               onClick={handleUpload}
               size="sm"
               disabled={status === "uploading"}
-              className="bg-black hover:bg-neutral-850 text-white text-xs h-9 rounded-lg font-semibold px-4 shadow-sm"
+              className="hover:bg-neutral-850 h-9 rounded-lg bg-black px-4 text-xs font-semibold text-white shadow-sm"
             >
               <Upload className="mr-1.5 h-3.5 w-3.5" />
               {status === "uploading" ? "Uploading…" : "Save Photo"}
@@ -110,14 +111,14 @@ export function AvatarUploader({
       </div>
 
       {status === "success" && (
-        <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-700">
           <CheckCircle2 className="h-4 w-4 text-emerald-600" />
           <span>Profile photo updated successfully!</span>
         </div>
       )}
 
       {error && (
-        <div className="flex items-center gap-1.5 text-xs text-rose-700 font-medium">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-rose-700">
           <AlertCircle className="h-4 w-4 text-rose-600" />
           <span>{error}</span>
         </div>

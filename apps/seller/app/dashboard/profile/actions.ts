@@ -46,7 +46,9 @@ export async function updateSellerProfileStudio(
   // Story & Journey narrative fields
   const short_bio = String(formData.get("short_bio") ?? "").trim();
   const how_it_started = String(formData.get("how_it_started") ?? "").trim();
-  const materials_and_technique = String(formData.get("materials_and_technique") ?? "").trim();
+  const materials_and_technique = String(
+    formData.get("materials_and_technique") ?? ""
+  ).trim();
   const vision = String(formData.get("vision") ?? "").trim();
 
   if (!business_name) {
@@ -63,7 +65,7 @@ export async function updateSellerProfileStudio(
       .eq("id", userId)
       .maybeSingle();
 
-    let existingMeta: Record<string, any> = {};
+    let existingMeta: Record<string, unknown> = {};
     if (existingProf?.description) {
       try {
         if (existingProf.description.startsWith("{")) {
@@ -72,11 +74,14 @@ export async function updateSellerProfileStudio(
       } catch {}
     }
 
-    const effectiveCoverUrl = cover_url || existingMeta.cover_url || null;
+    const effectiveCoverUrl =
+      cover_url ||
+      (typeof existingMeta.cover_url === "string" ? existingMeta.cover_url : null);
 
     // Construct structured metadata JSON to store inside description column
     const profileMetadata = {
-      short_bio: short_bio || `Authentic Indian craft studio based in ${city || "India"}.`,
+      short_bio:
+        short_bio || `Authentic Indian craft studio based in ${city || "India"}.`,
       maker_name: maker_name || business_name,
       handle: handle || business_name.toLowerCase().replace(/[^a-z0-9]/g, "_"),
       craft_category: craft_category || "Wooden Toys & Crafts",
@@ -108,7 +113,10 @@ export async function updateSellerProfileStudio(
     });
 
     if (profileError) {
-      console.error("[updateSellerProfileStudio] Error updating seller_profiles:", profileError);
+      console.error(
+        "[updateSellerProfileStudio] Error updating seller_profiles:",
+        profileError
+      );
       return { error: profileError.message || "Failed to save seller profile." };
     }
 

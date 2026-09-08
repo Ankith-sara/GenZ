@@ -42,7 +42,6 @@ async function uploadImageToStorage(
 export function SellerProductEditClient({
   product,
   images,
-  variants: _variants,
   reelCount,
   sellerId,
   sellerBusinessName,
@@ -98,7 +97,9 @@ export function SellerProductEditClient({
           priceInr: product.price_inr !== null ? String(product.price_inr) : "",
           category: product.category || "Wooden Toys & Crafts",
           description: product.description || "",
-          materials: Array.isArray(product.materials) ? product.materials.join(", ") : "",
+          materials: Array.isArray(product.materials)
+            ? product.materials.join(", ")
+            : "",
           status: (product.status as "published" | "draft") || "published",
           images: initialImages,
           sku: product.sku || "",
