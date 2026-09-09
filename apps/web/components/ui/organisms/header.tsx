@@ -37,7 +37,7 @@ const categoriesList = [
   {
     name: "Kondapalli Toys",
     href: "/discover?category=Kondapalli Toys",
-    image: "/cat_toys.png",
+    image: "/cat_kondapalli.jpg",
     desc: "Lightweight Tella Poniki wood toys depicting Indian folklore and village life",
     badge: "GI Tag",
   },
@@ -56,10 +56,31 @@ const categoriesList = [
     badge: null,
   },
   {
-    name: "Handicrafts",
-    href: "/discover?category=Handicrafts",
-    image: "/cat_furniture.png",
-    desc: "Heritage Indian craft, artisan woodwork & traditional decor",
+    name: "Brass & Metal Crafts",
+    href: "/discover?category=Brass & Metal Crafts",
+    image: "/cat_brass.jpg",
+    desc: "Ancient Dhokra brass statues, temple lamps & engraved heritage metalware",
+    badge: "Handmade",
+  },
+  {
+    name: "Terracotta & Pottery",
+    href: "/discover?category=Terracotta & Pottery",
+    image: "/cat_pottery.jpg",
+    desc: "Hand-thrown earthenware pottery, clay diyas & festive artisan decor",
+    badge: "Authentic",
+  },
+  {
+    name: "Handloom & Textiles",
+    href: "/discover?category=Handloom & Textiles",
+    image: "/cat_handloom.jpg",
+    desc: "Handwoven Kalamkari, Ikat weaves & artisanal handblock fabrics",
+    badge: "Heritage",
+  },
+  {
+    name: "Kitchen & Dining",
+    href: "/discover?category=Kitchen & Dining",
+    image: "/cat_kitchen.png",
+    desc: "Traditional bronze utensils, soapstone cookware & seasoned cast ware",
     badge: null,
   },
 ];
@@ -215,23 +236,26 @@ export function Header({
             scrolled ? "max-h-0 opacity-0" : "max-h-9 opacity-100"
           }`}
         >
-          <div className="font-graphik mx-auto flex h-9 max-w-[1280px] items-center justify-between px-4 text-[11px] tracking-wide sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 font-medium text-white">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
-                Made in India Marketplace
+          <div className="font-graphik mx-auto flex h-9 max-w-[1280px] items-center justify-between px-3 text-[10px] tracking-wide sm:px-6 sm:text-[11px] lg:px-8">
+            <div className="flex items-center gap-2 truncate sm:gap-3">
+              <span className="inline-flex items-center gap-1.5 truncate font-medium text-white">
+                <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-amber-400" />
+                <span className="truncate">Made in India Marketplace</span>
               </span>
             </div>
 
-            <div className="flex items-center gap-5 text-neutral-300">
+            <div className="flex shrink-0 items-center gap-3 text-neutral-300 sm:gap-5">
               <Link
                 href="/seller/signup"
-                className="font-semibold text-white transition-colors hover:text-neutral-300 hover:underline"
+                className="text-[10px] font-semibold text-white transition-colors hover:text-neutral-300 hover:underline sm:text-xs"
               >
                 Sell on GenZ
               </Link>
               <span className="text-neutral-700">|</span>
-              <Link href="/contact" className="transition-colors hover:text-white">
+              <Link
+                href="/contact"
+                className="text-[10px] transition-colors hover:text-white sm:text-xs"
+              >
                 Support
               </Link>
             </div>
@@ -245,10 +269,10 @@ export function Header({
             <Link
               id="genz-logo-link"
               aria-label="Go to GenZ homepage"
-              className="flex shrink-0 items-center gap-2.5"
+              className="flex shrink-0 items-center gap-2 sm:gap-2.5"
               href="/"
             >
-              <div className="relative h-10 w-10 overflow-hidden rounded-xl border border-neutral-700 bg-neutral-900 shadow-md">
+              <div className="relative h-8 w-8 overflow-hidden rounded-xl border border-neutral-700 bg-neutral-900 shadow-md sm:h-10 sm:w-10">
                 <Image
                   src="/logo.png"
                   alt="GenZ Logo"
@@ -258,7 +282,7 @@ export function Header({
                   priority
                 />
               </div>
-              <span className="font-nantes text-2xl font-bold tracking-tight text-white">
+              <span className="font-nantes text-xl font-bold tracking-tight text-white sm:text-2xl">
                 Gen<span className="text-amber-400">Z</span>
               </span>
             </Link>
@@ -266,7 +290,7 @@ export function Header({
             {/* Middle: Search Bar (desktop) */}
             <form
               onSubmit={handleSearchSubmit}
-              className="ml-8 ml-auto hidden h-10 w-full items-center overflow-hidden rounded-xl border border-neutral-300 bg-white shadow-xs transition-all focus-within:border-black focus-within:ring-2 focus-within:ring-black/10 md:flex lg:ml-16"
+              className="ml-auto hidden h-10 w-full max-w-lg items-center overflow-hidden rounded-xl border border-neutral-300 bg-white shadow-xs transition-all focus-within:border-black focus-within:ring-2 focus-within:ring-black/10 md:flex lg:ml-12"
             >
               <input
                 type="search"
@@ -286,19 +310,19 @@ export function Header({
             </form>
 
             {/* Right: Actions & User Avatar */}
-            <div className="flex shrink-0 items-center gap-3.5 sm:gap-4">
-              {/* Mobile search toggle — lets mobile users search without opening the full drawer */}
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
+              {/* Mobile search toggle */}
               <button
                 onClick={() => setShowMobileSearch((v) => !v)}
                 aria-label="Toggle search"
                 aria-expanded={showMobileSearch}
                 aria-controls="mobile-search-row"
-                className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white md:hidden"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white sm:h-9 sm:w-9 md:hidden"
               >
                 {showMobileSearch ? (
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
                 ) : (
-                  <Search className="h-5 w-5" />
+                  <Search className="h-4 w-4 sm:h-5 sm:w-5" />
                 )}
               </button>
 
@@ -306,11 +330,11 @@ export function Header({
               <Link
                 href="/wishlist"
                 aria-label="Wishlist"
-                className="relative flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white"
+                className="relative flex h-8 w-8 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white sm:h-9 sm:w-9"
               >
-                <Heart className="h-5 w-5" />
+                <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
                 {wishlistCount > 0 && (
-                  <span className="font-graphik absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black shadow-xs">
+                  <span className="font-graphik absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] font-bold text-black shadow-xs">
                     {wishlistCount}
                   </span>
                 )}
@@ -320,11 +344,11 @@ export function Header({
               <Link
                 href="/cart"
                 aria-label="Shopping Cart"
-                className="relative flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white"
+                className="relative flex h-8 w-8 items-center justify-center rounded-full text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white sm:h-9 sm:w-9"
               >
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
                 {cartCount > 0 && (
-                  <span className="font-graphik absolute top-0 right-0 flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-white px-1 text-[9px] font-bold text-black shadow-xs">
+                  <span className="font-graphik absolute -top-1 -right-1 flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-amber-400 px-1 text-[9px] font-bold text-black shadow-xs">
                     {cartCount}
                   </span>
                 )}
@@ -367,8 +391,8 @@ export function Header({
                           className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          <Compass className="h-4 w-4 text-neutral-300" /> Studio Control
-                          Center
+                          <Compass className="h-4 w-4 text-neutral-300" /> Studio
+                          Control Center
                         </a>
                       ) : role === "buyer" ? (
                         <>
@@ -418,7 +442,7 @@ export function Header({
               ) : (
                 <Link
                   href="/login"
-                  className="font-graphik flex h-9 items-center justify-center rounded-full bg-white px-4 text-xs font-bold text-black shadow-xs transition-colors hover:bg-neutral-200"
+                  className="font-graphik flex h-8 items-center justify-center rounded-full bg-white px-2.5 text-[11px] font-bold text-black shadow-xs transition-colors hover:bg-neutral-200 sm:h-9 sm:px-4 sm:text-xs"
                 >
                   Login
                 </Link>
@@ -430,9 +454,9 @@ export function Header({
                 aria-label="Open Menu"
                 aria-expanded={isOpen}
                 aria-controls="mobile-drawer"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-800 md:hidden"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-800 sm:h-9 sm:w-9 md:hidden"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </div>
           </div>
@@ -460,10 +484,13 @@ export function Header({
         </div>
 
         {/* SECONDARY NAVIGATION BAR */}
-        <div className="hidden border-b border-[#E5E5E0] bg-[#FAF7F0] md:block">
+        <div className="hidden overflow-x-auto border-b border-[#E5E5E0] bg-[#FAF7F0] md:block">
           <div className="mx-auto flex max-w-[1280px] items-center px-4 lg:px-8">
-            <nav aria-label="Main navigation" className="w-full">
-              <ul className="font-graphik flex items-center gap-x-8 py-2.5 text-sm font-medium tracking-wide whitespace-nowrap text-neutral-900">
+            <nav
+              aria-label="Main navigation"
+              className="w-full scrollbar-none overflow-x-auto"
+            >
+              <ul className="font-graphik flex min-w-max items-center gap-x-6 py-2.5 text-xs font-medium tracking-wide whitespace-nowrap text-neutral-900 sm:text-sm lg:gap-x-8">
                 {/* Home */}
                 <li className="relative py-0.5">
                   <Link
@@ -476,7 +503,7 @@ export function Header({
                   </Link>
                 </li>
 
-                {/* COLLECTIONS DROPDOWN — now shows category thumbnails */}
+                {/* COLLECTIONS DROPDOWN */}
                 <li ref={collectionsMenuRef} className="relative py-0.5">
                   <button
                     type="button"
@@ -500,9 +527,9 @@ export function Header({
                     <div
                       id="collections-menu"
                       role="menu"
-                      className="animate-in fade-in-50 slide-in-from-top-2 absolute left-0 z-50 mt-2 w-[640px] rounded-2xl border border-neutral-300 bg-[#FAF7F0] p-4 shadow-2xl"
+                      className="animate-in fade-in-50 slide-in-from-top-2 absolute left-0 z-50 mt-2 w-[90vw] max-w-[620px] rounded-2xl border border-neutral-300 bg-[#FAF7F0] p-4 shadow-2xl"
                     >
-                      <div className="grid grid-cols-2 gap-2.5">
+                      <div className="grid max-h-[60vh] grid-cols-1 gap-2.5 overflow-y-auto pr-1 sm:grid-cols-2">
                         {categoriesList.map((cat) => (
                           <Link
                             key={cat.name}
@@ -655,15 +682,15 @@ export function Header({
                   <p className="mb-2 px-3 text-[10px] font-bold tracking-wider text-amber-400 uppercase">
                     Collections & Categories
                   </p>
-                  <div className="grid grid-cols-1 gap-1">
-                    {categoriesList.slice(0, 6).map((cat) => (
+                  <div className="grid max-h-[40vh] grid-cols-1 gap-1 overflow-y-auto pr-1">
+                    {categoriesList.map((cat) => (
                       <Link
                         key={cat.name}
                         href={cat.href}
                         onClick={() => setIsOpen(false)}
                         className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-neutral-400 hover:bg-neutral-800 hover:text-white"
                       >
-                        <div className="relative h-6 w-6 overflow-hidden rounded-md border border-neutral-800 bg-neutral-900">
+                        <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-md border border-neutral-800 bg-neutral-900">
                           <Image
                             src={cat.image}
                             alt=""
@@ -672,7 +699,7 @@ export function Header({
                             sizes="24px"
                           />
                         </div>
-                        <span>{cat.name}</span>
+                        <span className="truncate">{cat.name}</span>
                       </Link>
                     ))}
                     <Link

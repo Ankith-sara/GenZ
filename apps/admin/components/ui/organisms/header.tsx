@@ -5,8 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  ShoppingBag, Search, Heart, Menu, X, 
-  ChevronDown, User, LogOut, Compass,
+  ShoppingBag,
+  Search,
+  Heart,
+  Menu,
+  X,
+  ChevronDown,
+  User,
+  LogOut,
+  Compass,
 } from "lucide-react";
 import { Button } from "@genz/ui";
 import { UserAvatar } from "@genz/ui";
@@ -30,7 +37,7 @@ const categoriesList = [
   {
     name: "Kondapalli Toys",
     href: "/discover?category=Kondapalli Toys",
-    image: "/cat_toys.png",
+    image: "/cat_kondapalli.jpg",
     desc: "Lightweight Tella Poniki wood toys depicting Indian folklore and village life",
     badge: "GI Tag",
   },
@@ -49,10 +56,31 @@ const categoriesList = [
     badge: null,
   },
   {
-    name: "Handicrafts",
-    href: "/discover?category=Handicrafts",
-    image: "/cat_furniture.png",
-    desc: "Heritage Indian craft, artisan woodwork & traditional decor",
+    name: "Brass & Metal Crafts",
+    href: "/discover?category=Brass & Metal Crafts",
+    image: "/cat_brass.jpg",
+    desc: "Ancient Dhokra brass statues, temple lamps & engraved heritage metalware",
+    badge: "Handmade",
+  },
+  {
+    name: "Terracotta & Pottery",
+    href: "/discover?category=Terracotta & Pottery",
+    image: "/cat_pottery.jpg",
+    desc: "Hand-thrown earthenware pottery, clay diyas & festive artisan decor",
+    badge: "Authentic",
+  },
+  {
+    name: "Handloom & Textiles",
+    href: "/discover?category=Handloom & Textiles",
+    image: "/cat_handloom.jpg",
+    desc: "Handwoven Kalamkari, Ikat weaves & artisanal handblock fabrics",
+    badge: "Heritage",
+  },
+  {
+    name: "Kitchen & Dining",
+    href: "/discover?category=Kitchen & Dining",
+    image: "/cat_kitchen.png",
+    desc: "Traditional bronze utensils, soapstone cookware & seasoned cast ware",
     badge: null,
   },
 ];
@@ -360,8 +388,8 @@ export function Header({
                           className="font-graphik flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium hover:bg-neutral-800 hover:text-white"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          <Compass className="h-4 w-4 text-neutral-300" /> Studio Control
-                          Center
+                          <Compass className="h-4 w-4 text-neutral-300" /> Studio
+                          Control Center
                         </Link>
                       ) : role === "buyer" ? (
                         <>

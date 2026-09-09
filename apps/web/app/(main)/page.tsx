@@ -38,7 +38,7 @@ const homepageCategories = [
   {
     name: "Kondapalli Toys",
     href: "/discover?category=Kondapalli Toys",
-    image: "/cat_toys.png",
+    image: "/cat_kondapalli.jpg",
     count: "GI Heritage Craft",
     desc: "Lightweight Tella Poniki wood toys depicting Indian folklore and village life.",
   },
@@ -57,11 +57,32 @@ const homepageCategories = [
     desc: "Solid wood furniture, handcrafted decor & living items.",
   },
   {
-    name: "Handicrafts",
-    href: "/discover?category=Handicrafts",
-    image: "/cat_furniture.png",
-    count: "Heritage Creations",
-    desc: "Master artisan woodwork, brass embellishments & traditional craft.",
+    name: "Brass & Metal Crafts",
+    href: "/discover?category=Brass & Metal Crafts",
+    image: "/cat_brass.jpg",
+    count: "Ancient Dhokra Castings",
+    desc: "Heritage brass diyas, temple bells, engraved metalware & master statues.",
+  },
+  {
+    name: "Terracotta & Pottery",
+    href: "/discover?category=Terracotta & Pottery",
+    image: "/cat_pottery.jpg",
+    count: "Earthen Clay Guilds",
+    desc: "Hand-thrown terracotta pottery, festive clay diyas and studio ceramics.",
+  },
+  {
+    name: "Handloom & Textiles",
+    href: "/discover?category=Handloom & Textiles",
+    image: "/cat_handloom.jpg",
+    count: "Authentic Weaves",
+    desc: "Natural indigo Kalamkari, Ikat weaves & artisanal handblock fabrics.",
+  },
+  {
+    name: "Kitchen & Dining",
+    href: "/discover?category=Kitchen & Dining",
+    image: "/cat_kitchen.png",
+    count: "120+ Heritage Utensils",
+    desc: "Traditional bronze utensils, soapstone cookware & seasoned artisan cast ware.",
   },
 ];
 
@@ -351,42 +372,42 @@ export default async function HomePage() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
             {homepageCategories.map((cat) => (
               <Link
                 key={cat.name}
                 href={cat.href}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#E5E5E0] bg-white p-5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-black/20 hover:shadow-xl"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#E5E5E0] bg-white p-3.5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-black/20 hover:shadow-xl sm:rounded-3xl sm:p-5"
               >
                 <div>
-                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100 sm:rounded-2xl">
                     <Image
                       src={cat.image}
                       alt={cat.name}
                       fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     />
                   </div>
 
-                  <div className="mt-4 space-y-1.5">
-                    <h3 className="font-nantes text-2xl font-bold tracking-tight text-[#1A1A18] transition-colors group-hover:text-amber-600">
+                  <div className="mt-3 space-y-1 sm:mt-4 sm:space-y-1.5">
+                    <h3 className="font-nantes line-clamp-1 text-base font-bold tracking-tight text-[#1A1A18] transition-colors group-hover:text-amber-600 sm:line-clamp-none sm:text-2xl">
                       {cat.name}
                     </h3>
                     {cat.desc && (
-                      <p className="font-graphik line-clamp-2 text-xs leading-relaxed text-neutral-600">
+                      <p className="font-graphik line-clamp-2 text-[11px] leading-relaxed text-neutral-600 sm:text-xs">
                         {cat.desc}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="font-graphik mt-5 flex items-center justify-between border-t border-[#F0F0EC] pt-3.5 text-xs font-bold text-[#1A1A18]">
-                  <span className="text-neutral-500 tabular-nums transition-colors group-hover:text-amber-800">
+                <div className="font-graphik mt-3.5 flex items-center justify-between border-t border-[#F0F0EC] pt-2.5 text-[11px] font-bold text-[#1A1A18] sm:mt-5 sm:pt-3.5 sm:text-xs">
+                  <span className="truncate pr-2 text-[10px] text-neutral-500 tabular-nums transition-colors group-hover:text-amber-800 sm:text-xs">
                     {cat.count}
                   </span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E5E5E0] bg-[#FAF8F4] transition-all duration-300 group-hover:border-black group-hover:bg-black group-hover:text-white">
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#E5E5E0] bg-[#FAF8F4] transition-all duration-300 group-hover:border-black group-hover:bg-black group-hover:text-white sm:h-8 sm:w-8">
+                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5 sm:h-3.5 sm:w-3.5" />
                   </div>
                 </div>
               </Link>

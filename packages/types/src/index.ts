@@ -21,9 +21,10 @@ export const DEFAULT_PRODUCT_CATEGORIES = [
   "Kondapalli Toys",
   "Wooden Toys & Crafts",
   "Home & Furniture",
-  "Handicrafts",
+  "Brass & Metal Crafts",
+  "Terracotta & Pottery",
+  "Handloom & Textiles",
+  "Kitchen & Dining",
 ] as const;
 
 export type ProductCategory = (typeof DEFAULT_PRODUCT_CATEGORIES)[number];
-
-

@@ -13,7 +13,9 @@ export interface PlaceOrderResult {
   error?: string;
 }
 
-export async function placeOrderAction(input: CreateOrderInput): Promise<PlaceOrderResult> {
+export async function placeOrderAction(
+  input: CreateOrderInput
+): Promise<PlaceOrderResult> {
   try {
     const supabase = await createClient();
     const {
@@ -23,7 +25,8 @@ export async function placeOrderAction(input: CreateOrderInput): Promise<PlaceOr
     const order = await createOrderRecord({
       ...input,
       customerId: user?.id || null,
-      paymentMethod: "cod",
+      paymentMethod: input.paymentMethod || "upi_qr",
+      notes: input.notes,
     });
 
     // Group items by seller to dispatch notification emails
@@ -81,11 +84,16 @@ export async function placeOrderAction(input: CreateOrderInput): Promise<PlaceOr
             customerName: input.customerName,
             customerPhone: input.customerPhone,
             shippingAddress: input.shippingAddress,
-            paymentMethod: "Cash on Delivery (COD)",
+            paymentMethod: input.notes
+              ? `UPI QR Payment (UTR: ${input.notes})`
+              : "UPI QR Code Payment",
           });
         }
       } catch (emailErr) {
-        console.warn(`[PlaceOrder] Email dispatch notice for seller ${sellerId}:`, emailErr);
+        console.warn(
+          `[PlaceOrder] Email dispatch notice for seller ${sellerId}:`,
+          emailErr
+        );
       }
     }
 

@@ -453,14 +453,15 @@ function OurStory5Timeline() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Main About Client Component
-// ─────────────────────────────────────────────────────────────────────────────
 export function AboutClient() {
   return (
     <main className="main-wrapper bg-cream-paper text-ink-black font-sans antialiased">
       {/* 1. FOUNDER STORY — Left Image, Right Text Layout */}
-      <section className="section_support border-ash border-b bg-[#FAF7F0] pt-16 pb-20 sm:pt-24 sm:pb-28">
+      <section
+        id="story"
+        className="section_support border-ash border-b bg-[#FAF7F0] pt-16 pb-20 sm:pt-24 sm:pb-28"
+      >
         <div className="padding-global px-6 sm:px-12">
           <div className="container-large mx-auto max-w-[1280px]">
             {/* Section Tag & Heading */}
@@ -609,7 +610,10 @@ export function AboutClient() {
       <FoundationsOfTrustScrollSection />
 
       {/* 4. INDIA 2030 VISION WITH STARTING WITH TOYS & OUR STORY 5 INTERACTIVE TIMELINE */}
-      <section className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12 md:py-28">
+      <section
+        id="vision"
+        className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12 md:py-28"
+      >
         <div className="mx-auto max-w-[1280px]">
           {/* Starting with Toys & Category Expansion Focus Box */}
           <ScrollReveal className="mb-20">
@@ -894,7 +898,8 @@ export function AboutClient() {
               Built for all Indian stakeholders.
             </h2>
             <p className="font-graphik text-smoke mt-3 max-w-lg text-sm">
-              Connecting consumers, artisans, startups, and institutions in one unified domestic ecosystem.
+              Connecting consumers, artisans, startups, and institutions in one unified
+              domestic ecosystem.
             </p>
           </ScrollReveal>
 

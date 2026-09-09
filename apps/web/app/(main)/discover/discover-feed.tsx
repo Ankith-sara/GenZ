@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ProductCard } from "@/features/products/components/product-card";
-import { Search } from "lucide-react";
 import type { Product } from "@genz/types";
 import type { ProductFilters } from "./types";
 
@@ -79,22 +78,32 @@ export function DiscoverFeed({
 
   if (products.length === 0) {
     return (
-      <div className="border-ash/30 bg-pure-white flex flex-col items-center justify-center border px-4 py-20 text-center">
-        <div className="bg-brand-yellow/10 text-brand-yellow-dark mb-5 flex h-16 w-16 items-center justify-center rounded-full">
-          <Search className="h-8 w-8 stroke-[1.5]" />
+      <div className="border-ash/40 flex flex-col items-center justify-center rounded-3xl border bg-white px-6 py-20 text-center shadow-xs">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-semibold text-amber-800">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-amber-500" />
+          <span>Artisan Cluster Onboarding</span>
         </div>
-        <h3 className="text-ink-black font-serif text-2xl font-normal tracking-tight sm:text-3xl">
-          No matches found
+        <h3 className="text-ink-black font-nantes text-3xl font-normal tracking-tight sm:text-4xl">
+          Coming Soon
         </h3>
-        <p className="text-smoke font-graphik mt-3 max-w-md text-sm leading-relaxed">
-          {filters.q ? (
+        <p className="font-graphik mt-3 max-w-md text-sm leading-relaxed text-[#73736E]">
+          {filters.category ? (
             <>
-              We couldn&apos;t find any products or sellers matching &ldquo;
-              <span className="text-ink-black font-semibold">{filters.q}</span>
-              &rdquo;.
+              Authentic products for &ldquo;
+              <strong className="font-semibold text-[#1A1A18]">
+                {filters.category}
+              </strong>
+              &rdquo; are currently being curated and onboarded from verified master
+              artisans. Check back shortly!
+            </>
+          ) : filters.q ? (
+            <>
+              We couldn&apos;t find an active listing matching &ldquo;
+              <strong className="font-semibold text-[#1A1A18]">{filters.q}</strong>
+              &rdquo;. Our craft team is adding new verified Indian makers daily!
             </>
           ) : (
-            "We couldn't find any products matching those filters."
+            "We are actively cataloging verified Indian craft items for this selection. New artisan inventory will be available soon."
           )}
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -102,13 +111,13 @@ export function DiscoverFeed({
             onClick={() => {
               window.location.href = "/discover";
             }}
-            className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik text-ink-black h-11 cursor-pointer border-none px-6 text-xs font-semibold tracking-wider uppercase transition-all"
+            className="font-graphik h-11 cursor-pointer rounded-xl border-none bg-[#D97706] px-6 text-xs font-semibold tracking-wider text-white uppercase shadow-xs transition-all hover:bg-[#B45309]"
           >
-            Clear all filters
+            Explore All Products
           </button>
           <Link
             href="/"
-            className="border-ash text-ink-black hover:bg-cream-paper font-graphik flex h-11 items-center justify-center border bg-transparent px-6 text-xs font-semibold tracking-wider uppercase transition-all"
+            className="font-graphik flex h-11 items-center justify-center rounded-xl border border-[#E5E5E0] bg-white px-6 text-xs font-semibold tracking-wider text-[#1A1A18] uppercase transition-all hover:bg-[#FAF8F4]"
           >
             Go to Home
           </Link>

@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverActions: {
-    // Allow large form submissions (images uploaded via FormData)
-    bodySizeLimit: "10mb",
+  experimental: {
+    serverActions: {
+      // Allow large form submissions (images uploaded via FormData)
+      bodySizeLimit: "10mb",
+    },
   },
   transpilePackages: [
     "@genz/ui",
