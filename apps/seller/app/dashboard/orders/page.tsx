@@ -12,18 +12,28 @@ export default async function SellerOrdersPage() {
 
   let sellerOrders: OrderRecord[] = [];
   try {
-    sellerOrders = await getOrders({ sellerId: session.userId });
-    if (sellerOrders.length === 0) {
-      // For initial demo/preview if this seller has no orders yet
-      const all = await getOrders();
-      sellerOrders = all;
-    }
+    const rawOrders = await getOrders({ sellerId: session.userId });
+    // Scope order items to this seller and adjust totals for multi-seller orders
+    sellerOrders = rawOrders.map((order) => {
+      const sellerItems = (order.items || []).filter(
+        (item) => (item.sellerId || item.seller_id) === session.userId
+      );
+      const sellerSubtotal = sellerItems.reduce(
+        (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+        0
+      );
+      return {
+        ...order,
+        items: sellerItems.length > 0 ? sellerItems : order.items,
+        totalAmount: sellerItems.length > 0 ? sellerSubtotal : order.totalAmount,
+      };
+    });
   } catch (err) {
     console.error("[SellerOrdersPage] Error fetching orders:", err);
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
       <OrdersManager
         mode="seller"
         orders={sellerOrders}

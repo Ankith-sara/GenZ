@@ -4,8 +4,7 @@ import { DashboardSidebar } from "@/components/ui/organisms/dashboard-sidebar";
 import { signOut } from "@/app/login/actions";
 import { SearchTriggerButton } from "@genz/ui";
 import { SellerHeaderNotifications } from "./header-notifications";
-import Link from "next/link";
-import { Calendar, LogOut, CheckCircle2, ShieldAlert, Plus } from "lucide-react";
+import { LogOut, CheckCircle2, AlertCircle } from "lucide-react";
 
 export default async function SellerDashboardLayout({
   children,
@@ -34,9 +33,9 @@ export default async function SellerDashboardLayout({
 
   const isVerified = sellerProfile?.status === "verified";
   const businessName =
-    sellerProfile?.business_name || session.profile?.full_name || "Seller Desk";
+    sellerProfile?.business_name || session.profile?.full_name || "Seller Store";
 
-  // Calculate incomplete onboarding steps for notification badge
+  // Calculate data-driven pending steps for notification badge
   const hasProfileDetails =
     Boolean(sellerProfile?.business_name) &&
     Boolean(sellerProfile?.gst_number && sellerProfile?.gst_number !== "PENDING");
@@ -52,36 +51,25 @@ export default async function SellerDashboardLayout({
   }
   if (!hasDocuments) {
     pendingSteps.push({
-      label: "Upload GST / Trade License documents",
+      label: "Upload Business / Verification Documents",
       href: "/dashboard/documents",
     });
   }
   if (!hasProducts) {
     pendingSteps.push({
-      label: "Publish your first product listing",
+      label: "Publish your first product",
       href: "/dashboard/products/new",
     });
   }
   if (!isVerified) {
     pendingSteps.push({
-      label: "Verification clearance pending admin audit",
+      label: "Store verification review in progress",
       href: "/dashboard",
     });
   }
 
-  const now = new Date();
-  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const dateRangeFormatted = `${sevenDaysAgo.toLocaleDateString("en-US", {
-    month: "short",
-    day: "2-digit",
-  })} - ${now.toLocaleDateString("en-US", {
-    month: "short",
-    day: "2-digit",
-    year: "numeric",
-  })}`;
-
   return (
-    <div className="font-graphik flex min-h-screen flex-col bg-[#FAF8F4] text-[#1A1A18] antialiased sm:flex-row">
+    <div className="bg-surface text-on-surface flex min-h-screen flex-col antialiased sm:flex-row">
       {/* 1. SELLER SIDEBAR */}
       <DashboardSidebar
         role="seller"
@@ -89,66 +77,56 @@ export default async function SellerDashboardLayout({
           full_name: session.profile?.full_name,
           email: session.user.email,
         }}
+        businessName={businessName}
+        isVerified={isVerified}
       />
 
       {/* 2. MAIN CONTENT AREA */}
       <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         {/* Sticky Header Topbar */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4]/90 px-3 backdrop-blur-md select-none sm:px-6">
-          {/* Workspace Title & Verification Pill */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <h1 className="font-graphik xs:max-w-[160px] max-w-[120px] truncate text-xs font-bold text-[#1A1A18] sm:max-w-xs sm:text-sm">
+        <header className="border-outline-variant/60 bg-surface-container-lowest/95 shadow-elevation-1 sticky top-0 z-30 flex h-14 items-center justify-between border-b px-3 backdrop-blur-md select-none sm:px-6">
+          {/* Workspace Title & Verification Chip */}
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-on-surface max-w-[140px] truncate text-xs font-semibold sm:max-w-xs sm:text-sm">
               {businessName}
             </h1>
             <span
-              className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold tracking-wider uppercase sm:px-2.5 sm:text-[10px] ${
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-tight ${
                 isVerified
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border-amber-200 bg-amber-50 text-amber-700"
+                  ? "border-success/20 bg-success-container text-on-success-container border"
+                  : "border-warning/20 bg-warning-container text-on-warning-container border"
               }`}
             >
               {isVerified ? (
                 <>
-                  <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                  <span className="xs:inline hidden">Verified Factory</span>
+                  <CheckCircle2 className="text-success h-3 w-3" />
+                  <span className="xs:inline hidden">Verified Store</span>
                   <span className="xs:hidden">Verified</span>
                 </>
               ) : (
                 <>
-                  <ShieldAlert className="h-3 w-3 text-amber-600" />
-                  <span className="xs:inline hidden">Pending Clearance</span>
+                  <AlertCircle className="text-warning h-3 w-3" />
+                  <span className="xs:inline hidden">Pending Review</span>
                   <span className="xs:hidden">Pending</span>
                 </>
               )}
             </span>
           </div>
 
-          {/* Controls: Search, Notifications, date badge, exit */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <Link
-              href="/dashboard/products/new"
-              className="flex h-8 items-center gap-1.5 rounded-lg bg-black px-3 text-xs font-semibold text-white shadow-2xs transition-all hover:bg-neutral-800 active:scale-95"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Add Product</span>
-            </Link>
-
-            <SearchTriggerButton placeholder="Search factory..." />
+          {/* Controls: Search, Notifications, Exit */}
+          <div className="flex items-center gap-2">
+            <SearchTriggerButton placeholder="Search store..." />
 
             <SellerHeaderNotifications pendingSteps={pendingSteps} />
-
-            <div className="hidden items-center gap-1.5 rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1 font-mono text-xs font-semibold text-[#52524E] shadow-2xs md:flex">
-              <Calendar className="h-3.5 w-3.5 text-[#73736E]" />
-              <span>{dateRangeFormatted}</span>
-            </div>
 
             <form action={signOut}>
               <button
                 type="submit"
-                className="flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[#E5E5E0] bg-white px-2 text-xs font-semibold text-[#52524E] shadow-2xs transition-colors hover:bg-rose-50 hover:text-rose-700 sm:px-2.5"
+                className="border-outline-variant/60 bg-surface-container-lowest text-on-surface-variant hover:bg-error-container hover:text-on-error-container hover:border-error/30 flex h-8 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors"
+                title="Sign out of seller account"
               >
                 <LogOut className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Exit</span>
+                <span className="hidden sm:inline">Sign out</span>
               </button>
             </form>
           </div>

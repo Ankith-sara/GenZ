@@ -103,8 +103,9 @@ export function ActionDropdown({
           setIsOpen((prev) => !prev);
         }}
         className={clsx(
-          "flex h-8 w-8 items-center justify-center rounded-lg border border-[#E5E5E0] bg-white text-[#52524E] transition-all hover:border-black/30 hover:bg-[#FAF7F0] hover:text-black focus:outline-none",
-          isOpen && "border-black bg-[#FAF7F0] text-black",
+          "border-border bg-card text-muted-foreground hover:border-foreground/30 hover:bg-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-full border shadow-2xs transition-all focus:outline-none",
+          isOpen &&
+            "border-foreground/40 bg-muted text-foreground ring-foreground/10 ring-1",
           buttonClassName
         )}
         aria-label="Actions menu"
@@ -126,7 +127,7 @@ export function ActionDropdown({
               right: coords.right !== undefined ? `${coords.right}px` : "auto",
               maxHeight: `${coords.maxHeight}px`,
             }}
-            className="animate-in fade-in-80 zoom-in-95 z-[999999] min-w-[175px] overflow-y-auto rounded-xl border border-[#E5E5E0] bg-white p-1.5 shadow-xl ring-1 ring-black/5 duration-100"
+            className="animate-in fade-in-80 zoom-in-95 border-border bg-card z-[999999] min-w-[190px] overflow-y-auto rounded-2xl border p-1.5 shadow-xl ring-1 ring-black/5 backdrop-blur-md duration-100"
           >
             {actions.map((item, idx) => (
               <button
@@ -140,14 +141,14 @@ export function ActionDropdown({
                   }
                 }}
                 className={clsx(
-                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors select-none disabled:cursor-not-allowed disabled:opacity-50",
+                  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors select-none disabled:cursor-not-allowed disabled:opacity-50",
                   item.variant === "destructive"
-                    ? "text-rose-600 hover:bg-rose-50"
-                    : "text-[#1A1A18] hover:bg-[#F5F5F3]"
+                    ? "text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                    : "text-foreground hover:bg-muted"
                 )}
               >
                 {item.icon && (
-                  <span className="h-3.5 w-3.5 shrink-0 text-[#73736E]">
+                  <span className="text-muted-foreground h-3.5 w-3.5 shrink-0">
                     {item.icon}
                   </span>
                 )}

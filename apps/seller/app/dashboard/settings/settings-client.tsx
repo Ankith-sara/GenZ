@@ -30,19 +30,16 @@ export function SellerSettingsClient({ userEmail }: SellerSettingsClientProps) {
   };
 
   return (
-    <div className="font-graphik space-y-6 select-none">
+    <div className="space-y-6">
       <PageHeader
-        title="Seller Settings"
-        description="Configure your account security, password reset preferences, and email notifications."
-        breadcrumbs={[
-          { label: "Seller Desk", href: "/seller/dashboard" },
-          { label: "Settings" },
-        ]}
+        title="Settings"
+        description="Configure your store notifications, email preferences, and account security."
+        breadcrumbs={[{ label: "Overview", href: "/dashboard" }, { label: "Settings" }]}
       />
 
       {savedSuccess && (
-        <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-xs text-emerald-900 shadow-2xs">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+        <div className="border-success/20 bg-success-container/60 text-on-success-container flex items-center gap-3 rounded-2xl border p-4 text-xs shadow-2xs">
+          <CheckCircle2 className="text-success h-4 w-4 shrink-0" />
           <span className="font-semibold">
             Notification preferences updated successfully.
           </span>
@@ -50,38 +47,38 @@ export function SellerSettingsClient({ userEmail }: SellerSettingsClientProps) {
       )}
 
       {passwordMsg && (
-        <div className="flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50/80 p-4 text-xs text-blue-900 shadow-2xs">
-          <KeyRound className="h-4 w-4 shrink-0 text-blue-600" />
+        <div className="border-primary/20 bg-primary-container/60 text-on-primary-container flex items-center gap-3 rounded-2xl border p-4 text-xs shadow-2xs">
+          <KeyRound className="text-primary h-4 w-4 shrink-0" />
           <span className="font-semibold">{passwordMsg}</span>
         </div>
       )}
 
       {/* 1. SECURITY & PASSWORD RESET CARD */}
-      <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-        <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
+      <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-5 sm:p-6">
+        <div className="border-outline-variant/40 flex items-center justify-between border-b pb-3">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-black" />
-            <h3 className="text-sm font-bold text-[#1A1A18]">
-              Security & Authentication
+            <ShieldCheck className="text-on-surface h-5 w-5" />
+            <h3 className="text-on-surface text-sm font-bold">
+              Security &amp; Authentication
             </h3>
           </div>
-          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-700">
-            2FA Eligible
+          <span className="border-success/20 bg-success-container text-on-success-container rounded-full border px-2.5 py-0.5 text-[10px] font-semibold">
+            2FA Protected
           </span>
         </div>
 
-        <div className="flex items-center justify-between rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 text-xs">
+        <div className="border-outline-variant/50 bg-surface-container-low flex items-center justify-between rounded-xl border p-4 text-xs">
           <div className="space-y-0.5">
-            <span className="block font-bold text-[#1A1A18]">Password Reset</span>
-            <span className="block text-[11px] text-[#73736E]">
-              Send password change link to your login email address ({userEmail})
+            <span className="text-on-surface block font-bold">Password Reset</span>
+            <span className="text-on-surface-variant block text-[11px]">
+              Send a password reset link to your login email address ({userEmail})
             </span>
           </div>
           <Button
             type="button"
             variant="outline"
             onClick={handlePasswordResetRequest}
-            className="h-8 border-[#E5E5E0] text-xs font-semibold hover:bg-white"
+            className="border-outline-variant hover:bg-surface-container text-on-surface h-8 rounded-full text-xs font-semibold"
           >
             <Lock className="mr-1.5 h-3.5 w-3.5" />
             <span>Reset Password</span>
@@ -90,46 +87,44 @@ export function SellerSettingsClient({ userEmail }: SellerSettingsClientProps) {
       </div>
 
       {/* 2. NOTIFICATION PREFERENCES CARD */}
-      <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-        <div className="flex items-center gap-2 border-b border-[#F0F0EC] pb-3">
-          <Bell className="h-5 w-5 text-black" />
-          <h3 className="text-sm font-bold text-[#1A1A18]">
-            Email Dispatch & Notification Preferences
+      <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-5 sm:p-6">
+        <div className="border-outline-variant/40 flex items-center gap-2 border-b pb-3">
+          <Bell className="text-on-surface h-5 w-5" />
+          <h3 className="text-on-surface text-sm font-bold">
+            Email &amp; Order Notification Preferences
           </h3>
         </div>
 
-        <div className="space-y-4 divide-y divide-[#F0F0EC] text-xs">
+        <div className="divide-outline-variant/30 space-y-4 divide-y text-xs">
           <div className="flex items-center justify-between pt-2">
             <div>
-              <h4 className="font-bold text-[#1A1A18]">Customer Order Alerts</h4>
-              <p className="text-[11px] text-[#73736E]">
+              <h4 className="text-on-surface font-bold">Customer Order Alerts</h4>
+              <p className="text-on-surface-variant text-[11px]">
                 Receive instant email notification whenever a customer places an order
-                or requests tracking updates.
+                for your products.
               </p>
             </div>
             <input
               type="checkbox"
               checked={orderAlerts}
               onChange={(e) => setOrderAlerts(e.target.checked)}
-              className="h-4 w-4 cursor-pointer rounded accent-black"
+              className="accent-primary h-4 w-4 cursor-pointer rounded"
             />
           </div>
 
           <div className="flex items-center justify-between pt-4">
             <div>
-              <h4 className="font-bold text-[#1A1A18]">
-                GenZ Seller Digest & Platform Reports
-              </h4>
-              <p className="text-[11px] text-[#73736E]">
-                Periodic emails about seller portal feature upgrades, market demand
-                reports, and catalog analytics.
+              <h4 className="text-on-surface font-bold">GenZ Seller Platform Digest</h4>
+              <p className="text-on-surface-variant text-[11px]">
+                Periodic emails about seller feature updates, market demand insights,
+                and catalog analytics.
               </p>
             </div>
             <input
               type="checkbox"
               checked={marketingEmails}
               onChange={(e) => setMarketingEmails(e.target.checked)}
-              className="h-4 w-4 cursor-pointer rounded accent-black"
+              className="accent-primary h-4 w-4 cursor-pointer rounded"
             />
           </div>
         </div>
@@ -138,10 +133,10 @@ export function SellerSettingsClient({ userEmail }: SellerSettingsClientProps) {
           <Button
             type="button"
             onClick={handleSavePreferences}
-            className="h-9 rounded-lg bg-black px-4 text-xs font-semibold text-white hover:bg-neutral-800"
+            className="bg-primary text-on-primary shadow-elevation-1 hover:shadow-elevation-2 h-8 rounded-full px-4 text-xs font-semibold"
           >
             <Save className="mr-1.5 h-3.5 w-3.5" />
-            <span>Save Notification Preferences</span>
+            <span>Save Preferences</span>
           </Button>
         </div>
       </div>

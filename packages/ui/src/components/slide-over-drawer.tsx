@@ -38,13 +38,14 @@ export function SlideOverDrawer({
 
   if (!isOpen) return null;
 
-  const resolvedWidth = ((size as "md" | "lg" | "xl" | "2xl") || maxWidth || "xl");
-  const widthClasses = {
-    md: "max-w-md",
-    lg: "max-w-lg",
-    xl: "max-w-xl",
-    "2xl": "max-w-2xl",
-  }[resolvedWidth] || "max-w-xl";
+  const resolvedWidth = (size as "md" | "lg" | "xl" | "2xl") || maxWidth || "xl";
+  const widthClasses =
+    {
+      md: "max-w-md",
+      lg: "max-w-lg",
+      xl: "max-w-xl",
+      "2xl": "max-w-2xl",
+    }[resolvedWidth] || "max-w-xl";
   const displaySubtitle = subtitle || description;
 
   return (
@@ -56,27 +57,33 @@ export function SlideOverDrawer({
 
       <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
         <div
-          className={`w-screen ${widthClasses} flex transform flex-col justify-between bg-white shadow-2xl transition-transform duration-200 ease-in-out`}
+          className={`w-screen ${widthClasses} bg-card text-foreground flex transform flex-col justify-between shadow-2xl transition-transform duration-200 ease-in-out`}
         >
-          <div className="flex items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4] px-6 py-4">
+          <div className="border-border bg-muted/40 flex items-center justify-between border-b px-6 py-4">
             <div>
-              <h2 className="text-lg font-bold text-[#1A1A18]">{title}</h2>
-              {displaySubtitle && <p className="mt-0.5 text-xs text-[#73736E]">{displaySubtitle}</p>}
+              <h2 className="text-foreground text-lg font-bold tracking-tight">
+                {title}
+              </h2>
+              {displaySubtitle && (
+                <p className="text-muted-foreground mt-0.5 text-xs">
+                  {displaySubtitle}
+                </p>
+              )}
             </div>
 
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-[#73736E] transition-colors hover:bg-[#EAEAE6] hover:text-black"
+              className="text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-full p-2 transition-colors"
               aria-label="Close drawer"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           </div>
 
           <div className="flex-1 space-y-6 overflow-y-auto p-6">{children}</div>
 
           {footer && (
-            <div className="flex shrink-0 items-center justify-end gap-3 border-t border-[#E5E5E0] bg-[#FAF8F4] p-4">
+            <div className="border-border bg-muted/40 flex shrink-0 items-center justify-end gap-3 border-t p-4">
               {footer}
             </div>
           )}

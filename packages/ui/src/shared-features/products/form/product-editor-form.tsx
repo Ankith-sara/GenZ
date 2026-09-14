@@ -4,8 +4,14 @@ import React, { useState, useEffect, useRef, startTransition } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  ArrowLeft, Eye, Save, Send,
-  CheckCircle2, Loader2, X, Film, 
+  ArrowLeft,
+  Eye,
+  Save,
+  Send,
+  CheckCircle2,
+  Loader2,
+  X,
+  Film,
   Image as ImageIcon,
 } from "lucide-react";
 import { Button } from "../../../components/button";
@@ -125,6 +131,9 @@ export function ProductEditorForm({
   const [status, setStatus] = useState<"published" | "draft">(
     initialValues?.status || "published"
   );
+  const [submittingStatus, setSubmittingStatus] = useState<
+    "published" | "draft" | null
+  >(null);
 
   const submittedStatusRef = useRef<"published" | "draft" | null>(null);
   const prevSuccessRef = useRef(false);
@@ -136,7 +145,8 @@ export function ProductEditorForm({
       const target = submittedStatusRef.current || status;
       if (target === "draft") {
         toast.success("Listing saved as Draft", {
-          description: "Your product has been saved privately in your workshop catalog.",
+          description:
+            "Your product has been saved privately in your workshop catalog.",
         });
       } else {
         toast.success(
@@ -175,7 +185,11 @@ export function ProductEditorForm({
       const url = new URL(window.location.href);
       url.searchParams.delete("created");
       url.searchParams.delete("status");
-      window.history.replaceState({}, "", url.pathname + (url.search ? url.search : ""));
+      window.history.replaceState(
+        {},
+        "",
+        url.pathname + (url.search ? url.search : "")
+      );
     }
   }, []);
 
@@ -187,6 +201,7 @@ export function ProductEditorForm({
 
     const effectiveStatus = targetStatus || status || "published";
     submittedStatusRef.current = effectiveStatus;
+    setSubmittingStatus(effectiveStatus);
 
     const formData = new FormData(formElement);
 
@@ -240,29 +255,29 @@ export function ProductEditorForm({
   return (
     <div className="mx-auto max-w-5xl space-y-6 pb-16">
       {/* PAGE HEADER & ACTIONS */}
-      <div className="flex flex-col gap-4 rounded-xl border border-[#E5E5E0] bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-border bg-card flex flex-col gap-4 rounded-2xl border p-5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="mb-1 flex items-center gap-2 text-xs text-[#737373]">
+          <div className="text-muted-foreground mb-1.5 flex items-center gap-2 text-xs">
             <Link
               href={cancelHref}
-              className="flex items-center gap-1 hover:text-[#171717] hover:underline"
+              className="hover:text-foreground flex items-center gap-1 font-medium transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>{role === "admin" ? "Catalog Desk" : "Products"}</span>
             </Link>
             <span>/</span>
-            <span className="font-semibold text-[#171717]">
+            <span className="text-foreground font-semibold">
               {mode === "edit" ? initialValues?.name || "Edit Listing" : "New Listing"}
             </span>
           </div>
-          <h1 className="text-xl font-semibold tracking-tight text-[#171717]">
+          <h1 className="text-foreground text-xl font-bold tracking-tight sm:text-2xl">
             {mode === "edit"
               ? `Edit: ${initialValues?.name || "Product"}`
               : role === "admin"
                 ? "Add Catalog Product"
                 : "Add New Product"}
           </h1>
-          <p className="mt-0.5 text-xs text-[#737373]">
+          <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
             {mode === "edit"
               ? "Update listing details, pricing, inventory specifications, and active status."
               : role === "admin"
@@ -277,10 +292,10 @@ export function ProductEditorForm({
               type="button"
               variant="outline"
               asChild
-              className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE}`}
+              className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-full px-4 text-xs font-semibold shadow-2xs ${PRESSABLE}`}
             >
               <Link href={manageReelsHref}>
-                <Film className="h-3.5 w-3.5 text-[#737373]" />
+                <Film className="text-muted-foreground h-3.5 w-3.5" />
                 <span>Reels {reelsCount !== undefined ? `(${reelsCount})` : ""}</span>
               </Link>
             </Button>
@@ -294,16 +309,16 @@ export function ProductEditorForm({
               executeSubmit("draft");
             }}
             disabled={isPending || isUploading}
-            className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] disabled:opacity-60 ${PRESSABLE}`}
+            className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-full px-4 text-xs font-semibold shadow-2xs disabled:opacity-60 ${PRESSABLE}`}
           >
-            {(isPending || isUploading) && submittedStatusRef.current === "draft" ? (
+            {(isPending || isUploading) && submittingStatus === "draft" ? (
               <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-[#737373]" />
+                <Loader2 className="text-muted-foreground h-3.5 w-3.5 animate-spin" />
                 <span>Saving Draft...</span>
               </>
             ) : (
               <>
-                <Save className="h-3.5 w-3.5 text-[#737373]" />
+                <Save className="text-muted-foreground h-3.5 w-3.5" />
                 <span>Save Draft</span>
               </>
             )}
@@ -313,9 +328,9 @@ export function ProductEditorForm({
             type="button"
             variant="outline"
             onClick={() => setShowPreviewModal(true)}
-            className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] ${PRESSABLE}`}
+            className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-full px-4 text-xs font-semibold shadow-2xs ${PRESSABLE}`}
           >
-            <Eye className="h-3.5 w-3.5 text-[#737373]" />
+            <Eye className="text-muted-foreground h-3.5 w-3.5" />
             <span>Preview</span>
           </Button>
 
@@ -326,15 +341,15 @@ export function ProductEditorForm({
               executeSubmit(target);
             }}
             disabled={isPending || isUploading}
-            className={`h-9 items-center gap-1.5 rounded-lg bg-[#171717] px-4 text-xs font-medium text-white shadow-xs hover:bg-[#262626] disabled:opacity-60 ${PRESSABLE}`}
+            className={`h-9 items-center gap-1.5 rounded-full !bg-[#18181b] px-5 text-xs font-semibold !text-white shadow-xs hover:!bg-black disabled:opacity-60 ${PRESSABLE}`}
           >
             {isPending || isUploading ? (
               <>
                 <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
-                <span>
+                <span className="text-white">
                   {isUploading
                     ? "Uploading Media..."
-                    : submittedStatusRef.current === "draft"
+                    : submittingStatus === "draft"
                       ? "Saving..."
                       : mode === "edit"
                         ? "Saving Changes..."
@@ -343,8 +358,8 @@ export function ProductEditorForm({
               </>
             ) : (
               <>
-                <Send className="h-3.5 w-3.5" />
-                <span>
+                <Send className="h-3.5 w-3.5 text-white" />
+                <span className="text-white">
                   {submitLabel ||
                     (mode === "edit" ? "Save Changes" : "Publish Product")}
                 </span>
@@ -447,8 +462,8 @@ export function ProductEditorForm({
         <PublishingCard status={status} onChangeStatus={setStatus} />
 
         {/* BOTTOM ACTION BAR */}
-        <div className="flex flex-col gap-3 rounded-xl border border-[#E5E5E0] bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-xs text-[#737373]">
+        <div className="border-border bg-card flex flex-col gap-3 rounded-2xl border p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-muted-foreground text-xs">
             Changes can be updated or unlisted anytime from your catalog desk.
           </span>
           <div className="flex items-center gap-2">
@@ -460,16 +475,16 @@ export function ProductEditorForm({
                 executeSubmit("draft");
               }}
               disabled={isPending || isUploading}
-              className={`h-9 items-center gap-1.5 rounded-lg border-[#E5E5E0] bg-white px-3.5 text-xs font-medium text-[#171717] hover:border-[#171717]/30 hover:bg-[#F5F5F4] hover:text-[#171717] disabled:opacity-60 ${PRESSABLE}`}
+              className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-full px-4 text-xs font-semibold shadow-2xs disabled:opacity-60 ${PRESSABLE}`}
             >
-              {(isPending || isUploading) && submittedStatusRef.current === "draft" ? (
+              {(isPending || isUploading) && submittingStatus === "draft" ? (
                 <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin text-[#737373]" />
+                  <Loader2 className="text-muted-foreground h-3.5 w-3.5 animate-spin" />
                   <span>Saving Draft...</span>
                 </>
               ) : (
                 <>
-                  <Save className="h-3.5 w-3.5 text-[#737373]" />
+                  <Save className="text-muted-foreground h-3.5 w-3.5" />
                   <span>Save as Draft</span>
                 </>
               )}
@@ -478,15 +493,15 @@ export function ProductEditorForm({
             <Button
               type="submit"
               disabled={isPending || isUploading}
-              className={`h-9 items-center gap-1.5 rounded-lg bg-[#171717] px-4 text-xs font-medium text-white shadow-xs hover:bg-[#262626] disabled:opacity-60 ${PRESSABLE}`}
+              className={`h-9 items-center gap-1.5 rounded-full !bg-[#18181b] px-5 text-xs font-semibold !text-white shadow-xs hover:!bg-black disabled:opacity-60 ${PRESSABLE}`}
             >
               {isPending || isUploading ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
-                  <span>
+                  <span className="text-white">
                     {isUploading
                       ? "Uploading Media..."
-                      : submittedStatusRef.current === "draft"
+                      : submittingStatus === "draft"
                         ? "Saving..."
                         : mode === "edit"
                           ? "Saving Changes..."
@@ -495,8 +510,8 @@ export function ProductEditorForm({
                 </>
               ) : (
                 <>
-                  <Send className="h-3.5 w-3.5" />
-                  <span>
+                  <Send className="h-3.5 w-3.5 text-white" />
+                  <span className="text-white">
                     {submitLabel ||
                       (mode === "edit" ? "Save Changes" : "Publish Product")}
                   </span>
@@ -514,22 +529,22 @@ export function ProductEditorForm({
             className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
             onClick={() => setShowPreviewModal(false)}
           />
-          <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between border-b border-[#E5E5E0] pb-3">
-              <span className="font-mono text-xs font-semibold tracking-wider text-[#737373] uppercase">
+          <div className="border-border bg-card relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border p-6 shadow-2xl">
+            <div className="border-border flex items-center justify-between border-b pb-3">
+              <span className="text-muted-foreground font-mono text-xs font-bold tracking-wider uppercase">
                 Storefront Buyer Preview
               </span>
               <button
                 type="button"
                 onClick={() => setShowPreviewModal(false)}
-                className="rounded-lg p-1 text-[#737373] hover:bg-[#F5F5F4] hover:text-[#171717]"
+                className="text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-full p-1.5 transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="mt-4 space-y-4">
-              <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-[#E5E5E0] bg-[#FAF8F5]">
+              <div className="border-border bg-muted/40 relative aspect-square w-full overflow-hidden rounded-2xl border">
                 {coverPreview ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -538,7 +553,7 @@ export function ProductEditorForm({
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-full w-full flex-col items-center justify-center text-[#A3A3A3]">
+                  <div className="text-muted-foreground flex h-full w-full flex-col items-center justify-center">
                     <ImageIcon className="mb-2 h-10 w-10" />
                     <span className="text-xs">No cover image uploaded</span>
                   </div>
@@ -546,23 +561,23 @@ export function ProductEditorForm({
               </div>
 
               <div>
-                <span className="rounded-md bg-[#FAF8F5] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#737373]">
+                <span className="bg-muted text-muted-foreground rounded-full px-3 py-1 font-mono text-[10px] font-semibold">
                   {category}
                 </span>
-                <h3 className="mt-1 text-base font-semibold text-[#171717]">
+                <h3 className="text-foreground mt-2 text-base font-bold tracking-tight">
                   {name || "Untitled Product"}
                 </h3>
-                <span className="font-mono text-lg font-bold text-[#171717]">
+                <span className="text-foreground font-mono text-lg font-bold">
                   ₹{priceInr ? Number(priceInr).toLocaleString() : "0.00"}
                 </span>
               </div>
 
               {description && (
-                <div className="border-t border-[#E5E5E0] pt-3">
-                  <span className="mb-1 block text-xs font-semibold text-[#171717]">
+                <div className="border-border border-t pt-3">
+                  <span className="text-foreground mb-1 block text-xs font-bold">
                     Craft Story
                   </span>
-                  <p className="text-xs leading-relaxed whitespace-pre-wrap text-[#52524E]">
+                  <p className="text-muted-foreground text-xs leading-relaxed whitespace-pre-wrap">
                     {description}
                   </p>
                 </div>

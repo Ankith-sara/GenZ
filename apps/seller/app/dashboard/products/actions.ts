@@ -117,7 +117,8 @@ export async function createProduct(
   // Images are now uploaded client-side to Supabase Storage.
   // The client sends storage paths (strings) instead of raw File bytes.
   const coverImagePath = String(formData.get("cover_image_path") ?? "").trim();
-  const galleryImagePaths = formData.getAll("gallery_image_paths")
+  const galleryImagePaths = formData
+    .getAll("gallery_image_paths")
     .map((v) => String(v).trim())
     .filter(Boolean);
 
@@ -176,7 +177,8 @@ export async function createProduct(
   }
 
   const customSellerId = String(formData.get("seller_id") ?? "").trim();
-  const targetSellerId = customSellerId || session.userId;
+  const isAdmin = session.profile?.role === "admin";
+  const targetSellerId = isAdmin && customSellerId ? customSellerId : session.userId;
 
   // 1. Ensure user profile exists in profiles table
   try {
@@ -572,34 +574,51 @@ export async function sellerDeleteProductAction(productId: string) {
     actionName: "delete_product",
     identifier: session.userId,
   });
-  if (rateLimit.blocked) return;
+  if (rateLimit.blocked) return { error: rateLimit.error || "Rate limit exceeded" };
 
   const supabase = await createClient();
+
+  // Verify ownership before deleting record or media
+  const { data: product } = await supabase
+    .from("products")
+    .select("cover_image_path, seller_id")
+    .eq("id", productId)
+    .maybeSingle();
+
+  if (
+    !product ||
+    (product.seller_id !== session.userId && session.profile?.role !== "admin")
+  ) {
+    return { error: "Permission denied: Product not found or unauthorized." };
+  }
 
   const { data: reels } = await supabase
     .from("reels")
     .select("video_path, thumbnail_path")
     .eq("product_id", productId);
 
-  const { data: product } = await supabase
-    .from("products")
-    .select("cover_image_path")
-    .eq("id", productId)
-    .single();
-
-  await supabase
+  const { error: deleteError } = await supabase
     .from("products")
     .delete()
     .eq("id", productId)
-    .eq("seller_id", session.userId);
+    .eq("seller_id", product.seller_id);
+
+  if (deleteError) {
+    console.error("Delete product error:", deleteError);
+    return { error: "Failed to delete product." };
+  }
 
   const paths = [
-    product?.cover_image_path,
+    product.cover_image_path,
     ...(reels ?? []).flatMap((r) => [r.video_path, r.thumbnail_path]),
   ].filter((p): p is string => !!p);
 
   if (paths.length > 0) {
-    await supabase.storage.from("product-media").remove(paths);
+    try {
+      await supabase.storage.from("product-media").remove(paths);
+    } catch (storageErr) {
+      console.warn("Storage media removal notice:", storageErr);
+    }
   }
 
   await logRateLimitAttempt({
@@ -609,53 +628,11 @@ export async function sellerDeleteProductAction(productId: string) {
   });
 
   revalidatePath("/dashboard/products");
+  return { success: true };
 }
 
 export async function deleteProduct(productId: string) {
-  const session = await requireRole("seller");
-
-  // Rate Limit
-  const rateLimit = await checkRateLimit({
-    endpointType: "user",
-    actionName: "delete_product",
-    identifier: session.userId,
-  });
-  if (rateLimit.blocked) return;
-
-  const supabase = await createClient();
-
-  const { data: reels } = await supabase
-    .from("reels")
-    .select("video_path, thumbnail_path")
-    .eq("product_id", productId);
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("cover_image_path")
-    .eq("id", productId)
-    .single();
-
-  await supabase
-    .from("products")
-    .delete()
-    .eq("id", productId)
-    .eq("seller_id", session.userId);
-
-  const paths = [
-    product?.cover_image_path,
-    ...(reels ?? []).flatMap((r) => [r.video_path, r.thumbnail_path]),
-  ].filter((p): p is string => !!p);
-
-  if (paths.length > 0) {
-    await supabase.storage.from("product-media").remove(paths);
-  }
-
-  await logRateLimitAttempt({
-    endpointType: "user",
-    actionName: "delete_product",
-    identifier: session.userId,
-  });
-
+  await sellerDeleteProductAction(productId);
   revalidatePath("/dashboard/products");
   redirect("/dashboard/products");
 }
@@ -700,6 +677,21 @@ export async function addVariant(
   }
 
   const supabase = await createClient();
+
+  // Verify product ownership
+  const { data: product } = await supabase
+    .from("products")
+    .select("id, seller_id")
+    .eq("id", productId)
+    .maybeSingle();
+
+  if (
+    !product ||
+    (product.seller_id !== session.userId && session.profile?.role !== "admin")
+  ) {
+    return { error: "Permission denied: Product not found or unauthorized." };
+  }
+
   const { error } = await supabase.from("product_variants").insert({
     product_id: productId,
     seller_id: session.userId,

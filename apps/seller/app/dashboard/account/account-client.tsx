@@ -72,27 +72,24 @@ export function SellerAccountClient({
   });
 
   return (
-    <div className="font-graphik space-y-6">
+    <div className="space-y-6">
       <PageHeader
-        title="Seller Account"
-        description="View and update your personal user details, factory business profile, and active session details."
-        breadcrumbs={[
-          { label: "Seller Desk", href: "/seller/dashboard" },
-          { label: "Account" },
-        ]}
+        title="Business Account & Profile"
+        description="Manage your verified business identity, GSTIN registration, and account credentials."
+        breadcrumbs={[{ label: "Overview", href: "/dashboard" }, { label: "Account" }]}
       />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* 1. PERSONAL USER ACCOUNT CARD */}
-        <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-          <div className="flex items-center gap-2 border-b border-[#F0F0EC] pb-3">
-            <User className="h-5 w-5 text-black" />
-            <h3 className="text-sm font-bold text-[#1A1A18]">Personal User Account</h3>
+        <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-5 sm:p-6">
+          <div className="border-outline-variant/40 flex items-center gap-2 border-b pb-3">
+            <User className="text-on-surface h-5 w-5" />
+            <h3 className="text-on-surface text-sm font-bold">User Account</h3>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="mb-2 block text-xs font-semibold text-[#73736E]">
+              <label className="text-on-surface-variant mb-2 block text-xs font-semibold">
                 Profile Avatar
               </label>
               <AvatarUploader
@@ -102,73 +99,79 @@ export function SellerAccountClient({
               />
             </div>
 
-            <div className="space-y-2.5 border-t border-[#F0F0EC] pt-3 text-xs">
+            <div className="border-outline-variant/40 space-y-2.5 border-t pt-3 text-xs">
               <div>
-                <span className="block font-semibold text-[#73736E]">Full Name</span>
-                <span className="font-bold text-black">{fullName}</span>
+                <span className="text-on-surface-variant block font-semibold">
+                  Full Name
+                </span>
+                <span className="text-on-surface font-bold">{fullName}</span>
               </div>
               <div>
-                <span className="block font-semibold text-[#73736E]">Login Email</span>
-                <span className="font-mono text-[#1A1A18]">{userEmail}</span>
+                <span className="text-on-surface-variant block font-semibold">
+                  Login Email
+                </span>
+                <span className="text-on-surface font-mono">{userEmail}</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* 2. CURRENT ACTIVE DEVICE LOG */}
-        <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-          <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
+        <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-5 sm:p-6">
+          <div className="border-outline-variant/40 flex items-center justify-between border-b pb-3">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-black" />
-              <h3 className="text-sm font-bold text-[#1A1A18]">
+              <ShieldCheck className="text-on-surface h-5 w-5" />
+              <h3 className="text-on-surface text-sm font-bold">
                 Current Device Session
               </h3>
             </div>
-            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-700">
+            <span className="border-success/20 bg-success-container text-on-success-container rounded-full border px-2.5 py-0.5 text-[10px] font-semibold">
               Active Session
             </span>
           </div>
 
-          <div className="flex items-center justify-between rounded-xl border border-emerald-200/60 bg-emerald-50/30 p-4 shadow-2xs">
+          <div className="border-success/20 bg-success-container/20 flex items-center justify-between rounded-xl border p-4 shadow-2xs">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#E5E5E0] bg-[#FAF8F4] text-black">
+              <div className="border-outline-variant/50 bg-surface-container-low text-on-surface flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border">
                 {currentDevice.type === "windows" ? (
-                  <Monitor className="h-5 w-5 text-[#1A1A18]" />
+                  <Monitor className="text-on-surface h-5 w-5" />
                 ) : currentDevice.type === "apple" ? (
-                  <Apple className="h-5 w-5 text-[#1A1A18]" />
+                  <Apple className="text-on-surface h-5 w-5" />
                 ) : (
-                  <Smartphone className="h-5 w-5 text-[#1A1A18]" />
+                  <Smartphone className="text-on-surface h-5 w-5" />
                 )}
               </div>
 
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#1A1A18]">{currentDevice.name}</span>
-                  <span className="rounded bg-emerald-100 px-1.5 py-0.5 font-mono text-[9px] font-bold text-emerald-800 uppercase">
+                  <span className="text-on-surface font-bold">
+                    {currentDevice.name}
+                  </span>
+                  <span className="bg-success-container text-on-success-container border-success/20 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase">
                     Current Device
                   </span>
                 </div>
-                <span className="block font-mono text-[11px] text-[#73736E]">
+                <span className="text-on-surface-variant block text-[11px]">
                   {currentDevice.browser} · Active now
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-1 font-mono text-[10px] font-bold text-emerald-700">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+            <div className="text-success flex items-center gap-1 text-[10px] font-bold">
+              <span className="bg-success h-2 w-2 animate-pulse rounded-full" />
               <span>Online</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3. FACTORY & BUSINESS PROFILE WITH EDIT OPTION */}
-      <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-        <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
+      {/* 3. BUSINESS PROFILE WITH EDIT OPTION */}
+      <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-5 sm:p-6">
+        <div className="border-outline-variant/40 flex items-center justify-between border-b pb-3">
           <div className="flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-black" />
-            <h3 className="text-sm font-bold text-[#1A1A18]">
-              Factory & Business Profile Details
+            <Building2 className="text-on-surface h-5 w-5" />
+            <h3 className="text-on-surface text-sm font-bold">
+              Business Details &amp; GSTIN
             </h3>
           </div>
 
@@ -177,10 +180,10 @@ export function SellerAccountClient({
             variant="outline"
             size="sm"
             onClick={() => setIsEditingBusiness((prev) => !prev)}
-            className="h-8 rounded-lg border-[#E5E5E0] bg-white px-3 text-xs font-semibold text-[#1A1A18] transition-colors hover:border-[#1A1A18]/40 hover:bg-[#FAF8F4] hover:text-[#1A1A18]"
+            className="border-outline-variant bg-surface-container-lowest text-on-surface hover:bg-surface-container h-8 rounded-full px-3 text-xs font-semibold transition-colors"
           >
             <Edit3 className="mr-1.5 h-3.5 w-3.5 text-current" />
-            <span>{isEditingBusiness ? "Close Editor" : "Edit Business Profile"}</span>
+            <span>{isEditingBusiness ? "Close Editor" : "Edit Business Details"}</span>
           </Button>
         </div>
 
@@ -194,57 +197,59 @@ export function SellerAccountClient({
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 text-xs sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-xl border border-[#F0F0EC] bg-[#FAF8F4] p-3.5">
-              <span className="block font-semibold text-[#73736E]">Business Name</span>
-              <span className="text-sm font-bold text-black">
+            <div className="border-outline-variant/50 bg-surface-container-low rounded-xl border p-3.5">
+              <span className="text-on-surface-variant block font-semibold">
+                Business Name
+              </span>
+              <span className="text-on-surface text-sm font-bold">
                 {sellerProfile?.business_name || "Not specified"}
               </span>
             </div>
 
-            <div className="rounded-xl border border-[#F0F0EC] bg-[#FAF8F4] p-3.5">
-              <span className="block font-semibold text-[#73736E]">
+            <div className="border-outline-variant/50 bg-surface-container-low rounded-xl border p-3.5">
+              <span className="text-on-surface-variant block font-semibold">
                 GSTIN Identification
               </span>
-              <span className="font-mono text-sm font-bold text-[#1A1A18]">
+              <span className="text-on-surface font-mono text-sm font-bold">
                 {sellerProfile?.gst_number || "Pending"}
               </span>
             </div>
 
-            <div className="rounded-xl border border-[#F0F0EC] bg-[#FAF8F4] p-3.5">
-              <span className="block font-semibold text-[#73736E]">
+            <div className="border-outline-variant/50 bg-surface-container-low rounded-xl border p-3.5">
+              <span className="text-on-surface-variant block font-semibold">
                 Clearance Status
               </span>
-              <span className="inline-flex items-center gap-1 font-bold text-emerald-700 capitalize">
+              <span className="text-success inline-flex items-center gap-1 font-bold capitalize">
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 <span>{sellerProfile?.status || "Pending"}</span>
               </span>
             </div>
 
-            <div className="rounded-xl border border-[#F0F0EC] bg-[#FAF8F4] p-3.5">
-              <span className="block font-semibold text-[#73736E]">
+            <div className="border-outline-variant/50 bg-surface-container-low rounded-xl border p-3.5">
+              <span className="text-on-surface-variant block font-semibold">
                 Factory Address
               </span>
-              <span className="text-[#1A1A18]">
+              <span className="text-on-surface">
                 {sellerProfile?.factory_address || "Not specified"}
               </span>
             </div>
 
-            <div className="rounded-xl border border-[#F0F0EC] bg-[#FAF8F4] p-3.5">
-              <span className="block font-semibold text-[#73736E]">
+            <div className="border-outline-variant/50 bg-surface-container-low rounded-xl border p-3.5">
+              <span className="text-on-surface-variant block font-semibold">
                 City / State / Pincode
               </span>
-              <span className="text-[#1A1A18]">
+              <span className="text-on-surface">
                 {sellerProfile?.city && sellerProfile?.state
                   ? `${sellerProfile.city}, ${sellerProfile.state} - ${sellerProfile.pincode || ""}`
                   : "India"}
               </span>
             </div>
 
-            <div className="rounded-xl border border-[#F0F0EC] bg-[#FAF8F4] p-3.5">
-              <span className="block font-semibold text-[#73736E]">
+            <div className="border-outline-variant/50 bg-surface-container-low rounded-xl border p-3.5">
+              <span className="text-on-surface-variant block font-semibold">
                 Established Year
               </span>
-              <span className="font-mono text-sm font-bold text-[#1A1A18]">
+              <span className="text-on-surface font-mono text-sm font-bold">
                 {sellerProfile?.established_year || "N/A"}
               </span>
             </div>

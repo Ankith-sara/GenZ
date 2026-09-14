@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/atoms/button";
+import { Button } from "@genz/ui";
 import { setProductStatus, deleteProduct } from "../actions";
 import type { ProductStatus } from "@/types/database";
 import { toast } from "sonner";

@@ -1,101 +1,63 @@
 "use client";
 
-import { useState } from "react";
-import type { ElementType } from "react";
+import React, { useState, useEffect, type ElementType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  FileText,
   Package,
-  ShieldCheck,
-  User,
-  Menu,
-  X,
-  ChevronsUpDown,
+  ShoppingBag,
+  Store,
+  Building2,
+  FileCheck,
+  Settings,
+  Plus,
   PanelLeftClose,
   PanelLeftOpen,
+  Menu,
+  X,
   LogOut,
-  ShoppingBag,
-  Settings,
-  Store,
-  Plus,
-  PlusCircle,
+  CheckCircle2,
+  AlertCircle,
+  MoreVertical,
 } from "lucide-react";
 import type { Role } from "@genz/types";
 import { signOut } from "@/app/login/actions";
 
-interface NavGroup {
-  groupName: string;
-  items: {
-    href: string;
-    label: string;
-    icon: ElementType;
-    badge?: string;
-  }[];
+interface NavItem {
+  href: string;
+  label: string;
+  icon: ElementType;
+  badge?: string;
 }
 
-function getNavGroups(role: Role): NavGroup[] {
-  if (role === "admin") {
-    return [
-      {
-        groupName: "OVERVIEW",
-        items: [
-          { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-          {
-            href: "/dashboard/verifications",
-            label: "Verifications",
-            icon: ShieldCheck,
-          },
-        ],
-      },
-      {
-        groupName: "ACCOUNT",
-        items: [
-          { href: "/dashboard/account", label: "Profile & Security", icon: User },
-        ],
-      },
-    ];
-  }
+interface NavGroup {
+  groupName: string;
+  items: NavItem[];
+}
 
+function getSellerNavGroups(): NavGroup[] {
   return [
     {
-      groupName: "SELLER DESK",
+      groupName: "Overview",
+      items: [{ href: "/dashboard", label: "Overview", icon: LayoutDashboard }],
+    },
+    {
+      groupName: "Store",
       items: [
-        { href: "/dashboard", label: "Seller Overview", icon: LayoutDashboard },
-        { href: "/dashboard/profile", label: "Public Profile", icon: Store },
+        { href: "/dashboard/products", label: "Products", icon: Package },
+        { href: "/dashboard/orders", label: "Orders", icon: ShoppingBag },
       ],
     },
     {
-      groupName: "COMMERCE & CATALOG",
-      items: [
-        {
-          href: "/dashboard/orders",
-          label: "Customer Orders",
-          icon: ShoppingBag,
-        },
-
-        {
-          href: "/dashboard/products",
-          label: "Products",
-          icon: Package,
-        },
-        {
-          href: "/dashboard/products/new",
-          label: "Add Product",
-          icon: PlusCircle,
-        },
-        {
-          href: "/dashboard/documents",
-          label: "Document Vault",
-          icon: FileText,
-        },
-      ],
+      groupName: "Growth",
+      items: [{ href: "/dashboard/profile", label: "Storefront", icon: Store }],
     },
     {
-      groupName: "MANAGEMENT",
+      groupName: "Account",
       items: [
-        { href: "/dashboard/account", label: "Account", icon: User },
+        { href: "/dashboard/account", label: "Business Profile", icon: Building2 },
+        { href: "/dashboard/documents", label: "Verification", icon: FileCheck },
         { href: "/dashboard/settings", label: "Settings", icon: Settings },
       ],
     },
@@ -108,86 +70,119 @@ interface DashboardSidebarProps {
     full_name?: string | null;
     email?: string | null;
   };
+  businessName?: string;
+  isVerified?: boolean;
 }
 
-export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
+export function DashboardSidebar({
+  user,
+  businessName,
+  isVerified,
+}: DashboardSidebarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("genz_seller_sidebar_collapsed");
-      return saved === "true";
-    }
-    return false;
-  });
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Restore saved collapse state safely on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const saved = localStorage.getItem("genz_seller_sidebar_collapsed");
+        if (saved === "true") setIsCollapsed(true);
+      } catch {}
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleCollapse = () => {
     setIsCollapsed((prev) => {
       const next = !prev;
-      localStorage.setItem("genz_seller_sidebar_collapsed", String(next));
+      try {
+        localStorage.setItem("genz_seller_sidebar_collapsed", String(next));
+      } catch {}
       return next;
     });
   };
 
-  const navGroups = getNavGroups(role);
-  const userInitial = (user?.full_name || user?.email || "S")[0].toUpperCase();
+  const navGroups = getSellerNavGroups();
+  const displayName = businessName || user?.full_name || "Seller";
+  const userInitial = displayName.charAt(0).toUpperCase();
+
+  const isRouteActive = (href: string) => {
+    if (href === "/dashboard") {
+      return pathname === "/dashboard";
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
     <>
-      {/* Mobile Header Bar */}
-      <div className="flex h-14 items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4] px-4 sm:hidden">
+      {/* Mobile Top App Bar */}
+      <header className="border-outline-variant/60 bg-surface-container-lowest flex h-14 items-center justify-between border-b px-4 select-none sm:hidden">
         <div className="flex items-center gap-2.5">
           <button
+            type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E5E5E0] bg-white text-black shadow-2xs active:scale-95"
-            aria-label="Toggle mobile menu"
+            className="border-outline-variant/60 bg-surface-container text-on-surface-variant flex h-9 w-9 items-center justify-center rounded-full border transition-transform active:scale-95"
+            aria-label="Toggle navigation drawer"
           >
-            {mobileOpen ? (
-              <X className="h-4.5 w-4.5" />
-            ) : (
-              <Menu className="h-4.5 w-4.5" />
-            )}
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
 
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-black text-xs font-bold text-white shadow-2xs">
+            <div className="bg-primary text-on-primary flex h-7 w-7 items-center justify-center rounded-xl text-xs font-bold shadow-xs">
               <ShoppingBag className="h-3.5 w-3.5" />
             </div>
-            <span className="font-nantes text-sm font-bold text-[#1A1A18]">
-              GenZ Partner
+            <span className="text-on-surface text-sm font-semibold tracking-tight">
+              GenZ Seller
             </span>
           </Link>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black text-xs font-bold text-white">
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${
+              isVerified
+                ? "bg-success-container text-on-success-container border-success/20 border"
+                : "bg-warning-container text-on-warning-container border-warning/20 border"
+            }`}
+          >
+            {isVerified ? (
+              <CheckCircle2 className="text-success h-3 w-3" />
+            ) : (
+              <AlertCircle className="text-warning h-3 w-3" />
+            )}
+            <span>{isVerified ? "Verified" : "Pending"}</span>
+          </span>
+          <div className="bg-primary-container text-on-primary-container flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold">
             {userInitial}
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Mobile Backdrop Overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs transition-opacity duration-300 sm:hidden"
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs transition-opacity sm:hidden"
           onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
         />
       )}
 
-      {/* Desktop / Responsive Sidebar Drawer */}
+      {/* Main Sidebar */}
       <aside
-        className={`sticky top-0 z-30 h-screen shrink-0 flex-col justify-between overflow-y-auto border-r border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] transition-all duration-300 select-none ${
-          isCollapsed ? "w-[72px]" : "w-[260px]"
+        className={`border-outline-variant/60 bg-surface-container-low text-on-surface sticky top-0 z-30 flex h-screen shrink-0 flex-col justify-between overflow-y-auto border-r transition-all duration-200 select-none ${
+          isCollapsed ? "w-[76px]" : "w-[264px]"
         } ${
           mobileOpen
-            ? "fixed inset-y-0 left-0 z-50 flex w-[280px] translate-x-0 shadow-2xl"
+            ? "shadow-elevation-3 fixed inset-y-0 left-0 z-50 flex w-[280px] translate-x-0"
             : "hidden sm:flex"
         }`}
       >
-        <div className="space-y-6 p-4">
-          {/* Header Brand */}
-          <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
+        <div className="flex flex-1 flex-col space-y-4 p-3.5">
+          {/* Header Brand & Toggle */}
+          <div className="border-outline-variant/40 flex items-center justify-between border-b px-2 pt-1 pb-2">
             <Link
               href="/dashboard"
               onClick={() => setMobileOpen(false)}
@@ -195,30 +190,35 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
                 isCollapsed ? "lg:w-full lg:justify-center" : ""
               }`}
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-black font-bold text-white shadow-2xs">
+              <div className="bg-primary text-on-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-xl font-bold shadow-xs">
                 <ShoppingBag className="h-4 w-4" />
               </div>
 
-              <div className={isCollapsed ? "lg:hidden" : "block"}>
-                <span className="font-nantes block text-sm leading-tight font-bold text-[#1A1A18]">
-                  GenZ Seller
-                </span>
-                <span className="block font-mono text-[10px] text-[#73736E]">
-                  Seller Desk
-                </span>
-              </div>
+              {!isCollapsed && (
+                <div className="min-w-0">
+                  <span className="text-on-surface block text-sm leading-none font-bold tracking-tight">
+                    GenZ Seller
+                  </span>
+                  <span className="text-on-surface-variant mt-0.5 block text-[11px] font-medium">
+                    Seller Desk
+                  </span>
+                </div>
+              )}
             </Link>
 
             <div className="flex items-center gap-1">
               <button
+                type="button"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg p-1.5 text-[#73736E] hover:bg-[#EBEBE6] sm:hidden"
+                className="text-on-surface-variant hover:bg-surface-container-high rounded-full p-1.5 sm:hidden"
+                aria-label="Close menu"
               >
                 <X className="h-4 w-4" />
               </button>
               <button
+                type="button"
                 onClick={toggleCollapse}
-                className="hidden rounded-lg p-1.5 text-[#73736E] transition-colors hover:bg-[#EBEBE6] hover:text-black lg:block"
+                className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface hidden rounded-full p-1.5 transition-colors lg:block"
                 aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               >
                 {isCollapsed ? (
@@ -230,40 +230,34 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
             </div>
           </div>
 
-          {/* Quick Add Product CTA */}
-          {role === "seller" && (
-            <div className="pt-1 pb-1">
-              <Link
-                href="/dashboard/products/new"
-                onClick={() => setMobileOpen(false)}
-                className={`flex items-center justify-center gap-2 rounded-xl bg-black px-3.5 py-2.5 font-graphik text-xs font-semibold text-white shadow-xs transition-all hover:bg-neutral-800 active:scale-98 ${
-                  isCollapsed ? "lg:px-0 lg:py-2.5" : ""
-                }`}
-                title="Add New Product"
-              >
-                <Plus className="h-4 w-4 shrink-0" />
-                <span className={isCollapsed ? "lg:hidden" : "inline"}>Add Product</span>
-              </Link>
-            </div>
-          )}
+          {/* Quick Action: Add Product */}
+          <div className="px-1">
+            <Link
+              href="/dashboard/products/new"
+              onClick={() => setMobileOpen(false)}
+              className={`bg-primary text-on-primary shadow-elevation-1 hover:shadow-elevation-2 flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-xs font-semibold transition-all active:scale-98 ${
+                isCollapsed ? "lg:px-0 lg:py-2.5" : ""
+              }`}
+              title="Add New Product"
+            >
+              <Plus className="h-4 w-4 shrink-0" />
+              <span className={isCollapsed ? "lg:hidden" : "inline"}>Add Product</span>
+            </Link>
+          </div>
 
           {/* Navigation Groups */}
-          <div className="space-y-5">
-            {navGroups.map((group, idx) => (
-              <div key={idx} className="space-y-1">
-                <p
-                  className={`font-graphik mb-1 px-3 text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase ${
-                    isCollapsed ? "lg:hidden" : "block"
-                  }`}
-                >
-                  {group.groupName}
-                </p>
+          <nav className="flex-1 space-y-4 pt-1" aria-label="Sidebar Navigation">
+            {navGroups.map((group) => (
+              <div key={group.groupName} className="space-y-1">
+                {!isCollapsed && (
+                  <span className="text-on-surface-variant/80 block px-3 text-[10px] font-bold tracking-wider uppercase">
+                    {group.groupName}
+                  </span>
+                )}
 
                 <div className="space-y-0.5">
                   {group.items.map((item) => {
-                    const isActive =
-                      pathname === item.href ||
-                      (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                    const active = isRouteActive(item.href);
                     const Icon = item.icon;
 
                     return (
@@ -271,21 +265,23 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
-                        className={`group relative flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
+                        className={`group relative flex items-center gap-3 rounded-full px-3.5 py-2 text-xs font-medium transition-all ${
                           isCollapsed ? "lg:justify-center lg:px-0" : ""
                         } ${
-                          isActive
-                            ? "border border-[#E5E5E0] bg-white font-bold text-black shadow-2xs"
-                            : "text-[#52524E] hover:bg-[#EBEBE6] hover:text-black"
+                          active
+                            ? "bg-primary-container text-on-primary-container font-semibold shadow-xs"
+                            : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
                         }`}
+                        title={isCollapsed ? item.label : undefined}
                       >
-                        {/* Active Left Accent Bar */}
-                        {isActive && (
-                          <span className="absolute top-1.5 bottom-1.5 left-0 w-1 rounded-r-full bg-black" />
-                        )}
-
-                        <Icon className="h-4 w-4 shrink-0 text-[#73736E] group-hover:text-black" />
-                        <span className={isCollapsed ? "lg:hidden" : "block"}>
+                        <Icon
+                          className={`h-4 w-4 shrink-0 transition-colors ${
+                            active
+                              ? "text-on-primary-container"
+                              : "text-on-surface-variant group-hover:text-on-surface"
+                          }`}
+                        />
+                        <span className={isCollapsed ? "lg:hidden" : "block truncate"}>
                           {item.label}
                         </span>
                       </Link>
@@ -294,59 +290,76 @@ export function DashboardSidebar({ role, user }: DashboardSidebarProps) {
                 </div>
               </div>
             ))}
-          </div>
+          </nav>
         </div>
 
-        {/* Bottom Profile Footer */}
-        <div className="relative border-t border-[#E5E5E0] p-3">
+        {/* Bottom Profile & Actions Area */}
+        <div className="border-outline-variant/50 bg-surface-container/60 relative border-t p-2.5">
           {userMenuOpen && (
-            <div className="font-graphik absolute right-3 bottom-16 left-3 z-50 space-y-1 rounded-xl border border-[#E5E5E0] bg-white p-2 text-xs shadow-xl">
+            <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-3 animate-in fade-in slide-in-from-bottom-2 absolute right-2.5 bottom-16 left-2.5 z-50 space-y-1 rounded-2xl border p-2 text-xs duration-150">
+              <div className="border-outline-variant/40 border-b px-2 py-1.5">
+                <span className="text-on-surface block truncate text-xs font-semibold">
+                  {displayName}
+                </span>
+                <span className="text-on-surface-variant block truncate text-[11px]">
+                  {user?.email}
+                </span>
+              </div>
+
               <Link
-                href="/dashboard/account"
+                href="/dashboard/settings"
                 onClick={() => {
                   setUserMenuOpen(false);
                   setMobileOpen(false);
                 }}
-                className="flex items-center gap-2 rounded-lg p-2 font-medium text-black hover:bg-[#FAF8F4]"
+                className="text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface flex items-center gap-2 rounded-xl p-2 font-medium"
               >
-                <User className="h-3.5 w-3.5" />
+                <Settings className="text-on-surface-variant h-4 w-4" />
                 <span>Account Settings</span>
               </Link>
 
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="flex w-full items-center gap-2 rounded-lg p-2 font-semibold text-rose-700 hover:bg-rose-50"
+                  className="text-error hover:bg-error-container hover:text-on-error-container flex w-full items-center gap-2 rounded-xl p-2 text-left font-medium transition-colors"
                 >
-                  <LogOut className="h-3.5 w-3.5" />
+                  <LogOut className="text-error h-4 w-4" />
                   <span>Sign Out</span>
                 </button>
               </form>
             </div>
           )}
 
-          <div
+          <button
+            type="button"
             onClick={() => setUserMenuOpen((prev) => !prev)}
-            className={`flex cursor-pointer items-center justify-between rounded-xl p-2 transition-colors hover:bg-[#EBEBE6] ${
+            className={`hover:bg-surface-container-high flex w-full items-center justify-between rounded-xl p-1.5 text-left transition-colors ${
               isCollapsed ? "lg:justify-center" : ""
             }`}
+            aria-label="User profile menu"
           >
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black text-xs font-bold text-white shadow-2xs">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <div className="bg-primary-container text-on-primary-container flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold shadow-xs">
                 {userInitial}
               </div>
-              <div className={`overflow-hidden ${isCollapsed ? "lg:hidden" : "block"}`}>
-                <span className="font-graphik block truncate text-xs font-bold text-[#1A1A18]">
-                  {user?.full_name || "Factory Manager"}
-                </span>
-                <span className="block truncate font-mono text-[10px] text-[#73736E]">
-                  {user?.email}
-                </span>
-              </div>
+              {!isCollapsed && (
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-on-surface block truncate text-xs leading-tight font-semibold">
+                      {displayName}
+                    </span>
+                  </div>
+                  <span className="text-on-surface-variant mt-0.5 block truncate text-[10px] leading-tight">
+                    {user?.email || "Seller Account"}
+                  </span>
+                </div>
+              )}
             </div>
 
-            {!isCollapsed && <ChevronsUpDown className="h-3.5 w-3.5 text-[#8C8C85]" />}
-          </div>
+            {!isCollapsed && (
+              <MoreVertical className="text-on-surface-variant h-3.5 w-3.5 shrink-0" />
+            )}
+          </button>
         </div>
       </aside>
     </>

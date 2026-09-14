@@ -2,8 +2,16 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import {
-  Upload, Link2, X, Star, GripVertical, Maximize2,
-  Loader2, AlertCircle, Plus, CheckCircle2,
+  Upload,
+  Link2,
+  X,
+  Star,
+  GripVertical,
+  Maximize2,
+  Loader2,
+  AlertCircle,
+  Plus,
+  CheckCircle2,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -22,11 +30,7 @@ interface MediaCardProps {
   maxImages?: number;
 }
 
-export function MediaCard({
-  images,
-  onImagesChange,
-  maxImages = 8,
-}: MediaCardProps) {
+export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardProps) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -196,7 +200,12 @@ export function MediaCard({
       await new Promise<void>((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve();
-        img.onerror = () => reject(new Error("Unable to load image from this URL. Check format or CORS restrictions."));
+        img.onerror = () =>
+          reject(
+            new Error(
+              "Unable to load image from this URL. Check format or CORS restrictions."
+            )
+          );
         img.src = trimmed;
       });
 
@@ -227,36 +236,43 @@ export function MediaCard({
       setUrlInputValue("");
       setShowUrlInput(false);
     } catch (err: unknown) {
-      setUrlError(err instanceof Error ? err.message : "Failed to load image from URL.");
+      setUrlError(
+        err instanceof Error ? err.message : "Failed to load image from URL."
+      );
     } finally {
       setIsUrlLoading(false);
     }
   };
 
   return (
-    <div id="media" className="space-y-4 rounded-xl border border-neutral-200 bg-white p-5 shadow-2xs">
+    <div
+      id="media"
+      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+    >
       {/* SECTION HEADER */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-neutral-100 pb-3">
+      <div className="border-border flex flex-col gap-2 border-b pb-3.5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="flex items-center gap-2 text-sm font-semibold text-neutral-900">
-              <ImageIcon className="h-4 w-4 text-neutral-600" />
+            <h2 className="text-foreground flex items-center gap-2 text-sm font-bold">
+              <ImageIcon className="text-muted-foreground h-4 w-4" />
               <span>Product Images</span>
             </h2>
             <span
-              className={`rounded-full px-2 py-0.5 font-mono text-[11px] font-medium ${
+              className={`rounded-full px-2.5 py-0.5 font-mono text-[11px] font-semibold ${
                 isMaxReached
-                  ? "bg-amber-100 text-amber-800"
+                  ? "bg-amber-500/15 text-amber-800 dark:text-amber-300"
                   : images.length > 0
-                  ? "bg-neutral-100 text-neutral-800"
-                  : "bg-neutral-100 text-neutral-500"
+                    ? "bg-muted text-foreground"
+                    : "bg-muted/60 text-muted-foreground"
               }`}
             >
               {images.length} / {maxImages} images
             </span>
           </div>
-          <p className="mt-0.5 text-xs text-neutral-500">
-            The first photo is automatically the <strong className="font-semibold text-neutral-800">Cover</strong>. Drag to reorder photos anytime.
+          <p className="text-muted-foreground mt-0.5 text-xs">
+            The first photo is automatically the{" "}
+            <strong className="text-foreground font-semibold">Cover</strong>. Drag to
+            reorder photos anytime.
           </p>
         </div>
 
@@ -269,10 +285,10 @@ export function MediaCard({
                 setShowUrlInput(!showUrlInput);
                 setUrlError(null);
               }}
-              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all cursor-pointer ${
+              className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-all ${
                 showUrlInput
-                  ? "border-neutral-900 bg-neutral-900 text-white"
-                  : "border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300"
+                  ? "border-[#18181b] !bg-[#18181b] !text-white dark:border-white dark:!bg-white dark:!text-black"
+                  : "border-border bg-background text-foreground hover:bg-muted/40"
               }`}
             >
               <Link2 className="h-3.5 w-3.5" />
@@ -282,14 +298,14 @@ export function MediaCard({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-neutral-800 active:scale-[0.98] cursor-pointer"
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full !bg-[#18181b] px-4 py-1.5 text-xs font-semibold !text-white shadow-2xs transition-all hover:!bg-[#27272a] active:scale-[0.98]"
             >
               <Upload className="h-3.5 w-3.5" />
               <span>Upload Images</span>
             </button>
           </div>
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 border border-emerald-200">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
             <CheckCircle2 className="h-3.5 w-3.5" />
             <span>Maximum capacity reached</span>
           </span>
@@ -308,16 +324,19 @@ export function MediaCard({
 
       {/* INLINE "ADD FROM URL" PANEL */}
       {showUrlInput && !isMaxReached && (
-        <div className="rounded-xl border border-neutral-200 bg-neutral-50/80 p-3.5 space-y-2 animate-in fade-in slide-in-from-top-1 duration-150">
+        <div className="border-border bg-muted/40 animate-in fade-in slide-in-from-top-1 space-y-2.5 rounded-xl border p-4 duration-150">
           <div className="flex items-center justify-between">
-            <label htmlFor="image-url-input" className="text-xs font-medium text-neutral-800 flex items-center gap-1.5">
-              <Link2 className="h-3.5 w-3.5 text-neutral-500" />
-              <span>Paste Image Url</span>
+            <label
+              htmlFor="image-url-input"
+              className="text-foreground flex items-center gap-1.5 text-xs font-semibold"
+            >
+              <Link2 className="text-muted-foreground h-3.5 w-3.5" />
+              <span>Paste Image URL</span>
             </label>
             <button
               type="button"
               onClick={() => setShowUrlInput(false)}
-              className="text-neutral-400 hover:text-neutral-600 cursor-pointer"
+              className="text-muted-foreground hover:text-foreground cursor-pointer"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -340,13 +359,13 @@ export function MediaCard({
                 }
               }}
               disabled={isUrlLoading}
-              className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none"
+              className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary/20 flex-1 rounded-xl border px-3.5 py-2 text-xs focus:ring-2 focus:outline-none"
             />
             <button
               type="button"
               onClick={handleAddFromUrl}
               disabled={isUrlLoading || !urlInputValue.trim()}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-neutral-900 px-4 py-1.5 text-xs font-medium text-white transition-all hover:bg-neutral-800 disabled:opacity-50 cursor-pointer"
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl !bg-[#18181b] px-4 py-2 text-xs font-semibold !text-white transition-all hover:!bg-[#27272a] disabled:opacity-50"
             >
               {isUrlLoading ? (
                 <>
@@ -360,7 +379,7 @@ export function MediaCard({
           </div>
 
           {urlError && (
-            <p className="flex items-center gap-1 text-[11px] text-red-600">
+            <p className="text-destructive flex items-center gap-1 text-[11px]">
               <AlertCircle className="h-3 w-3 shrink-0" />
               <span>{urlError}</span>
             </p>
@@ -375,33 +394,33 @@ export function MediaCard({
           onDragLeave={handleZoneDragLeave}
           onDrop={handleZoneDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`relative flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
+          className={`relative flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
             isDraggingOver
-              ? "border-neutral-900 bg-neutral-100/80 ring-4 ring-neutral-900/5 scale-[0.99]"
-              : "border-neutral-200 bg-[#FAFAF9] hover:border-neutral-300 hover:bg-[#F5F5F4]"
+              ? "border-primary bg-primary/5 ring-primary/10 scale-[0.99] ring-4"
+              : "border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40"
           }`}
         >
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 shadow-2xs transition-transform group-hover:scale-105">
+          <div className="border-border bg-background text-muted-foreground flex h-12 w-12 items-center justify-center rounded-full border shadow-2xs transition-transform group-hover:scale-105">
             <Upload className="h-5 w-5" />
           </div>
 
           <div className="mt-3 space-y-1">
-            <p className="text-sm font-semibold text-neutral-900">
+            <p className="text-foreground text-sm font-bold">
               Drag & drop product photos here
             </p>
-            <p className="text-xs text-neutral-500">
+            <p className="text-muted-foreground text-xs">
               or click to browse from your device
             </p>
           </div>
 
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center rounded-md bg-white border border-neutral-200 px-2 py-0.5 text-[11px] font-medium text-neutral-600">
+            <span className="bg-background border-border text-muted-foreground inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold">
               PNG, JPG, WEBP, AVIF
             </span>
-            <span className="inline-flex items-center rounded-md bg-white border border-neutral-200 px-2 py-0.5 text-[11px] font-medium text-neutral-600">
+            <span className="bg-background border-border text-muted-foreground inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold">
               Max 5MB each
             </span>
-            <span className="inline-flex items-center rounded-md bg-white border border-neutral-200 px-2 py-0.5 text-[11px] font-medium text-neutral-600">
+            <span className="bg-background border-border text-muted-foreground inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold">
               Up to 8 images
             </span>
           </div>
@@ -415,7 +434,7 @@ export function MediaCard({
           onDragLeave={handleZoneDragLeave}
           onDrop={handleZoneDrop}
           className={`relative rounded-xl p-1 transition-all ${
-            isDraggingOver ? "ring-2 ring-neutral-900 bg-neutral-50 rounded-xl" : ""
+            isDraggingOver ? "rounded-xl bg-neutral-50 ring-2 ring-neutral-900" : ""
           }`}
         >
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -433,12 +452,12 @@ export function MediaCard({
                   onDragLeave={handleItemDragLeave}
                   onDrop={(e) => handleItemDrop(e, idx)}
                   onDragEnd={handleItemDragEnd}
-                  className={`group relative aspect-square overflow-hidden rounded-xl border bg-neutral-50 transition-all duration-200 ${
+                  className={`group bg-muted/20 relative aspect-square overflow-hidden rounded-xl border transition-all duration-200 ${
                     isCover
-                      ? "border-neutral-900 ring-2 ring-neutral-900/10 shadow-xs"
-                      : "border-neutral-200 hover:border-neutral-300 shadow-2xs"
-                  } ${isDragging ? "opacity-30 scale-95" : "opacity-100"} ${
-                    isDragTarget ? "ring-2 ring-neutral-900 scale-102" : ""
+                      ? "border-primary ring-primary/20 shadow-xs ring-2"
+                      : "border-border hover:border-foreground/20 shadow-2xs"
+                  } ${isDragging ? "scale-95 opacity-30" : "opacity-100"} ${
+                    isDragTarget ? "ring-primary scale-102 ring-2" : ""
                   }`}
                 >
                   {/* Thumbnail Image */}
@@ -455,12 +474,12 @@ export function MediaCard({
                   {/* COVER BADGE OR POSITION NUMBER (Top-Left) */}
                   <div className="absolute top-2 left-2 z-10">
                     {isCover ? (
-                      <span className="inline-flex items-center gap-1 rounded-md bg-neutral-900/90 px-2 py-0.5 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-xs shadow-xs border border-white/15">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/85 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-white uppercase shadow-xs backdrop-blur-xs">
                         <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                         <span>COVER</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center justify-center rounded-md bg-neutral-900/70 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-white backdrop-blur-xs shadow-2xs">
+                      <span className="inline-flex items-center justify-center rounded-full bg-black/75 px-2 py-0.5 font-mono text-[10px] font-semibold text-white shadow-2xs backdrop-blur-xs">
                         #{idx + 1}
                       </span>
                     )}
@@ -475,7 +494,7 @@ export function MediaCard({
                         e.stopPropagation();
                         setPreviewItem(item);
                       }}
-                      className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-900/80 text-white backdrop-blur-xs transition-colors hover:bg-neutral-900 cursor-pointer"
+                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/75 text-white backdrop-blur-xs transition-colors hover:bg-black"
                     >
                       <Maximize2 className="h-3 w-3" />
                     </button>
@@ -486,7 +505,7 @@ export function MediaCard({
                         e.stopPropagation();
                         handleRemove(idx);
                       }}
-                      className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-900/80 text-white backdrop-blur-xs transition-colors hover:bg-red-600 cursor-pointer"
+                      className="hover:bg-destructive flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/75 text-white backdrop-blur-xs transition-colors"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
@@ -508,9 +527,9 @@ export function MediaCard({
                           e.stopPropagation();
                           handleSetCover(idx);
                         }}
-                        className="inline-flex items-center gap-1 rounded-md bg-white/95 px-2 py-0.5 text-[10px] font-semibold text-neutral-900 shadow-xs backdrop-blur-xs transition-all hover:bg-white active:scale-95 cursor-pointer"
+                        className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold text-neutral-900 shadow-xs backdrop-blur-xs transition-all hover:bg-white active:scale-95"
                       >
-                        <Star className="h-2.5 w-2.5 text-amber-500 fill-amber-500" />
+                        <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
                         <span>Make Cover</span>
                       </button>
                     )}
@@ -524,40 +543,42 @@ export function MediaCard({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="group relative flex aspect-square flex-col items-center justify-center rounded-xl border-2 border-dashed border-neutral-200 bg-[#FAFAF9] p-3 text-center transition-all hover:border-neutral-300 hover:bg-[#F5F5F4] cursor-pointer"
+                className="group border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40 relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-3 text-center transition-all"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 shadow-2xs group-hover:scale-105 transition-transform">
+                <div className="border-border bg-background text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full border shadow-2xs transition-transform group-hover:scale-105">
                   <Plus className="h-4 w-4" />
                 </div>
-                <span className="mt-2 text-xs font-medium text-neutral-700">
+                <span className="text-foreground mt-2 text-xs font-semibold">
                   Add Image
                 </span>
-                <span className="text-[10px] text-neutral-400 font-mono">
+                <span className="text-muted-foreground font-mono text-[10px]">
                   {remainingSlots} left
                 </span>
               </button>
             )}
 
             {/* SUBTLE EMPTY SLOTS OUTLINES (For remaining slots up to 8) */}
-            {Array.from({ length: Math.max(0, remainingSlots - 1) }).map((_, emptyIdx) => (
-              <div
-                key={`empty-slot-${emptyIdx}`}
-                className="hidden sm:flex aspect-square flex-col items-center justify-center rounded-xl border border-dashed border-neutral-200/60 bg-neutral-50/30 text-neutral-300"
-              >
-                <span className="font-mono text-[11px] text-neutral-300">
-                  #{images.length + emptyIdx + 2}
-                </span>
-              </div>
-            ))}
+            {Array.from({ length: Math.max(0, remainingSlots - 1) }).map(
+              (_, emptyIdx) => (
+                <div
+                  key={`empty-slot-${emptyIdx}`}
+                  className="border-border/60 bg-muted/10 text-muted-foreground/40 hidden aspect-square flex-col items-center justify-center rounded-xl border border-dashed sm:flex"
+                >
+                  <span className="font-mono text-[11px]">
+                    #{images.length + emptyIdx + 2}
+                  </span>
+                </div>
+              )
+            )}
           </div>
 
           {/* Quick instructions bar */}
-          <div className="mt-3 flex items-center justify-between text-[11px] text-neutral-400 px-1">
-            <span className="flex items-center gap-1">
-              <GripVertical className="h-3 w-3" />
-              <span>Drag any photo to change order</span>
+          <div className="text-muted-foreground mt-3.5 flex items-center justify-between px-1 text-[11px]">
+            <span className="flex items-center gap-1.5 font-medium">
+              <GripVertical className="h-3.5 w-3.5" />
+              <span>Drag any photo to reorder</span>
             </span>
-            <span>JPG, PNG, WEBP, AVIF • Up to 5MB</span>
+            <span className="font-medium">JPG, PNG, WEBP, AVIF • Up to 5MB</span>
           </div>
         </div>
       )}
@@ -566,19 +587,19 @@ export function MediaCard({
       {previewItem && (
         <div
           onClick={() => setPreviewItem(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-xs animate-in fade-in duration-150"
+          className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm duration-150"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-h-[90vh] max-w-2xl overflow-hidden rounded-2xl bg-neutral-900 shadow-2xl border border-neutral-800 text-white"
+            className="bg-card border-border text-foreground relative max-h-[90vh] max-w-2xl overflow-hidden rounded-3xl border shadow-2xl"
           >
-            <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-3">
+            <div className="border-border flex items-center justify-between border-b px-5 py-3.5">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-xs text-neutral-200">
+                <span className="text-foreground text-xs font-bold">
                   {previewItem.name || "Product Image"}
                 </span>
                 {images[0]?.id === previewItem.id && (
-                  <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold text-amber-400 border border-amber-500/30">
+                  <span className="rounded-full border border-amber-500/30 bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-300">
                     COVER
                   </span>
                 )}
@@ -586,18 +607,18 @@ export function MediaCard({
               <button
                 type="button"
                 onClick={() => setPreviewItem(null)}
-                className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors cursor-pointer"
+                className="text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-full p-1.5 transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="flex items-center justify-center bg-black/40 p-4 max-h-[75vh]">
+            <div className="flex max-h-[75vh] items-center justify-center bg-black/10 p-4 dark:bg-black/40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={previewItem.previewUrl}
                 alt={previewItem.name || "Image preview"}
-                className="max-h-[70vh] w-auto max-w-full rounded-lg object-contain shadow-lg"
+                className="max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-lg"
               />
             </div>
           </div>

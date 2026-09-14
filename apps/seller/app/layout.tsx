@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
+import { Plus_Jakarta_Sans, Roboto } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
@@ -7,16 +7,18 @@ import { SITE_URL } from "@genz/utils";
 
 const siteUrl = SITE_URL || "https://seller.genz-platform.com";
 
-const plusJakarta = Plus_Jakarta_Sans({
+const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-graphik",
+  variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
-const grenette = Fraunces({
+const fontRoboto = Roboto({
   subsets: ["latin"],
-  variable: "--font-grenette",
-  weight: ["400", "500", "600"],
+  variable: "--font-roboto",
+  weight: ["300", "400", "500", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -45,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${plusJakarta.variable} ${grenette.variable} flex min-h-screen flex-col antialiased`}
+        className={`${fontSans.variable} ${fontRoboto.variable} flex min-h-screen flex-col font-sans antialiased`}
         suppressHydrationWarning
       >
         {children}

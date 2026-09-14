@@ -4,8 +4,16 @@ import { useActionState, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MapPin, Calendar, BadgeCheck, Globe, ExternalLink, 
-  Save, CheckCircle2, AlertCircle, BookOpen, Film, 
+  MapPin,
+  Calendar,
+  BadgeCheck,
+  Globe,
+  ExternalLink,
+  Save,
+  CheckCircle2,
+  AlertCircle,
+  BookOpen,
+  Film,
   ArrowRight,
 } from "lucide-react";
 import { Button, Input, Label, Textarea } from "@genz/ui";
@@ -79,24 +87,24 @@ export function SellerProfileStudio({
     }
   }
 
-  // Interactive local state for live storefront preview
+  // Controlled states for live preview sync
   const [businessName, setBusinessName] = useState(
-    sellerProfile?.business_name || fullName || "Etikoppaka Heritage Lacquer Toys"
+    sellerProfile?.business_name || "Polumuri Craft Atelier"
   );
   const [makerName, setMakerName] = useState(
     parsedMeta.maker_name || fullName || "Polumuri Nageswara Rao"
   );
   const [handle, setHandle] = useState(
     parsedMeta.handle ||
-      (businessName
-        ? businessName.toLowerCase().replace(/[^a-z0-9]/g, "_")
-        : "etikoppakatoys")
+      (sellerProfile?.business_name
+        ? sellerProfile.business_name.toLowerCase().replace(/[^a-z0-9_]/g, "")
+        : "etikoppaka_crafts")
   );
   const [craftCategory, setCraftCategory] = useState(
-    parsedMeta.craft_category || "Etikoppaka Wooden Toys"
+    parsedMeta.craft_category || CRAFT_CATEGORIES[0]
   );
   const [craftTitle, setCraftTitle] = useState(
-    parsedMeta.craft_title || "Second-Generation Master Artisan & GI Craft Custodian"
+    parsedMeta.craft_title || "Master Woodturner & GI Certified Artisan"
   );
   const [city, setCity] = useState(sellerProfile?.city || "Etikoppaka");
   const [state, setState] = useState(sellerProfile?.state || "Andhra Pradesh");
@@ -121,22 +129,19 @@ export function SellerProfileStudio({
   return (
     <div className="space-y-8">
       {/* Top Header */}
-      <div className="flex flex-col justify-between gap-4 border-b border-[#E5E5E0] pb-6 sm:flex-row sm:items-center">
+      <div className="border-outline-variant/60 flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-center">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[10px] font-bold tracking-widest text-amber-700 uppercase">
-              STOREFRONT CREATOR STUDIO
-            </span>
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900">
-              Atelier Storefront
+            <span className="bg-surface-container-high text-on-surface-variant rounded-full px-2.5 py-0.5 text-[10px] font-semibold">
+              Public Storefront
             </span>
           </div>
-          <h1 className="font-nantes text-2xl font-bold text-[#1A1A18] sm:text-3xl">
-            Maker Profile & Public Storefront
+          <h1 className="text-on-surface mt-1 text-xl font-bold tracking-tight sm:text-2xl">
+            Storefront &amp; Maker Profile
           </h1>
-          <p className="font-graphik mt-1 text-xs text-neutral-600 sm:text-sm">
-            Customize how national buyers discover your workshop, read your journey, and
-            view your catalog.
+          <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">
+            Customize how buyers discover your workshop, read your journey, and view
+            your catalog.
           </p>
         </div>
 
@@ -145,7 +150,7 @@ export function SellerProfileStudio({
             asChild
             variant="outline"
             size="sm"
-            className="font-graphik rounded-xl border-black bg-white px-4 text-xs font-bold text-black transition-all hover:bg-black hover:text-white"
+            className="border-outline-variant/60 bg-surface-container-lowest text-on-surface hover:bg-surface-container rounded-full px-4 text-xs font-semibold transition-all"
           >
             <a
               href={liveStorefrontUrl}
@@ -153,7 +158,7 @@ export function SellerProfileStudio({
               rel="noopener noreferrer"
               className="flex items-center gap-1.5"
             >
-              <span>View Public Profile</span>
+              <span>View Public Storefront</span>
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </Button>
@@ -162,33 +167,34 @@ export function SellerProfileStudio({
 
       {/* Success / Error notification */}
       {formState?.success && (
-        <div className="flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-medium text-emerald-800">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+        <div className="border-success/20 bg-success-container/70 text-on-success-container flex items-center gap-2.5 rounded-2xl border p-4 text-xs font-medium">
+          <CheckCircle2 className="text-success h-4 w-4 shrink-0" />
           <p>{formState.message || "Profile successfully updated!"}</p>
         </div>
       )}
       {formState?.error && (
-        <div className="flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs font-medium text-rose-800">
-          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+        <div className="border-error/20 bg-error-container/70 text-on-error-container flex items-center gap-2.5 rounded-2xl border p-4 text-xs font-medium">
+          <AlertCircle className="text-error h-4 w-4 shrink-0" />
           <p>{formState.error}</p>
         </div>
       )}
 
       {/* Main Studio 2-Column Grid */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-        {/* LEFT COLUMN: Profile Customization Form (7 cols) */}
+        {/* LEFT COLUMN: Profile Customization Form */}
         <div className="space-y-6 lg:col-span-7">
           <form action={formAction} className="space-y-6">
             <input type="hidden" name="cover_url" value={coverUrl || ""} />
 
             {/* 1. Profile Avatar & Atelier Cover Banner */}
-            <div className="rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs space-y-6">
+            <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-6 rounded-2xl border p-6">
               <div>
-                <h2 className="font-graphik text-sm font-bold text-neutral-900">
+                <h2 className="text-on-surface text-sm font-bold">
                   1. Artisan Profile Photo
                 </h2>
-                <p className="font-graphik mt-1 text-xs text-neutral-500">
-                  Upload a genuine portrait of you or your master craftsperson at work in the workshop.
+                <p className="text-on-surface-variant mt-1 text-xs">
+                  Upload a genuine portrait of you or your master craftsperson at work
+                  in the workshop.
                 </p>
 
                 <div className="mt-3">
@@ -201,12 +207,13 @@ export function SellerProfileStudio({
                 </div>
               </div>
 
-              <div className="border-t border-[#F0EFEA] pt-5">
-                <h2 className="font-graphik text-sm font-bold text-neutral-900">
+              <div className="border-outline-variant/40 border-t pt-5">
+                <h2 className="text-on-surface text-sm font-bold">
                   Atelier Cover Banner
                 </h2>
-                <p className="font-graphik mt-1 text-xs text-neutral-500">
-                  Upload a panoramic photo of your workshop, lathe machinery, raw timber, or craft showroom.
+                <p className="text-on-surface-variant mt-1 text-xs">
+                  Upload a panoramic photo of your workshop, lathe machinery, raw
+                  timber, or craft showroom.
                 </p>
 
                 <div className="mt-3">
@@ -219,16 +226,16 @@ export function SellerProfileStudio({
             </div>
 
             {/* 2. Identity, Handle & Category */}
-            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
-              <h2 className="font-graphik text-sm font-bold text-neutral-900">
-                2. Maker Identity & Handle
+            <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-6">
+              <h2 className="text-on-surface text-sm font-bold">
+                2. Maker Identity &amp; Handle
               </h2>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="business_name"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Workshop / Business Name *
                   </Label>
@@ -239,14 +246,14 @@ export function SellerProfileStudio({
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
                     placeholder="e.g. Etikoppaka Heritage Lacquer Toys"
-                    className="h-10 rounded-lg text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl text-xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="maker_name"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Master Artisan / Founder Name *
                   </Label>
@@ -256,7 +263,7 @@ export function SellerProfileStudio({
                     value={makerName}
                     onChange={(e) => setMakerName(e.target.value)}
                     placeholder="e.g. Rameshwar Rao"
-                    className="h-10 rounded-lg text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl text-xs"
                   />
                 </div>
               </div>
@@ -265,12 +272,12 @@ export function SellerProfileStudio({
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="handle"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Storefront Handle (@username) *
                   </Label>
                   <div className="relative flex items-center">
-                    <span className="absolute left-3 font-mono text-xs text-neutral-400">
+                    <span className="text-on-surface-variant absolute left-3 font-mono text-xs">
                       @
                     </span>
                     <Input
@@ -283,7 +290,7 @@ export function SellerProfileStudio({
                         )
                       }
                       placeholder="etikoppaka_crafts"
-                      className="h-10 rounded-lg pl-7 font-mono text-xs"
+                      className="border-outline-variant/60 h-10 rounded-xl pl-7 font-mono text-xs"
                     />
                   </div>
                 </div>
@@ -291,7 +298,7 @@ export function SellerProfileStudio({
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="craft_category"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Craft Category *
                   </Label>
@@ -300,7 +307,7 @@ export function SellerProfileStudio({
                     name="craft_category"
                     value={craftCategory}
                     onChange={(e) => setCraftCategory(e.target.value)}
-                    className="h-10 w-full rounded-lg border border-[#E5E5E0] bg-white px-3 text-xs font-medium text-neutral-800"
+                    className="border-outline-variant/60 bg-surface-container-lowest text-on-surface h-10 w-full rounded-xl border px-3 text-xs font-medium"
                   >
                     {CRAFT_CATEGORIES.map((c) => (
                       <option key={c} value={c}>
@@ -315,7 +322,7 @@ export function SellerProfileStudio({
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="craft_title"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Artisan Craft Title
                   </Label>
@@ -325,14 +332,14 @@ export function SellerProfileStudio({
                     value={craftTitle}
                     onChange={(e) => setCraftTitle(e.target.value)}
                     placeholder="e.g. Master Woodcarver & National Awardee"
-                    className="h-10 rounded-lg text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl text-xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="established_year"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Year Established
                   </Label>
@@ -343,21 +350,21 @@ export function SellerProfileStudio({
                     value={establishedYear}
                     onChange={(e) => setEstablishedYear(e.target.value)}
                     placeholder="e.g. 1988"
-                    className="h-10 rounded-lg font-mono text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl font-mono text-xs"
                   />
                 </div>
               </div>
             </div>
 
             {/* 3. Short Bio & Story Narrative */}
-            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
+            <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-6">
               <div className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-amber-700" />
-                <h2 className="font-graphik text-sm font-bold text-neutral-900">
-                  3. Story & Journey Narrative
+                <BookOpen className="text-primary h-4 w-4" />
+                <h2 className="text-on-surface text-sm font-bold">
+                  3. Story &amp; Journey Narrative
                 </h2>
               </div>
-              <p className="font-graphik text-xs text-neutral-500">
+              <p className="text-on-surface-variant text-xs">
                 This personal story will be showcased under the &quot;Story &amp;
                 Journey&quot; tab on your public profile.
               </p>
@@ -366,11 +373,11 @@ export function SellerProfileStudio({
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="short_bio"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Headline Bio (Storefront Pitch)
                   </Label>
-                  <span className="text-[10px] text-neutral-400">
+                  <span className="text-on-surface-variant text-[10px]">
                     {shortBio.length}/200 chars
                   </span>
                 </div>
@@ -382,14 +389,14 @@ export function SellerProfileStudio({
                   value={shortBio}
                   onChange={(e) => setShortBio(e.target.value)}
                   placeholder="A concise, punchy bio summarizing your craft and heritage."
-                  className="rounded-lg text-xs"
+                  className="border-outline-variant/60 rounded-xl text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <Label
                   htmlFor="how_it_started"
-                  className="text-xs font-semibold text-neutral-700"
+                  className="text-on-surface-variant text-xs font-semibold"
                 >
                   How My Journey Started (In Depth Narrative)
                 </Label>
@@ -402,16 +409,16 @@ export function SellerProfileStudio({
                     `Along the banks of the Varaha River in Andhra Pradesh lies the village of Etikoppaka, where turned-wood lacquer craft has been passed down for over 400 years. As the son of senior artisan Polumuri Talla Chari, making toys is an inheritance carrying pride and responsibility.`
                   }
                   placeholder="Share your personal story of learning the craft, ancestral roots, and workshop dedication..."
-                  className="rounded-lg text-xs"
+                  className="border-outline-variant/60 rounded-xl text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <Label
                   htmlFor="materials_and_technique"
-                  className="text-xs font-semibold text-neutral-700"
+                  className="text-on-surface-variant text-xs font-semibold"
                 >
-                  Materials, Wood Species & Lathe Technique
+                  Materials, Wood Species &amp; Lathe Technique
                 </Label>
                 <Textarea
                   id="materials_and_technique"
@@ -422,17 +429,17 @@ export function SellerProfileStudio({
                     `Shaped exclusively from soft Ankudi Karra wood on a traditional lathe. Pure lac is applied by hand while the wood turns, using natural friction heat to melt and bind the lacquer. Finished with 100% natural, non-toxic colors derived from seeds, bark, roots, and leaves (Registered GI Craft, 2017).`
                   }
                   placeholder="Describe your raw materials, sustainability standards, and artisan techniques..."
-                  className="rounded-lg text-xs"
+                  className="border-outline-variant/60 rounded-xl text-xs"
                 />
               </div>
             </div>
 
             {/* 4. Location & Workshop Details */}
-            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
+            <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-6">
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-neutral-700" />
-                <h2 className="font-graphik text-sm font-bold text-neutral-900">
-                  4. Workshop Location & Verification
+                <MapPin className="text-on-surface h-4 w-4" />
+                <h2 className="text-on-surface text-sm font-bold">
+                  4. Workshop Location &amp; Verification
                 </h2>
               </div>
 
@@ -440,7 +447,7 @@ export function SellerProfileStudio({
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="city"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     City / Craft Cluster *
                   </Label>
@@ -450,14 +457,14 @@ export function SellerProfileStudio({
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder="e.g. Etikoppaka"
-                    className="h-10 rounded-lg text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl text-xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="state"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     State *
                   </Label>
@@ -467,7 +474,7 @@ export function SellerProfileStudio({
                     value={state}
                     onChange={(e) => setState(e.target.value)}
                     placeholder="e.g. Andhra Pradesh"
-                    className="h-10 rounded-lg text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl text-xs"
                   />
                 </div>
               </div>
@@ -476,7 +483,7 @@ export function SellerProfileStudio({
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="gst_number"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     GSTIN / Tax ID
                   </Label>
@@ -485,14 +492,14 @@ export function SellerProfileStudio({
                     name="gst_number"
                     defaultValue={sellerProfile?.gst_number || ""}
                     placeholder="22AAAAA0000A1Z5"
-                    className="h-10 rounded-lg font-mono text-xs uppercase"
+                    className="border-outline-variant/60 h-10 rounded-xl font-mono text-xs uppercase"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="pincode"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Pincode
                   </Label>
@@ -501,7 +508,7 @@ export function SellerProfileStudio({
                     name="pincode"
                     defaultValue={sellerProfile?.pincode || ""}
                     placeholder="531055"
-                    className="h-10 rounded-lg font-mono text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl font-mono text-xs"
                   />
                 </div>
               </div>
@@ -509,7 +516,7 @@ export function SellerProfileStudio({
               <div className="space-y-1.5">
                 <Label
                   htmlFor="factory_address"
-                  className="text-xs font-semibold text-neutral-700"
+                  className="text-on-surface-variant text-xs font-semibold"
                 >
                   Workshop / Factory Physical Address
                 </Label>
@@ -518,17 +525,17 @@ export function SellerProfileStudio({
                   name="factory_address"
                   defaultValue={sellerProfile?.factory_address || ""}
                   placeholder="Plot 14, Main Craft Bazaar, Artisans Street"
-                  className="h-10 rounded-lg text-xs"
+                  className="border-outline-variant/60 h-10 rounded-xl text-xs"
                 />
               </div>
             </div>
 
             {/* 5. Contact & Social Channels */}
-            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
+            <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-6">
               <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-neutral-700" />
-                <h2 className="font-graphik text-sm font-bold text-neutral-900">
-                  5. Contact & Social Channels
+                <Globe className="text-on-surface h-4 w-4" />
+                <h2 className="text-on-surface text-sm font-bold">
+                  5. Contact &amp; Social Channels
                 </h2>
               </div>
 
@@ -536,7 +543,7 @@ export function SellerProfileStudio({
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="whatsapp"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     WhatsApp Business
                   </Label>
@@ -545,14 +552,14 @@ export function SellerProfileStudio({
                     name="whatsapp"
                     defaultValue={parsedMeta.whatsapp || ""}
                     placeholder="+91 9876543210"
-                    className="h-10 rounded-lg text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl text-xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="instagram"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Instagram Handle
                   </Label>
@@ -561,14 +568,14 @@ export function SellerProfileStudio({
                     name="instagram"
                     defaultValue={parsedMeta.instagram || ""}
                     placeholder="etikoppaka_toys"
-                    className="h-10 rounded-lg text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl text-xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="website"
-                    className="text-xs font-semibold text-neutral-700"
+                    className="text-on-surface-variant text-xs font-semibold"
                   >
                     Official Website
                   </Label>
@@ -577,27 +584,29 @@ export function SellerProfileStudio({
                     name="website"
                     defaultValue={parsedMeta.website || ""}
                     placeholder="https://..."
-                    className="h-10 rounded-lg text-xs"
+                    className="border-outline-variant/60 h-10 rounded-xl text-xs"
                   />
                 </div>
               </div>
             </div>
 
             {/* 6. Workshop Process Reels */}
-            <div className="space-y-4 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs">
+            <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-4 rounded-2xl border p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Film className="h-4 w-4 text-amber-700" />
-                  <h2 className="font-graphik text-sm font-bold text-neutral-900">
+                  <Film className="text-primary h-4 w-4" />
+                  <h2 className="text-on-surface text-sm font-bold">
                     6. Workshop Process Reels
                   </h2>
                 </div>
-                <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-900">
+                <span className="bg-primary-container text-on-primary-container rounded-full px-2.5 py-0.5 text-[10px] font-bold">
                   {reelCount} Published
                 </span>
               </div>
-              <p className="font-graphik text-xs text-neutral-500 leading-relaxed">
-                Video reels appear directly under the &quot;Reels&quot; tab on your public profile. Upload raw video footage of woodturning, organic lacquering, or carving.
+              <p className="text-on-surface-variant text-xs leading-relaxed">
+                Video reels appear directly under the &quot;Reels&quot; tab on your
+                public profile. Upload raw video footage of woodturning, organic
+                lacquering, or carving.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -605,10 +614,10 @@ export function SellerProfileStudio({
                   asChild
                   variant="outline"
                   size="sm"
-                  className="rounded-xl border-[#E5E5E0] bg-white text-xs font-semibold text-[#1A1A18] hover:bg-[#FAF8F5]"
+                  className="border-outline-variant/60 bg-surface-container-lowest text-on-surface hover:bg-surface-container rounded-full text-xs font-semibold"
                 >
                   <Link href="/dashboard/products">
-                    <span>Manage & Upload Reels to Products</span>
+                    <span>Manage &amp; Upload Reels to Products</span>
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Link>
                 </Button>
@@ -621,7 +630,7 @@ export function SellerProfileStudio({
                 type="submit"
                 size="lg"
                 disabled={isPending}
-                className="font-graphik hover:bg-neutral-850 h-12 rounded-xl bg-black px-8 text-xs font-bold text-white shadow-md transition-all active:scale-[0.98]"
+                className="bg-primary text-on-primary shadow-elevation-1 hover:shadow-elevation-2 h-11 rounded-full px-8 text-xs font-bold transition-all active:scale-[0.98]"
               >
                 <Save className="mr-2 h-4 w-4" />
                 <span>
@@ -632,31 +641,31 @@ export function SellerProfileStudio({
           </form>
         </div>
 
-        {/* RIGHT COLUMN: Live Storefront Profile Card Preview (5 cols) */}
+        {/* RIGHT COLUMN: Live Storefront Profile Card Preview */}
         <div className="lg:col-span-5">
           <div className="sticky top-20 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-xs font-bold tracking-wider text-neutral-500 uppercase">
+              <span className="text-on-surface-variant font-mono text-xs font-bold tracking-wider uppercase">
                 Live Storefront Preview
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+              <span className="bg-success-container text-on-success-container border-success/20 inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-bold">
+                <span className="bg-success h-1.5 w-1.5 animate-pulse rounded-full" />
                 Live Sync
               </span>
             </div>
 
             {/* Storefront Profile Frame */}
-            <div className="overflow-hidden rounded-3xl border border-[#E5E5E0] bg-white shadow-lg">
+            <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-2 overflow-hidden rounded-3xl border">
               {/* Cover Banner */}
-              <div className="relative h-28 w-full overflow-hidden bg-neutral-900">
+              <div className="bg-surface-container-highest relative h-28 w-full overflow-hidden">
                 <Image
                   src={coverUrl || "/machine_work.png"}
                   alt="Cover preview"
                   fill
-                  className="object-cover opacity-75"
+                  className="object-cover opacity-85"
                   unoptimized
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute top-3 right-3 rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-xs">
                   Public Storefront
                 </div>
@@ -664,9 +673,9 @@ export function SellerProfileStudio({
 
               {/* Profile Body */}
               <div className="relative px-6 pt-0 pb-6">
-                {/* Avatar (clean frame, no story ring) */}
+                {/* Avatar */}
                 <div className="-mt-12 flex items-end justify-between">
-                  <div className="relative h-20 w-20 overflow-hidden rounded-2xl border-4 border-white bg-neutral-100 shadow-md">
+                  <div className="border-surface-container-lowest bg-surface-container-high shadow-elevation-1 relative h-20 w-20 overflow-hidden rounded-2xl border-4">
                     <Image
                       src={liveAvatarUrl || "/indian_craftsman.png"}
                       alt={businessName}
@@ -680,15 +689,15 @@ export function SellerProfileStudio({
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
                       isVerified
-                        ? "bg-amber-100 text-amber-800"
-                        : "border border-neutral-200 bg-neutral-100 text-neutral-600"
+                        ? "bg-success-container text-on-success-container border-success/20 border"
+                        : "border-outline-variant/60 bg-surface-container text-on-surface-variant border"
                     }`}
                   >
                     <BadgeCheck
                       className={`h-3.5 w-3.5 ${
                         isVerified
-                          ? "fill-amber-200 text-amber-600"
-                          : "text-neutral-400"
+                          ? "fill-success text-on-success"
+                          : "text-on-surface-variant"
                       }`}
                     />
                     {isVerified ? "Verified Maker" : "Pending Audit"}
@@ -697,59 +706,59 @@ export function SellerProfileStudio({
 
                 {/* Name & Handle */}
                 <div className="mt-3">
-                  <h3 className="font-nantes line-clamp-1 text-lg font-bold text-[#1A1A18]">
+                  <h3 className="text-on-surface line-clamp-1 text-lg font-bold">
                     {businessName}
                   </h3>
-                  <div className="flex items-center gap-1 text-xs text-neutral-500">
-                    <span className="font-mono text-neutral-400">@{handle}</span>
+                  <div className="text-on-surface-variant flex items-center gap-1 text-xs">
+                    <span className="text-on-surface-variant font-mono">@{handle}</span>
                     <span>·</span>
-                    <span className="font-medium text-amber-800">{craftCategory}</span>
+                    <span className="text-primary font-medium">{craftCategory}</span>
                   </div>
-                  <p className="font-graphik mt-1 text-xs font-semibold text-neutral-700">
+                  <p className="text-on-surface-variant mt-1 text-xs font-semibold">
                     {craftTitle}
                   </p>
                 </div>
 
                 {/* Location & Established Year */}
-                <div className="mt-2.5 flex items-center gap-3 text-[11px] text-neutral-500">
+                <div className="text-on-surface-variant mt-2.5 flex items-center gap-3 text-[11px]">
                   <span className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3 text-neutral-400" />
+                    <MapPin className="text-on-surface-variant h-3 w-3" />
                     {city}, {state}
                   </span>
                   {establishedYear && (
                     <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3 text-neutral-400" />
+                      <Calendar className="text-on-surface-variant h-3 w-3" />
                       Est. {establishedYear}
                     </span>
                   )}
                 </div>
 
                 {/* Bio */}
-                <p className="font-graphik mt-3 line-clamp-3 text-xs leading-relaxed text-neutral-600">
+                <p className="text-on-surface-variant mt-3 line-clamp-3 text-xs leading-relaxed">
                   {shortBio}
                 </p>
 
                 {/* Storefront Profile Metrics */}
-                <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-neutral-100 bg-[#FAF8F5] p-3 text-center">
+                <div className="border-outline-variant/40 bg-surface-container-low mt-4 grid grid-cols-3 gap-2 rounded-2xl border p-3 text-center">
                   <div>
-                    <p className="font-graphik text-sm font-extrabold text-[#1A1A18]">
+                    <p className="text-on-surface text-sm font-extrabold">
                       {productCount}
                     </p>
-                    <p className="text-[10px] text-neutral-500">Products</p>
+                    <p className="text-on-surface-variant text-[10px]">Products</p>
                   </div>
                   <div>
-                    <p className="font-graphik text-sm font-extrabold text-amber-800">
+                    <p className="text-primary text-sm font-extrabold">
                       {establishedYear
                         ? `${new Date().getFullYear() - Number(establishedYear)}+`
                         : "25+"}
                     </p>
-                    <p className="text-[10px] text-neutral-500">Years Craft</p>
+                    <p className="text-on-surface-variant text-[10px]">Years Craft</p>
                   </div>
                   <div>
-                    <p className="font-graphik text-sm font-extrabold text-rose-600">
+                    <p className="text-secondary text-sm font-extrabold">
                       {reelCount > 0 ? reelCount : "4+"}
                     </p>
-                    <p className="text-[10px] text-neutral-500">Video Reels</p>
+                    <p className="text-on-surface-variant text-[10px]">Video Reels</p>
                   </div>
                 </div>
 
@@ -759,7 +768,7 @@ export function SellerProfileStudio({
                     asChild
                     size="sm"
                     variant="outline"
-                    className="font-graphik w-full rounded-xl border-[#1A1A18] text-xs font-bold text-[#1A1A18] hover:bg-[#1A1A18] hover:text-white"
+                    className="border-outline-variant/60 bg-surface-container-lowest text-on-surface hover:bg-surface-container w-full rounded-full text-xs font-bold"
                   >
                     <a
                       href={liveStorefrontUrl}
