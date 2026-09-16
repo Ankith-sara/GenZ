@@ -658,28 +658,28 @@ export function Header({
 
               {/* Mobile Search */}
               <form onSubmit={handleSearchSubmit} className="relative mb-6">
-                <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+                <Search className="absolute top-1/2 left-3.5 h-4.5 w-4.5 -translate-y-1/2 text-neutral-500" />
                 <input
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search products or makers..."
-                  className="w-full rounded-full border border-neutral-800 bg-neutral-900 py-2.5 pr-4 pl-10 text-xs text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
+                  className="w-full rounded-full border border-neutral-800 bg-neutral-900 py-3 pr-4 pl-11 text-sm text-white placeholder-neutral-500 focus:border-amber-400 focus:outline-none"
                 />
               </form>
 
               {/* Mobile Navigation Links */}
-              <nav className="font-graphik flex flex-col gap-1 text-xs font-semibold text-neutral-300">
+              <nav className="font-graphik flex flex-col gap-1.5 text-neutral-200">
                 <Link
                   href="/"
-                  className="rounded-xl px-3 py-2.5 hover:bg-neutral-800 hover:text-amber-400"
+                  className="rounded-xl px-3.5 py-2.5 text-base font-semibold transition-colors hover:bg-neutral-800 hover:text-amber-400"
                   onClick={() => setIsOpen(false)}
                 >
                   Home
                 </Link>
 
-                <div className="my-1 border-t border-neutral-800 pt-2">
-                  <p className="mb-2 px-3 text-[10px] font-bold tracking-wider text-amber-400 uppercase">
+                <div className="my-1 border-t border-neutral-800 pt-3">
+                  <p className="mb-2.5 px-3.5 text-xs font-bold tracking-wider text-amber-400 uppercase">
                     Collections & Categories
                   </p>
                   <div className="grid max-h-[40vh] grid-cols-1 gap-1 overflow-y-auto pr-1">
@@ -688,15 +688,15 @@ export function Header({
                         key={cat.name}
                         href={cat.href}
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                        className="flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white"
                       >
-                        <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-md border border-neutral-800 bg-neutral-900">
+                        <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-md border border-neutral-800 bg-neutral-900">
                           <Image
                             src={cat.image}
                             alt=""
                             fill
                             className="object-cover"
-                            sizes="24px"
+                            sizes="28px"
                           />
                         </div>
                         <span className="truncate">{cat.name}</span>
@@ -705,7 +705,7 @@ export function Header({
                     <Link
                       href="/discover"
                       onClick={() => setIsOpen(false)}
-                      className="px-3 py-1.5 text-[11px] font-bold text-amber-400 hover:underline"
+                      className="inline-block px-3.5 py-2 text-sm font-bold text-amber-400 hover:underline"
                     >
                       View All Collections
                     </Link>
@@ -714,7 +714,7 @@ export function Header({
 
                 <Link
                   href="/discover?reels=true"
-                  className="rounded-xl px-3 py-2.5 hover:bg-neutral-800 hover:text-amber-400"
+                  className="rounded-xl px-3.5 py-2.5 text-base font-semibold transition-colors hover:bg-neutral-800 hover:text-amber-400"
                   onClick={() => setIsOpen(false)}
                 >
                   Live Factory Reels
@@ -722,7 +722,7 @@ export function Header({
 
                 <Link
                   href="/about"
-                  className="rounded-xl px-3 py-2.5 hover:bg-neutral-800 hover:text-amber-400"
+                  className="rounded-xl px-3.5 py-2.5 text-base font-semibold transition-colors hover:bg-neutral-800 hover:text-amber-400"
                   onClick={() => setIsOpen(false)}
                 >
                   About Us
@@ -730,7 +730,7 @@ export function Header({
 
                 <Link
                   href="/contact"
-                  className="rounded-xl px-3 py-2.5 hover:bg-neutral-800 hover:text-amber-400"
+                  className="rounded-xl px-3.5 py-2.5 text-base font-semibold transition-colors hover:bg-neutral-800 hover:text-amber-400"
                   onClick={() => setIsOpen(false)}
                 >
                   Contact
@@ -742,7 +742,7 @@ export function Header({
             <div className="mt-6 border-t border-neutral-800 pt-4">
               <Button
                 asChild
-                className="font-graphik mb-2 w-full rounded-xl bg-amber-400 text-xs font-bold text-black hover:bg-amber-300"
+                className="font-graphik mb-2.5 h-11 w-full rounded-xl bg-amber-400 text-sm font-bold text-black hover:bg-amber-300"
               >
                 <Link href="/seller/signup" onClick={() => setIsOpen(false)}>
                   Sell on GenZ
@@ -752,7 +752,7 @@ export function Header({
                 <Button
                   asChild
                   variant="outline"
-                  className="font-graphik w-full rounded-xl border-neutral-700 bg-neutral-900 text-xs font-semibold text-white hover:bg-neutral-800"
+                  className="font-graphik h-11 w-full rounded-xl border-neutral-700 bg-neutral-900 text-sm font-semibold text-white hover:bg-neutral-800"
                 >
                   <a
                     href={
@@ -775,7 +775,7 @@ export function Header({
                 <Button
                   asChild
                   variant="outline"
-                  className="font-graphik w-full rounded-xl border-neutral-700 bg-neutral-900 text-xs font-semibold text-white hover:bg-neutral-800 hover:text-amber-400"
+                  className="font-graphik h-11 w-full rounded-xl border-neutral-700 bg-neutral-900 text-sm font-semibold text-white hover:bg-neutral-800 hover:text-amber-400"
                 >
                   <Link href="/login" onClick={() => setIsOpen(false)}>
                     Login / Sign Up
