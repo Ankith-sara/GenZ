@@ -29,6 +29,7 @@ interface SellerMetadata {
   craft_category?: string;
   craft_title?: string;
   cover_url?: string;
+  avatar_url?: string;
   how_it_started?: string;
   materials_and_technique?: string;
   vision?: string;
@@ -116,7 +117,9 @@ export function SellerProfileStudio({
     sellerProfile?.established_year ? String(sellerProfile.established_year) : "1984"
   );
   const [coverUrl, setCoverUrl] = useState<string | null>(parsedMeta.cover_url || null);
-  const [liveAvatarUrl, setLiveAvatarUrl] = useState<string | null>(avatarUrl);
+  const [liveAvatarUrl, setLiveAvatarUrl] = useState<string | null>(
+    avatarUrl || parsedMeta.avatar_url || null
+  );
 
   const [formState, formAction, isPending] = useActionState<
     ProfileUpdateState,
@@ -185,16 +188,26 @@ export function SellerProfileStudio({
         <div className="space-y-6 lg:col-span-7">
           <form action={formAction} className="space-y-6">
             <input type="hidden" name="cover_url" value={coverUrl || ""} />
+            <input type="hidden" name="avatar_url" value={liveAvatarUrl || ""} />
 
             {/* 1. Profile Avatar & Atelier Cover Banner */}
             <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-6 rounded-2xl border p-6">
               <div>
-                <h2 className="text-on-surface text-sm font-bold">
-                  1. Artisan Profile Photo
-                </h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-on-surface text-sm font-bold">
+                    1. Artisan Profile Photo
+                  </h2>
+                  {liveAvatarUrl && (
+                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800 shadow-2xs">
+                      <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                      <span>Connected to Profile</span>
+                    </span>
+                  )}
+                </div>
                 <p className="text-on-surface-variant mt-1 text-xs">
-                  Upload a genuine portrait of you or your master craftsperson at work
-                  in the workshop.
+                  {liveAvatarUrl
+                    ? "Your public maker avatar is synchronized from your profile. You can update or replace it here anytime."
+                    : "Upload a genuine portrait of you or your master craftsperson to showcase your atelier."}
                 </p>
 
                 <div className="mt-3">
@@ -203,6 +216,7 @@ export function SellerProfileStudio({
                     fullName={makerName || businessName}
                     currentUrl={liveAvatarUrl}
                     onUploaded={(url) => setLiveAvatarUrl(url)}
+                    size="lg"
                   />
                 </div>
               </div>
@@ -676,14 +690,27 @@ export function SellerProfileStudio({
                 {/* Avatar */}
                 <div className="-mt-12 flex items-end justify-between">
                   <div className="border-surface-container-lowest bg-surface-container-high shadow-elevation-1 relative h-20 w-20 overflow-hidden rounded-2xl border-4">
-                    <Image
-                      src={liveAvatarUrl || "/indian_craftsman.png"}
-                      alt={businessName}
-                      fill
-                      className="object-cover"
-                      sizes="80px"
-                      unoptimized
-                    />
+                    {liveAvatarUrl ? (
+                      <Image
+                        src={liveAvatarUrl}
+                        alt={businessName}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="relative flex h-full w-full items-center justify-center bg-[#E4E6EB]">
+                        <svg
+                          viewBox="0 0 100 100"
+                          className="h-full w-full fill-[#8A8D91]"
+                          aria-hidden="true"
+                        >
+                          <circle cx="50" cy="38" r="18" />
+                          <path d="M 20 86 C 20 66, 32 58, 50 58 C 68 58, 80 66, 80 86 Z" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
 
                   <span

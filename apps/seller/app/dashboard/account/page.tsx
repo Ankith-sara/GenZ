@@ -64,8 +64,7 @@ export default async function SellerAccountPage() {
           ? "pending"
           : "verified";
 
-  const effectiveStatus: VerificationStatus =
-    sellerProfile?.status || fallbackStatus;
+  const effectiveStatus: VerificationStatus = sellerProfile?.status || fallbackStatus;
 
   const effectiveSellerProfile: SellerProfile = {
     id: session.userId,
@@ -135,12 +134,29 @@ export default async function SellerAccountPage() {
     }
   }
 
+  // Check if avatar_url is stored in sellerProfile description metadata
+  let metaAvatarUrl: string | null = null;
+  if (sellerProfile?.description) {
+    try {
+      if (sellerProfile.description.startsWith("{")) {
+        const parsed = JSON.parse(sellerProfile.description);
+        if (parsed.avatar_url && typeof parsed.avatar_url === "string") {
+          metaAvatarUrl = parsed.avatar_url;
+        }
+      }
+    } catch {}
+  }
+
+  const effectiveAvatarUrl = userProfile?.avatar_url || metaAvatarUrl || null;
+
   return (
     <SellerAccountClient
       userId={session.userId}
       userEmail={session.email || ""}
-      fullName={userProfile?.full_name || applicationData?.full_name || "Factory Seller"}
-      avatarUrl={userProfile?.avatar_url || null}
+      fullName={
+        userProfile?.full_name || applicationData?.full_name || "Factory Seller"
+      }
+      avatarUrl={effectiveAvatarUrl}
       sellerProfile={effectiveSellerProfile}
     />
   );

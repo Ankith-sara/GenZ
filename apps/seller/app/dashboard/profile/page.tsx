@@ -6,7 +6,8 @@ import { SellerProfileStudio } from "./profile-studio";
 
 export const metadata = {
   title: "Maker Profile & Storefront Studio — GenZ Seller Portal",
-  description: "Customize your artisan profile, journey narrative, and catalog showcase.",
+  description:
+    "Customize your artisan profile, journey narrative, and catalog showcase.",
 };
 
 interface ApplicationFormData {
@@ -30,27 +31,64 @@ export default async function SellerProfilePage() {
   const session = await requireRole("seller");
   const supabase = await createClient();
 
-  const [
-    { data: userProfile },
-    { data: sellerProfile },
-    { count: productCount },
-    { count: reelCount },
-  ] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("full_name, avatar_url")
-      .eq("id", session.userId)
-      .maybeSingle(),
-    supabase.from("seller_profiles").select("*").eq("id", session.userId).maybeSingle(),
-    supabase
-      .from("products")
-      .select("*", { count: "exact", head: true })
-      .eq("seller_id", session.userId),
-    supabase
-      .from("reels")
-      .select("*", { count: "exact", head: true })
-      .eq("seller_id", session.userId),
-  ]);
+  let userProfile: { full_name?: string | null; avatar_url?: string | null } | null =
+    null;
+  let sellerProfile: SellerProfile | null = null;
+  let productCount = 0;
+  let reelCount = 0;
+
+  try {
+    const adminSupabase = createAdminClient();
+    const [pRes, sRes, prodRes, reelRes] = await Promise.all([
+      adminSupabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", session.userId)
+        .maybeSingle(),
+      adminSupabase
+        .from("seller_profiles")
+        .select("*")
+        .eq("id", session.userId)
+        .maybeSingle(),
+      adminSupabase
+        .from("products")
+        .select("*", { count: "exact", head: true })
+        .eq("seller_id", session.userId),
+      adminSupabase
+        .from("reels")
+        .select("*", { count: "exact", head: true })
+        .eq("seller_id", session.userId),
+    ]);
+    userProfile = pRes.data;
+    sellerProfile = sRes.data;
+    productCount = prodRes.count ?? 0;
+    reelCount = reelRes.count ?? 0;
+  } catch {
+    const [pRes, sRes, prodRes, reelRes] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", session.userId)
+        .maybeSingle(),
+      supabase
+        .from("seller_profiles")
+        .select("*")
+        .eq("id", session.userId)
+        .maybeSingle(),
+      supabase
+        .from("products")
+        .select("*", { count: "exact", head: true })
+        .eq("seller_id", session.userId),
+      supabase
+        .from("reels")
+        .select("*", { count: "exact", head: true })
+        .eq("seller_id", session.userId),
+    ]);
+    userProfile = pRes.data;
+    sellerProfile = sRes.data;
+    productCount = prodRes.count ?? 0;
+    reelCount = reelRes.count ?? 0;
+  }
 
   // Fetch signup details from seller_applications to pre-populate missing profile fields
   const email = session.email?.toLowerCase().trim();
@@ -82,8 +120,7 @@ export default async function SellerProfilePage() {
           ? "pending"
           : "verified";
 
-  const effectiveStatus: VerificationStatus =
-    sellerProfile?.status || fallbackStatus;
+  const effectiveStatus: VerificationStatus = sellerProfile?.status || fallbackStatus;
 
   const effectiveSellerProfile: SellerProfile = {
     id: session.userId,
@@ -153,11 +190,28 @@ export default async function SellerProfilePage() {
     }
   }
 
+  // Check if avatar_url is stored in sellerProfile description metadata
+  let metaAvatarUrl: string | null = null;
+  if (sellerProfile?.description) {
+    try {
+      if (sellerProfile.description.startsWith("{")) {
+        const parsed = JSON.parse(sellerProfile.description);
+        if (parsed.avatar_url && typeof parsed.avatar_url === "string") {
+          metaAvatarUrl = parsed.avatar_url;
+        }
+      }
+    } catch {}
+  }
+
+  const effectiveAvatarUrl = userProfile?.avatar_url || metaAvatarUrl || null;
+
   return (
     <SellerProfileStudio
       userId={session.userId}
-      fullName={userProfile?.full_name || applicationData?.full_name || "Factory Seller"}
-      avatarUrl={userProfile?.avatar_url || null}
+      fullName={
+        userProfile?.full_name || applicationData?.full_name || "Factory Seller"
+      }
+      avatarUrl={effectiveAvatarUrl}
       sellerProfile={effectiveSellerProfile}
       productCount={productCount ?? 0}
       reelCount={reelCount ?? 0}

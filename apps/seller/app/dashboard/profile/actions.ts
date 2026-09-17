@@ -35,6 +35,7 @@ export async function updateSellerProfileStudio(
     .trim()
     .toUpperCase();
   const cover_url = String(formData.get("cover_url") ?? "").trim();
+  const avatar_url = String(formData.get("avatar_url") ?? "").trim();
 
   // Social & Contact Channels
   const whatsapp = String(formData.get("whatsapp") ?? "").trim();
@@ -58,7 +59,7 @@ export async function updateSellerProfileStudio(
   try {
     const adminSupabase = createAdminClient();
 
-    // Fetch existing profile metadata to preserve cover_url or other fields
+    // Fetch existing profile metadata to preserve cover_url, avatar_url, or other fields
     const { data: existingProf } = await adminSupabase
       .from("seller_profiles")
       .select("description")
@@ -77,6 +78,9 @@ export async function updateSellerProfileStudio(
     const effectiveCoverUrl =
       cover_url ||
       (typeof existingMeta.cover_url === "string" ? existingMeta.cover_url : null);
+    const effectiveAvatarUrl =
+      avatar_url ||
+      (typeof existingMeta.avatar_url === "string" ? existingMeta.avatar_url : null);
 
     // Construct structured metadata JSON to store inside description column
     const profileMetadata = {
@@ -87,6 +91,7 @@ export async function updateSellerProfileStudio(
       craft_category: craft_category || "Wooden Toys & Crafts",
       craft_title: craft_title || "Master Artisan & Manufacturer",
       cover_url: effectiveCoverUrl,
+      avatar_url: effectiveAvatarUrl,
       how_it_started,
       materials_and_technique,
       vision,
@@ -120,19 +125,22 @@ export async function updateSellerProfileStudio(
       return { error: profileError.message || "Failed to save seller profile." };
     }
 
-    // 2. Also update display name in profiles table if maker_name or business_name provided
+    // 2. Also update display name and avatar in profiles table
+    const profileUpdates: { full_name?: string; avatar_url?: string } = {};
     if (maker_name || business_name) {
-      await adminSupabase
-        .from("profiles")
-        .update({
-          full_name: maker_name || business_name,
-        })
-        .eq("id", userId);
+      profileUpdates.full_name = maker_name || business_name;
+    }
+    if (effectiveAvatarUrl) {
+      profileUpdates.avatar_url = effectiveAvatarUrl;
+    }
+    if (Object.keys(profileUpdates).length > 0) {
+      await adminSupabase.from("profiles").update(profileUpdates).eq("id", userId);
     }
 
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/profile");
     revalidatePath("/dashboard/account");
+    revalidatePath("/dashboard/settings");
     revalidatePath(`/sellers/${userId}`);
 
     return {
