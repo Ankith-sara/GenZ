@@ -92,7 +92,11 @@ export function SellerProfileView({
   const modalVideoRef = useRef<HTMLVideoElement>(null);
 
   const location = [seller.city, seller.state].filter(Boolean).join(", ");
-  const avatarSrc = seller.avatar_url || "/indian_craftsman.png";
+  const isPolumuri =
+    seller.id === "fab03143-9d65-47cf-bdc0-53db548b1005" ||
+    seller.id === "etikoppaka-lacquer-crafts" ||
+    seller.business_name?.toLowerCase().includes("etikoppaka");
+  const avatarSrc = seller.avatar_url || (isPolumuri ? "/indian_craftsman.png" : null);
   const coverSrc = seller.cover_url || "/machine_work.png";
   const craftTitle =
     seller.craft_title || "Second-Generation Master Artisan & GI Craft Custodian";
@@ -224,15 +228,29 @@ export function SellerProfileView({
 
         {/* Master Artisan Avatar Floating Over Bottom Edge */}
         <div className="absolute -bottom-14 left-6 z-20 sm:-bottom-16 sm:left-10">
-          <div className="relative h-28 w-28 overflow-hidden rounded-2xl border-4 border-white bg-white shadow-xl ring-2 ring-amber-900/20 sm:h-36 sm:w-36 sm:rounded-3xl">
-            <Image
-              src={avatarSrc}
-              alt={seller.business_name}
-              fill
-              className="object-cover object-center"
-              priority
-              unoptimized
-            />
+          <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#E4E6EB] shadow-xl ring-2 ring-amber-900/20 sm:h-36 sm:w-36 sm:rounded-3xl">
+            {avatarSrc ? (
+              <Image
+                src={avatarSrc}
+                alt={seller.business_name}
+                fill
+                className="object-cover object-center"
+                priority
+                unoptimized
+              />
+            ) : (
+              <div className="relative flex h-full w-full items-center justify-center bg-[#E4E6EB]">
+                <svg
+                  viewBox="0 0 128 128"
+                  className="h-full w-full translate-y-3 scale-115 text-[#B0B3B8]"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <circle cx="64" cy="45" r="23" />
+                  <path d="M64 76c-25 0-46 17-46 38 0 3 2.5 5.5 5.5 5.5h81c3 0 5.5-2.5 5.5-5.5 0-21-21-38-46-38z" />
+                </svg>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -719,14 +737,28 @@ export function SellerProfileView({
             {/* Top Controls Bar */}
             <div className="relative z-20 flex items-center justify-between p-4">
               <div className="flex items-center gap-2">
-                <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/40">
-                  <Image
-                    src={avatarSrc}
-                    alt={seller.business_name}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
+                <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white/40 bg-[#E4E6EB]">
+                  {avatarSrc ? (
+                    <Image
+                      src={avatarSrc}
+                      alt={seller.business_name}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="relative flex h-full w-full items-center justify-center bg-[#E4E6EB]">
+                      <svg
+                        viewBox="0 0 128 128"
+                        className="h-full w-full translate-y-1 scale-110 text-[#B0B3B8]"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <circle cx="64" cy="45" r="23" />
+                        <path d="M64 76c-25 0-46 17-46 38 0 3 2.5 5.5 5.5 5.5h81c3 0 5.5-2.5 5.5-5.5 0-21-21-38-46-38z" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h4 className="text-xs leading-tight font-bold text-white">

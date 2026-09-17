@@ -286,7 +286,11 @@ export default async function SellerPublicProfilePage({
           dbSeller.established_year ||
           (meta.established_year ? Number(meta.established_year) : 2018),
         avatar_url:
-          userProfile?.avatar_url || meta.avatar_url || "/indian_craftsman.png",
+          userProfile?.avatar_url ||
+          meta.avatar_url ||
+          (dbSeller.id === "fab03143-9d65-47cf-bdc0-53db548b1005"
+            ? "/indian_craftsman.png"
+            : null),
         cover_url: meta.cover_url || "/machine_work.png",
         story: {
           how_it_started:

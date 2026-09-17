@@ -22,7 +22,7 @@ export interface SuggestedSeller {
   craft: string;
   city?: string | null;
   state?: string | null;
-  avatar: string;
+  avatar?: string | null;
   established_year?: number | null;
   thumbnails: string[];
   products_count?: number;
@@ -89,23 +89,31 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
           </div>
         ) : (
           /* Real Makers Cards Grid — Responsive for Mobile & Desktop */
-          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6">
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
             {sellers.map((seller) => {
-              const location = [seller.city, seller.state]
-                .filter(Boolean)
-                .join(", ");
-              const sellerImage = seller.avatar || "/indian_craftsman.png";
+              const location = [seller.city, seller.state].filter(Boolean).join(", ");
+              const hasValidAvatar = Boolean(
+                seller.avatar &&
+                seller.avatar.trim() !== "" &&
+                !seller.avatar.includes("placeholder") &&
+                seller.avatar !== "/sellers.png" &&
+                seller.avatar !== "/creators.png" &&
+                seller.avatar !== "/machine_work.png" &&
+                (seller.id === "fab03143-9d65-47cf-bdc0-53db548b1005" ||
+                  seller.id === "etikoppaka-lacquer-crafts" ||
+                  seller.avatar !== "/indian_craftsman.png")
+              );
 
               return (
                 <div
                   key={seller.id}
                   className="group flex w-full flex-col text-left transition-all duration-300"
                 >
-                  <div className="relative flex h-full flex-col items-center justify-between rounded-2xl border border-[#E5E5E0] bg-white p-5 sm:p-6 text-center shadow-xs transition-all duration-300 hover:border-neutral-300 hover:shadow-md">
+                  <div className="relative flex h-full flex-col items-center justify-between rounded-2xl border border-[#E5E5E0] bg-white p-5 text-center shadow-xs transition-all duration-300 hover:border-neutral-300 hover:shadow-md sm:p-6">
                     {/* Top Content */}
                     <div className="flex w-full flex-col items-center">
                       {/* Top Bar: Suggested for you & Verified Badge */}
-                      <div className="flex w-full items-center justify-between font-graphik text-[11px] font-medium text-neutral-400">
+                      <div className="font-graphik flex w-full items-center justify-between text-[11px] font-medium text-neutral-400">
                         <span className="rounded-full bg-[#FAF8F5] px-2.5 py-0.5 text-[10px] font-semibold text-neutral-600">
                           Suggested for you
                         </span>
@@ -118,16 +126,31 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
                       <Link
                         href={`/sellers/${seller.id}`}
                         title={`View ${seller.business_name} Profile`}
-                        className="relative mx-auto my-4 h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden border-2 border-[#E5E5E0] bg-neutral-100 shadow-xs block cursor-pointer transition-transform duration-200 hover:scale-105"
+                        className="relative mx-auto my-4 flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-[#E5E5E0] bg-[#E4E6EB] shadow-xs transition-transform duration-200 hover:scale-105 sm:h-28 sm:w-28"
                       >
-                        <Image
-                          src={sellerImage}
-                          alt={seller.maker_name || seller.business_name}
-                          fill
-                          unoptimized
-                          className="object-cover object-center"
-                          sizes="(max-width: 640px) 96px, 112px"
-                        />
+                        {hasValidAvatar ? (
+                          <Image
+                            src={seller.avatar!}
+                            alt={seller.maker_name || seller.business_name}
+                            fill
+                            unoptimized
+                            className="object-cover object-center"
+                            sizes="(max-width: 640px) 96px, 112px"
+                          />
+                        ) : (
+                          /* Meta-style Default Profile DP */
+                          <div className="relative flex h-full w-full items-center justify-center bg-[#E4E6EB]">
+                            <svg
+                              viewBox="0 0 128 128"
+                              className="h-full w-full translate-y-2.5 scale-110 text-[#B0B3B8]"
+                              fill="currentColor"
+                              aria-hidden="true"
+                            >
+                              <circle cx="64" cy="45" r="23" />
+                              <path d="M64 76c-25 0-46 17-46 38 0 3 2.5 5.5 5.5 5.5h81c3 0 5.5-2.5 5.5-5.5 0-21-21-38-46-38z" />
+                            </svg>
+                          </div>
+                        )}
                       </Link>
 
                       {/* Profile Details: Business Name (Without Blue Tick) */}
@@ -141,17 +164,20 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
                       </h3>
 
                       {/* Maker Handle / Name */}
-                      <p className="font-graphik text-xs text-neutral-400 mt-0.5 font-mono">
-                        by {seller.maker_name || "Verified Indian Artisan"}
+                      <p className="font-graphik mt-0.5 font-mono text-xs text-neutral-400">
+                        by{" "}
+                        {seller.maker_name && seller.maker_name !== seller.business_name
+                          ? seller.maker_name
+                          : "Verified Indian Artisan"}
                       </p>
 
                       {/* Craft & Bio */}
-                      <p className="font-graphik text-xs font-medium text-neutral-600 mt-2 line-clamp-2 px-1 leading-relaxed">
+                      <p className="font-graphik mt-2 line-clamp-2 px-1 text-xs leading-relaxed font-medium text-neutral-600">
                         {seller.craft}
                       </p>
 
                       {/* Location & Provenance */}
-                      <div className="mt-2.5 flex items-center justify-center gap-1.5 text-[11px] text-neutral-400 font-graphik font-normal">
+                      <div className="font-graphik mt-2.5 flex items-center justify-center gap-1.5 text-[11px] font-normal text-neutral-400">
                         {location && <span>{location}</span>}
                         {location && <span>•</span>}
                         <span>
@@ -170,7 +196,7 @@ export function SuggestedSellers({ sellers = [] }: SuggestedSellersProps) {
                     <div className="mt-5 w-full">
                       <Link
                         href={`/sellers/${seller.id}`}
-                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#171717] py-2.5 px-4 text-center font-graphik text-xs font-semibold text-white transition-all duration-200 hover:bg-neutral-800 shadow-xs"
+                        className="font-graphik flex w-full items-center justify-center gap-2 rounded-xl bg-[#171717] px-4 py-2.5 text-center text-xs font-semibold text-white shadow-xs transition-all duration-200 hover:bg-neutral-800"
                       >
                         <span>View Profile</span>
                         <ArrowRight className="h-3.5 w-3.5 opacity-70 transition-transform group-hover:translate-x-0.5" />

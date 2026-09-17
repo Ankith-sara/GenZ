@@ -102,7 +102,7 @@ export default async function HomePage() {
       .select("*")
       .eq("status", "published")
       .order("created_at", { ascending: false })
-      .limit(12);
+      .limit(50);
 
     if (pData) products = pData as Product[];
 
@@ -193,25 +193,31 @@ export default async function HomePage() {
         ? `${sellerProds[0].category} Workshop`
         : "Direct Indian Workshop");
 
-    const avatars = [
-      "/indian_craftsman.png",
-      "/sellers.png",
-      "/creators.png",
-      "/machine_work.png",
-    ];
+    const isPolumuri =
+      s.id === "fab03143-9d65-47cf-bdc0-53db548b1005" ||
+      businessName.toLowerCase().includes("etikoppaka");
+
+    const avatar =
+      (meta.avatar_url as string) || (isPolumuri ? "/indian_craftsman.png" : null);
 
     return {
       id: s.id,
       business_name: businessName,
-      maker_name: makerName,
-      craft,
-      city: s.city || (meta.city as string) || null,
-      state: s.state || (meta.state as string) || null,
-      avatar:
-        (meta.avatar_url as string) || avatars[idx % avatars.length] || "/sellers.png",
+      maker_name: isPolumuri ? "Polumuri Nageswara Rao" : makerName,
+      craft: isPolumuri
+        ? "Second-Generation Master Artisan & GI Craft Custodian"
+        : craft,
+      city: s.city || (meta.city as string) || (isPolumuri ? "Etikoppaka" : null),
+      state:
+        s.state || (meta.state as string) || (isPolumuri ? "Andhra Pradesh" : null),
+      avatar,
       established_year:
         s.established_year ||
-        (meta.established_year ? Number(meta.established_year) : null),
+        (meta.established_year
+          ? Number(meta.established_year)
+          : isPolumuri
+            ? 1984
+            : null),
       thumbnails: realThumbnails,
       products_count: sellerProds.length,
       description:

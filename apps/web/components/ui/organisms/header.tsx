@@ -490,7 +490,7 @@ export function Header({
               aria-label="Main navigation"
               className="w-full scrollbar-none overflow-x-auto"
             >
-              <ul className="font-graphik flex min-w-max items-center gap-x-6 py-2.5 text-xs font-medium tracking-wide whitespace-nowrap text-neutral-900 sm:text-sm lg:gap-x-8">
+              <ul className="font-graphik flex min-w-max items-center gap-x-7 py-3 text-sm font-semibold tracking-normal whitespace-nowrap text-neutral-900 sm:text-base lg:gap-x-9">
                 {/* Home */}
                 <li className="relative py-0.5">
                   <Link
@@ -511,13 +511,13 @@ export function Header({
                     aria-expanded={showCollectionsDropdown}
                     aria-haspopup="true"
                     aria-controls="collections-menu"
-                    className={`flex cursor-pointer items-center gap-1 transition-colors hover:text-black ${
+                    className={`flex cursor-pointer items-center gap-1.5 transition-colors hover:text-black ${
                       pathname === "/discover" ? "font-bold text-black" : ""
                     }`}
                   >
                     <span>Collections</span>
                     <ChevronDown
-                      className={`h-3.5 w-3.5 text-neutral-700 transition-transform ${
+                      className={`h-4 w-4 text-neutral-700 transition-transform ${
                         showCollectionsDropdown ? "rotate-180 text-black" : ""
                       }`}
                     />
