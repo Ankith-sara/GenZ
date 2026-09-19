@@ -200,39 +200,38 @@ export default async function AdminDashboardOverviewPage() {
 
         {/* 4-Column Platform Health & Real-time Activity */}
         <div className="space-y-6 lg:col-span-4">
-          {/* Platform Status */}
-          <div className="rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-2xs">
-            <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                <span className="font-graphik text-sm font-bold text-[#1A1A18]">
-                  System Status
-                </span>
+          {/* Priority Queue */}
+          <DashboardPanel
+            title="Priority queue"
+            description="Operational work currently waiting for an admin."
+            contentClassName="space-y-3"
+          >
+            <Link
+              href="/dashboard/verifications"
+              className="border-outline-variant/60 bg-surface-container-low hover:bg-surface-container flex items-center justify-between rounded-xl border p-3 transition-colors"
+            >
+              <div>
+                <p className="text-on-surface text-xs font-semibold">Seller verification</p>
+                <p className="text-on-surface-variant mt-0.5 text-[11px]">
+                  {pendingCount ?? 0} application{(pendingCount ?? 0) === 1 ? "" : "s"} waiting for review
+                </p>
               </div>
-              <StatusBadge status="active" label="Operational" />
-            </div>
+              <ArrowUpRight className="text-on-surface-variant h-4 w-4" />
+            </Link>
 
-            <div className="font-graphik mt-4 space-y-3 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[#73736E]">Supabase Database</span>
-                <span className="font-mono text-xs font-semibold text-emerald-700">
-                  99.99%
-                </span>
+            <Link
+              href="/dashboard/orders"
+              className="border-outline-variant/60 bg-surface-container-low hover:bg-surface-container flex items-center justify-between rounded-xl border p-3 transition-colors"
+            >
+              <div>
+                <p className="text-on-surface text-xs font-semibold">Order operations</p>
+                <p className="text-on-surface-variant mt-0.5 text-[11px]">
+                  {orderCount ?? 0} total order{(orderCount ?? 0) === 1 ? "" : "s"} recorded
+                </p>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[#73736E]">Next.js Middleware</span>
-                <span className="font-mono text-xs font-semibold text-emerald-700">
-                  Active
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[#73736E]">Storage & Document Vault</span>
-                <span className="font-mono text-xs font-semibold text-emerald-700">
-                  Operational
-                </span>
-              </div>
-            </div>
-          </div>
+              <ArrowUpRight className="text-on-surface-variant h-4 w-4" />
+            </Link>
+          </DashboardPanel>
 
           {/* Quick Actions Feed */}
           <div className="rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-2xs">
