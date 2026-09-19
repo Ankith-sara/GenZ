@@ -3,7 +3,7 @@ import { requireRole } from "@/features/auth/lib/require-role";
 import Link from "next/link";
 import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
 import { getAnalyticsData } from "@/features/admin/lib/vercel-analytics";
-import { MetricCard } from "@genz/ui";
+import { DashboardPageHeader, DashboardStat, DashboardPanel } from "@genz/ui";
 import { StatusBadge } from "@genz/ui";
 import {
   Users,
@@ -60,53 +60,54 @@ export default async function AdminDashboardOverviewPage() {
 
   return (
     <div className="space-y-8">
+      <DashboardPageHeader
+        eyebrow="Platform operations"
+        title="Good to see you, Admin"
+        description="Monitor marketplace health, seller verification and the operational queues that need attention."
+        actions={
+          <Link
+            href="/dashboard/verifications"
+            className="bg-primary text-on-primary inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold shadow-elevation-1 transition hover:shadow-elevation-2"
+          >
+            <ShieldCheck className="h-3.5 w-3.5" />
+            Review verifications
+          </Link>
+        }
+      />
+
       {/* 1. KPI WIDGETS SECTION */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          title="Total Platform Users"
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <DashboardStat
+          label="Platform users"
           value={totalUsers}
-          change="+14.2%"
-          changeType="increase"
-          description={`${sellersCount} Sellers · ${buyersCount} Buyers`}
+          detail={`${sellersCount} sellers · ${buyersCount} buyers`}
           icon={<Users className="h-4 w-4" />}
-          sparklineData={[10, 15, 12, 19, 24, 30, 36]}
         />
-
-        <MetricCard
-          title="Pending Audits"
+        <DashboardStat
+          label="Pending verifications"
           value={pendingCount ?? 0}
-          change={pendingCount && pendingCount > 0 ? "Requires Action" : "Clear"}
-          changeType={pendingCount && pendingCount > 0 ? "decrease" : "increase"}
-          description={`${verifiedCount ?? 0} Sellers Cleared`}
+          detail={`${verifiedCount ?? 0} verified sellers`}
+          tone={(pendingCount ?? 0) > 0 ? "warning" : "success"}
           icon={<Building2 className="h-4 w-4" />}
-          sparklineData={[4, 6, 8, 5, 9, 7, 5]}
         />
-
-        <MetricCard
-          title="Active Products"
+        <DashboardStat
+          label="Active products"
           value={productCount ?? 0}
-          change="+8.6%"
-          changeType="increase"
-          description="Catalog listings online"
+          detail="Catalog listings currently online"
           icon={<ShoppingBag className="h-4 w-4" />}
-          sparklineData={[14, 18, 20, 22, 25, 29, 34]}
         />
-
-        <MetricCard
-          title="Total Orders"
+        <DashboardStat
+          label="Total orders"
           value={orderCount ?? 0}
-          change="+18.4%"
-          changeType="increase"
-          description="Customer direct orders"
+          detail="Orders recorded on the platform"
           icon={<ShoppingBag className="h-4 w-4" />}
-          sparklineData={[8, 12, 16, 21, 28, 35, 42]}
         />
       </div>
 
       {/* 2. MAIN 12-COLUMN GRID (Analytics 8-col + System Activity 4-col) */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* 8-Column Analytics Card */}
-        <div className="space-y-6 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xs lg:col-span-8">
+        <DashboardPanel title="Website traffic & performance" description="Platform discovery and acquisition activity." className="lg:col-span-8" contentClassName="space-y-6">
           <div className="flex flex-col justify-between gap-4 border-b border-[#F0F0EC] pb-4 sm:flex-row sm:items-center">
             <div>
               <div className="mb-1 flex items-center gap-2">
