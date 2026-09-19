@@ -24,7 +24,7 @@ import { PRODUCT_STATUS_LABEL, formatInr } from "@/features/products/lib/product
 import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
 import { getSellerAnalyticsData } from "@/features/admin/lib/vercel-analytics";
 import { SITE_URL } from "@genz/utils";
-import { DashboardPageHeader } from "@genz/ui";
+import { DashboardPageHeader, DashboardStat } from "@genz/ui";
 
 export default async function SellerDashboardPage() {
   const session = await requireRole("seller");
@@ -384,96 +384,37 @@ export default async function SellerDashboardPage() {
         </section>
       )}
 
-      {/* 4. KPI STORE PERFORMANCE CARDS (Genuine Data Only) */}
-      <section className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Metric 1: Total Sales */}
-        <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 rounded-2xl border p-5">
-          <div className="flex items-center justify-between">
-            <span className="text-on-surface-variant text-xs font-semibold">
-              Sales Revenue
-            </span>
-            <div className="bg-success-container text-success flex h-8 w-8 items-center justify-center rounded-xl">
-              <TrendingUp className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-2">
-            <p className="text-on-surface text-2xl font-bold tracking-tight">
-              {formatInr(totalRevenue)}
-            </p>
-            <p className="text-on-surface-variant mt-0.5 text-[11px]">
-              From {deliveredOrders.length} delivered order
-              {deliveredOrders.length !== 1 ? "s" : ""}
-            </p>
-          </div>
-        </div>
-
-        {/* Metric 2: Orders Breakdown */}
-        <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 rounded-2xl border p-5">
-          <div className="flex items-center justify-between">
-            <span className="text-on-surface-variant text-xs font-semibold">
-              Customer Orders
-            </span>
-            <div className="bg-primary-container text-primary flex h-8 w-8 items-center justify-center rounded-xl">
-              <ShoppingBag className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-2">
-            <p className="text-on-surface text-2xl font-bold tracking-tight">
-              {totalOrdersCount}
-            </p>
-            <div className="text-on-surface-variant mt-0.5 flex items-center gap-2 text-[11px]">
-              <span className="text-warning font-semibold">
-                {pendingOrders.length} to fulfill
-              </span>
-              <span>·</span>
-              <span>{shippedOrders.length} in transit</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Metric 3: Active Products */}
-        <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 rounded-2xl border p-5">
-          <div className="flex items-center justify-between">
-            <span className="text-on-surface-variant text-xs font-semibold">
-              Active Products
-            </span>
-            <div className="bg-secondary-container text-secondary flex h-8 w-8 items-center justify-center rounded-xl">
-              <Package className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-2">
-            <p className="text-on-surface text-2xl font-bold tracking-tight">
-              {productCount ?? 0}
-            </p>
-            <p className="text-on-surface-variant mt-0.5 text-[11px]">
-              {(productCount ?? 0) > 0 ? "Published on marketplace" : "Catalog empty"}
-            </p>
-          </div>
-        </div>
-
-        {/* Metric 4: Storefront Views */}
-        <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 rounded-2xl border p-5">
-          <div className="flex items-center justify-between">
-            <span className="text-on-surface-variant text-xs font-semibold">
-              Product Views
-            </span>
-            <div className="bg-surface-container-high text-on-surface-variant flex h-8 w-8 items-center justify-center rounded-xl">
-              <Eye className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-2">
-            <p className="text-on-surface text-2xl font-bold tracking-tight">
-              {analytics.totalPageViews}
-            </p>
-            <p className="text-on-surface-variant mt-0.5 text-[11px]">
-              {analytics.totalVisitors} unique buyer visit
-              {analytics.totalVisitors !== 1 ? "s" : ""}
-            </p>
-          </div>
-        </div>
+      {/* 4. STORE PERFORMANCE */}
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <DashboardStat
+          label="Sales revenue"
+          value={formatInr(totalRevenue)}
+          detail={`From ${deliveredOrders.length} delivered order${deliveredOrders.length !== 1 ? "s" : ""}`}
+          tone="success"
+          icon={<TrendingUp className="h-4 w-4" />}
+        />
+        <DashboardStat
+          label="Customer orders"
+          value={totalOrdersCount}
+          detail={`${pendingOrders.length} to fulfill · ${shippedOrders.length} in transit`}
+          tone={pendingOrders.length > 0 ? "warning" : "default"}
+          icon={<ShoppingBag className="h-4 w-4" />}
+        />
+        <DashboardStat
+          label="Active products"
+          value={productCount ?? 0}
+          detail={(productCount ?? 0) > 0 ? "Published on marketplace" : "Catalog empty"}
+          icon={<Package className="h-4 w-4" />}
+        />
+        <DashboardStat
+          label="Product views"
+          value={analytics.totalPageViews}
+          detail={`${analytics.totalVisitors} unique buyer visit${analytics.totalVisitors !== 1 ? "s" : ""}`}
+          icon={<Eye className="h-4 w-4" />}
+        />
       </section>
 
-      {/* 5. ANALYTICS & QUICK ACTIONS */}
+      {/* 5. ANALYTICS & QUICK ACTIONS */
       <section id="analytics" className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* 8-Col Analytics Chart & Details */}
         <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-5 rounded-2xl border p-5 sm:p-6 lg:col-span-8">
