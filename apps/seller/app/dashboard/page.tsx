@@ -212,6 +212,9 @@ export default async function SellerDashboardPage() {
     });
   }
 
+  const hour = new Date().getHours();
+  const timeGreeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+
   return (
     <div className="space-y-8 pb-12">
       <DashboardPageHeader
