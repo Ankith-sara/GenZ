@@ -196,7 +196,7 @@ export default async function AdminDashboardOverviewPage() {
               </div>
             </div>
           </div>
-        </div>
+        </DashboardPanel>
 
         {/* 4-Column Platform Health & Real-time Activity */}
         <div className="space-y-6 lg:col-span-4">
