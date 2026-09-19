@@ -24,6 +24,7 @@ import { PRODUCT_STATUS_LABEL, formatInr } from "@/features/products/lib/product
 import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
 import { getSellerAnalyticsData } from "@/features/admin/lib/vercel-analytics";
 import { SITE_URL } from "@genz/utils";
+import { DashboardPageHeader } from "@genz/ui";
 
 export default async function SellerDashboardPage() {
   const session = await requireRole("seller");
@@ -211,68 +212,48 @@ export default async function SellerDashboardPage() {
     });
   }
 
-  // Time-aware greeting
-  const hour = new Date().getHours();
-  const timeGreeting =
-    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-
   return (
     <div className="space-y-8 pb-12">
-      {/* 1. TOP HEADER: GREETING & STORE OVERVIEW */}
-      <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h2 className="text-on-surface text-xl font-bold tracking-tight sm:text-2xl">
-              {timeGreeting}, {storeName}
-            </h2>
-            <span
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                isVerified
-                  ? "bg-success-container text-on-success-container border-success/20 border"
-                  : "bg-warning-container text-on-warning-container border-warning/20 border"
-              }`}
+      <DashboardPageHeader
+        eyebrow="Seller workspace"
+        title={`${timeGreeting}, ${storeName}`}
+        description="A focused view of your orders, catalog, storefront activity and the actions that need your attention."
+        actions={
+          <>
+            <Link
+              href={`${SITE_URL}/sellers/${session.userId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-outline-variant/60 bg-surface-container-lowest text-on-surface hover:bg-surface-container inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold shadow-2xs transition-colors"
             >
-              {isVerified ? (
-                <>
-                  <CheckCircle2 className="text-success h-3.5 w-3.5" />
-                  <span>Verified Store</span>
-                </>
-              ) : (
-                <>
-                  <Clock className="text-warning h-3.5 w-3.5" />
-                  <span>Verification Pending</span>
-                </>
-              )}
-            </span>
-          </div>
-          <p className="text-on-surface-variant mt-1 text-xs sm:text-sm">
-            Here&apos;s a live summary of your store performance, orders, and action
-            items.
-          </p>
-        </div>
+              <Store className="text-on-surface-variant h-3.5 w-3.5" />
+              <span>View Storefront</span>
+              <ExternalLink className="text-on-surface-variant h-3 w-3" />
+            </Link>
+            <Link
+              href="/dashboard/products/new"
+              className="bg-primary text-on-primary shadow-elevation-1 hover:shadow-elevation-2 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all active:scale-98"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Add Product</span>
+            </Link>
+          </>
+        }
+      />
 
-        {/* Primary Header CTAs */}
-        <div className="flex shrink-0 items-center gap-2.5">
-          <Link
-            href={`${SITE_URL}/sellers/${session.userId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-outline-variant/60 bg-surface-container-lowest text-on-surface hover:bg-surface-container inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold shadow-2xs transition-colors"
-          >
-            <Store className="text-on-surface-variant h-3.5 w-3.5" />
-            <span>View Storefront</span>
-            <ExternalLink className="text-on-surface-variant h-3 w-3" />
-          </Link>
-
-          <Link
-            href="/dashboard/products/new"
-            className="bg-primary text-on-primary shadow-elevation-1 hover:shadow-elevation-2 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all active:scale-98"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Add Product</span>
-          </Link>
-        </div>
-      </section>
+      {/* Store status */}
+      <div className="flex items-center gap-2">
+        <span
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold ${
+            isVerified
+              ? "bg-success-container text-on-success-container border-success/20 border"
+              : "bg-warning-container text-on-warning-container border-warning/20 border"
+          }`}
+        >
+          {isVerified ? <CheckCircle2 className="text-success h-3 w-3" /> : <Clock className="text-warning h-3 w-3" />}
+          {isVerified ? "Verified Store" : "Verification Pending"}
+        </span>
+      </div>
 
       {/* 2. NEEDS YOUR ATTENTION (ACTION CENTER) */}
       {attentionItems.length > 0 && (
