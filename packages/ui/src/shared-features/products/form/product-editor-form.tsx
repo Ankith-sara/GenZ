@@ -471,7 +471,7 @@ export function ProductEditorForm({
 
         </section>
 
-        {/* BOTTOM ACTION BAR */
+        {/* BOTTOM ACTION BAR */}
         <div className="border-border bg-card sticky bottom-3 z-20 flex flex-col gap-3 rounded-xl border p-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
           <span className="text-muted-foreground text-xs">
             Changes can be updated or unlisted anytime from your catalog desk.
