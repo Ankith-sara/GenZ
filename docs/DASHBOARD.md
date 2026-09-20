@@ -102,3 +102,15 @@ Current foundation components:
 - `DashboardStat`
 
 Domain-specific dashboard sections remain inside `apps/seller` or `apps/admin`.
+
+
+## Seller Orders — Fulfillment UX
+
+The seller orders workspace is treated as an operational queue:
+
+- Surface orders needing action before secondary order states.
+- Provide a combined **Needs Action** filter for placed and processing orders.
+- Keep KPI values tied to the currently scoped order set.
+- Preserve mobile list representation for operational records.
+- Make clickable order rows keyboard accessible.
+- Use the shared dashboard header/stat primitives for consistent hierarchy.
