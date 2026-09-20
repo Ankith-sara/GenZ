@@ -320,7 +320,6 @@ export function ProductsCatalogManager({
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [stockFilter, setStockFilter] = useState("all");
   const [priceRangeFilter, setPriceRangeFilter] = useState("all");
   const [badgeFilter, setBadgeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
@@ -476,10 +475,6 @@ export function ProductsCatalogManager({
       if (sortBy === "price_desc") {
         return (b.price_inr || 0) - (a.price_inr || 0);
       }
-      if (sortBy === "stock_desc") {
-        return (b.inventory_count || 0) - (a.inventory_count || 0);
-      }
-      if (sortBy === "stock_asc") {
         return (a.inventory_count || 0) - (b.inventory_count || 0);
       }
       if (sortBy === "name_asc") {
@@ -496,7 +491,6 @@ export function ProductsCatalogManager({
     searchQuery,
     statusFilter,
     categoryFilter,
-    stockFilter,
     priceRangeFilter,
     badgeFilter,
     sortBy,
@@ -716,28 +710,6 @@ export function ProductsCatalogManager({
     })),
   ];
 
-  const stockOptions: FilterOption[] = [
-    { value: "all", label: "All Inventory", count: kpis.totalCount },
-    {
-      value: "in_stock",
-      label: "In Stock (> 5 units)",
-      count: kpis.inStockCount,
-      colorDot: "bg-emerald-500",
-    },
-    {
-      value: "low_stock",
-      label: "Low Stock (1–5 units)",
-      count: kpis.lowStockCount,
-      colorDot: "bg-amber-500",
-    },
-    {
-      value: "out_of_stock",
-      label: "Out of Stock (0 units)",
-      count: kpis.outOfStockCount,
-      colorDot: "bg-rose-500",
-    },
-  ];
-
   const priceOptions: FilterOption[] = [
     { value: "all", label: "All Prices" },
     { value: "under_500", label: "Under ₹500" },
@@ -773,8 +745,6 @@ export function ProductsCatalogManager({
     { value: "oldest", label: "Sort: Oldest First" },
     { value: "price_asc", label: "Price: Low to High" },
     { value: "price_desc", label: "Price: High to Low" },
-    { value: "stock_desc", label: "Highest Stock" },
-    { value: "stock_asc", label: "Lowest Stock" },
     { value: "name_asc", label: "Name: A to Z" },
   ];
 
@@ -782,7 +752,6 @@ export function ProductsCatalogManager({
     Boolean(searchQuery) ||
     statusFilter !== "all" ||
     categoryFilter !== "all" ||
-    stockFilter !== "all" ||
     priceRangeFilter !== "all" ||
     badgeFilter !== "all" ||
     sortBy !== "newest";
@@ -791,7 +760,6 @@ export function ProductsCatalogManager({
     setSearchQuery("");
     setStatusFilter("all");
     setCategoryFilter("all");
-    setStockFilter("all");
     setPriceRangeFilter("all");
     setBadgeFilter("all");
     setSortBy("newest");
@@ -834,8 +802,7 @@ export function ProductsCatalogManager({
         <div
           onClick={() => {
             setStatusFilter("all");
-            setStockFilter("all");
-          }}
+                  }}
           className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
             statusFilter === "all" && stockFilter === "all"
               ? "ring-primary/10 border-primary/40 ring-2"
