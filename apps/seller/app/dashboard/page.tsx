@@ -213,7 +213,8 @@ export default async function SellerDashboardPage() {
   }
 
   const hour = new Date().getHours();
-  const timeGreeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const timeGreeting =
+    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
     <div className="space-y-8 pb-12">
@@ -253,7 +254,11 @@ export default async function SellerDashboardPage() {
               : "bg-warning-container text-on-warning-container border-warning/20 border"
           }`}
         >
-          {isVerified ? <CheckCircle2 className="text-success h-3 w-3" /> : <Clock className="text-warning h-3 w-3" />}
+          {isVerified ? (
+            <CheckCircle2 className="text-success h-3 w-3" />
+          ) : (
+            <Clock className="text-warning h-3 w-3" />
+          )}
           {isVerified ? "Verified Store" : "Verification Pending"}
         </span>
       </div>
@@ -403,7 +408,9 @@ export default async function SellerDashboardPage() {
         <DashboardStat
           label="Active products"
           value={productCount ?? 0}
-          detail={(productCount ?? 0) > 0 ? "Published on marketplace" : "Catalog empty"}
+          detail={
+            (productCount ?? 0) > 0 ? "Published on marketplace" : "Catalog empty"
+          }
           icon={<Package className="h-4 w-4" />}
         />
         <DashboardStat
@@ -414,7 +421,7 @@ export default async function SellerDashboardPage() {
         />
       </section>
 
-      {/* 5. ANALYTICS & QUICK ACTIONS */
+      {/* 5. ANALYTICS & QUICK ACTIONS */}
       <section id="analytics" className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* 8-Col Analytics Chart & Details */}
         <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 space-y-5 rounded-2xl border p-5 sm:p-6 lg:col-span-8">

@@ -67,7 +67,7 @@ export default async function AdminDashboardOverviewPage() {
         actions={
           <Link
             href="/dashboard/verifications"
-            className="bg-primary text-on-primary inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold shadow-elevation-1 transition hover:shadow-elevation-2"
+            className="bg-primary text-on-primary shadow-elevation-1 hover:shadow-elevation-2 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition"
           >
             <ShieldCheck className="h-3.5 w-3.5" />
             Review verifications
@@ -107,32 +107,28 @@ export default async function AdminDashboardOverviewPage() {
       {/* 2. MAIN 12-COLUMN GRID (Analytics 8-col + System Activity 4-col) */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* 8-Column Analytics Card */}
-        <DashboardPanel title="Website traffic & performance" description="Platform discovery and acquisition activity." className="lg:col-span-8" contentClassName="space-y-6">
-          <div className="flex flex-col justify-between gap-4 border-b border-[#F0F0EC] pb-4 sm:flex-row sm:items-center">
-            <div>
-              <div className="mb-1 flex items-center gap-2">
-                <span className="flex items-center gap-1 rounded bg-black px-2 py-0.5 font-mono text-[10px] font-bold text-white uppercase">
-                  Platform Traffic
-                </span>
-                <a
-                  href="https://genzonline.in"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-1 font-mono text-xs font-semibold text-[#73736E] hover:text-black"
-                >
-                  www.genzonline.in
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                  ● Live Tracking
-                </span>
-              </div>
-              <h2 className="font-graphik text-xl font-bold text-[#1A1A18]">
-                Website Traffic & Performance
-              </h2>
+        <DashboardPanel
+          title="Website traffic & performance"
+          description="Platform discovery and acquisition activity."
+          className="lg:col-span-8"
+          contentClassName="space-y-6"
+          actions={
+            <div className="flex items-center gap-2">
+              <a
+                href="https://genzonline.in"
+                target="_blank"
+                rel="noreferrer"
+                className="text-on-surface-variant hover:text-on-surface flex items-center gap-1 font-mono text-xs font-semibold"
+              >
+                www.genzonline.in
+                <ExternalLink className="h-3 w-3" />
+              </a>
+              <span className="bg-success-container text-on-success-container border-success/20 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold">
+                ● Live Tracking
+              </span>
             </div>
-          </div>
-
+          }
+        >
           {/* Interactive Chart */}
           <VercelAnalyticsChart
             dailyData={analytics.dailyData}
@@ -211,9 +207,12 @@ export default async function AdminDashboardOverviewPage() {
               className="border-outline-variant/60 bg-surface-container-low hover:bg-surface-container flex items-center justify-between rounded-xl border p-3 transition-colors"
             >
               <div>
-                <p className="text-on-surface text-xs font-semibold">Seller verification</p>
+                <p className="text-on-surface text-xs font-semibold">
+                  Seller verification
+                </p>
                 <p className="text-on-surface-variant mt-0.5 text-[11px]">
-                  {pendingCount ?? 0} application{(pendingCount ?? 0) === 1 ? "" : "s"} waiting for review
+                  {pendingCount ?? 0} application{(pendingCount ?? 0) === 1 ? "" : "s"}{" "}
+                  waiting for review
                 </p>
               </div>
               <ArrowUpRight className="text-on-surface-variant h-4 w-4" />
@@ -224,9 +223,12 @@ export default async function AdminDashboardOverviewPage() {
               className="border-outline-variant/60 bg-surface-container-low hover:bg-surface-container flex items-center justify-between rounded-xl border p-3 transition-colors"
             >
               <div>
-                <p className="text-on-surface text-xs font-semibold">Order operations</p>
+                <p className="text-on-surface text-xs font-semibold">
+                  Order operations
+                </p>
                 <p className="text-on-surface-variant mt-0.5 text-[11px]">
-                  {orderCount ?? 0} total order{(orderCount ?? 0) === 1 ? "" : "s"} recorded
+                  {orderCount ?? 0} total order{(orderCount ?? 0) === 1 ? "" : "s"}{" "}
+                  recorded
                 </p>
               </div>
               <ArrowUpRight className="text-on-surface-variant h-4 w-4" />
