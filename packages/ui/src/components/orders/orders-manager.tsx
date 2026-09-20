@@ -3,6 +3,8 @@
 import React, { useState, useTransition } from "react";
 import type { OrderRecord, OrderStatus } from "@genz/types";
 import { SlideOverDrawer } from "../slide-over-drawer";
+import { DashboardPageHeader } from "../dashboard-page-header";
+import { DashboardStat } from "../dashboard-stat";
 import { Button } from "../button";
 import { Label } from "../label";
 import {
@@ -70,6 +72,7 @@ export function OrdersManager({
   const shippedCount = scopedOrders.filter((o) => o.status === "shipped").length;
   const deliveredCount = scopedOrders.filter((o) => o.status === "delivered").length;
   const cancelledCount = scopedOrders.filter((o) => o.status === "cancelled").length;
+  const needsActionCount = placedCount + processingCount;
 
   const totalRevenue = scopedOrders.reduce((sum, o) => {
     if (mode === "seller" && sellerId) {
@@ -83,7 +86,18 @@ export function OrdersManager({
 
   // Filter by tab and search
   const filteredOrders = scopedOrders.filter((order) => {
-    if (selectedStatusTab !== "all" && order.status !== selectedStatusTab) {
+    if (
+      selectedStatusTab !== "all" &&
+      selectedStatusTab !== "needs_action" &&
+      order.status !== selectedStatusTab
+    ) {
+      return false;
+    }
+    if (
+      selectedStatusTab === "needs_action" &&
+      order.status !== "placed" &&
+      order.status !== "processing"
+    ) {
       return false;
     }
     if (searchQuery.trim()) {
@@ -205,91 +219,95 @@ export function OrdersManager({
 
   return (
     <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="flex flex-col justify-between gap-4 border-b border-zinc-200 pb-5 sm:flex-row sm:items-center">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl font-bold tracking-tight text-zinc-900 sm:text-2xl">
-              {mode === "admin" ? "Platform Orders" : "Orders & Fulfillment"}
-            </h1>
-            <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-semibold text-zinc-700">
-              {mode === "admin" ? "Master View" : "Store Desk"}
-            </span>
-          </div>
-          <p className="mt-1 text-xs text-zinc-500 sm:text-sm">
-            {mode === "admin"
-              ? "Inspect and track customer orders across all marketplace sellers."
-              : "Manage customer orders placed for your products. Track progress from workshop to delivery."}
-          </p>
-        </div>
-      </div>
+      <DashboardPageHeader
+        eyebrow={mode === "admin" ? "Platform operations" : "Seller operations"}
+        title={mode === "admin" ? "Orders" : "Orders & Fulfillment"}
+        description={
+          mode === "admin"
+            ? "Inspect and manage customer orders across the marketplace."
+            : "Process orders, dispatch shipments, and track delivery progress for your store."
+        }
+      />
 
-      {/* KPI Metric Cards */}
-      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-5">
-        <div className="bg-card border-border rounded-2xl border p-4 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Total Orders
-            </span>
-            <Package className="text-muted-foreground h-4 w-4" />
-          </div>
-          <p className="text-foreground mt-1.5 text-2xl font-bold">{totalCount}</p>
-          <span className="text-muted-foreground text-[11px]">All recorded</span>
-        </div>
+      <section className="grid grid-cols-2 gap-3.5 sm:grid-cols-5">
+        <DashboardStat
+          label="Total orders"
+          value={totalCount}
+          detail="All recorded orders"
+          icon={<Package className="h-4 w-4" />}
+        />
+        <DashboardStat
+          label="Needs action"
+          value={needsActionCount}
+          detail="Placed + processing"
+          tone={needsActionCount > 0 ? "warning" : "default"}
+          icon={<Clock className="h-4 w-4" />}
+        />
+        <DashboardStat
+          label="In transit"
+          value={shippedCount}
+          detail="Shipped with courier"
+          icon={<Truck className="h-4 w-4" />}
+        />
+        <DashboardStat
+          label="Delivered"
+          value={deliveredCount}
+          detail="Completed orders"
+          tone="success"
+          icon={<CheckCircle2 className="h-4 w-4" />}
+        />
+        <DashboardStat
+          label={mode === "seller" ? "Seller revenue" : "Order volume"}
+          value={`₹${totalRevenue.toLocaleString("en-IN")}`}
+          detail="Current order set"
+          icon={<CreditCard className="h-4 w-4" />}
+        />
+      </section>
 
-        <div className="bg-card border-border rounded-2xl border p-4 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              To Fulfill
-            </span>
-            <Clock className="h-4 w-4 text-amber-600" />
-          </div>
-          <p className="mt-1.5 text-2xl font-bold text-amber-700">
-            {placedCount + processingCount}
-          </p>
-          <span className="text-[11px] text-amber-700">Needs action</span>
-        </div>
-
-        <div className="bg-card border-border rounded-2xl border p-4 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              In Transit
-            </span>
-            <Truck className="h-4 w-4 text-purple-600" />
-          </div>
-          <p className="mt-1.5 text-2xl font-bold text-purple-700">{shippedCount}</p>
-          <span className="text-[11px] text-purple-700">Shipped with courier</span>
-        </div>
-
-        <div className="bg-card border-border rounded-2xl border p-4 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">Delivered</span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-          </div>
-          <p className="mt-1.5 text-2xl font-bold text-emerald-700">{deliveredCount}</p>
-          <span className="text-[11px] text-emerald-700">Completed &amp; paid</span>
-        </div>
-
-        <div className="bg-card border-border col-span-2 rounded-2xl border p-4 shadow-2xs sm:col-span-1">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              {mode === "seller" ? "Seller Revenue" : "Total Volume"}
-            </span>
-            <CreditCard className="text-muted-foreground h-4 w-4" />
-          </div>
-          <p className="text-foreground mt-1.5 text-xl font-bold sm:text-2xl">
-            ₹{totalRevenue.toLocaleString("en-IN")}
-          </p>
-          <span className="text-muted-foreground text-[11px]">Authentic sales</span>
-        </div>
+      <div className="flex flex-wrap items-center gap-2 text-[11px]">
+        <span className="text-on-surface-variant font-semibold">Fulfillment queue:</span>
+        <button
+          type="button"
+          onClick={() => setSelectedStatusTab("needs_action")}
+          className={`rounded-full px-2.5 py-1 font-semibold transition-colors ${
+            selectedStatusTab === "needs_action"
+              ? "bg-warning-container text-on-warning-container"
+              : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
+          }`}
+        >
+          {needsActionCount} needs action
+        </button>
+        <button
+          type="button"
+          onClick={() => setSelectedStatusTab("shipped")}
+          className={`rounded-full px-2.5 py-1 font-semibold transition-colors ${
+            selectedStatusTab === "shipped"
+              ? "bg-secondary-container text-on-secondary-container"
+              : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
+          }`}
+        >
+          {shippedCount} shipped
+        </button>
+        <button
+          type="button"
+          onClick={() => setSelectedStatusTab("delivered")}
+          className={`rounded-full px-2.5 py-1 font-semibold transition-colors ${
+            selectedStatusTab === "delivered"
+              ? "bg-success-container text-on-success-container"
+              : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
+          }`}
+        >
+          {deliveredCount} delivered
+        </button>
       </div>
 
       {/* Search & Status Filters */}
-      <div className="bg-card border-border flex flex-col justify-between gap-3 rounded-2xl border p-3.5 shadow-2xs md:flex-row md:items-center">
+      <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 flex flex-col justify-between gap-3 rounded-2xl border p-3.5 md:flex-row md:items-center">
         {/* Status Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
           {[
             { key: "all", label: "All Orders", count: totalCount },
+            { key: "needs_action", label: "Needs Action", count: needsActionCount },
             { key: "placed", label: "Placed", count: placedCount },
             { key: "processing", label: "Processing", count: processingCount },
             { key: "shipped", label: "Shipped", count: shippedCount },
@@ -302,16 +320,16 @@ export function OrdersManager({
               onClick={() => setSelectedStatusTab(tab.key)}
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedStatusTab === tab.key
-                  ? "bg-primary text-primary-foreground shadow-xs"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                  ? "bg-primary text-on-primary shadow-elevation-1"
+                  : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
               }`}
             >
               <span>{tab.label}</span>
               <span
                 className={`py-0.2 rounded-full px-1.5 text-[10px] ${
                   selectedStatusTab === tab.key
-                    ? "bg-primary-foreground/20 text-primary-foreground"
-                    : "bg-background text-muted-foreground"
+                    ? "bg-on-primary/20 text-on-primary"
+                    : "bg-surface-container-lowest text-on-surface-variant"
                 }`}
               >
                 {tab.count}
@@ -328,18 +346,18 @@ export function OrdersManager({
             placeholder="Search Order ID, customer, city..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-muted/40 border-border text-foreground placeholder-muted-foreground focus:ring-ring focus:bg-card w-full rounded-full border py-2 pr-3 pl-9 text-xs transition-all focus:ring-2 focus:outline-none"
+            className="border-outline-variant/60 bg-surface-container-low text-on-surface placeholder:text-on-surface-variant focus:ring-primary/20 focus:bg-surface-container-lowest w-full rounded-full border py-2 pr-3 pl-9 text-xs transition-all focus:ring-2 focus:outline-none focus:ring-2"
           />
         </div>
       </div>
 
       {/* Orders Table & Mobile Representation */}
-      <div className="bg-card border-border overflow-hidden rounded-2xl border shadow-2xs">
+      <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 overflow-hidden rounded-2xl border">
         {filteredOrders.length === 0 ? (
           <div className="p-12 text-center">
             <Package className="mx-auto mb-3 h-10 w-10 text-zinc-300" />
-            <h3 className="text-base font-semibold text-zinc-900">No orders found</h3>
-            <p className="mt-1 text-xs text-zinc-500">
+            <h3 className="text-on-surface text-base font-semibold">No orders found</h3>
+            <p className="text-on-surface-variant mt-1 text-xs">
               {orders.length === 0
                 ? "When customers purchase your products, orders will appear here."
                 : "No orders match your search query or status filter."}
