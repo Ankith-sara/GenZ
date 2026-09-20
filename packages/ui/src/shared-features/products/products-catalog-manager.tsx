@@ -182,7 +182,7 @@ function FilterDropdown({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={clsx(
-          "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium shadow-2xs transition-all select-none",
+          "inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border px-3.5 text-sm font-medium shadow-sm transition-all select-none",
           isActive
             ? "border-foreground/40 bg-foreground/5 text-foreground ring-foreground/10 font-semibold ring-1"
             : "border-border bg-card text-foreground hover:border-foreground/30 hover:bg-muted/40",
@@ -226,7 +226,7 @@ function FilterDropdown({
       {isOpen && (
         <div
           className={clsx(
-            "border-border bg-card animate-in fade-in-80 zoom-in-95 absolute z-50 mt-1.5 max-w-[300px] min-w-[210px] overflow-hidden rounded-2xl border p-1.5 shadow-xl ring-1 ring-black/5 duration-100",
+            "border-border/70 bg-card/95 backdrop-blur-xl animate-in fade-in-80 zoom-in-95 absolute z-50 mt-2 max-w-[320px] min-w-[220px] overflow-hidden rounded-xl border p-2 shadow-2xl ring-1 ring-black/5 duration-150",
             align === "right" ? "right-0" : "left-0"
           )}
         >
@@ -245,7 +245,7 @@ function FilterDropdown({
                     setIsOpen(false);
                   }}
                   className={clsx(
-                    "flex w-full cursor-pointer items-center justify-between gap-2.5 rounded-xl px-2.5 py-2 text-left text-xs font-medium transition-colors select-none",
+                    "flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors select-none",
                     isOptionSelected
                       ? "bg-muted text-foreground font-semibold"
                       : "text-foreground hover:bg-muted/60"
