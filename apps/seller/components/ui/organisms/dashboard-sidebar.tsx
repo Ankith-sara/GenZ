@@ -39,27 +39,27 @@ interface NavGroup {
 function getSellerNavGroups(): NavGroup[] {
   return [
     {
-      groupName: "Overview",
+      groupName: "Workspace",
       items: [{ href: "/dashboard", label: "Overview", icon: LayoutDashboard }],
+    },
+    {
+      groupName: "Manage",
+      items: [
+        { href: "/dashboard/orders", label: "Orders", icon: ShoppingBag },
+        { href: "/dashboard/products", label: "Products", icon: Package },
+      ],
     },
     {
       groupName: "Store",
       items: [
-        { href: "/dashboard/products", label: "Products", icon: Package },
-        { href: "/dashboard/orders", label: "Orders", icon: ShoppingBag },
+        { href: "/dashboard/profile", label: "Storefront", icon: Store },
+        { href: "/dashboard/account", label: "Business Profile", icon: Building2 },
+        { href: "/dashboard/documents", label: "Verification", icon: FileCheck },
       ],
-    },
-    {
-      groupName: "Growth",
-      items: [{ href: "/dashboard/profile", label: "Storefront", icon: Store }],
     },
     {
       groupName: "Account",
-      items: [
-        { href: "/dashboard/account", label: "Business Profile", icon: Building2 },
-        { href: "/dashboard/documents", label: "Verification", icon: FileCheck },
-        { href: "/dashboard/settings", label: "Settings", icon: Settings },
-      ],
+      items: [{ href: "/dashboard/settings", label: "Settings", icon: Settings }],
     },
   ];
 }
@@ -272,6 +272,7 @@ export function DashboardSidebar({
                             ? "bg-primary-container text-on-primary-container font-semibold shadow-xs"
                             : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
                         }`}
+                        aria-current={active ? "page" : undefined}
                         title={isCollapsed ? item.label : undefined}
                       >
                         <Icon
