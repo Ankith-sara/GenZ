@@ -13,10 +13,10 @@ The dashboards are operational workspaces, not marketing pages.
 
 ### Seller
 
-1. Overview
-2. Store — Products, Orders
-3. Growth — Storefront and analytics
-4. Account — Business Profile, Verification, Settings
+1. Workspace — Overview
+2. Manage — Orders, Products
+3. Store — Storefront, Business Profile, Verification
+4. Account — Settings
 
 Primary actions:
 - Add product
@@ -61,11 +61,12 @@ Never display fabricated percentage changes, fake sparklines or "live" system-he
 
 ## Seller dashboard hierarchy
 
-1. Action-required items
-2. Store/business metrics
-3. Recent orders
-4. Product/catalog activity
-5. Store setup/verification progress
+1. Action center — blockers and next actions
+2. Store setup/verification — completion path when incomplete
+3. Store/business metrics — revenue, orders, catalog, traffic
+4. Analytics and quick actions
+5. Recent orders — operational work
+6. Recent products — catalog activity
 
 ## Admin dashboard hierarchy
 
@@ -102,3 +103,15 @@ Current foundation components:
 - `DashboardStat`
 
 Domain-specific dashboard sections remain inside `apps/seller` or `apps/admin`.
+
+
+## Day 2 — Seller UX pass
+
+The seller dashboard now follows a task-first operational hierarchy:
+
+- Action-required work is presented as a prioritized list instead of a grid of equal-weight cards.
+- Revenue is calculated from delivered seller orders so the metric label matches the underlying value.
+- Fulfillment status is visible immediately below the KPI row.
+- Recent orders have a dedicated mobile list representation instead of relying on horizontal table scrolling.
+- Seller navigation is grouped by the user's mental model: Workspace, Manage, Store and Account.
+- Active navigation exposes `aria-current="page"` for assistive technology.
