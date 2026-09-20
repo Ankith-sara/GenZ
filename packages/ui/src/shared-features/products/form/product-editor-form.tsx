@@ -393,6 +393,13 @@ export function ProductEditorForm({
       )}
 
       {/* FORM SECTIONS */}
+      <div className="border-border bg-card/95 sticky top-0 z-20 -mx-1 overflow-x-auto rounded-xl border px-2 py-2 shadow-sm backdrop-blur-xl">
+        <nav aria-label="Product editor sections" className="flex min-w-max items-center gap-1">
+          {[["media", "Media"], ["details", "Details"], ["ownership", "Ownership"], ["variants", "Variants"], ["inventory", "Operations"], ["merchandising", "Merchandising"], ["publishing", "Publishing"]].map(([id, label]) => (
+            <a key={id} href={"#" + id} className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg px-3 py-2 text-xs font-medium transition-colors">{label}</a>
+          ))}
+        </nav>
+      </div>
       <form
         id="shared-product-editor-form"
         onSubmit={(e) => {
@@ -406,10 +413,11 @@ export function ProductEditorForm({
         {productId && <input type="hidden" name="productId" value={productId} />}
 
         {/* 1. Media Uploader */}
-        <MediaCard images={images} onImagesChange={setImages} />
+        <section id="media"><MediaCard images={images} onImagesChange={setImages} />
 
         {/* 2. Basic Info */}
-        <BasicInfoCard
+        </section>
+        <section id="details"><BasicInfoCard
           name={name}
           onChangeName={setName}
           priceInr={priceInr}
@@ -423,8 +431,8 @@ export function ProductEditorForm({
           categories={categories}
         />
 
-        {/* 3. Catalog Ownership */}
-        <CatalogOwnershipCard
+        </section>
+        <section id="ownership"><CatalogOwnershipCard
           sellers={sellers}
           adminUserId={adminUserId}
           selectedSellerId={selectedSellerId}
@@ -433,11 +441,11 @@ export function ProductEditorForm({
           sellerBusinessName={sellerBusinessName}
         />
 
-        {/* 4. Product Variants */}
-        <VariantsCard basePrice={priceInr} productName={name} />
+        </section>
+        <section id="variants"><VariantsCard basePrice={priceInr} productName={name} />
 
-        {/* 5. Inventory & Tracking */}
-        <InventoryCard
+        </section>
+        <section id="inventory"><InventoryCard
           sku={sku}
           onChangeSku={setSku}
           stockQty={stockQty}
@@ -448,8 +456,8 @@ export function ProductEditorForm({
           onToggleTrackInventory={setTrackInventory}
         />
 
-        {/* 6. Merchandising & Badges */}
-        <MerchandisingCard
+        </section>
+        <section id="merchandising"><MerchandisingCard
           isFeatured={isFeatured}
           onToggleFeatured={setIsFeatured}
           isNewArrival={isNewArrival}
@@ -458,11 +466,13 @@ export function ProductEditorForm({
           onToggleBestSeller={setIsBestSeller}
         />
 
-        {/* 7. Publishing Status */}
-        <PublishingCard status={status} onChangeStatus={setStatus} />
+        </section>
+        <section id="publishing"><PublishingCard status={status} onChangeStatus={setStatus} />
 
-        {/* BOTTOM ACTION BAR */}
-        <div className="border-border bg-card flex flex-col gap-3 rounded-2xl border p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+        </section>
+
+        {/* BOTTOM ACTION BAR */
+        <div className="border-border bg-card sticky bottom-3 z-20 flex flex-col gap-3 rounded-xl border p-4 shadow-lg sm:flex-row sm:items-center sm:justify-between">
           <span className="text-muted-foreground text-xs">
             Changes can be updated or unlisted anytime from your catalog desk.
           </span>
