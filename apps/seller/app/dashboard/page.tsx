@@ -96,7 +96,6 @@ export default async function SellerDashboardPage() {
     };
   });
 
-  const totalRevenue = scopedOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
   const totalOrdersCount = scopedOrders.length;
   const pendingOrders = scopedOrders.filter(
     (o) => o.status === "placed" || o.status === "processing"
@@ -265,68 +264,68 @@ export default async function SellerDashboardPage() {
 
       {/* 2. NEEDS YOUR ATTENTION (ACTION CENTER) */}
       {attentionItems.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-on-surface-variant flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase">
-              <Sparkles className="text-warning h-3.5 w-3.5" />
-              <span>Needs Your Attention ({attentionItems.length})</span>
-            </h3>
+        <section className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 rounded-2xl border">
+          <div className="border-outline-variant/40 flex flex-col gap-2 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Sparkles className="text-warning h-4 w-4" />
+                <h2 className="text-on-surface text-sm font-bold">Action center</h2>
+                <span className="bg-warning-container text-on-warning-container rounded-full px-2 py-0.5 text-[10px] font-bold">
+                  {attentionItems.length}
+                </span>
+              </div>
+              <p className="text-on-surface-variant mt-0.5 text-xs">
+                Prioritized tasks that can block fulfillment, verification, or sales.
+              </p>
+            </div>
+            <Link
+              href="/dashboard/orders"
+              className="text-primary inline-flex items-center gap-1 self-start text-xs font-semibold hover:underline sm:self-auto"
+            >
+              Open orders
+              <ArrowRight className="h-3 w-3" />
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="divide-outline-variant/40 divide-y">
             {attentionItems.map((item) => {
               const Icon = item.icon;
               return (
-                <div
+                <Link
                   key={item.id}
-                  className={`shadow-elevation-1 flex flex-col justify-between rounded-2xl border p-4 transition-all ${
-                    item.level === "required"
-                      ? "border-warning/30 bg-warning-container/20"
-                      : "border-outline-variant/60 bg-surface-container-lowest hover:border-outline"
-                  }`}
+                  href={item.href}
+                  className="hover:bg-surface-container-low group flex items-start gap-3 px-5 py-4 transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary"
                 >
-                  <div className="flex items-start gap-3">
-                    <div
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
-                        item.level === "required"
-                          ? "bg-warning-container text-on-warning-container"
-                          : "bg-surface-container-high text-on-surface-variant"
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wider uppercase ${
-                            item.level === "required"
-                              ? "bg-warning-container text-on-warning-container border-warning/20 border"
-                              : "bg-surface-container text-on-surface-variant border-outline-variant/40 border"
-                          }`}
-                        >
-                          {item.level}
-                        </span>
-                      </div>
-                      <h4 className="text-on-surface mt-1 truncate text-xs font-bold">
-                        {item.title}
-                      </h4>
-                      <p className="text-on-surface-variant mt-0.5 line-clamp-2 text-[11px] leading-relaxed">
-                        {item.description}
-                      </p>
-                    </div>
+                  <div
+                    className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                      item.level === "required"
+                        ? "bg-warning-container text-on-warning-container"
+                        : "bg-surface-container-high text-on-surface-variant"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
                   </div>
 
-                  <div className="border-outline-variant/40 mt-3 flex justify-end border-t pt-3">
-                    <Link
-                      href={item.href}
-                      className="text-primary inline-flex items-center gap-1 text-xs font-semibold hover:underline"
-                    >
-                      <span>{item.ctaText}</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </Link>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-on-surface text-xs font-bold">{item.title}</span>
+                      <span
+                        className={`rounded-full border px-2 py-0.5 text-[9px] font-bold tracking-wider uppercase ${
+                          item.level === "required"
+                            ? "border-warning/20 bg-warning-container text-on-warning-container"
+                            : "border-outline-variant/40 bg-surface-container text-on-surface-variant"
+                        }`}
+                      >
+                        {item.level}
+                      </span>
+                    </div>
+                    <p className="text-on-surface-variant mt-1 text-[11px] leading-relaxed">
+                      {item.description}
+                    </p>
                   </div>
-                </div>
+
+                  <ArrowRight className="text-on-surface-variant group-hover:text-primary mt-2 h-4 w-4 shrink-0 transition-colors" />
+                </Link>
               );
             })}
           </div>
@@ -392,8 +391,8 @@ export default async function SellerDashboardPage() {
       {/* 4. STORE PERFORMANCE */}
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <DashboardStat
-          label="Sales revenue"
-          value={formatInr(totalRevenue)}
+          label="Delivered revenue"
+          value={formatInr(deliveredRevenue)}
           detail={`From ${deliveredOrders.length} delivered order${deliveredOrders.length !== 1 ? "s" : ""}`}
           tone="success"
           icon={<TrendingUp className="h-4 w-4" />}
@@ -420,6 +419,19 @@ export default async function SellerDashboardPage() {
           icon={<Eye className="h-4 w-4" />}
         />
       </section>
+
+      <div className="flex flex-wrap items-center gap-2 text-[11px]">
+        <span className="text-on-surface-variant font-semibold">Fulfillment:</span>
+        <Link href="/dashboard/orders" className="bg-warning-container text-on-warning-container rounded-full px-2.5 py-1 font-semibold hover:opacity-80">
+          {pendingOrders.length} pending
+        </Link>
+        <Link href="/dashboard/orders" className="bg-secondary-container text-on-secondary-container rounded-full px-2.5 py-1 font-semibold hover:opacity-80">
+          {shippedOrders.length} shipped
+        </Link>
+        <span className="bg-success-container text-on-success-container rounded-full px-2.5 py-1 font-semibold">
+          {deliveredOrders.length} delivered
+        </span>
+      </div>
 
       {/* 5. ANALYTICS & QUICK ACTIONS */}
       <section id="analytics" className="grid grid-cols-1 gap-6 lg:grid-cols-12">
@@ -605,7 +617,28 @@ export default async function SellerDashboardPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="space-y-2 md:hidden">
+            {scopedOrders.slice(0, 5).map((order) => (
+              <Link
+                key={`mobile-${order.id}`}
+                href="/dashboard/orders"
+                className="border-outline-variant/50 bg-surface-container-low hover:bg-surface-container flex items-center justify-between gap-3 rounded-xl border p-3"
+              >
+                <div className="min-w-0">
+                  <div className="text-on-surface truncate text-xs font-bold">{order.id}</div>
+                  <div className="text-on-surface-variant mt-0.5 text-[11px]">
+                    {order.shippingAddress?.city || "Standard Shipping"} · {(order.items || []).length} item{(order.items || []).length !== 1 ? "s" : ""}
+                  </div>
+                </div>
+                <div className="shrink-0 text-right">
+                  <div className="text-on-surface text-xs font-bold">{formatInr(order.totalAmount)}</div>
+                  <span className="text-on-surface-variant text-[10px] font-semibold capitalize">{order.status}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-outline-variant/40 text-on-surface-variant border-b text-[11px] font-semibold tracking-wider uppercase">
