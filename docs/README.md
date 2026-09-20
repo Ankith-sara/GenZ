@@ -9,6 +9,7 @@ This folder is the working documentation source of truth for the GenZ monorepo.
 | [PRODUCT.md](./PRODUCT.md) | Product vision, users, roles, core workflows and business rules |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Monorepo structure, app boundaries, data flow and shared packages |
 | [DESIGN.md](./DESIGN.md) | UI/UX system, responsive behavior and design constraints |
+| [DASHBOARD.md](./DASHBOARD.md) | Seller/admin dashboard information architecture and UX rules |
 | [RULES.md](./RULES.md) | Non-negotiable engineering and coding rules |
 | [AI_AGENT.md](./AI_AGENT.md) | How an AI coding agent must inspect, plan, implement, test and report work |
 | [SECURITY.md](./SECURITY.md) | Authentication, authorization, RLS, secrets and security checklist |
