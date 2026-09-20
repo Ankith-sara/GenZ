@@ -84,7 +84,7 @@ export function PublishControls({
   return (
     <div className="font-graphik space-y-4">
       {/* Horizontal Toolbar */}
-      <div className="flex flex-col gap-4 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Left Status Indicator */}
         <div className="flex items-center gap-2.5">
           {currentStatus === "published" ? (
@@ -95,12 +95,12 @@ export function PublishControls({
             <div className="flex h-2.5 w-2.5 rounded-full bg-amber-500" />
           )}
           <div>
-            <span className="block text-xs font-bold text-[#1A1A18] capitalize">
+            <span className="block text-xs font-bold text-foreground capitalize">
               {currentStatus === "published"
                 ? "Live in Storefront Marketplace"
                 : `${currentStatus} Status`}
             </span>
-            <span className="text-[11px] text-[#73736E]">
+            <span className="text-[11px] text-muted-foreground">
               {currentStatus === "published"
                 ? "Visible to all buyers and search engine catalog"
                 : currentStatus === "archived"
@@ -117,7 +117,7 @@ export function PublishControls({
               type="button"
               disabled={isPending}
               onClick={() => handleStatusChange("published")}
-              className="flex h-10 items-center gap-2 rounded-xl bg-black px-4 text-xs font-semibold text-white shadow-2xs transition-all hover:bg-neutral-800 disabled:opacity-60"
+              className="flex h-10 items-center gap-2 rounded-lg bg-foreground px-4 text-xs font-semibold text-white shadow-sm transition-all hover:bg-foreground/90 disabled:opacity-60"
             >
               {activeAction === "published" ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -134,7 +134,7 @@ export function PublishControls({
                 asChild
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-xl border-[#E5E5E0] bg-white text-xs font-semibold text-black hover:bg-[#FAF8F4] hover:text-black"
+                className="h-10 rounded-lg border-border bg-card text-xs font-semibold text-foreground hover:bg-card hover:text-foreground"
               >
                 <Link
                   href={`/products/${productId}`}
@@ -142,7 +142,7 @@ export function PublishControls({
                   className="flex items-center gap-1.5 px-3"
                 >
                   <span>View Public Page</span>
-                  <ExternalLink className="h-3.5 w-3.5 text-[#73736E]" />
+                  <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
                 </Link>
               </Button>
 
@@ -151,12 +151,12 @@ export function PublishControls({
                 disabled={isPending}
                 onClick={() => handleStatusChange("draft")}
                 variant="outline"
-                className="flex h-10 items-center gap-2 rounded-xl border-[#E5E5E0] bg-white px-4 text-xs font-semibold text-black transition-all hover:bg-[#FAF8F4] hover:text-black disabled:opacity-60"
+                className="flex h-10 items-center gap-2 rounded-lg border-border bg-card px-4 text-xs font-semibold text-foreground transition-all hover:bg-card hover:text-foreground disabled:opacity-60"
               >
                 {activeAction === "draft" ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <FileEdit className="h-3.5 w-3.5 text-[#73736E]" />
+                  <FileEdit className="h-3.5 w-3.5 text-muted-foreground" />
                 )}
                 <span>
                   {activeAction === "draft"
@@ -173,12 +173,12 @@ export function PublishControls({
               disabled={isPending}
               onClick={() => handleStatusChange("archived")}
               variant="outline"
-              className="flex h-10 items-center gap-2 rounded-xl border-[#E5E5E0] bg-white px-4 text-xs font-medium text-[#52524E] transition-all hover:bg-[#FAF8F4] hover:text-[#1A1A18] disabled:opacity-60"
+              className="flex h-10 items-center gap-2 rounded-lg border-border bg-card px-4 text-xs font-medium text-foreground transition-all hover:bg-card hover:text-foreground disabled:opacity-60"
             >
               {activeAction === "archived" ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
-                <Archive className="h-3.5 w-3.5 text-[#73736E]" />
+                <Archive className="h-3.5 w-3.5 text-muted-foreground" />
               )}
               <span>{activeAction === "archived" ? "Archiving..." : "Archive"}</span>
             </Button>
@@ -189,7 +189,7 @@ export function PublishControls({
             variant="outline"
             disabled={isPending}
             onClick={() => setConfirmingDelete((prev) => !prev)}
-            className="flex h-10 items-center gap-1.5 rounded-xl border-rose-200 bg-white px-3 text-xs font-semibold text-rose-600 transition-all hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700 disabled:opacity-60"
+            className="flex h-10 items-center gap-1.5 rounded-lg border-destructive/20 bg-card px-3 text-xs font-semibold text-rose-600 transition-all hover:border-rose-300 hover:bg-destructive/5 hover:text-rose-700 disabled:opacity-60"
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>Delete</span>
@@ -199,8 +199,8 @@ export function PublishControls({
 
       {/* Danger Zone Confirmation Dropdown */}
       {confirmingDelete && (
-        <div className="flex flex-col gap-3 rounded-xl border border-rose-200 bg-rose-50/80 p-4 text-xs sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 font-semibold text-rose-900">
+        <div className="flex flex-col gap-3 rounded-lg border border-destructive/20 bg-destructive/5/80 p-4 text-xs sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 font-semibold text-destructive">
             <AlertTriangle className="h-4 w-4 shrink-0 text-rose-600" />
             <span>Are you sure you want to permanently delete this listing?</span>
           </div>
@@ -227,7 +227,7 @@ export function PublishControls({
               size="sm"
               disabled={isPending}
               onClick={() => setConfirmingDelete(false)}
-              className="rounded-lg border-rose-200 bg-white text-xs font-semibold text-rose-900 hover:bg-rose-100"
+              className="rounded-lg border-destructive/20 bg-card text-xs font-semibold text-destructive hover:bg-rose-100"
             >
               Cancel
             </Button>

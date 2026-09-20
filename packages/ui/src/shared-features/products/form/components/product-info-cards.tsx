@@ -70,7 +70,7 @@ export function BasicInfoCard({
   return (
     <div
       id="basic-info"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+      className="border-border bg-card space-y-5 rounded-lg border p-5 shadow-sm"
     >
       <div className="border-border border-b pb-3.5">
         <h2 className="text-foreground flex items-center gap-2 text-sm font-bold">
@@ -107,7 +107,7 @@ export function BasicInfoCard({
               value={name}
               onChange={(e) => onChangeName(e.target.value)}
               placeholder="e.g. Handcrafted Teakwood Building Blocks"
-              className={`border-border bg-background text-foreground placeholder:text-muted-foreground mt-1.5 h-10 w-full rounded-xl border px-3.5 text-xs ${FOCUS_RING}`}
+              className={`border-border bg-background text-foreground placeholder:text-muted-foreground mt-1.5 h-10 w-full rounded-lg border px-3.5 text-xs ${FOCUS_RING}`}
             />
           </div>
 
@@ -132,7 +132,7 @@ export function BasicInfoCard({
                 value={priceInr}
                 onChange={(e) => onChangePriceInr(e.target.value)}
                 placeholder="1499"
-                className={`border-border bg-background text-foreground placeholder:text-muted-foreground h-10 w-full rounded-xl border pr-3.5 pl-8 text-xs font-medium ${FOCUS_RING}`}
+                className={`border-border bg-background text-foreground placeholder:text-muted-foreground h-10 w-full rounded-lg border pr-3.5 pl-8 text-xs font-medium ${FOCUS_RING}`}
               />
             </div>
           </div>
@@ -152,7 +152,7 @@ export function BasicInfoCard({
               name="category"
               value={category}
               onChange={(e) => onChangeCategory(e.target.value)}
-              className={`border-border bg-background text-foreground mt-1.5 h-10 w-full rounded-xl border px-3.5 text-xs ${FOCUS_RING}`}
+              className={`border-border bg-background text-foreground mt-1.5 h-10 w-full rounded-lg border px-3.5 text-xs ${FOCUS_RING}`}
             >
               {categories.map((c) => (
                 <option key={c} value={c}>
@@ -176,7 +176,7 @@ export function BasicInfoCard({
               value={materials}
               onChange={(e) => onChangeMaterials(e.target.value)}
               placeholder="e.g. Natural Organic Wood, Vegetable Dyes"
-              className={`border-border bg-background text-foreground placeholder:text-muted-foreground mt-1.5 h-10 w-full rounded-xl border px-3.5 text-xs ${FOCUS_RING}`}
+              className={`border-border bg-background text-foreground placeholder:text-muted-foreground mt-1.5 h-10 w-full rounded-lg border px-3.5 text-xs ${FOCUS_RING}`}
             />
           </div>
         </div>
@@ -288,7 +288,7 @@ export function CatalogOwnershipCard({
   return (
     <div
       id="catalog-ownership"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+      className="border-border bg-card space-y-5 rounded-lg border p-5 shadow-sm"
     >
       <div className="border-border border-b pb-3.5">
         <h2 className="text-foreground flex items-center gap-2 text-sm font-bold">
@@ -307,7 +307,7 @@ export function CatalogOwnershipCard({
           <>
             {/* Hidden seller ID input for seller submission */}
             <input type="hidden" name="seller_id" value={selectedSellerId} />
-            <div className="border-border bg-muted/40 text-foreground flex items-center gap-3.5 rounded-xl border p-4 text-xs">
+            <div className="border-border bg-muted/40 text-foreground flex items-center gap-3.5 rounded-lg border p-4 text-xs">
               <div className="bg-primary/10 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
                 <ShieldCheck className="h-5 w-5" />
               </div>
@@ -337,7 +337,7 @@ export function CatalogOwnershipCard({
                 name="seller_id"
                 value={selectedSellerId}
                 onChange={(e) => onChangeSellerId && onChangeSellerId(e.target.value)}
-                className={`border-border bg-background text-foreground mt-1.5 h-10 w-full rounded-xl border px-3.5 text-xs font-medium ${FOCUS_RING}`}
+                className={`border-border bg-background text-foreground mt-1.5 h-10 w-full rounded-lg border px-3.5 text-xs font-medium ${FOCUS_RING}`}
               >
                 {adminUserId && (
                   <option value={adminUserId}>
@@ -354,7 +354,7 @@ export function CatalogOwnershipCard({
 
             {/* Ownership Banner */}
             {isDirectPlatform ? (
-              <div className="flex items-center gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-800 dark:text-emerald-300">
+              <div className="flex items-center gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-800 dark:text-emerald-300">
                 <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                 <div>
                   <span className="block font-bold">
@@ -367,7 +367,7 @@ export function CatalogOwnershipCard({
                 </div>
               </div>
             ) : (
-              <div className="border-border bg-muted/40 text-foreground flex items-center gap-3 rounded-xl border p-3.5 text-xs">
+              <div className="border-border bg-muted/40 text-foreground flex items-center gap-3 rounded-lg border p-3.5 text-xs">
                 <ShieldCheck className="text-primary h-4 w-4 shrink-0" />
                 <div>
                   <span className="block font-bold">
@@ -414,7 +414,7 @@ export function InventoryCard({
   return (
     <div
       id="inventory"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+      className="border-border bg-card space-y-5 rounded-lg border p-5 shadow-sm"
     >
       <div className="border-border flex items-center justify-between border-b pb-3.5">
         <div>
@@ -451,7 +451,7 @@ export function InventoryCard({
             value={sku}
             onChange={(e) => onChangeSku(e.target.value)}
             placeholder="e.g. TOY-WOOD-001"
-            className={`border-border bg-background text-foreground placeholder:text-muted-foreground mt-1.5 h-10 w-full rounded-xl border px-3.5 font-mono text-xs ${FOCUS_RING}`}
+            className={`border-border bg-background text-foreground placeholder:text-muted-foreground mt-1.5 h-10 w-full rounded-lg border px-3.5 font-mono text-xs ${FOCUS_RING}`}
           />
         </div>
 
@@ -467,7 +467,7 @@ export function InventoryCard({
             value={stockQty}
             onChange={(e) => onChangeStockQty(e.target.value)}
             placeholder="0"
-            className={`border-border bg-background text-foreground placeholder:text-muted-foreground disabled:bg-muted/50 disabled:text-muted-foreground mt-1.5 h-10 w-full rounded-xl border px-3.5 font-mono text-xs ${FOCUS_RING}`}
+            className={`border-border bg-background text-foreground placeholder:text-muted-foreground disabled:bg-muted/50 disabled:text-muted-foreground mt-1.5 h-10 w-full rounded-lg border px-3.5 font-mono text-xs ${FOCUS_RING}`}
           />
         </div>
 
@@ -483,7 +483,7 @@ export function InventoryCard({
             value={lowStockThreshold}
             onChange={(e) => onChangeLowStockThreshold(e.target.value)}
             placeholder="5"
-            className={`border-border bg-background text-foreground placeholder:text-muted-foreground disabled:bg-muted/50 disabled:text-muted-foreground mt-1.5 h-10 w-full rounded-xl border px-3.5 font-mono text-xs ${FOCUS_RING}`}
+            className={`border-border bg-background text-foreground placeholder:text-muted-foreground disabled:bg-muted/50 disabled:text-muted-foreground mt-1.5 h-10 w-full rounded-lg border px-3.5 font-mono text-xs ${FOCUS_RING}`}
           />
         </div>
       </div>
@@ -515,7 +515,7 @@ export function MerchandisingCard({
   return (
     <div
       id="merchandising"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+      className="border-border bg-card space-y-5 rounded-lg border p-5 shadow-sm"
     >
       <div className="border-border border-b pb-3.5">
         <h2 className="text-foreground flex items-center gap-2 text-sm font-bold">
@@ -530,7 +530,7 @@ export function MerchandisingCard({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <label
-          className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 text-xs transition-all ${
+          className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3.5 text-xs transition-all ${
             isFeatured
               ? "text-foreground border-amber-500/40 bg-amber-500/10 ring-1 ring-amber-500/30"
               : "border-border bg-background text-foreground hover:bg-muted/40 hover:border-border"
@@ -558,7 +558,7 @@ export function MerchandisingCard({
         </label>
 
         <label
-          className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 text-xs transition-all ${
+          className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3.5 text-xs transition-all ${
             isNewArrival
               ? "text-foreground border-emerald-500/40 bg-emerald-500/10 ring-1 ring-emerald-500/30"
               : "border-border bg-background text-foreground hover:bg-muted/40 hover:border-border"
@@ -586,9 +586,9 @@ export function MerchandisingCard({
         </label>
 
         <label
-          className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 text-xs transition-all ${
+          className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3.5 text-xs transition-all ${
             isBestSeller
-              ? "text-foreground border-rose-500/40 bg-rose-500/10 ring-1 ring-rose-500/30"
+              ? "text-foreground border-rose-500/40 bg-destructive/50/10 ring-1 ring-rose-500/30"
               : "border-border bg-background text-foreground hover:bg-muted/40 hover:border-border"
           }`}
         >
@@ -601,7 +601,7 @@ export function MerchandisingCard({
             className="border-border text-primary focus:ring-primary/20 h-4 w-4 rounded"
           />
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-destructive/50/10 text-rose-600 dark:text-rose-400">
               <Flame className="h-4 w-4" />
             </div>
             <div>
@@ -645,7 +645,7 @@ export function PublishingCard({ status, onChangeStatus }: PublishingCardProps) 
   return (
     <div
       id="publishing"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+      className="border-border bg-card space-y-5 rounded-lg border p-5 shadow-sm"
     >
       <div className="border-border border-b pb-3.5">
         <h2 className="text-foreground flex items-center gap-2 text-sm font-bold">
@@ -666,9 +666,9 @@ export function PublishingCard({ status, onChangeStatus }: PublishingCardProps) 
           <button
             type="button"
             onClick={() => handleSelect("published")}
-            className={`flex cursor-pointer items-center justify-between rounded-xl border p-4 text-left transition-all duration-150 ${
+            className={`flex cursor-pointer items-center justify-between rounded-lg border p-4 text-left transition-all duration-150 ${
               status === "published"
-                ? "text-foreground border-emerald-500/50 bg-emerald-500/10 shadow-2xs ring-2 ring-emerald-500/20"
+                ? "text-foreground border-emerald-500/50 bg-emerald-500/10 shadow-sm ring-2 ring-emerald-500/20"
                 : "border-border bg-background text-foreground hover:bg-muted/40 hover:border-foreground/20"
             }`}
           >
@@ -687,9 +687,9 @@ export function PublishingCard({ status, onChangeStatus }: PublishingCardProps) 
           <button
             type="button"
             onClick={() => handleSelect("draft")}
-            className={`flex cursor-pointer items-center justify-between rounded-xl border p-4 text-left transition-all duration-150 ${
+            className={`flex cursor-pointer items-center justify-between rounded-lg border p-4 text-left transition-all duration-150 ${
               status === "draft"
-                ? "text-foreground border-amber-500/50 bg-amber-500/10 shadow-2xs ring-2 ring-amber-500/20"
+                ? "text-foreground border-amber-500/50 bg-amber-500/10 shadow-sm ring-2 ring-amber-500/20"
                 : "border-border bg-background text-foreground hover:bg-muted/40 hover:border-foreground/20"
             }`}
           >

@@ -276,7 +276,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
   return (
     <div
       id="variants"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+      className="border-border bg-card space-y-5 rounded-lg border p-5 shadow-sm"
     >
       {/* HEADER */}
       <div className="border-border flex flex-col gap-2 border-b pb-3.5 sm:flex-row sm:items-center sm:justify-between">
@@ -319,7 +319,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
             {options.map((opt, optIdx) => (
               <div
                 key={opt.id}
-                className="border-border bg-muted/30 hover:border-foreground/20 space-y-3 rounded-xl border p-4 transition-all"
+                className="border-border bg-muted/30 hover:border-foreground/20 space-y-3 rounded-lg border p-4 transition-all"
               >
                 <div className="flex items-center justify-between gap-3">
                   {/* Option Name Input + Presets */}
@@ -374,7 +374,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
                   {opt.values.map((val, valIdx) => (
                     <span
                       key={valIdx}
-                      className="border-border bg-background text-foreground group inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium shadow-2xs"
+                      className="border-border bg-background text-foreground group inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium shadow-sm"
                     >
                       <span>{val}</span>
                       <button
@@ -462,7 +462,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
 
             {/* BULK ACTION BAR */}
             {showBulkActions && variants.length > 1 && (
-              <div className="border-border bg-muted/30 animate-in fade-in flex flex-wrap items-center gap-3 rounded-xl border p-3.5 text-xs duration-150">
+              <div className="border-border bg-muted/30 animate-in fade-in flex flex-wrap items-center gap-3 rounded-lg border p-3.5 text-xs duration-150">
                 {/* Bulk Price */}
                 <div className="flex items-center gap-1.5">
                   <span className="text-muted-foreground font-semibold">
@@ -522,7 +522,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
 
             {/* VARIANTS EDITABLE TABLE */}
             {variants.length > 0 ? (
-              <div className="border-border overflow-x-auto rounded-xl border shadow-2xs">
+              <div className="border-border overflow-x-auto rounded-lg border shadow-sm">
                 <table className="w-full text-left text-xs">
                   <thead className="border-border bg-muted/40 text-muted-foreground border-b text-[10px] font-bold tracking-wider uppercase">
                     <tr>
@@ -649,7 +649,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
                 </table>
               </div>
             ) : (
-              <div className="border-border bg-muted/20 rounded-2xl border border-dashed p-6 text-center">
+              <div className="border-border bg-muted/20 rounded-lg border border-dashed p-6 text-center">
                 <p className="text-foreground text-xs font-semibold">
                   No variant combinations generated yet
                 </p>
