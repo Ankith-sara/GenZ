@@ -323,6 +323,7 @@ export function ProductsCatalogManager({
   const [priceRangeFilter, setPriceRangeFilter] = useState("all");
   const [badgeFilter, setBadgeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [selectedProduct, setSelectedProduct] = useState<SharedProductRecord | null>(
     null
   );
@@ -722,6 +723,45 @@ export function ProductsCatalogManager({
     badgeFilter !== "all" ||
     sortBy !== "newest";
 
+  const visibleIds = filteredProducts.map((p) => p.id);
+  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
+
+  const toggleProductSelection = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleVisibleSelection = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allVisibleSelected) visibleIds.forEach((id) => next.delete(id));
+      else visibleIds.forEach((id) => next.add(id));
+      return next;
+    });
+  };
+
+  const clearSelection = () => setSelectedIds(new Set());
+
+  const handleBulkStatus = async (nextStatus: "published" | "draft") => {
+    if (!onUpdateStatus || selectedIds.size === 0) return;
+    const ids = Array.from(selectedIds);
+    setLoadingId("bulk");
+    try {
+      await Promise.all(ids.map((id) => onUpdateStatus(id, nextStatus)));
+      setProducts((prev) => prev.map((p) => selectedIds.has(p.id) ? { ...p, status: nextStatus } : p));
+      clearSelection();
+      toast.success(ids.length + " product" + (ids.length === 1 ? "" : "s") + " updated");
+    } catch (error) {
+      toast.error("Some products could not be updated", { description: error instanceof Error ? error.message : "Please try again." });
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
   const handleResetFilters = () => {
     setSearchQuery("");
     setStatusFilter("all");
@@ -782,6 +822,20 @@ export function ProductsCatalogManager({
           <p className="text-foreground mt-1 text-2xl font-bold">₹{Math.round(kpis.averagePrice).toLocaleString("en-IN")}</p>
         </div>
       </div>
+
+      {selectedIds.size > 0 && (
+        <div className="border-primary/20 bg-primary/5 flex flex-col gap-3 rounded-xl border px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <span className="bg-primary text-primary-foreground inline-flex h-6 min-w-6 items-center justify-center rounded-md px-1.5 text-xs font-semibold">{selectedIds.size}</span>
+            selected
+            <button type="button" onClick={clearSelection} className="ml-1 text-muted-foreground underline underline-offset-2 hover:text-foreground">Clear</button>
+          </div>
+          <div className="flex gap-2">
+            <Button type="button" size="sm" variant="outline" onClick={() => handleBulkStatus("published")}>Publish</Button>
+            <Button type="button" size="sm" variant="outline" onClick={() => handleBulkStatus("draft")}>Move to draft</Button>
+          </div>
+        </div>
+      )}
 
       {/* MULTI-FILTER TOOLBAR */}
       <div className="space-y-3">
