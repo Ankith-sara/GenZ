@@ -71,7 +71,7 @@ function FooterLinks() {
       </div>
       <div className="flex items-center gap-4">
         <span className="text-muted-foreground inline-flex items-center gap-1 text-[11px]">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+          <ShieldCheck className="h-3.5 w-3.5 text-[#52524E]" />
           <span>256-bit SSL Secure</span>
         </span>
         <a

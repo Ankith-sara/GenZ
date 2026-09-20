@@ -133,7 +133,7 @@ export default async function SellerDashboardLayout({
         </header>
 
         {/* Content Body Container */}
-        <main className="mx-auto w-full max-w-7xl flex-1 p-3.5 sm:p-6 lg:p-8">
+        <main className="mx-auto w-full max-w-7xl flex-1 px-3 py-3 sm:px-5 sm:py-4 lg:px-6 lg:py-5">
           {children}
         </main>
       </div>

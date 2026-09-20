@@ -60,7 +60,7 @@ export default async function SellerProductDetailPage({
   }
 
   return (
-    <div className="font-graphik mx-auto max-w-5xl py-6 sm:py-8">
+    <div className="w-full">
       <SellerProductEditClient
         product={product}
         images={images ?? []}

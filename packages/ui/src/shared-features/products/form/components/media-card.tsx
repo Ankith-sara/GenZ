@@ -5,13 +5,9 @@ import {
   Upload,
   Link2,
   X,
-  Star,
   GripVertical,
-  Maximize2,
   Loader2,
   AlertCircle,
-  Plus,
-  CheckCircle2,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -24,30 +20,32 @@ export interface ProductImageItem {
   size?: number;
 }
 
-interface MediaCardProps {
+export interface MediaCardProps {
   images: ProductImageItem[];
   onImagesChange: (images: ProductImageItem[]) => void;
   maxImages?: number;
+  isUploading?: boolean;
 }
 
-export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardProps) {
+export function MediaCard({
+  images,
+  onImagesChange,
+  maxImages = 8,
+  isUploading = false,
+}: MediaCardProps) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  // URL modal / inline state
+  // URL inline state
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [urlInputValue, setUrlInputValue] = useState("");
   const [isUrlLoading, setIsUrlLoading] = useState(false);
   const [urlError, setUrlError] = useState<string | null>(null);
 
-  // Lightbox preview state
-  const [previewItem, setPreviewItem] = useState<ProductImageItem | null>(null);
-
   // Hidden file input ref
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const remainingSlots = Math.max(0, maxImages - images.length);
   const isMaxReached = images.length >= maxImages;
 
   // Process selected or dropped files
@@ -152,9 +150,9 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
     const [movedItem] = updated.splice(draggedIndex, 1);
     updated.splice(targetIndex, 0, movedItem);
 
+    onImagesChange(updated);
     setDraggedIndex(null);
     setDragOverIndex(null);
-    onImagesChange(updated);
   };
 
   const handleItemDragEnd = () => {
@@ -162,33 +160,18 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
     setDragOverIndex(null);
   };
 
-  // Quick action: Promote item to Cover (index 0)
-  const handleSetCover = (index: number) => {
-    if (index === 0 || index >= images.length) return;
-    const updated = [...images];
-    const [item] = updated.splice(index, 1);
-    updated.unshift(item);
-    onImagesChange(updated);
+  // Remove photo
+  const handleRemoveImage = (idToRemove: string) => {
+    onImagesChange(images.filter((img) => img.id !== idToRemove));
   };
 
-  // Remove item
-  const handleRemove = (index: number) => {
-    const updated = images.filter((_, idx) => idx !== index);
-    onImagesChange(updated);
-  };
-
-  // Add from URL handler
+  // Add from remote URL
   const handleAddFromUrl = async () => {
     const trimmed = urlInputValue.trim();
-    if (!trimmed) {
-      setUrlError("Please enter a valid image URL.");
-      return;
-    }
+    if (!trimmed) return;
 
-    try {
-      new URL(trimmed);
-    } catch {
-      setUrlError("Invalid URL format. Include http:// or https://");
+    if (isMaxReached) {
+      setUrlError(`Maximum limit of ${maxImages} images reached.`);
       return;
     }
 
@@ -196,20 +179,18 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
     setUrlError(null);
 
     try {
-      // Validate image by loading it
       await new Promise<void>((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve();
         img.onerror = () =>
           reject(
             new Error(
-              "Unable to load image from this URL. Check format or CORS restrictions."
+              "Unable to load image from this URL. Check format or access restrictions."
             )
           );
         img.src = trimmed;
       });
 
-      // Try fetching as File if possible
       let fileObj: File | undefined;
       try {
         const res = await fetch(trimmed, { mode: "cors" });
@@ -221,7 +202,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
           });
         }
       } catch {
-        // Fallback: If CORS blocks fetch, file remains undefined and previewUrl is used
+        // Fallback: previewUrl will be used
       }
 
       const newItem: ProductImageItem = {
@@ -245,385 +226,216 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
   };
 
   return (
-    <div
-      id="media"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+    <section
+      id="sec-media"
+      className="scroll-mt-24 overflow-hidden rounded-xl border border-[#E5E5E0] bg-white shadow-xs"
     >
-      {/* SECTION HEADER */}
-      <div className="border-border flex flex-col gap-2 border-b pb-3.5 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-foreground flex items-center gap-2 text-sm font-bold">
-              <ImageIcon className="text-muted-foreground h-4 w-4" />
-              <span>Product Images</span>
+      {/* Section Head */}
+      <div className="flex items-start justify-between gap-3 border-b border-[#E5E5E0] p-5 pb-3 sm:p-6 sm:pb-3">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 text-[#52524E]">
+            <ImageIcon className="h-5 w-5" />
+          </span>
+          <div className="min-w-0">
+            <h2 className="flex items-center gap-1.5 text-base font-semibold text-[#1A1A18]">
+              <span>Media &amp; photos</span>
+              <span className="text-rose-600">*</span>
             </h2>
-            <span
-              className={`rounded-full px-2.5 py-0.5 font-mono text-[11px] font-semibold ${
-                isMaxReached
-                  ? "bg-amber-500/15 text-amber-800 dark:text-amber-300"
-                  : images.length > 0
-                    ? "bg-muted text-foreground"
-                    : "bg-muted/60 text-muted-foreground"
-              }`}
-            >
-              {images.length} / {maxImages} images
-            </span>
+            <p className="mt-0.5 max-w-[60ch] text-xs text-[#52524E]">
+              The first photo is the storefront cover. Drag a photo to reorder, or use
+              the controls on mobile.
+            </p>
           </div>
-          <p className="text-muted-foreground mt-0.5 text-xs">
-            The first photo is automatically the{" "}
-            <strong className="text-foreground font-semibold">Cover</strong>. Drag to
-            reorder photos anytime.
-          </p>
         </div>
-
-        {/* Action Controls in Header (Upload & Add URL) */}
-        {!isMaxReached ? (
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                setShowUrlInput(!showUrlInput);
-                setUrlError(null);
-              }}
-              className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                showUrlInput
-                  ? "border-[#18181b] !bg-[#18181b] !text-white dark:border-white dark:!bg-white dark:!text-black"
-                  : "border-border bg-background text-foreground hover:bg-muted/40"
-              }`}
-            >
-              <Link2 className="h-3.5 w-3.5" />
-              <span>Add from URL</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full !bg-[#18181b] px-4 py-1.5 text-xs font-semibold !text-white shadow-2xs transition-all hover:!bg-[#27272a] active:scale-[0.98]"
-            >
-              <Upload className="h-3.5 w-3.5" />
-              <span>Upload Images</span>
-            </button>
-          </div>
-        ) : (
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
-            <CheckCircle2 className="h-3.5 w-3.5" />
-            <span>Maximum capacity reached</span>
+        {isUploading && (
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#E5E5E0] bg-[#FAF8F4] px-2.5 py-1 text-xs font-medium text-[#52524E]">
+            <Loader2 className="h-3 w-3 animate-spin text-[#1A1A18]" />
+            <span>Uploading...</span>
           </span>
         )}
-
-        {/* Hidden File Input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/png,image/jpeg,image/webp,image/avif"
-          multiple
-          className="sr-only"
-          onChange={onFileInputChange}
-        />
       </div>
 
-      {/* INLINE "ADD FROM URL" PANEL */}
-      {showUrlInput && !isMaxReached && (
-        <div className="border-border bg-muted/40 animate-in fade-in slide-in-from-top-1 space-y-2.5 rounded-xl border p-4 duration-150">
-          <div className="flex items-center justify-between">
-            <label
-              htmlFor="image-url-input"
-              className="text-foreground flex items-center gap-1.5 text-xs font-semibold"
-            >
-              <Link2 className="text-muted-foreground h-3.5 w-3.5" />
-              <span>Paste Image URL</span>
-            </label>
-            <button
-              type="button"
-              onClick={() => setShowUrlInput(false)}
-              className="text-muted-foreground hover:text-foreground cursor-pointer"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
+      {/* Section Body */}
+      <div className="p-5 sm:p-6">
+        <div className="space-y-3">
+          {/* Dropzone */}
+          <div
+            onClick={() => {
+              if (!isMaxReached) fileInputRef.current?.click();
+            }}
+            onDragOver={handleZoneDragOver}
+            onDragLeave={handleZoneDragLeave}
+            onDrop={handleZoneDrop}
+            tabIndex={0}
+            role="button"
+            aria-label="Add product photos"
+            className={`relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-7 text-center transition-all ${
+              isMaxReached
+                ? "cursor-not-allowed border-[#E5E5E0] bg-[#FAF8F4]/50 opacity-60"
+                : isDraggingOver
+                  ? "cursor-pointer border-[#1A1A18] bg-[#F4F4F5]"
+                  : "cursor-pointer border-[#E5E5E0] bg-[#FAF8F4] hover:border-[#1A1A18]/40 hover:bg-[#F5F3ED]"
+            }`}
+          >
+            <span className="text-[#52524E]">
+              <Upload className="h-7 w-7 stroke-[1.75]" />
+            </span>
+            <b className="text-sm font-medium text-[#1A1A18]">
+              Drag &amp; drop product photos here
+            </b>
+            <small className="text-xs text-[#52524E]">
+              or click to browse, or add from a URL
+            </small>
 
-          <div className="flex gap-2">
+            {/* Metadata Badges */}
+            <div className="mt-1 flex flex-wrap justify-center gap-1.5">
+              <span className="inline-flex h-[22px] items-center rounded border border-[#E5E5E0] bg-white px-2 text-[11px] font-medium text-[#52524E]">
+                PNG · JPG · WEBP
+              </span>
+              <span className="inline-flex h-[22px] items-center rounded border border-[#E5E5E0] bg-white px-2 text-[11px] font-medium text-[#52524E]">
+                Max 5MB each
+              </span>
+              <span className="inline-flex h-[22px] items-center rounded border border-[#E5E5E0] bg-white px-2 text-[11px] font-medium text-[#52524E]">
+                {images.length} / {maxImages} images
+              </span>
+            </div>
+
             <input
-              id="image-url-input"
-              type="url"
-              placeholder="https://images.unsplash.com/photo-... or direct CDN URL"
-              value={urlInputValue}
-              onChange={(e) => {
-                setUrlInputValue(e.target.value);
-                setUrlError(null);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleAddFromUrl();
-                }
-              }}
-              disabled={isUrlLoading}
-              className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary/20 flex-1 rounded-xl border px-3.5 py-2 text-xs focus:ring-2 focus:outline-none"
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/avif"
+              multiple
+              className="hidden"
+              onChange={onFileInputChange}
+              disabled={isMaxReached}
             />
-            <button
-              type="button"
-              onClick={handleAddFromUrl}
-              disabled={isUrlLoading || !urlInputValue.trim()}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl !bg-[#18181b] px-4 py-2 text-xs font-semibold !text-white transition-all hover:!bg-[#27272a] disabled:opacity-50"
-            >
-              {isUrlLoading ? (
-                <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  <span>Loading...</span>
-                </>
-              ) : (
-                <span>Add Image</span>
-              )}
-            </button>
           </div>
 
-          {urlError && (
-            <p className="text-destructive flex items-center gap-1 text-[11px]">
-              <AlertCircle className="h-3 w-3 shrink-0" />
-              <span>{urlError}</span>
-            </p>
+          {/* Add from URL Toggle Button */}
+          {!isMaxReached && (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowUrlInput(!showUrlInput);
+                  setUrlError(null);
+                }}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-[#1A1A18] transition-colors hover:bg-black/5"
+              >
+                <Link2 className="h-3.5 w-3.5 text-[#52524E]" />
+                <span>Add from URL</span>
+              </button>
+            </div>
           )}
-        </div>
-      )}
 
-      {/* EMPTY STATE DRAG & DROP ZONE */}
-      {images.length === 0 && (
-        <div
-          onDragOver={handleZoneDragOver}
-          onDragLeave={handleZoneDragLeave}
-          onDrop={handleZoneDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`relative flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
-            isDraggingOver
-              ? "border-primary bg-primary/5 ring-primary/10 scale-[0.99] ring-4"
-              : "border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40"
-          }`}
-        >
-          <div className="border-border bg-background text-muted-foreground flex h-12 w-12 items-center justify-center rounded-full border shadow-2xs transition-transform group-hover:scale-105">
-            <Upload className="h-5 w-5" />
-          </div>
-
-          <div className="mt-3 space-y-1">
-            <p className="text-foreground text-sm font-bold">
-              Drag & drop product photos here
-            </p>
-            <p className="text-muted-foreground text-xs">
-              or click to browse from your device
-            </p>
-          </div>
-
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="bg-background border-border text-muted-foreground inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold">
-              PNG, JPG, WEBP, AVIF
-            </span>
-            <span className="bg-background border-border text-muted-foreground inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold">
-              Max 5MB each
-            </span>
-            <span className="bg-background border-border text-muted-foreground inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold">
-              Up to 8 images
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* GALLERY GRID (When 1 or more images exist) */}
-      {images.length > 0 && (
-        <div
-          onDragOver={handleZoneDragOver}
-          onDragLeave={handleZoneDragLeave}
-          onDrop={handleZoneDrop}
-          className={`relative rounded-xl p-1 transition-all ${
-            isDraggingOver ? "rounded-xl bg-neutral-50 ring-2 ring-neutral-900" : ""
-          }`}
-        >
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {images.map((item, idx) => {
-              const isCover = idx === 0;
-              const isDragging = draggedIndex === idx;
-              const isDragTarget = dragOverIndex === idx;
-
-              return (
-                <div
-                  key={item.id}
-                  draggable
-                  onDragStart={(e) => handleItemDragStart(e, idx)}
-                  onDragOver={(e) => handleItemDragOver(e, idx)}
-                  onDragLeave={handleItemDragLeave}
-                  onDrop={(e) => handleItemDrop(e, idx)}
-                  onDragEnd={handleItemDragEnd}
-                  className={`group bg-muted/20 relative aspect-square overflow-hidden rounded-xl border transition-all duration-200 ${
-                    isCover
-                      ? "border-primary ring-primary/20 shadow-xs ring-2"
-                      : "border-border hover:border-foreground/20 shadow-2xs"
-                  } ${isDragging ? "scale-95 opacity-30" : "opacity-100"} ${
-                    isDragTarget ? "ring-primary scale-102 ring-2" : ""
-                  }`}
+          {/* Inline URL Input Row */}
+          {showUrlInput && !isMaxReached && (
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <input
+                  type="url"
+                  placeholder="https://example.com/photo.jpg"
+                  value={urlInputValue}
+                  onChange={(e) => {
+                    setUrlInputValue(e.target.value);
+                    setUrlError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddFromUrl();
+                    }
+                  }}
+                  disabled={isUrlLoading}
+                  className="h-10 flex-1 rounded-lg border border-[#E5E5E0] bg-white px-3.5 text-sm text-[#1A1A18] placeholder:text-[#52524E]/50 focus:border-[#1A1A18] focus:ring-1 focus:ring-[#1A1A18] focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddFromUrl}
+                  disabled={isUrlLoading || !urlInputValue.trim()}
+                  className="inline-flex h-10 cursor-pointer items-center justify-center rounded-full bg-[#F4F4F5] px-4 text-xs font-semibold text-[#1A1A18] transition-colors hover:bg-[#E5E5E0] disabled:opacity-40"
                 >
-                  {/* Thumbnail Image */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.previewUrl}
-                    alt={item.name || `Product image ${idx + 1}`}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+                  {isUrlLoading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    "Add"
+                  )}
+                </button>
+              </div>
 
-                  {/* Gradient overlay on hover for high contrast */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100" />
+              {urlError && (
+                <p className="flex items-center gap-1 text-[11px] text-rose-600">
+                  <AlertCircle className="h-3 w-3 shrink-0" />
+                  <span>{urlError}</span>
+                </p>
+              )}
+            </div>
+          )}
 
-                  {/* COVER BADGE OR POSITION NUMBER (Top-Left) */}
-                  <div className="absolute top-2 left-2 z-10">
-                    {isCover ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/85 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-white uppercase shadow-xs backdrop-blur-xs">
-                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                        <span>COVER</span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center justify-center rounded-full bg-black/75 px-2 py-0.5 font-mono text-[10px] font-semibold text-white shadow-2xs backdrop-blur-xs">
-                        #{idx + 1}
+          {/* Media Grid */}
+          {images.length > 0 && (
+            <div className="mt-3.5 grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5">
+              {images.map((item, idx) => {
+                const isCover = idx === 0;
+                const isDragging = draggedIndex === idx;
+                const isDragTarget = dragOverIndex === idx;
+
+                return (
+                  <div
+                    key={item.id}
+                    draggable
+                    onDragStart={(e) => handleItemDragStart(e, idx)}
+                    onDragOver={(e) => handleItemDragOver(e, idx)}
+                    onDragLeave={handleItemDragLeave}
+                    onDrop={(e) => handleItemDrop(e, idx)}
+                    onDragEnd={handleItemDragEnd}
+                    className={`group relative aspect-square cursor-grab overflow-hidden rounded-xl border bg-[#FAF8F4] transition-all active:cursor-grabbing ${
+                      isCover
+                        ? "border-[#1A1A18] ring-1 ring-[#1A1A18]"
+                        : "border-[#E5E5E0] hover:border-[#1A1A18]/40"
+                    } ${isDragging ? "scale-95 opacity-30" : "opacity-100"} ${
+                      isDragTarget ? "scale-102 ring-2 ring-[#1A1A18]" : ""
+                    }`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.previewUrl}
+                      alt={item.name || `Photo ${idx + 1}`}
+                      className="h-full w-full object-cover select-none"
+                    />
+
+                    {/* Cover Pill */}
+                    {isCover && (
+                      <span className="absolute top-1.5 left-1.5 flex h-5 items-center rounded bg-[#1A1A18] px-2 text-[10px] font-semibold tracking-wider text-white shadow-xs">
+                        COVER
                       </span>
                     )}
-                  </div>
 
-                  {/* TOP-RIGHT CONTROLS: Zoom & Remove */}
-                  <div className="absolute top-2 right-2 z-10 flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                    {/* Remove Button */}
                     <button
                       type="button"
-                      title="Preview full image"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setPreviewItem(item);
+                        handleRemoveImage(item.id);
                       }}
-                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/75 text-white backdrop-blur-xs transition-colors hover:bg-black"
-                    >
-                      <Maximize2 className="h-3 w-3" />
-                    </button>
-                    <button
-                      type="button"
-                      title="Remove image"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemove(idx);
-                      }}
-                      className="hover:bg-destructive flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/75 text-white backdrop-blur-xs transition-colors"
+                      className="absolute top-1.5 right-1.5 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white shadow-xs transition-colors hover:bg-black/80"
+                      title="Remove photo"
+                      aria-label="Remove photo"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
-                  </div>
 
-                  {/* BOTTOM ACTION BAR: Drag Handle & "Set Cover" */}
-                  <div className="absolute right-2 bottom-2 left-2 z-10 flex items-center justify-between opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-                    <div
-                      title="Drag to reorder"
-                      className="cursor-grab p-1 text-white/90 hover:text-white active:cursor-grabbing"
-                    >
-                      <GripVertical className="h-4 w-4" />
+                    {/* Bottom Drag Handle */}
+                    <div className="absolute inset-x-0 bottom-0 flex h-6 items-center justify-center bg-gradient-to-t from-black/60 to-transparent text-white/90">
+                      <GripVertical className="h-3.5 w-3.5" />
                     </div>
-
-                    {!isCover && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSetCover(idx);
-                        }}
-                        className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold text-neutral-900 shadow-xs backdrop-blur-xs transition-all hover:bg-white active:scale-95"
-                      >
-                        <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
-                        <span>Make Cover</span>
-                      </button>
-                    )}
                   </div>
-                </div>
-              );
-            })}
-
-            {/* INTERACTIVE ADD TILE (If not max reached) */}
-            {!isMaxReached && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="group border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40 relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-3 text-center transition-all"
-              >
-                <div className="border-border bg-background text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full border shadow-2xs transition-transform group-hover:scale-105">
-                  <Plus className="h-4 w-4" />
-                </div>
-                <span className="text-foreground mt-2 text-xs font-semibold">
-                  Add Image
-                </span>
-                <span className="text-muted-foreground font-mono text-[10px]">
-                  {remainingSlots} left
-                </span>
-              </button>
-            )}
-
-            {/* SUBTLE EMPTY SLOTS OUTLINES (For remaining slots up to 8) */}
-            {Array.from({ length: Math.max(0, remainingSlots - 1) }).map(
-              (_, emptyIdx) => (
-                <div
-                  key={`empty-slot-${emptyIdx}`}
-                  className="border-border/60 bg-muted/10 text-muted-foreground/40 hidden aspect-square flex-col items-center justify-center rounded-xl border border-dashed sm:flex"
-                >
-                  <span className="font-mono text-[11px]">
-                    #{images.length + emptyIdx + 2}
-                  </span>
-                </div>
-              )
-            )}
-          </div>
-
-          {/* Quick instructions bar */}
-          <div className="text-muted-foreground mt-3.5 flex items-center justify-between px-1 text-[11px]">
-            <span className="flex items-center gap-1.5 font-medium">
-              <GripVertical className="h-3.5 w-3.5" />
-              <span>Drag any photo to reorder</span>
-            </span>
-            <span className="font-medium">JPG, PNG, WEBP, AVIF • Up to 5MB</span>
-          </div>
-        </div>
-      )}
-
-      {/* LIGHTBOX PREVIEW MODAL */}
-      {previewItem && (
-        <div
-          onClick={() => setPreviewItem(null)}
-          className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm duration-150"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-card border-border text-foreground relative max-h-[90vh] max-w-2xl overflow-hidden rounded-3xl border shadow-2xl"
-          >
-            <div className="border-border flex items-center justify-between border-b px-5 py-3.5">
-              <div className="flex items-center gap-2">
-                <span className="text-foreground text-xs font-bold">
-                  {previewItem.name || "Product Image"}
-                </span>
-                {images[0]?.id === previewItem.id && (
-                  <span className="rounded-full border border-amber-500/30 bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-300">
-                    COVER
-                  </span>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={() => setPreviewItem(null)}
-                className="text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-full p-1.5 transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
+                );
+              })}
             </div>
-
-            <div className="flex max-h-[75vh] items-center justify-center bg-black/10 p-4 dark:bg-black/40">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={previewItem.previewUrl}
-                alt={previewItem.name || "Image preview"}
-                className="max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-lg"
-              />
-            </div>
-          </div>
+          )}
         </div>
-      )}
-    </div>
+      </div>
+    </section>
   );
 }

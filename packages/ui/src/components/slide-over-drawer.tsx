@@ -51,39 +51,37 @@ export function SlideOverDrawer({
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-200"
+        className="fixed inset-0 bg-[#1A1A18]/40 backdrop-blur-xs transition-opacity duration-200"
         onClick={onClose}
       />
 
       <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
         <div
-          className={`w-screen ${widthClasses} bg-card text-foreground flex transform flex-col justify-between shadow-2xl transition-transform duration-200 ease-in-out`}
+          className={`w-screen ${widthClasses} flex transform flex-col justify-between border-l border-[#E5E5E0] bg-white text-[#1A1A18] shadow-2xl transition-transform duration-200 ease-in-out`}
         >
-          <div className="border-border bg-muted/40 flex items-center justify-between border-b px-6 py-4">
+          <div className="flex items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4] px-6 py-4">
             <div>
-              <h2 className="text-foreground text-lg font-bold tracking-tight">
+              <h2 className="text-base font-bold tracking-tight text-[#1A1A18]">
                 {title}
               </h2>
               {displaySubtitle && (
-                <p className="text-muted-foreground mt-0.5 text-xs">
-                  {displaySubtitle}
-                </p>
+                <p className="mt-0.5 text-xs text-[#52524E]">{displaySubtitle}</p>
               )}
             </div>
 
             <button
               onClick={onClose}
-              className="text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-full p-2 transition-colors"
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#E5E5E0] bg-white text-[#52524E] transition-colors hover:bg-[#FAF8F4] hover:text-[#1A1A18]"
               aria-label="Close drawer"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
-          <div className="flex-1 space-y-6 overflow-y-auto p-6">{children}</div>
+          <div className="flex-1 space-y-5 overflow-y-auto p-5 sm:p-6">{children}</div>
 
           {footer && (
-            <div className="border-border bg-muted/40 flex shrink-0 items-center justify-end gap-3 border-t p-4">
+            <div className="flex shrink-0 items-center justify-between gap-3 border-t border-[#E5E5E0] bg-[#FAF8F4] px-6 py-3.5">
               {footer}
             </div>
           )}

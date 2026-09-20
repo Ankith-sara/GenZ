@@ -21,17 +21,11 @@ if ! npx lint-staged -r --max-arg-length 2000; then
   exit 1
 fi
 
-# Phase 2: Run related tests only for modified files
-printf "\n${CYAN}▶ [2/2] Testing modified files (vitest related)...${NC}\n"
-STAGED_CODE_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx|js|jsx)$' || true)
-
-if [ -n "$STAGED_CODE_FILES" ]; then
-  if ! echo "$STAGED_CODE_FILES" | xargs npx vitest related --run --passWithNoTests; then
-    printf "\n${RED} [GenZ Pre-Commit] Related unit tests failed for modified files.${NC}\n\n"
-    exit 1
-  fi
-else
-  printf "${YELLOW} No code files modified. Skipping unit tests.${NC}\n"
+# Phase 2: Run related tests for modified files (with domain fallback for UI)
+printf "\n${CYAN}▶ [2/2] Testing modified files (vitest related & domain suites)...${NC}\n"
+if ! node scripts/test-staged.mjs; then
+  printf "\n${RED} [GenZ Pre-Commit] Unit or domain tests failed for modified files.${NC}\n\n"
+  exit 1
 fi
 
 printf "${BOLD}------------------------------------------------------------${NC}\n"

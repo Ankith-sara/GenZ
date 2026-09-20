@@ -1,18 +1,8 @@
 "use client";
 
 import React, { useState, useMemo, useCallback } from "react";
-import {
-  Layers,
-  Plus,
-  Trash2,
-  X,
-  Sparkles,
-  DollarSign,
-  Package,
-  Barcode,
-  Check,
-  RotateCcw,
-} from "lucide-react";
+import { Layers, Plus, Trash2, X, Sparkles, RotateCcw } from "lucide-react";
+import { M3Switch } from "./product-info-cards";
 
 export interface OptionGroup {
   id: string;
@@ -43,7 +33,7 @@ interface VariantsCardProps {
   productName?: string;
 }
 
-const PRESET_OPTIONS = ["Size", "Color", "Material", "Finish", "Style", "Pack Size"];
+export const STANDARD_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "3XL"];
 
 export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardProps) {
   const [hasVariants, setHasVariants] = useState(false);
@@ -53,7 +43,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
     {
       id: "opt-1",
       name: "Size",
-      values: ["Small", "Medium"],
+      values: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
     },
   ]);
 
@@ -82,7 +72,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
           v
             .toUpperCase()
             .replace(/[^A-Z0-9]+/g, "")
-            .slice(0, 3)
+            .slice(0, 4)
         )
         .join("-");
       return suffix ? `${cleanPrefix}-${suffix}` : cleanPrefix;
@@ -115,7 +105,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
     return results;
   }, [options]);
 
-  // Derive variants directly from combinations + overrides (pure derived state, no useEffect)
+  // Derive variants directly from combinations + overrides
   const variants = useMemo<VariantRow[]>(() => {
     if (!hasVariants) return [];
     return combinations
@@ -150,72 +140,65 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
   // Add a new option group (e.g. Color)
   const addOptionGroup = () => {
     if (options.length >= 3) return;
-
-    const usedNames = options.map((o) => o.name);
-    const nextPreset = PRESET_OPTIONS.find((p) => !usedNames.includes(p)) || "Option";
-
-    const newOpt: OptionGroup = {
-      id: `opt-${Date.now()}`,
-      name: nextPreset,
-      values: [],
-    };
-    setOptions([...options, newOpt]);
+    const newId = `opt-${Date.now()}`;
+    setOptions([
+      ...options,
+      {
+        id: newId,
+        name: "",
+        values: [],
+      },
+    ]);
   };
 
-  // Remove an option group
+  // Remove option group
   const removeOptionGroup = (id: string) => {
     setOptions(options.filter((o) => o.id !== id));
   };
 
-  // Update option group name
+  // Update option name
   const updateOptionName = (id: string, name: string) => {
     setOptions(options.map((o) => (o.id === id ? { ...o, name } : o)));
   };
 
-  // Add a value tag to an option
-  const addValueTag = (optId: string) => {
-    const raw = newTagInputs[optId]?.trim();
-    if (!raw) return;
-
-    const newValues = raw
-      .split(",")
-      .map((s) => s.trim())
-      .filter((s) => Boolean(s));
+  // Add a value to an option group
+  const addValueTag = (id: string) => {
+    const raw = newTagInputs[id] || "";
+    const trimmed = raw.trim().replace(/^,+|,+$/g, "");
+    if (!trimmed) return;
 
     setOptions(
-      options.map((opt) => {
-        if (opt.id !== optId) return opt;
-        const currentVals = [...opt.values];
-        for (const val of newValues) {
-          if (!currentVals.includes(val)) {
-            currentVals.push(val);
-          }
+      options.map((o) => {
+        if (o.id === id && !o.values.includes(trimmed)) {
+          return { ...o, values: [...o.values, trimmed] };
         }
-        return { ...opt, values: currentVals };
+        return o;
       })
     );
 
-    setNewTagInputs({ ...newTagInputs, [optId]: "" });
+    setNewTagInputs({ ...newTagInputs, [id]: "" });
   };
 
-  // Remove a value tag from an option
-  const removeValueTag = (optId: string, valIndex: number) => {
+  // Remove a value tag from an option group
+  const removeValueTag = (id: string, indexToRemove: number) => {
     setOptions(
-      options.map((opt) => {
-        if (opt.id !== optId) return opt;
-        return {
-          ...opt,
-          values: opt.values.filter((_, i) => i !== valIndex),
-        };
+      options.map((o) => {
+        if (o.id === id) {
+          return {
+            ...o,
+            values: o.values.filter((_, idx) => idx !== indexToRemove),
+          };
+        }
+        return o;
       })
     );
   };
 
-  // Update a single variant property
+  // Update a specific field for a variant
   const updateVariant = (
     title: string,
     field: keyof VariantOverride,
-    value: unknown
+    value: string | boolean
   ) => {
     setCustomOverrides((prev) => ({
       ...prev,
@@ -226,7 +209,7 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
     }));
   };
 
-  // Remove a specific variant row
+  // Remove / exclude a variant row
   const removeVariantRow = (title: string) => {
     setCustomOverrides((prev) => ({
       ...prev,
@@ -274,124 +257,84 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
   };
 
   return (
-    <div
+    <section
       id="variants"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+      className="scroll-mt-24 overflow-hidden rounded-xl border border-[#E5E5E0] bg-white shadow-xs"
     >
-      {/* HEADER */}
-      <div className="border-border flex flex-col gap-2 border-b pb-3.5 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-foreground flex items-center gap-2 text-sm font-bold">
-            <Layers className="text-muted-foreground h-4 w-4" />
-            <span>Product Variants</span>
-          </h2>
-          <p className="text-muted-foreground mt-0.5 text-xs">
-            Configure options such as size, color, or finish to create multi-item
-            listings with independent prices and stock.
-          </p>
+      {/* SECTION HEAD */}
+      <div className="flex items-start justify-between gap-3 border-b border-[#E5E5E0] p-5 pb-3 sm:p-6 sm:pb-3">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 text-[#52524E]">
+            <Layers className="h-5 w-5" />
+          </span>
+          <div className="min-w-0">
+            <h2 className="text-base font-semibold text-[#1A1A18]">Variants</h2>
+            <p className="mt-0.5 max-w-[60ch] text-xs text-[#52524E]">
+              Sell this piece in more than one size, colour or finish, each with its own
+              price and stock.
+            </p>
+          </div>
         </div>
 
-        {/* Toggle Checkbox */}
-        <label className="text-foreground flex cursor-pointer items-center gap-2 text-xs font-semibold select-none">
-          <input
-            type="checkbox"
+        {/* M3 Switch in header */}
+        <div className="shrink-0 pt-0.5">
+          <M3Switch
+            id="has-variants"
             checked={hasVariants}
-            onChange={(e) => setHasVariants(e.target.checked)}
-            className="border-border text-primary focus:ring-primary/20 h-4 w-4 cursor-pointer rounded"
+            onChange={setHasVariants}
+            label="This product has options"
           />
-          <span>This product has options</span>
-        </label>
+        </div>
       </div>
 
       {hasVariants && (
-        <div className="animate-in fade-in space-y-5 duration-150">
+        <div className="space-y-5 p-5 sm:p-6">
           {/* 1. OPTIONS BUILDER */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-foreground text-xs font-bold">
-                Options ({options.length} / 3 max)
-              </span>
-              <span className="text-muted-foreground text-[11px]">
-                Press Enter or comma to add multiple tags
-              </span>
-            </div>
-
             {options.map((opt, optIdx) => (
               <div
                 key={opt.id}
-                className="border-border bg-muted/30 hover:border-foreground/20 space-y-3 rounded-xl border p-4 transition-all"
+                className="flex flex-col items-start gap-3 rounded-lg border border-[#E5E5E0] bg-[#FAF8F4] p-3.5 transition-all sm:flex-row"
               >
-                <div className="flex items-center justify-between gap-3">
-                  {/* Option Name Input + Presets */}
-                  <div className="flex flex-1 flex-wrap items-center gap-2">
-                    <label
-                      htmlFor={`opt-name-${opt.id}`}
-                      className="text-muted-foreground text-[11px] font-bold tracking-wide uppercase"
-                    >
-                      Option {optIdx + 1}
-                    </label>
-                    <input
-                      id={`opt-name-${opt.id}`}
-                      type="text"
-                      value={opt.name}
-                      onChange={(e) => updateOptionName(opt.id, e.target.value)}
-                      placeholder="e.g. Size, Color, Finish"
-                      className="border-border bg-background text-foreground focus:ring-primary/20 h-8 w-36 rounded-lg border px-2.5 text-xs font-semibold focus:ring-1 focus:outline-none"
-                    />
-
-                    {/* Quick presets pills */}
-                    <div className="hidden items-center gap-1.5 text-[11px] sm:flex">
-                      {PRESET_OPTIONS.filter((p) => p !== opt.name)
-                        .slice(0, 3)
-                        .map((preset) => (
-                          <button
-                            key={preset}
-                            type="button"
-                            onClick={() => updateOptionName(opt.id, preset)}
-                            className="border-border bg-background text-muted-foreground hover:border-foreground/20 hover:text-foreground cursor-pointer rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors"
-                          >
-                            {preset}
-                          </button>
-                        ))}
-                    </div>
-                  </div>
-
-                  {/* Remove Option Group Button */}
-                  {options.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeOptionGroup(opt.id)}
-                      title="Remove this option"
-                      className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive cursor-pointer rounded-lg p-1.5 transition-colors"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  )}
+                {/* Option Name Input */}
+                <div className="w-full shrink-0 sm:w-44">
+                  <input
+                    id={`opt-name-${opt.id}`}
+                    type="text"
+                    value={opt.name}
+                    onChange={(e) => updateOptionName(opt.id, e.target.value)}
+                    placeholder={`Option ${optIdx + 1} name, e.g. Size`}
+                    className="h-10 w-full rounded-lg border border-[#E5E5E0] bg-white px-3 text-xs font-semibold text-[#1A1A18] focus:border-[#1A1A18] focus:ring-1 focus:ring-[#1A1A18] focus:outline-none"
+                  />
                 </div>
 
-                {/* Option Values Tags + Input */}
-                <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                  {opt.values.map((val, valIdx) => (
-                    <span
-                      key={valIdx}
-                      className="border-border bg-background text-foreground group inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium shadow-2xs"
-                    >
-                      <span>{val}</span>
-                      <button
-                        type="button"
-                        onClick={() => removeValueTag(opt.id, valIdx)}
-                        className="text-muted-foreground hover:text-foreground cursor-pointer"
+                {/* Option Values Chips Field & Quick Presets */}
+                <div className="w-full flex-1 space-y-2">
+                  <div className="flex min-h-10 w-full flex-wrap items-center gap-1.5 rounded-lg border border-[#E5E5E0] bg-white p-2 focus-within:border-[#1A1A18] focus-within:ring-1 focus-within:ring-[#1A1A18]">
+                    {opt.values.map((val, valIdx) => (
+                      <span
+                        key={valIdx}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-[#E5E5E0] bg-[#FAF8F4] px-2.5 py-1 text-xs font-medium text-[#1A1A18]"
                       >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  ))}
+                        <span>{val}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeValueTag(opt.id, valIdx)}
+                          className="cursor-pointer text-[#52524E] hover:text-[#1A1A18]"
+                          aria-label={`Remove ${val}`}
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </span>
+                    ))}
 
-                  {/* Tag input */}
-                  <div className="flex items-center gap-1.5">
                     <input
                       type="text"
-                      placeholder="Add value (e.g. S, Red)..."
+                      placeholder={
+                        opt.values.length === 0
+                          ? "Type a value and press Enter"
+                          : "Add value..."
+                      }
                       value={newTagInputs[opt.id] || ""}
                       onChange={(e) =>
                         setNewTagInputs({ ...newTagInputs, [opt.id]: e.target.value })
@@ -402,57 +345,118 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
                           addValueTag(opt.id);
                         }
                       }}
-                      className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary/20 h-8 w-44 rounded-lg border border-dashed px-2.5 text-xs focus:border-solid focus:ring-1 focus:outline-none"
+                      onBlur={() => addValueTag(opt.id)}
+                      className="h-7 min-w-[120px] flex-1 bg-transparent px-2 text-xs text-[#1A1A18] placeholder:text-[#52524E]/50 focus:outline-none"
                     />
-                    <button
-                      type="button"
-                      onClick={() => addValueTag(opt.id)}
-                      disabled={!newTagInputs[opt.id]?.trim()}
-                      className="h-8 cursor-pointer rounded-lg !bg-[#18181b] px-3 text-xs font-semibold !text-white transition-opacity hover:!bg-[#27272a] disabled:opacity-30"
-                    >
-                      Add
-                    </button>
                   </div>
+
+                  {/* Sizing Quick Presets (XS to 3XL) */}
+                  {opt.name.toLowerCase().includes("size") && (
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5 text-[11px]">
+                      <span className="font-medium text-[#52524E]">Presets:</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOptions(
+                            options.map((o) =>
+                              o.id === opt.id
+                                ? {
+                                    ...o,
+                                    values: Array.from(
+                                      new Set([...o.values, ...STANDARD_SIZES])
+                                    ),
+                                  }
+                                : o
+                            )
+                          );
+                        }}
+                        className="inline-flex cursor-pointer items-center rounded-md border border-[#1A1A18] bg-[#1A1A18] px-2 py-0.5 text-[11px] font-semibold text-white transition-colors hover:bg-[#2E2E2B]"
+                      >
+                        + All XS to 3XL
+                      </button>
+                      {STANDARD_SIZES.map((sz) => {
+                        const isSelected = opt.values.includes(sz);
+                        return (
+                          <button
+                            key={sz}
+                            type="button"
+                            onClick={() => {
+                              if (isSelected) {
+                                setOptions(
+                                  options.map((o) =>
+                                    o.id === opt.id
+                                      ? {
+                                          ...o,
+                                          values: o.values.filter((v) => v !== sz),
+                                        }
+                                      : o
+                                  )
+                                );
+                              } else {
+                                setOptions(
+                                  options.map((o) =>
+                                    o.id === opt.id
+                                      ? { ...o, values: [...o.values, sz] }
+                                      : o
+                                  )
+                                );
+                              }
+                            }}
+                            className={`inline-flex cursor-pointer items-center rounded-md border px-2 py-0.5 text-[11px] font-medium transition-colors ${
+                              isSelected
+                                ? "border-[#1A1A18] bg-[#FAF8F4] font-bold text-[#1A1A18]"
+                                : "border-[#E5E5E0] bg-white text-[#52524E] hover:border-[#1A1A18] hover:text-[#1A1A18]"
+                            }`}
+                          >
+                            {sz}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
+
+                {/* Remove Option Button */}
+                {options.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeOptionGroup(opt.id)}
+                    title="Remove this option"
+                    className="cursor-pointer rounded-full p-2 text-[#52524E] transition-colors hover:bg-rose-50 hover:text-rose-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                )}
               </div>
             ))}
 
-            {/* Add another option button */}
+            {/* Add Option Button */}
             {options.length < 3 && (
               <button
                 type="button"
                 onClick={addOptionGroup}
-                className="border-border text-foreground hover:border-foreground/20 hover:bg-muted/40 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-dashed px-3.5 py-1.5 text-xs font-semibold transition-colors"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#1A1A18] transition-colors hover:bg-black/5"
               >
-                <Plus className="text-muted-foreground h-3.5 w-3.5" />
-                <span>Add another option (e.g. Color, Finish)</span>
+                <Plus className="h-3.5 w-3.5" />
+                <span>Add option</span>
               </button>
             )}
           </div>
 
-          {/* 2. VARIANT COMBINATIONS MATRIX */}
+          {/* 2. VARIANT COMBINATIONS MATRIX TABLE */}
           <div className="space-y-3 pt-2">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h3 className="text-foreground flex items-center gap-2 text-xs font-bold">
-                  <span>Variant Matrix</span>
-                  <span className="bg-muted text-muted-foreground rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold">
-                    {variants.length} combinations
-                  </span>
-                </h3>
-                <p className="text-muted-foreground text-[11px]">
-                  Edit individual variant prices, stock, and SKUs below.
-                </p>
-              </div>
+              <span className="text-xs font-semibold text-[#1A1A18]">
+                Variant combinations ({variants.length})
+              </span>
 
-              {/* Bulk Edit Toggle */}
               {variants.length > 1 && (
                 <button
                   type="button"
                   onClick={() => setShowBulkActions(!showBulkActions)}
-                  className="text-muted-foreground hover:text-foreground inline-flex cursor-pointer items-center gap-1 text-xs font-semibold hover:underline"
+                  className="inline-flex cursor-pointer items-center gap-1 text-xs font-medium text-[#52524E] hover:text-[#1A1A18] hover:underline"
                 >
-                  <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                  <Sparkles className="h-3.5 w-3.5 text-[#C89D32]" />
                   <span>
                     {showBulkActions ? "Hide bulk edit" : "Bulk edit prices & stock"}
                   </span>
@@ -460,50 +464,46 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
               )}
             </div>
 
-            {/* BULK ACTION BAR */}
+            {/* Bulk Action Bar */}
             {showBulkActions && variants.length > 1 && (
-              <div className="border-border bg-muted/30 animate-in fade-in flex flex-wrap items-center gap-3 rounded-xl border p-3.5 text-xs duration-150">
-                {/* Bulk Price */}
+              <div className="flex flex-wrap items-center gap-3 rounded-lg border border-[#E5E5E0] bg-[#FAF8F4] p-3 text-xs">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-semibold">
-                    Price (₹):
-                  </span>
+                  <span className="font-semibold text-[#52524E]">Price (₹):</span>
                   <input
                     type="number"
                     min="0"
                     placeholder="e.g. 1499"
                     value={bulkPriceInput}
                     onChange={(e) => setBulkPriceInput(e.target.value)}
-                    className="border-border bg-background text-foreground h-8 w-24 rounded-lg border px-2.5 font-mono text-xs"
+                    className="h-8 w-24 rounded-lg border border-[#E5E5E0] bg-white px-2.5 font-mono text-xs text-[#1A1A18] focus:border-[#1A1A18] focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={handleApplyBulkPrice}
                     disabled={!bulkPriceInput}
-                    className="h-8 cursor-pointer rounded-lg !bg-[#18181b] px-3 text-[11px] font-semibold !text-white hover:!bg-[#27272a] disabled:opacity-40"
+                    className="h-8 cursor-pointer rounded-full bg-[#1A1A18] px-3 text-[11px] font-semibold text-white hover:bg-[#2E2E2B] disabled:opacity-40"
                   >
-                    Apply All
+                    Apply
                   </button>
                 </div>
 
-                {/* Bulk Stock */}
                 <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-semibold">Stock:</span>
+                  <span className="font-semibold text-[#52524E]">Stock:</span>
                   <input
                     type="number"
                     min="0"
-                    placeholder="e.g. 25"
+                    placeholder="25"
                     value={bulkStockInput}
                     onChange={(e) => setBulkStockInput(e.target.value)}
-                    className="border-border bg-background text-foreground h-8 w-20 rounded-lg border px-2.5 font-mono text-xs"
+                    className="h-8 w-20 rounded-lg border border-[#E5E5E0] bg-white px-2.5 font-mono text-xs text-[#1A1A18] focus:border-[#1A1A18] focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={handleApplyBulkStock}
                     disabled={!bulkStockInput}
-                    className="h-8 cursor-pointer rounded-lg !bg-[#18181b] px-3 text-[11px] font-semibold !text-white hover:!bg-[#27272a] disabled:opacity-40"
+                    className="h-8 cursor-pointer rounded-full bg-[#1A1A18] px-3 text-[11px] font-semibold text-white hover:bg-[#2E2E2B] disabled:opacity-40"
                   >
-                    Apply All
+                    Apply
                   </button>
                 </div>
 
@@ -511,58 +511,36 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
                   <button
                     type="button"
                     onClick={handleResetToBasePrice}
-                    className="text-muted-foreground hover:text-foreground ml-auto inline-flex cursor-pointer items-center gap-1 text-[11px]"
+                    className="ml-auto inline-flex cursor-pointer items-center gap-1 text-[11px] text-[#52524E] hover:text-[#1A1A18]"
                   >
                     <RotateCcw className="h-3 w-3" />
-                    <span>Reset prices to base (₹{basePrice})</span>
+                    <span>Reset to base (₹{basePrice})</span>
                   </button>
                 )}
               </div>
             )}
 
-            {/* VARIANTS EDITABLE TABLE */}
+            {/* Matrix Table */}
             {variants.length > 0 ? (
-              <div className="border-border overflow-x-auto rounded-xl border shadow-2xs">
-                <table className="w-full text-left text-xs">
-                  <thead className="border-border bg-muted/40 text-muted-foreground border-b text-[10px] font-bold tracking-wider uppercase">
+              <div className="overflow-x-auto rounded-lg border border-[#E5E5E0] shadow-xs">
+                <table className="w-full border-collapse text-left text-xs">
+                  <thead className="border-b border-[#E5E5E0] bg-[#FAF8F4] text-[11px] font-semibold text-[#52524E]">
                     <tr>
-                      <th className="p-3">Variant Combination</th>
-                      <th className="w-40 p-3">
-                        <span className="flex items-center gap-1">
-                          <Barcode className="h-3 w-3" />
-                          <span>SKU Code</span>
-                        </span>
-                      </th>
-                      <th className="w-32 p-3">
-                        <span className="flex items-center gap-1">
-                          <DollarSign className="h-3 w-3" />
-                          <span>Price (₹)</span>
-                        </span>
-                      </th>
-                      <th className="w-28 p-3">
-                        <span className="flex items-center gap-1">
-                          <Package className="h-3 w-3" />
-                          <span>Stock Qty</span>
-                        </span>
-                      </th>
-                      <th className="w-28 p-3">Status</th>
+                      <th className="p-3">Variant</th>
+                      <th className="w-44 p-3">SKU</th>
+                      <th className="w-36 p-3">Price (₹)</th>
+                      <th className="w-28 p-3">Stock</th>
                       <th className="w-10 p-3 text-center"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-border bg-card divide-y">
-                    {variants.map((v, idx) => (
-                      <tr key={v.id} className="hover:bg-muted/30 transition-colors">
-                        {/* Variant Title */}
-                        <td className="p-3">
-                          <span className="text-foreground block font-bold">
-                            {v.title}
-                          </span>
-                          <span className="text-muted-foreground font-mono text-[10px]">
-                            #{idx + 1}
-                          </span>
-                        </td>
+                  <tbody className="divide-y divide-[#E5E5E0] bg-white">
+                    {variants.map((v) => (
+                      <tr
+                        key={v.id}
+                        className="transition-colors hover:bg-[#FAF8F4]/60"
+                      >
+                        <td className="p-3 font-semibold text-[#1A1A18]">{v.title}</td>
 
-                        {/* SKU Input */}
                         <td className="p-3">
                           <input
                             type="text"
@@ -570,31 +548,24 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
                             onChange={(e) =>
                               updateVariant(v.title, "sku", e.target.value)
                             }
-                            placeholder="SKU-CODE"
-                            className="border-border bg-background text-foreground focus:ring-primary/20 h-8 w-full rounded-lg border px-2.5 font-mono text-xs focus:ring-1 focus:outline-none"
+                            placeholder="SKU"
+                            className="h-9 w-full rounded-lg border border-[#E5E5E0] bg-white px-2.5 font-mono text-xs text-[#1A1A18] focus:border-[#1A1A18] focus:ring-1 focus:ring-[#1A1A18] focus:outline-none"
                           />
                         </td>
 
-                        {/* Price Input */}
                         <td className="p-3">
-                          <div className="relative">
-                            <span className="text-muted-foreground absolute top-1/2 left-2.5 -translate-y-1/2 font-mono text-xs">
-                              ₹
-                            </span>
-                            <input
-                              type="number"
-                              min="0"
-                              value={v.price}
-                              onChange={(e) =>
-                                updateVariant(v.title, "price", e.target.value)
-                              }
-                              placeholder={basePrice ? String(basePrice) : "0"}
-                              className="border-border bg-background text-foreground focus:ring-primary/20 h-8 w-full rounded-lg border pr-2 pl-6 font-mono text-xs font-medium focus:ring-1 focus:outline-none"
-                            />
-                          </div>
+                          <input
+                            type="number"
+                            min="0"
+                            value={v.price}
+                            onChange={(e) =>
+                              updateVariant(v.title, "price", e.target.value)
+                            }
+                            placeholder={basePrice ? String(basePrice) : "0"}
+                            className="h-9 w-full rounded-lg border border-[#E5E5E0] bg-white px-2.5 font-mono text-xs font-medium text-[#1A1A18] focus:border-[#1A1A18] focus:ring-1 focus:ring-[#1A1A18] focus:outline-none"
+                          />
                         </td>
 
-                        {/* Stock Input */}
                         <td className="p-3">
                           <input
                             type="number"
@@ -604,41 +575,16 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
                               updateVariant(v.title, "stock", e.target.value)
                             }
                             placeholder="0"
-                            className="border-border bg-background text-foreground focus:ring-primary/20 h-8 w-full rounded-lg border px-2.5 font-mono text-xs focus:ring-1 focus:outline-none"
+                            className="h-9 w-full rounded-lg border border-[#E5E5E0] bg-white px-2.5 font-mono text-xs text-[#1A1A18] focus:border-[#1A1A18] focus:ring-1 focus:ring-[#1A1A18] focus:outline-none"
                           />
                         </td>
 
-                        {/* Status Selector / Toggle */}
-                        <td className="p-3">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateVariant(v.title, "isAvailable", !v.isAvailable)
-                            }
-                            className={`inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold transition-colors ${
-                              v.isAvailable && Number(v.stock || "0") > 0
-                                ? "border border-emerald-500/20 bg-emerald-500/15 text-emerald-800 dark:text-emerald-300"
-                                : "bg-muted text-muted-foreground border-border border"
-                            }`}
-                          >
-                            {v.isAvailable && Number(v.stock || "0") > 0 ? (
-                              <>
-                                <Check className="h-2.5 w-2.5" />
-                                <span>Active</span>
-                              </>
-                            ) : (
-                              <span>Out of stock</span>
-                            )}
-                          </button>
-                        </td>
-
-                        {/* Delete Row Button */}
                         <td className="p-3 text-center">
                           <button
                             type="button"
                             onClick={() => removeVariantRow(v.title)}
                             title="Exclude this variant"
-                            className="text-muted-foreground hover:text-destructive cursor-pointer rounded p-1 transition-colors"
+                            className="cursor-pointer rounded p-1 text-[#52524E] transition-colors hover:text-rose-600"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
@@ -649,19 +595,15 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
                 </table>
               </div>
             ) : (
-              <div className="border-border bg-muted/20 rounded-2xl border border-dashed p-6 text-center">
-                <p className="text-foreground text-xs font-semibold">
-                  No variant combinations generated yet
-                </p>
-                <p className="text-muted-foreground mt-1 text-[11px]">
-                  Add values (e.g. S, M, L) to your options above to create
-                  combinations.
+              <div className="rounded-lg border border-dashed border-[#E5E5E0] bg-[#FAF8F4]/50 p-5 text-center">
+                <p className="text-xs text-[#52524E]">
+                  Add at least one option with two or more values to generate variant
+                  rows.
                 </p>
               </div>
             )}
           </div>
 
-          {/* Hidden Form Input for Form Submission Serialization */}
           <input
             type="hidden"
             name="variants_json"
@@ -669,6 +611,6 @@ export function VariantsCard({ basePrice = "", productName = "" }: VariantsCardP
           />
         </div>
       )}
-    </div>
+    </section>
   );
 }

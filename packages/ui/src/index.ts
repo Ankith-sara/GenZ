@@ -8,6 +8,7 @@ export * from "./components/status-badge";
 export * from "./components/verified-badge";
 export * from "./components/user-avatar";
 export * from "./components/action-dropdown";
+export * from "./components/select";
 export * from "./components/location-select";
 export * from "./components/phone-input";
 export * from "./components/search-trigger-button";

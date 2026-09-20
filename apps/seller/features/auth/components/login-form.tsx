@@ -23,6 +23,8 @@ interface LoginFormProps {
   disableOtp?: boolean;
 }
 
+import { validateLoginEmail, validateLoginPassword } from "../lib/login-validation";
+
 export function LoginForm({ redirectTo, disableOtp = true }: LoginFormProps) {
   const [step, setStep] = useState<"credentials" | "otp">("credentials");
   const [email, setEmail] = useState("");
@@ -37,21 +39,8 @@ export function LoginForm({ redirectTo, disableOtp = true }: LoginFormProps) {
   // Real-time touch validation tracking
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const emailError = touched.email
-    ? !email.trim()
-      ? "Email address is required."
-      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
-        ? "Please enter a valid email address (e.g. user@example.com)."
-        : null
-    : null;
-
-  const passwordError = touched.password
-    ? !password
-      ? "Password is required."
-      : password.length < 6
-        ? "Password must be at least 6 characters."
-        : null
-    : null;
+  const emailError = touched.email ? validateLoginEmail(email) : null;
+  const passwordError = touched.password ? validateLoginPassword(password) : null;
 
   const handleBlur = (field: string) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -322,7 +311,7 @@ export function LoginForm({ redirectTo, disableOtp = true }: LoginFormProps) {
             </>
           ) : isSuccess ? (
             <>
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+              <CheckCircle2 className="h-4 w-4 text-amber-500" />
               <span>Authenticated! Entering Desk...</span>
             </>
           ) : (
