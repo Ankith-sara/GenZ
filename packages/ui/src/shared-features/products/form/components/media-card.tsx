@@ -247,7 +247,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
   return (
     <div
       id="media"
-      className="border-border bg-card space-y-5 rounded-2xl border p-5 shadow-2xs"
+      className="border-border bg-card space-y-5 rounded-lg border p-5 shadow-sm"
     >
       {/* SECTION HEADER */}
       <div className="border-border flex flex-col gap-2 border-b pb-3.5 sm:flex-row sm:items-center sm:justify-between">
@@ -287,7 +287,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
               }}
               className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-all ${
                 showUrlInput
-                  ? "border-[#18181b] !bg-[#18181b] !text-white dark:border-white dark:!bg-white dark:!text-black"
+                  ? "border-[#18181b] !bg-[#18181b] !text-white dark:border-white dark:!bg-card dark:!text-foreground"
                   : "border-border bg-background text-foreground hover:bg-muted/40"
               }`}
             >
@@ -298,7 +298,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full !bg-[#18181b] px-4 py-1.5 text-xs font-semibold !text-white shadow-2xs transition-all hover:!bg-[#27272a] active:scale-[0.98]"
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full !bg-[#18181b] px-4 py-1.5 text-xs font-semibold !text-white shadow-sm transition-all hover:!bg-[#27272a] active:scale-[0.98]"
             >
               <Upload className="h-3.5 w-3.5" />
               <span>Upload Images</span>
@@ -324,7 +324,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
 
       {/* INLINE "ADD FROM URL" PANEL */}
       {showUrlInput && !isMaxReached && (
-        <div className="border-border bg-muted/40 animate-in fade-in slide-in-from-top-1 space-y-2.5 rounded-xl border p-4 duration-150">
+        <div className="border-border bg-muted/40 animate-in fade-in slide-in-from-top-1 space-y-2.5 rounded-lg border p-4 duration-150">
           <div className="flex items-center justify-between">
             <label
               htmlFor="image-url-input"
@@ -359,13 +359,13 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
                 }
               }}
               disabled={isUrlLoading}
-              className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary/20 flex-1 rounded-xl border px-3.5 py-2 text-xs focus:ring-2 focus:outline-none"
+              className="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary/20 flex-1 rounded-lg border px-3.5 py-2 text-xs focus:ring-2 focus:outline-none"
             />
             <button
               type="button"
               onClick={handleAddFromUrl}
               disabled={isUrlLoading || !urlInputValue.trim()}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl !bg-[#18181b] px-4 py-2 text-xs font-semibold !text-white transition-all hover:!bg-[#27272a] disabled:opacity-50"
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg !bg-[#18181b] px-4 py-2 text-xs font-semibold !text-white transition-all hover:!bg-[#27272a] disabled:opacity-50"
             >
               {isUrlLoading ? (
                 <>
@@ -394,13 +394,13 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
           onDragLeave={handleZoneDragLeave}
           onDrop={handleZoneDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`relative flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
+          className={`relative flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 text-center transition-all duration-200 ${
             isDraggingOver
               ? "border-primary bg-primary/5 ring-primary/10 scale-[0.99] ring-4"
               : "border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40"
           }`}
         >
-          <div className="border-border bg-background text-muted-foreground flex h-12 w-12 items-center justify-center rounded-full border shadow-2xs transition-transform group-hover:scale-105">
+          <div className="border-border bg-background text-muted-foreground flex h-12 w-12 items-center justify-center rounded-full border shadow-sm transition-transform group-hover:scale-105">
             <Upload className="h-5 w-5" />
           </div>
 
@@ -433,8 +433,8 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
           onDragOver={handleZoneDragOver}
           onDragLeave={handleZoneDragLeave}
           onDrop={handleZoneDrop}
-          className={`relative rounded-xl p-1 transition-all ${
-            isDraggingOver ? "rounded-xl bg-neutral-50 ring-2 ring-neutral-900" : ""
+          className={`relative rounded-lg p-1 transition-all ${
+            isDraggingOver ? "rounded-lg bg-neutral-50 ring-2 ring-neutral-900" : ""
           }`}
         >
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -452,10 +452,10 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
                   onDragLeave={handleItemDragLeave}
                   onDrop={(e) => handleItemDrop(e, idx)}
                   onDragEnd={handleItemDragEnd}
-                  className={`group bg-muted/20 relative aspect-square overflow-hidden rounded-xl border transition-all duration-200 ${
+                  className={`group bg-muted/20 relative aspect-square overflow-hidden rounded-lg border transition-all duration-200 ${
                     isCover
-                      ? "border-primary ring-primary/20 shadow-xs ring-2"
-                      : "border-border hover:border-foreground/20 shadow-2xs"
+                      ? "border-primary ring-primary/20 shadow-sm ring-2"
+                      : "border-border hover:border-foreground/20 shadow-sm"
                   } ${isDragging ? "scale-95 opacity-30" : "opacity-100"} ${
                     isDragTarget ? "ring-primary scale-102 ring-2" : ""
                   }`}
@@ -474,12 +474,12 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
                   {/* COVER BADGE OR POSITION NUMBER (Top-Left) */}
                   <div className="absolute top-2 left-2 z-10">
                     {isCover ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/85 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-white uppercase shadow-xs backdrop-blur-xs">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-foreground/85 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-white uppercase shadow-sm backdrop-blur-xs">
                         <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                         <span>COVER</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center justify-center rounded-full bg-black/75 px-2 py-0.5 font-mono text-[10px] font-semibold text-white shadow-2xs backdrop-blur-xs">
+                      <span className="inline-flex items-center justify-center rounded-full bg-foreground/75 px-2 py-0.5 font-mono text-[10px] font-semibold text-white shadow-sm backdrop-blur-xs">
                         #{idx + 1}
                       </span>
                     )}
@@ -494,7 +494,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
                         e.stopPropagation();
                         setPreviewItem(item);
                       }}
-                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/75 text-white backdrop-blur-xs transition-colors hover:bg-black"
+                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-foreground/75 text-white backdrop-blur-xs transition-colors hover:bg-foreground"
                     >
                       <Maximize2 className="h-3 w-3" />
                     </button>
@@ -505,7 +505,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
                         e.stopPropagation();
                         handleRemove(idx);
                       }}
-                      className="hover:bg-destructive flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/75 text-white backdrop-blur-xs transition-colors"
+                      className="hover:bg-destructive flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-foreground/75 text-white backdrop-blur-xs transition-colors"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
@@ -527,7 +527,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
                           e.stopPropagation();
                           handleSetCover(idx);
                         }}
-                        className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold text-neutral-900 shadow-xs backdrop-blur-xs transition-all hover:bg-white active:scale-95"
+                        className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-card/95 px-2.5 py-1 text-[10px] font-bold text-neutral-900 shadow-sm backdrop-blur-xs transition-all hover:bg-card active:scale-95"
                       >
                         <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
                         <span>Make Cover</span>
@@ -543,9 +543,9 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="group border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40 relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-3 text-center transition-all"
+                className="group border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40 relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-3 text-center transition-all"
               >
-                <div className="border-border bg-background text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full border shadow-2xs transition-transform group-hover:scale-105">
+                <div className="border-border bg-background text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full border shadow-sm transition-transform group-hover:scale-105">
                   <Plus className="h-4 w-4" />
                 </div>
                 <span className="text-foreground mt-2 text-xs font-semibold">
@@ -562,7 +562,7 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
               (_, emptyIdx) => (
                 <div
                   key={`empty-slot-${emptyIdx}`}
-                  className="border-border/60 bg-muted/10 text-muted-foreground/40 hidden aspect-square flex-col items-center justify-center rounded-xl border border-dashed sm:flex"
+                  className="border-border/60 bg-muted/10 text-muted-foreground/40 hidden aspect-square flex-col items-center justify-center rounded-lg border border-dashed sm:flex"
                 >
                   <span className="font-mono text-[11px]">
                     #{images.length + emptyIdx + 2}
@@ -587,11 +587,11 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
       {previewItem && (
         <div
           onClick={() => setPreviewItem(null)}
-          className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm duration-150"
+          className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 p-4 backdrop-blur-sm duration-150"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-card border-border text-foreground relative max-h-[90vh] max-w-2xl overflow-hidden rounded-3xl border shadow-2xl"
+            className="bg-card border-border text-foreground relative max-h-[90vh] max-w-2xl overflow-hidden rounded-lg border shadow-2xl"
           >
             <div className="border-border flex items-center justify-between border-b px-5 py-3.5">
               <div className="flex items-center gap-2">
@@ -613,12 +613,12 @@ export function MediaCard({ images, onImagesChange, maxImages = 8 }: MediaCardPr
               </button>
             </div>
 
-            <div className="flex max-h-[75vh] items-center justify-center bg-black/10 p-4 dark:bg-black/40">
+            <div className="flex max-h-[75vh] items-center justify-center bg-foreground/10 p-4 dark:bg-foreground/40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={previewItem.previewUrl}
                 alt={previewItem.name || "Image preview"}
-                className="max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-lg"
+                className="max-h-[70vh] w-auto max-w-full rounded-lg object-contain shadow-lg"
               />
             </div>
           </div>
