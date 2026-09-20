@@ -102,6 +102,10 @@ export default async function SellerDashboardPage() {
   );
   const shippedOrders = scopedOrders.filter((o) => o.status === "shipped");
   const deliveredOrders = scopedOrders.filter((o) => o.status === "delivered");
+  const deliveredRevenue = deliveredOrders.reduce(
+    (sum, o) => sum + (o.totalAmount || 0),
+    0
+  );
 
   const isVerified = sellerProfile?.status === "verified";
   const hasProfileDetails =
