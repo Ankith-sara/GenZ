@@ -9,23 +9,18 @@ import {
   ShoppingBag,
   Edit,
   Eye,
-  EyeOff,
   CheckCircle2,
   Trash2,
   Plus,
   ChevronDown,
-  Tag,
   RotateCcw,
   Save,
   Loader2,
   ExternalLink,
   Copy,
   Check,
-  Package,
-  Clock,
   AlertTriangle,
   ArrowUpDown,
-  Boxes,
   LayoutGrid,
   List,
   Sparkles,
@@ -34,9 +29,10 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "../../components/button";
-import { StatusBadge } from "../../components/status-badge";
 import { SlideOverDrawer } from "../../components/slide-over-drawer";
 import { ActionDropdown, type ActionItem } from "../../components/action-dropdown";
+import { Select } from "../../components/select";
+import { DEFAULT_PRODUCT_CATEGORIES } from "./form/components/product-info-cards";
 
 export interface SharedProductRecord {
   id: string;
@@ -89,46 +85,85 @@ export interface ProductsCatalogManagerProps {
 const ICON_STROKE = 1.75;
 const PRESSABLE =
   "cursor-pointer transition-all duration-150 ease-out active:scale-[0.98] disabled:active:scale-100 disabled:cursor-not-allowed";
-const FOCUS_RING =
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:ring-offset-background";
 
 function resolveProductImage(p: SharedProductRecord): string | null {
+  const candidate =
+    p.image_url ||
+    (p.images && p.images.length > 0 ? p.images[0] : null) ||
+    p.cover_image_path;
+
+  if (!candidate) return null;
+
   if (
-    p.image_url &&
-    (p.image_url.startsWith("http://") ||
-      p.image_url.startsWith("https://") ||
-      p.image_url.startsWith("/"))
+    candidate.startsWith("http://") ||
+    candidate.startsWith("https://") ||
+    candidate.startsWith("/")
   ) {
-    return p.image_url;
+    return candidate;
   }
-  if (p.images && p.images.length > 0 && p.images[0]) {
-    const first = p.images[0];
-    if (
-      first.startsWith("http://") ||
-      first.startsWith("https://") ||
-      first.startsWith("/")
-    ) {
-      return first;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (supabaseUrl) {
+    const cleanUrl = supabaseUrl.replace(/\/+$/, "");
+    let cleanPath = candidate.replace(/^\/+/, "");
+    if (cleanPath.startsWith("product-media/")) {
+      cleanPath = cleanPath.slice("product-media/".length);
     }
+    return `${cleanUrl}/storage/v1/object/public/product-media/${cleanPath}`;
   }
-  if (p.cover_image_path) {
-    if (
-      p.cover_image_path.startsWith("http://") ||
-      p.cover_image_path.startsWith("https://")
-    ) {
-      return p.cover_image_path;
-    }
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    if (supabaseUrl) {
-      const cleanUrl = supabaseUrl.replace(/\/+$/, "");
-      const cleanPath = p.cover_image_path.replace(/^\/+/, "");
-      return `${cleanUrl}/storage/v1/object/public/product-media/${cleanPath}`;
-    }
-    return p.cover_image_path.startsWith("/")
-      ? p.cover_image_path
-      : `/${p.cover_image_path}`;
+
+  return `/${candidate.replace(/^\/+/, "")}`;
+}
+
+function QuickEditThumbnail({ product }: { product: SharedProductRecord }) {
+  const [errorUrl, setErrorUrl] = useState<string | null>(null);
+  const imgThumb = resolveProductImage(product);
+  const hasError = Boolean(imgThumb && errorUrl === imgThumb);
+
+  return (
+    <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E5E5E0] bg-white">
+      {imgThumb && !hasError ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          key={imgThumb}
+          src={imgThumb}
+          alt=""
+          className="h-full w-full object-cover"
+          onError={() => setErrorUrl(imgThumb)}
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-[#FAF8F4] text-[#52524E]/40">
+          <ShoppingBag className="h-5 w-5" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function formatDate(iso?: string | null): string {
+  if (!iso) return "—";
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return "—";
+    const day = d.getDate();
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    return `${day} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  } catch {
+    return "—";
   }
-  return null;
 }
 
 interface FilterOption {
@@ -182,18 +217,18 @@ function FilterDropdown({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={clsx(
-          "inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border px-3.5 text-sm font-medium shadow-sm transition-all select-none",
+          "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border px-3 text-xs font-medium shadow-xs transition-all select-none",
           isActive
-            ? "border-foreground/40 bg-foreground/5 text-foreground ring-foreground/10 font-semibold ring-1"
-            : "border-border bg-card text-foreground hover:border-foreground/30 hover:bg-muted/40",
-          isOpen && "ring-primary/20 border-foreground/30 ring-2"
+            ? "border-primary/40 bg-secondary-container text-on-secondary-container font-semibold"
+            : "border-outline-variant/60 bg-surface-container-lowest text-on-surface hover:bg-surface-container-low",
+          isOpen && "ring-primary/20 border-primary/40 ring-2"
         )}
       >
         {icon && (
           <span
             className={clsx(
               "h-3.5 w-3.5 shrink-0",
-              isActive ? "text-foreground" : "text-muted-foreground"
+              isActive ? "text-primary" : "text-on-surface-variant"
             )}
           >
             {icon}
@@ -207,8 +242,8 @@ function FilterDropdown({
             className={clsx(
               "py-0.2 ml-0.5 rounded-full px-1.5 text-[10px] font-semibold",
               isActive
-                ? "bg-foreground/15 text-foreground"
-                : "bg-muted text-muted-foreground"
+                ? "bg-primary/10 text-primary"
+                : "bg-surface-container text-on-surface-variant"
             )}
           >
             {selectedOption.count}
@@ -217,7 +252,7 @@ function FilterDropdown({
         <ChevronDown
           className={clsx(
             "h-3 w-3 shrink-0 transition-transform duration-200",
-            isActive ? "text-foreground" : "text-muted-foreground",
+            isActive ? "text-primary" : "text-on-surface-variant",
             isOpen && "rotate-180"
           )}
         />
@@ -226,11 +261,11 @@ function FilterDropdown({
       {isOpen && (
         <div
           className={clsx(
-            "border-border/70 bg-card/95 backdrop-blur-xl animate-in fade-in-80 zoom-in-95 absolute z-50 mt-2 max-w-[320px] min-w-[220px] overflow-hidden rounded-xl border p-2 shadow-2xl ring-1 ring-black/5 duration-150",
+            "border-outline-variant/60 bg-surface-container-lowest/98 animate-in fade-in-80 zoom-in-95 shadow-elevation-2 absolute z-50 mt-1.5 max-w-[320px] min-w-[220px] overflow-hidden rounded-xl border p-1.5 backdrop-blur-xl duration-150",
             align === "right" ? "right-0" : "left-0"
           )}
         >
-          <div className="text-muted-foreground px-2.5 py-1.5 text-[10px] font-bold tracking-wider uppercase">
+          <div className="text-on-surface-variant px-2.5 py-1.5 text-[10px] font-bold tracking-wider uppercase">
             {label}
           </div>
           <div className="max-h-60 space-y-0.5 overflow-y-auto">
@@ -245,10 +280,10 @@ function FilterDropdown({
                     setIsOpen(false);
                   }}
                   className={clsx(
-                    "flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors select-none",
+                    "flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-2.5 py-2 text-left text-xs font-medium transition-colors select-none",
                     isOptionSelected
-                      ? "bg-muted text-foreground font-semibold"
-                      : "text-foreground hover:bg-muted/60"
+                      ? "bg-secondary-container text-on-secondary-container font-semibold"
+                      : "text-on-surface hover:bg-surface-container-low"
                   )}
                 >
                   <div className="flex min-w-0 items-center gap-2">
@@ -261,7 +296,7 @@ function FilterDropdown({
                       />
                     )}
                     {option.icon && (
-                      <span className="text-muted-foreground h-3.5 w-3.5 shrink-0">
+                      <span className="text-on-surface-variant h-3.5 w-3.5 shrink-0">
                         {option.icon}
                       </span>
                     )}
@@ -274,15 +309,15 @@ function FilterDropdown({
                         className={clsx(
                           "py-0.2 rounded-full px-1.5 text-[10px]",
                           isOptionSelected
-                            ? "bg-foreground/15 text-foreground font-bold"
-                            : "bg-muted text-muted-foreground font-medium"
+                            ? "bg-primary/10 text-primary font-bold"
+                            : "bg-surface-container text-on-surface-variant font-medium"
                         )}
                       >
                         {option.count}
                       </span>
                     )}
                     {isOptionSelected && (
-                      <Check className="text-foreground h-3.5 w-3.5 stroke-[2.5]" />
+                      <Check className="text-primary h-3.5 w-3.5 stroke-[2.5]" />
                     )}
                   </div>
                 </button>
@@ -292,6 +327,55 @@ function FilterDropdown({
         </div>
       )}
     </div>
+  );
+}
+
+/* Material 3 Switch Component */
+function MaterialSwitch({
+  checked,
+  onChange,
+  disabled,
+  label,
+}: {
+  checked: boolean;
+  onChange: () => void;
+  disabled?: boolean;
+  label?: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      disabled={disabled}
+      onClick={(e) => {
+        e.stopPropagation();
+        onChange();
+      }}
+      className={clsx(
+        "focus-visible:outline-primary relative h-8 w-13 shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        checked
+          ? "border-primary bg-primary"
+          : "border-outline-variant bg-surface-container-highest"
+      )}
+    >
+      <span
+        className={clsx(
+          "absolute top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full transition-all duration-200",
+          checked
+            ? "bg-on-primary text-primary left-5 h-6 w-6"
+            : "bg-outline left-1.5 h-4 w-4 text-transparent"
+        )}
+      >
+        <Check
+          className={clsx(
+            "h-3.5 w-3.5 stroke-[3] transition-opacity",
+            checked ? "opacity-100" : "opacity-0"
+          )}
+        />
+      </span>
+    </button>
   );
 }
 
@@ -316,7 +400,7 @@ export function ProductsCatalogManager({
     setProducts(initialProducts);
   }
 
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [viewMode, setViewMode] = useState<"list" | "tiles">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -324,13 +408,12 @@ export function ProductsCatalogManager({
   const [priceRangeFilter, setPriceRangeFilter] = useState("all");
   const [badgeFilter, setBadgeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
-  const [selectedProduct, setSelectedProduct] = useState<SharedProductRecord | null>(
-    null
-  );
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  // Slide-over Quick Edit
   const [editingProduct, setEditingProduct] = useState<SharedProductRecord | null>(
     null
   );
-
   const [editForm, setEditForm] = useState<{
     name: string;
     category: string;
@@ -345,15 +428,37 @@ export function ProductsCatalogManager({
     description: "",
   });
 
+  // Category options for Quick Edit drawer
+  const editingCategory = editingProduct?.category?.trim();
+  const quickEditCategoryOptions = useMemo(() => {
+    const categoriesSet = new Set<string>(DEFAULT_PRODUCT_CATEGORIES);
+    if (editingCategory) {
+      categoriesSet.add(editingCategory);
+    }
+    products.forEach((p) => {
+      if (p.category && p.category.trim()) {
+        categoriesSet.add(p.category.trim());
+      }
+    });
+    return Array.from(categoriesSet).map((cat) => ({
+      value: cat,
+      label: cat,
+    }));
+  }, [editingCategory, products]);
+
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [copiedId, setCopiedId] = useState(false);
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
 
   // Status counts & KPI metrics
   const kpis = useMemo(() => {
     const totalCount = products.length;
     const publishedCount = products.filter((p) => p.status === "published").length;
     const draftCount = products.filter((p) => p.status !== "published").length;
+
+    const outOfStockCount = products.filter(
+      (p) => (p.inventory_count ?? 0) === 0
+    ).length;
     const lowStockCount = products.filter((p) => {
       const count = p.inventory_count ?? 0;
       const threshold = p.low_stock_threshold ?? 5;
@@ -364,33 +469,30 @@ export function ProductsCatalogManager({
       const threshold = p.low_stock_threshold ?? 5;
       return count > threshold;
     }).length;
-    const outOfStockCount = products.filter(
-      (p) => (p.inventory_count ?? 0) === 0
-    ).length;
+
+    const totalUnits = products.reduce((sum, p) => sum + (p.inventory_count ?? 0), 0);
+    const catalogValuation = products.reduce((sum, p) => {
+      const price = p.price_inr || 0;
+      const units = p.inventory_count ?? 0;
+      return sum + price * units;
+    }, 0);
+
     const featuredCount = products.filter((p) => Boolean(p.is_featured)).length;
     const newArrivalCount = products.filter((p) => Boolean(p.is_new_arrival)).length;
     const bestSellerCount = products.filter((p) => Boolean(p.is_best_seller)).length;
-
-    const catalogValuation = products.reduce((sum, p) => {
-      const price = p.price_inr || 0;
-      const units =
-        p.inventory_count !== null && p.inventory_count !== undefined
-          ? p.inventory_count
-          : 1;
-      return sum + price * units;
-    }, 0);
 
     return {
       totalCount,
       publishedCount,
       draftCount,
+      outOfStockCount,
       lowStockCount,
       inStockCount,
-      outOfStockCount,
+      totalUnits,
+      catalogValuation,
       featuredCount,
       newArrivalCount,
       bestSellerCount,
-      catalogValuation,
     };
   }, [products]);
 
@@ -400,18 +502,10 @@ export function ProductsCatalogManager({
     products.forEach((p) => {
       if (p.category) set.add(p.category);
     });
-    const found = Array.from(set);
-    if (found.length > 0) return found;
-    return [
-      "Etikoppaka Wooden Toys",
-      "Kondapalli Toys",
-      "Wooden Toys & Crafts",
-      "Home & Furniture",
-      "Handicrafts",
-    ];
+    return Array.from(set);
   }, [products]);
 
-  // Filtered & sorted dataset
+  // Filtered & sorted products
   const filteredProducts = useMemo(() => {
     const list = products.filter((p) => {
       const q = searchQuery.toLowerCase().trim();
@@ -420,8 +514,7 @@ export function ProductsCatalogManager({
         p.name.toLowerCase().includes(q) ||
         (p.category || "").toLowerCase().includes(q) ||
         p.id.toLowerCase().includes(q) ||
-        (p.sku || "").toLowerCase().includes(q) ||
-        (p.materials && p.materials.some((m) => m.toLowerCase().includes(q)));
+        (p.sku || "").toLowerCase().includes(q);
 
       const isPublished = p.status === "published";
       const matchesStatus =
@@ -437,20 +530,20 @@ export function ProductsCatalogManager({
         stockFilter === "all" ||
         (stockFilter === "in_stock" && count > threshold) ||
         (stockFilter === "low_stock" && count > 0 && count <= threshold) ||
-        (stockFilter === "out_of_stock" && count === 0);
+        (stockFilter === "out_of_stock" && count === 0) ||
+        (stockFilter === "attention" && count <= threshold);
 
       const price = p.price_inr || 0;
       const matchesPrice =
         priceRangeFilter === "all" ||
-        (priceRangeFilter === "under_500" && price < 500) ||
-        (priceRangeFilter === "500_1000" && price >= 500 && price <= 1000) ||
-        (priceRangeFilter === "1000_2500" && price > 1000 && price <= 2500) ||
-        (priceRangeFilter === "above_2500" && price > 2500);
+        (priceRangeFilter === "lt300" && price < 300) ||
+        (priceRangeFilter === "300_500" && price >= 300 && price <= 500) ||
+        (priceRangeFilter === "gt500" && price > 500);
 
       const matchesBadge =
         badgeFilter === "all" ||
-        (badgeFilter === "featured" && p.is_featured) ||
         (badgeFilter === "new_arrival" && p.is_new_arrival) ||
+        (badgeFilter === "featured" && p.is_featured) ||
         (badgeFilter === "best_seller" && p.is_best_seller);
 
       return (
@@ -463,33 +556,32 @@ export function ProductsCatalogManager({
       );
     });
 
+    // Sorting
     return list.sort((a, b) => {
-      if (sortBy === "oldest") {
-        return (
-          new Date(a.created_at || a.updated_at || 0).getTime() -
-          new Date(b.created_at || b.updated_at || 0).getTime()
-        );
-      }
-      if (sortBy === "price_asc") {
-        return (a.price_inr || 0) - (b.price_inr || 0);
-      }
-      if (sortBy === "price_desc") {
-        return (b.price_inr || 0) - (a.price_inr || 0);
-      }
-      if (sortBy === "stock_desc") {
-        return (b.inventory_count || 0) - (a.inventory_count || 0);
-      }
-      if (sortBy === "stock_asc") {
+      if (sortBy === "name_asc") return a.name.localeCompare(b.name);
+      if (sortBy === "price_asc") return (a.price_inr || 0) - (b.price_inr || 0);
+      if (sortBy === "price_desc") return (b.price_inr || 0) - (a.price_inr || 0);
+      if (sortBy === "stock_asc")
         return (a.inventory_count || 0) - (b.inventory_count || 0);
-      }
-      if (sortBy === "name_asc") {
-        return a.name.localeCompare(b.name);
+      if (sortBy === "stock_desc")
+        return (b.inventory_count || 0) - (a.inventory_count || 0);
+      if (sortBy === "oldest") {
+        const da = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const db = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return da - db;
       }
       // default: newest
-      return (
-        new Date(b.updated_at || b.created_at || 0).getTime() -
-        new Date(a.updated_at || a.created_at || 0).getTime()
-      );
+      const da = a.updated_at
+        ? new Date(a.updated_at).getTime()
+        : a.created_at
+          ? new Date(a.created_at).getTime()
+          : 0;
+      const db = b.updated_at
+        ? new Date(b.updated_at).getTime()
+        : b.created_at
+          ? new Date(b.created_at).getTime()
+          : 0;
+      return db - da;
     });
   }, [
     products,
@@ -502,10 +594,96 @@ export function ProductsCatalogManager({
     sortBy,
   ]);
 
+  const needAttentionCount = kpis.outOfStockCount + kpis.lowStockCount;
+
+  // Single-product status toggle
+  const handleToggleStatus = async (product: SharedProductRecord) => {
+    const nextStatus = product.status === "published" ? "draft" : "published";
+    setLoadingId(product.id);
+
+    setProducts((prev) =>
+      prev.map((p) => (p.id === product.id ? { ...p, status: nextStatus } : p))
+    );
+
+    try {
+      if (onUpdateStatus) {
+        await onUpdateStatus(product.id, nextStatus);
+      }
+      toast.success(
+        nextStatus === "published"
+          ? `"${product.name}" published`
+          : `"${product.name}" moved to drafts`
+      );
+    } catch {
+      setProducts(initialProducts);
+      toast.error("Failed to update status");
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
+  // Bulk Status Update
+  const handleBulkUpdateStatus = async (nextStatus: "published" | "draft") => {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+
+    setIsBulkLoading(true);
+    const prevProducts = [...products];
+
+    setProducts((prev) =>
+      prev.map((p) => (selectedIds.has(p.id) ? { ...p, status: nextStatus } : p))
+    );
+
+    try {
+      if (onUpdateStatus) {
+        await Promise.all(ids.map((id) => onUpdateStatus(id, nextStatus)));
+      }
+      toast.success(
+        ids.length === 1
+          ? `Listing ${nextStatus === "published" ? "published" : "moved to drafts"}`
+          : `${ids.length} listings ${nextStatus === "published" ? "published" : "moved to drafts"}`
+      );
+      setSelectedIds(new Set());
+    } catch {
+      setProducts(prevProducts);
+      toast.error("Failed to update selected listings");
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
+
+  // Delete product
+  const handleDelete = async (product: SharedProductRecord) => {
+    if (
+      !confirm(
+        `Are you sure you want to delete "${product.name}"? This action cannot be undone.`
+      )
+    ) {
+      return;
+    }
+
+    setLoadingId(product.id);
+    const prevProducts = [...products];
+    setProducts((prev) => prev.filter((p) => p.id !== product.id));
+
+    try {
+      if (onDeleteProduct) {
+        await onDeleteProduct(product.id);
+      }
+      toast.success(`"${product.name}" deleted.`);
+    } catch {
+      setProducts(prevProducts);
+      toast.error("Failed to delete product");
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
+  // Quick edit drawer handlers
   const handleOpenEdit = (product: SharedProductRecord) => {
     setEditingProduct(product);
     setEditForm({
-      name: product.name || "",
+      name: product.name,
       category: product.category || "",
       price_inr: product.price_inr ? String(product.price_inr) : "",
       status: product.status || "published",
@@ -513,10 +691,9 @@ export function ProductsCatalogManager({
     });
   };
 
-  const handleSaveEdit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveEdit = async () => {
     if (!editingProduct) return;
-
+    setIsSaving(true);
     const parsedPrice = editForm.price_inr ? Number(editForm.price_inr) : null;
     const updatedData: SharedProductRecord = {
       ...editingProduct,
@@ -528,15 +705,9 @@ export function ProductsCatalogManager({
       updated_at: new Date().toISOString(),
     };
 
-    setIsSaving(true);
-
-    // Optimistic UI update
     setProducts((prev) =>
       prev.map((p) => (p.id === editingProduct.id ? updatedData : p))
     );
-    if (selectedProduct?.id === editingProduct.id) {
-      setSelectedProduct(updatedData);
-    }
 
     try {
       if (onUpdateProduct) {
@@ -549,234 +720,35 @@ export function ProductsCatalogManager({
         });
       }
       setEditingProduct(null);
-      toast.success("Product changes saved successfully!");
-    } catch (err) {
-      console.error("Failed to save product:", err);
+      toast.success("Product changes saved!");
+    } catch {
       setProducts(initialProducts);
-      toast.error("Failed to save product changes", {
-        description: err instanceof Error ? err.message : "Please try again.",
-      });
+      toast.error("Failed to save changes");
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleToggleStatus = async (product: SharedProductRecord) => {
-    const nextStatus = product.status === "published" ? "draft" : "published";
-    setLoadingId(product.id);
-
-    setProducts((prev) =>
-      prev.map((p) => (p.id === product.id ? { ...p, status: nextStatus } : p))
-    );
-    if (selectedProduct?.id === product.id) {
-      setSelectedProduct({ ...selectedProduct, status: nextStatus });
-    }
-
-    try {
-      if (onUpdateStatus) {
-        await onUpdateStatus(product.id, nextStatus);
-      }
-      toast.success(
-        nextStatus === "published"
-          ? `"${product.name}" published to live storefront!`
-          : `"${product.name}" moved to draft`,
-        {
-          description:
-            nextStatus === "published"
-              ? "Product is now live and visible to all shoppers."
-              : "Product is now hidden from the marketplace.",
-        }
-      );
-    } catch (err) {
-      console.error("Failed to update status:", err);
-      setProducts((prev) =>
-        prev.map((p) => (p.id === product.id ? { ...p, status: product.status } : p))
-      );
-      if (selectedProduct?.id === product.id) {
-        setSelectedProduct(product);
-      }
-      toast.error("Failed to update product status", {
-        description: err instanceof Error ? err.message : "Please try again.",
-      });
-    } finally {
-      setLoadingId(null);
+  // Selection handlers
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(new Set(filteredProducts.map((p) => p.id)));
+    } else {
+      setSelectedIds(new Set());
     }
   };
 
-  const handleDelete = async (product: SharedProductRecord) => {
-    if (
-      !confirm(
-        `Are you sure you want to delete "${product.name}"? This action cannot be undone.`
-      )
-    ) {
-      return;
-    }
-
-    setLoadingId(product.id);
-    const previousProducts = [...products];
-
-    setProducts((prev) => prev.filter((p) => p.id !== product.id));
-    if (selectedProduct?.id === product.id) {
-      setSelectedProduct(null);
-    }
-
-    try {
-      if (onDeleteProduct) {
-        await onDeleteProduct(product.id);
-      }
-      toast.success(`"${product.name}" deleted successfully.`);
-    } catch (err) {
-      console.error("Failed to delete product:", err);
-      setProducts(previousProducts);
-      toast.error("Failed to delete product", {
-        description: err instanceof Error ? err.message : "Please try again.",
-      });
-    } finally {
-      setLoadingId(null);
-    }
+  const handleToggleSelect = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelectedIds(next);
   };
 
-  const handleCopyId = (id: string) => {
-    navigator.clipboard.writeText(id);
-    setCopiedId(true);
-    toast.success("Product ID copied to clipboard");
-    setTimeout(() => setCopiedId(false), 2000);
-  };
-
-  const getActionItems = (p: SharedProductRecord): ActionItem[] => [
-    {
-      label: "View Details",
-      icon: <Eye className="h-3.5 w-3.5" />,
-      onClick: () => setSelectedProduct(p),
-    },
-    {
-      label: "Full Studio Edit",
-      icon: <Tag className="h-3.5 w-3.5" />,
-      onClick: () => {
-        window.location.href = editProductHref(p.id);
-      },
-    },
-    {
-      label: "Quick Edit",
-      icon: <Edit className="h-3.5 w-3.5" />,
-      onClick: () => handleOpenEdit(p),
-    },
-    {
-      label: p.status === "published" ? "Unpublish to Draft" : "Publish Listing",
-      icon:
-        p.status === "published" ? (
-          <EyeOff className="h-3.5 w-3.5" />
-        ) : (
-          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-        ),
-      onClick: () => handleToggleStatus(p),
-    },
-    {
-      label: "View Storefront",
-      icon: <ExternalLink className="h-3.5 w-3.5" />,
-      onClick: () => {
-        window.open(storefrontHref(p.id), "_blank");
-      },
-    },
-    {
-      label: "Copy Product ID",
-      icon: <Copy className="h-3.5 w-3.5" />,
-      onClick: () => handleCopyId(p.id),
-    },
-    {
-      label: "Delete Product",
-      icon: <Trash2 className="h-3.5 w-3.5 text-rose-600" />,
-      variant: "destructive",
-      onClick: () => handleDelete(p),
-    },
-  ];
-
-  const statusOptions: FilterOption[] = [
-    { value: "all", label: "All Statuses", count: kpis.totalCount },
-    {
-      value: "published",
-      label: "Published",
-      count: kpis.publishedCount,
-      colorDot: "bg-emerald-500",
-    },
-    {
-      value: "draft",
-      label: "Drafts",
-      count: kpis.draftCount,
-      colorDot: "bg-amber-500",
-    },
-  ];
-
-  const categoryOptions: FilterOption[] = [
-    { value: "all", label: "All Categories", count: kpis.totalCount },
-    ...categories.map((c) => ({
-      value: c,
-      label: c,
-      count: products.filter((p) => p.category === c).length,
-    })),
-  ];
-
-  const stockOptions: FilterOption[] = [
-    { value: "all", label: "All Inventory", count: kpis.totalCount },
-    {
-      value: "in_stock",
-      label: "In Stock (> 5 units)",
-      count: kpis.inStockCount,
-      colorDot: "bg-emerald-500",
-    },
-    {
-      value: "low_stock",
-      label: "Low Stock (1–5 units)",
-      count: kpis.lowStockCount,
-      colorDot: "bg-amber-500",
-    },
-    {
-      value: "out_of_stock",
-      label: "Out of Stock (0 units)",
-      count: kpis.outOfStockCount,
-      colorDot: "bg-rose-500",
-    },
-  ];
-
-  const priceOptions: FilterOption[] = [
-    { value: "all", label: "All Prices" },
-    { value: "under_500", label: "Under ₹500" },
-    { value: "500_1000", label: "₹500 – ₹1,000" },
-    { value: "1000_2500", label: "₹1,000 – ₹2,500" },
-    { value: "above_2500", label: "Above ₹2,500" },
-  ];
-
-  const badgeOptions: FilterOption[] = [
-    { value: "all", label: "All Highlights", count: kpis.totalCount },
-    {
-      value: "featured",
-      label: "Featured Only",
-      count: kpis.featuredCount,
-      icon: <Star className="h-3 w-3 fill-amber-400 text-amber-500" />,
-    },
-    {
-      value: "new_arrival",
-      label: "New Arrivals",
-      count: kpis.newArrivalCount,
-      icon: <Sparkles className="h-3 w-3 text-indigo-500" />,
-    },
-    {
-      value: "best_seller",
-      label: "Best Sellers",
-      count: kpis.bestSellerCount,
-      icon: <Flame className="h-3 w-3 fill-rose-500 text-rose-500" />,
-    },
-  ];
-
-  const sortOptions: FilterOption[] = [
-    { value: "newest", label: "Sort: Newest First" },
-    { value: "oldest", label: "Sort: Oldest First" },
-    { value: "price_asc", label: "Price: Low to High" },
-    { value: "price_desc", label: "Price: High to Low" },
-    { value: "stock_desc", label: "Highest Stock" },
-    { value: "stock_asc", label: "Lowest Stock" },
-    { value: "name_asc", label: "Name: A to Z" },
-  ];
+  const isAllSelected =
+    filteredProducts.length > 0 && selectedIds.size === filteredProducts.length;
+  const isIndeterminate =
+    selectedIds.size > 0 && selectedIds.size < filteredProducts.length;
 
   const isAnyFilterActive =
     Boolean(searchQuery) ||
@@ -797,1191 +769,985 @@ export function ProductsCatalogManager({
     setSortBy("newest");
   };
 
+  // Filter dropdown configurations
+  const statusOptions: FilterOption[] = [
+    { value: "all", label: "All statuses", count: kpis.totalCount },
+    { value: "published", label: "Published", count: kpis.publishedCount },
+    { value: "draft", label: "Draft", count: kpis.draftCount },
+  ];
+
+  const stockOptions: FilterOption[] = [
+    { value: "all", label: "All stock", count: kpis.totalCount },
+    { value: "in_stock", label: "In stock", count: kpis.inStockCount },
+    { value: "low_stock", label: "Low stock", count: kpis.lowStockCount },
+    { value: "out_of_stock", label: "Out of stock", count: kpis.outOfStockCount },
+    {
+      value: "attention",
+      label: "Low or out of stock",
+      count: needAttentionCount,
+    },
+  ];
+
+  const categoryOptions: FilterOption[] = [
+    { value: "all", label: "All categories", count: kpis.totalCount },
+    ...categories.map((c) => ({
+      value: c,
+      label: c,
+      count: products.filter((p) => p.category === c).length,
+    })),
+  ];
+
+  const priceOptions: FilterOption[] = [
+    { value: "all", label: "Any price" },
+    { value: "lt300", label: "Under ₹300" },
+    { value: "300_500", label: "₹300 to ₹500" },
+    { value: "gt500", label: "Over ₹500" },
+  ];
+
+  const badgeOptions: FilterOption[] = [
+    { value: "all", label: "All listings" },
+    {
+      value: "new_arrival",
+      label: "New",
+      icon: <Sparkles className="h-3 w-3 text-indigo-500" />,
+    },
+    {
+      value: "featured",
+      label: "Featured",
+      icon: <Star className="h-3 w-3 fill-amber-400 text-amber-500" />,
+    },
+    {
+      value: "best_seller",
+      label: "Best Seller",
+      icon: <Flame className="h-3 w-3 fill-rose-500 text-rose-500" />,
+    },
+  ];
+
+  const sortOptions: FilterOption[] = [
+    { value: "newest", label: "Newest first" },
+    { value: "oldest", label: "Oldest first" },
+    { value: "name_asc", label: "Name A to Z" },
+    { value: "price_asc", label: "Price, low to high" },
+    { value: "price_desc", label: "Price, high to low" },
+    { value: "stock_asc", label: "Stock, low to high" },
+  ];
+
+  const getActionItems = (p: SharedProductRecord): ActionItem[] => [
+    {
+      label: "Quick Edit",
+      icon: <Edit className="h-3.5 w-3.5" />,
+      onClick: () => handleOpenEdit(p),
+    },
+    {
+      label: "Full Editor",
+      icon: <ExternalLink className="h-3.5 w-3.5" />,
+      onClick: () => {
+        window.location.href = editProductHref(p.id);
+      },
+    },
+    {
+      label: "View in Storefront",
+      icon: <Eye className="h-3.5 w-3.5" />,
+      onClick: () => {
+        window.open(storefrontHref(p.id), "_blank");
+      },
+    },
+    {
+      label: "Copy Product ID",
+      icon: <Copy className="h-3.5 w-3.5" />,
+      onClick: () => {
+        navigator.clipboard.writeText(p.id);
+        toast.success("Product ID copied to clipboard");
+      },
+    },
+    {
+      label: "Delete Listing",
+      icon: <Trash2 className="text-error h-3.5 w-3.5" />,
+      variant: "destructive",
+      onClick: () => handleDelete(p),
+    },
+  ];
+
   return (
-    <div className="mx-auto max-w-[1440px] space-y-6 pb-12">
-      {/* PAGE HEADER */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="w-full space-y-4 sm:space-y-5">
+      {/* 1. PAGE HEADER */}
+      <div className="flex flex-col gap-2.5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <nav className="text-muted-foreground mb-1.5 flex items-center gap-1.5 text-xs">
-            <span>{role === "admin" ? "Admin" : "Seller Desk"}</span>
-            <span>/</span>
-            <span className="text-foreground font-medium">Product Catalog</span>
-          </nav>
-          <h1 className="text-foreground text-xl font-bold tracking-tight sm:text-2xl">
-            {role === "admin" ? "Product Catalog" : "Factory Product Catalog"}
+          <h1 className="text-on-surface text-2xl font-normal tracking-tight sm:text-3xl">
+            {role === "admin" ? "Platform catalog" : "Product catalog"}
           </h1>
-          <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
-            {role === "admin"
-              ? "Manage catalog listings, pricing specs, and publication statuses across all sellers."
-              : "Manage your manufacturing catalog listings, prices, variants, and draft publications."}
+          <p className="text-on-surface-variant mt-0.5 max-w-2xl text-sm leading-relaxed">
+            Manage your listings, prices, stock and drafts. Switch a listing on to show
+            it in your storefront.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-3">
           <Link href={newProductHref}>
             <Button
-              className={`h-9 items-center gap-2 rounded-full !bg-[#18181b] px-4 text-xs font-semibold !text-white shadow-xs hover:!bg-black ${PRESSABLE} ${FOCUS_RING}`}
+              className={`bg-primary-container text-on-primary-container shadow-elevation-2 h-11 items-center gap-2 rounded-xl px-5 text-sm font-semibold hover:opacity-95 ${PRESSABLE}`}
             >
-              <Plus className="h-4 w-4 text-white" strokeWidth={ICON_STROKE} />
-              <span className="font-semibold text-white">Add New Product</span>
+              <Plus className="h-4 w-4" strokeWidth={ICON_STROKE} />
+              <span>Add product</span>
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* KPI METRIC CARDS */}
-      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-5">
-        <div
-          onClick={() => {
-            setStatusFilter("all");
-            setStockFilter("all");
-          }}
-          className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
-            statusFilter === "all" && stockFilter === "all"
-              ? "ring-primary/10 border-primary/40 ring-2"
-              : ""
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Total Catalog
+      {/* 2. CATALOG SUMMARY & STOCK ALERT */}
+      <section
+        className="grid grid-cols-1 gap-4 lg:grid-cols-12"
+        aria-label="Catalog summary"
+      >
+        {/* 4-Item Stat Grid */}
+        <div className="border-outline-variant/60 bg-outline-variant/60 shadow-elevation-1 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border sm:grid-cols-4 lg:col-span-7 xl:col-span-8">
+          <button
+            type="button"
+            onClick={() => {
+              setStatusFilter("all");
+              setStockFilter("all");
+            }}
+            className="bg-surface-container-lowest hover:bg-surface-container-low flex cursor-pointer flex-col gap-0.5 p-5 text-left transition-colors"
+          >
+            <span className="text-on-surface-variant text-xs font-semibold">
+              Listings
             </span>
-            <Package className="text-muted-foreground h-4 w-4" />
+            <span className="text-on-surface mt-1 font-mono text-2xl font-bold sm:text-3xl">
+              {kpis.totalCount}
+            </span>
+            <span className="text-on-surface-variant text-[11px]">In your catalog</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setStatusFilter("published");
+              setStockFilter("all");
+            }}
+            className="bg-surface-container-lowest hover:bg-surface-container-low flex cursor-pointer flex-col gap-0.5 p-5 text-left transition-colors"
+          >
+            <span className="text-on-surface-variant text-xs font-semibold">Live</span>
+            <span className="text-on-surface mt-1 font-mono text-2xl font-bold sm:text-3xl">
+              {kpis.publishedCount}
+            </span>
+            <span className="text-on-surface-variant text-[11px]">
+              Visible to buyers
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setStatusFilter("draft");
+              setStockFilter("all");
+            }}
+            className="bg-surface-container-lowest hover:bg-surface-container-low flex cursor-pointer flex-col gap-0.5 p-5 text-left transition-colors"
+          >
+            <span className="text-on-surface-variant text-xs font-semibold">
+              Drafts
+            </span>
+            <span className="text-on-surface mt-1 font-mono text-2xl font-bold sm:text-3xl">
+              {kpis.draftCount}
+            </span>
+            <span className="text-on-surface-variant text-[11px]">
+              {kpis.draftCount > 0 ? "Ready to publish" : "Nothing waiting"}
+            </span>
+          </button>
+
+          <div className="bg-surface-container-lowest flex flex-col gap-0.5 p-5 text-left">
+            <span className="text-on-surface-variant text-xs font-semibold">
+              Inventory value
+            </span>
+            <span className="text-on-surface mt-1 font-mono text-2xl font-bold sm:text-3xl">
+              ₹{kpis.catalogValuation.toLocaleString("en-IN")}
+            </span>
+            <span className="text-on-surface-variant text-[11px]">
+              {kpis.totalUnits} units in stock
+            </span>
           </div>
-          <p className="text-foreground mt-1.5 text-2xl font-bold">{kpis.totalCount}</p>
-          <span className="text-muted-foreground text-[11px]">All listed items</span>
         </div>
 
+        {/* Dynamic Stock Health Alert Box */}
         <div
-          onClick={() => {
-            setStatusFilter("published");
-          }}
-          className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
-            statusFilter === "published"
-              ? "border-emerald-500/40 ring-2 ring-emerald-500/10"
-              : ""
-          }`}
+          className={clsx(
+            "shadow-elevation-1 flex flex-col justify-between gap-3 rounded-2xl p-5 lg:col-span-5 xl:col-span-4",
+            needAttentionCount > 0
+              ? "bg-warning-container text-on-warning-container"
+              : "bg-secondary-container text-on-secondary-container"
+          )}
         >
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Published Live
+          <div className="flex items-center gap-2.5">
+            {needAttentionCount > 0 ? (
+              <AlertTriangle className="text-warning h-5 w-5 shrink-0" />
+            ) : (
+              <CheckCircle2 className="text-success h-5 w-5 shrink-0" />
+            )}
+            <span className="text-sm font-bold tracking-tight">
+              {needAttentionCount > 0 ? "Stock needs attention" : "Stock looks healthy"}
             </span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
           </div>
-          <p className="mt-1.5 text-2xl font-bold text-emerald-700">
-            {kpis.publishedCount}
+
+          <p className="text-lg leading-snug font-normal">
+            {needAttentionCount > 0
+              ? `${needAttentionCount} of ${kpis.totalCount} listings are low or out of stock`
+              : "Every listing has more than 5 units in stock"}
           </p>
-          <span className="text-[11px] text-emerald-700">Active on storefront</span>
-        </div>
 
-        <div
-          onClick={() => {
-            setStatusFilter("draft");
-          }}
-          className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
-            statusFilter === "draft"
-              ? "border-amber-500/40 ring-2 ring-amber-500/10"
-              : ""
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">Drafts</span>
-            <Clock className="h-4 w-4 text-amber-600" />
-          </div>
-          <p className="mt-1.5 text-2xl font-bold text-amber-700">{kpis.draftCount}</p>
-          <span className="text-[11px] text-amber-700">Needs publishing</span>
-        </div>
-
-        <div
-          onClick={() => {
-            setStockFilter(stockFilter === "low_stock" ? "all" : "low_stock");
-          }}
-          className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
-            stockFilter === "low_stock"
-              ? "border-rose-500/40 ring-2 ring-rose-500/10"
-              : ""
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Stock Alert
-            </span>
-            <AlertTriangle className="h-4 w-4 text-rose-600" />
-          </div>
-          <p className="mt-1.5 text-2xl font-bold text-rose-700">
-            {kpis.lowStockCount}
-          </p>
-          <span className="text-[11px] text-rose-700">Low or out of stock</span>
-        </div>
-
-        <div className="bg-card border-border col-span-2 rounded-2xl border p-4 shadow-2xs sm:col-span-1">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Catalog Value
-            </span>
-            <Tag className="text-muted-foreground h-4 w-4" />
-          </div>
-          <p className="text-foreground mt-1.5 text-xl font-bold sm:text-2xl">
-            ₹{kpis.catalogValuation.toLocaleString("en-IN")}
-          </p>
-          <span className="text-muted-foreground text-[11px]">
-            Total inventory value
-          </span>
-        </div>
-      </div>
-
-      {/* MULTI-FILTER TOOLBAR */}
-      <div className="space-y-3">
-        <div className="flex flex-col gap-2.5 xl:flex-row xl:items-center xl:justify-between">
-          {/* Search Box */}
-          <div className="relative min-w-[260px] flex-1">
-            <Search
-              className="text-muted-foreground absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
-              strokeWidth={ICON_STROKE}
-            />
-            <input
-              type="text"
-              placeholder="Search by product title, SKU, category, or ID..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`border-border bg-card text-foreground placeholder:text-muted-foreground hover:border-foreground/30 h-9 w-full rounded-full border pr-4 pl-9.5 text-xs shadow-2xs ${FOCUS_RING}`}
-            />
+          {/* Proportional Segmented Progress Bar */}
+          <div
+            className="flex h-3 w-full gap-1 overflow-hidden rounded-full bg-black/10"
+            aria-hidden="true"
+          >
+            {kpis.totalCount > 0 ? (
+              <>
+                {kpis.outOfStockCount > 0 && (
+                  <div
+                    style={{
+                      width: `${(kpis.outOfStockCount / kpis.totalCount) * 100}%`,
+                    }}
+                    className="bg-error rounded-full transition-all"
+                  />
+                )}
+                {kpis.lowStockCount > 0 && (
+                  <div
+                    style={{
+                      width: `${(kpis.lowStockCount / kpis.totalCount) * 100}%`,
+                    }}
+                    className="bg-warning rounded-full transition-all"
+                  />
+                )}
+                {kpis.inStockCount > 0 && (
+                  <div
+                    style={{
+                      width: `${(kpis.inStockCount / kpis.totalCount) * 100}%`,
+                    }}
+                    className="bg-success rounded-full transition-all"
+                  />
+                )}
+              </>
+            ) : (
+              <div className="w-full bg-black/5" />
+            )}
           </div>
 
-          {/* Custom Material 3 Filter Dropdowns Row */}
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Status Filter */}
-            <FilterDropdown
-              label="Status"
-              icon={<CheckCircle2 className="h-3.5 w-3.5" />}
-              value={statusFilter}
-              options={statusOptions}
-              onChange={setStatusFilter}
-            />
+          {/* Legend and Action */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <div className="flex flex-wrap items-center gap-3 text-xs font-semibold">
+              {kpis.outOfStockCount > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <span className="bg-error h-2 w-2 rounded-full" />
+                  {kpis.outOfStockCount} out of stock
+                </span>
+              )}
+              {kpis.lowStockCount > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <span className="bg-warning h-2 w-2 rounded-full" />
+                  {kpis.lowStockCount} low (≤ 5)
+                </span>
+              )}
+              <span className="flex items-center gap-1.5">
+                <span className="bg-success h-2 w-2 rounded-full" />
+                {kpis.inStockCount} healthy
+              </span>
+            </div>
 
-            {/* Category Filter */}
-            <FilterDropdown
-              label="Category"
-              icon={<Boxes className="h-3.5 w-3.5" />}
-              value={categoryFilter}
-              options={categoryOptions}
-              onChange={setCategoryFilter}
-            />
-
-            {/* Inventory / Stock Filter */}
-            <FilterDropdown
-              label="Inventory"
-              icon={<Package className="h-3.5 w-3.5" />}
-              value={stockFilter}
-              options={stockOptions}
-              onChange={setStockFilter}
-            />
-
-            {/* Price Range Filter */}
-            <FilterDropdown
-              label="Price"
-              icon={<Tag className="h-3.5 w-3.5" />}
-              value={priceRangeFilter}
-              options={priceOptions}
-              onChange={setPriceRangeFilter}
-            />
-
-            {/* Badging / Highlights Filter */}
-            <FilterDropdown
-              label="Highlights"
-              icon={<Sparkles className="h-3.5 w-3.5" />}
-              value={badgeFilter}
-              options={badgeOptions}
-              onChange={setBadgeFilter}
-            />
-
-            {/* Sort By Filter */}
-            <FilterDropdown
-              label="Sort"
-              icon={<ArrowUpDown className="h-3.5 w-3.5" />}
-              value={sortBy}
-              options={sortOptions}
-              onChange={setSortBy}
-              align="right"
-            />
-
-            {/* Reset All Filters Button */}
-            {isAnyFilterActive && (
+            {needAttentionCount > 0 && (
               <button
                 type="button"
-                onClick={handleResetFilters}
-                className={`border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium shadow-2xs ${PRESSABLE} ${FOCUS_RING}`}
+                onClick={() => setStockFilter("attention")}
+                className="bg-on-warning-container text-warning-container inline-flex h-8 cursor-pointer items-center justify-center rounded-full px-3.5 text-xs font-semibold transition-opacity hover:opacity-90"
               >
-                <RotateCcw
-                  className="text-muted-foreground h-3.5 w-3.5"
-                  strokeWidth={ICON_STROKE}
-                />
-                <span>Reset</span>
+                Review {needAttentionCount} listing
+                {needAttentionCount === 1 ? "" : "s"}
               </button>
             )}
           </div>
         </div>
+      </section>
 
-        {/* ACTIVE FILTER PILLS */}
-        {isAnyFilterActive && (
-          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-            <span className="text-muted-foreground mr-1 text-[11px] font-semibold">
-              Active filters:
+      {/* 3. MAIN LISTINGS WORKSPACE CARD */}
+      <section
+        className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 overflow-hidden rounded-2xl border"
+        aria-label="Listings"
+      >
+        {/* Dynamic Head: Normal List-Head OR Bulk Selection Bar */}
+        {selectedIds.size > 0 ? (
+          <div className="bg-secondary-container text-on-secondary-container flex min-h-16 flex-wrap items-center gap-3 px-5 py-3">
+            <button
+              type="button"
+              onClick={() => setSelectedIds(new Set())}
+              aria-label="Clear selection"
+              className="hover:bg-on-secondary-container/10 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <span className="mr-auto text-base font-medium">
+              {selectedIds.size} selected
             </span>
-            {searchQuery && (
-              <span className="border-border bg-card text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-2xs">
-                Search: &ldquo;{searchQuery}&rdquo;
+            <button
+              type="button"
+              disabled={isBulkLoading}
+              onClick={() => handleBulkUpdateStatus("published")}
+              className="hover:bg-on-secondary-container/10 inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full px-4 text-xs font-semibold transition-colors disabled:opacity-50"
+            >
+              {isBulkLoading ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Check className="h-3.5 w-3.5" />
+              )}
+              <span>Publish</span>
+            </button>
+            <button
+              type="button"
+              disabled={isBulkLoading}
+              onClick={() => handleBulkUpdateStatus("draft")}
+              className="hover:bg-on-secondary-container/10 inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full px-4 text-xs font-semibold transition-colors disabled:opacity-50"
+            >
+              <span>Move to drafts</span>
+            </button>
+          </div>
+        ) : (
+          <div className="border-outline-variant/40 flex min-h-16 flex-col gap-3 border-b px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <h2 className="text-on-surface text-lg font-bold tracking-tight">
+                Listings
+              </h2>
+              <span className="text-on-surface-variant text-xs">
+                {filteredProducts.length === products.length
+                  ? `${products.length} listings`
+                  : `${filteredProducts.length} of ${products.length} listings`}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              {/* Search input */}
+              <div className="relative flex items-center">
+                <Search className="text-on-surface-variant absolute left-3 h-3.5 w-3.5" />
+                <input
+                  type="search"
+                  placeholder="Search listings..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-surface-container-high text-on-surface placeholder:text-on-surface-variant focus:ring-primary h-9 w-48 rounded-full pr-3 pl-8 text-xs outline-none focus:ring-2 sm:w-60"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="text-on-surface-variant hover:text-on-surface absolute right-2.5 cursor-pointer"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Sort Menu Button */}
+              <FilterDropdown
+                label="Sort"
+                icon={<ArrowUpDown className="h-3.5 w-3.5" />}
+                value={sortBy}
+                options={sortOptions}
+                onChange={setSortBy}
+                align="right"
+              />
+
+              {/* Segmented View Mode Toggle */}
+              <div
+                className="border-outline-variant/80 inline-flex h-9 items-center overflow-hidden rounded-full border p-0.5"
+                role="group"
+                aria-label="View mode"
+              >
                 <button
                   type="button"
-                  onClick={() => setSearchQuery("")}
-                  className="ml-0.5 cursor-pointer hover:text-rose-500"
+                  onClick={() => setViewMode("list")}
+                  aria-pressed={viewMode === "list"}
+                  className={clsx(
+                    "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-all select-none",
+                    viewMode === "list"
+                      ? "bg-secondary-container text-on-secondary-container shadow-xs"
+                      : "text-on-surface-variant hover:text-on-surface"
+                  )}
                 >
-                  <X className="h-3 w-3" />
+                  <List className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">List</span>
                 </button>
-              </span>
-            )}
-            {statusFilter !== "all" && (
-              <span className="border-border bg-card text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-2xs">
-                Status: {statusFilter === "published" ? "Published" : "Draft"}
                 <button
                   type="button"
-                  onClick={() => setStatusFilter("all")}
-                  className="ml-0.5 cursor-pointer hover:text-rose-500"
+                  onClick={() => setViewMode("tiles")}
+                  aria-pressed={viewMode === "tiles"}
+                  className={clsx(
+                    "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-all select-none",
+                    viewMode === "tiles"
+                      ? "bg-secondary-container text-on-secondary-container shadow-xs"
+                      : "text-on-surface-variant hover:text-on-surface"
+                  )}
                 >
-                  <X className="h-3 w-3" />
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Tiles</span>
                 </button>
-              </span>
-            )}
-            {categoryFilter !== "all" && (
-              <span className="border-border bg-card text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-2xs">
-                Category: {categoryFilter}
-                <button
-                  type="button"
-                  onClick={() => setCategoryFilter("all")}
-                  className="ml-0.5 cursor-pointer hover:text-rose-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
-            {stockFilter !== "all" && (
-              <span className="border-border bg-card text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-2xs">
-                Stock: {stockOptions.find((o) => o.value === stockFilter)?.label}
-                <button
-                  type="button"
-                  onClick={() => setStockFilter("all")}
-                  className="ml-0.5 cursor-pointer hover:text-rose-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
-            {priceRangeFilter !== "all" && (
-              <span className="border-border bg-card text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-2xs">
-                Price: {priceOptions.find((o) => o.value === priceRangeFilter)?.label}
-                <button
-                  type="button"
-                  onClick={() => setPriceRangeFilter("all")}
-                  className="ml-0.5 cursor-pointer hover:text-rose-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
-            {badgeFilter !== "all" && (
-              <span className="border-border bg-card text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-2xs">
-                Highlight: {badgeOptions.find((o) => o.value === badgeFilter)?.label}
-                <button
-                  type="button"
-                  onClick={() => setBadgeFilter("all")}
-                  className="ml-0.5 cursor-pointer hover:text-rose-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
-            {sortBy !== "newest" && (
-              <span className="border-border bg-card text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-2xs">
-                Sort: {sortOptions.find((o) => o.value === sortBy)?.label}
-                <button
-                  type="button"
-                  onClick={() => setSortBy("newest")}
-                  className="ml-0.5 cursor-pointer hover:text-rose-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Filter Chips Bar */}
+        <div className="border-outline-variant/40 flex flex-wrap items-center gap-2 border-b px-5 py-3">
+          <FilterDropdown
+            label="Status"
+            value={statusFilter}
+            options={statusOptions}
+            onChange={setStatusFilter}
+          />
+          <FilterDropdown
+            label="Stock"
+            value={stockFilter}
+            options={stockOptions}
+            onChange={setStockFilter}
+          />
+          <FilterDropdown
+            label="Category"
+            value={categoryFilter}
+            options={categoryOptions}
+            onChange={setCategoryFilter}
+          />
+          <FilterDropdown
+            label="Price"
+            value={priceRangeFilter}
+            options={priceOptions}
+            onChange={setPriceRangeFilter}
+          />
+          <FilterDropdown
+            label="Highlights"
+            value={badgeFilter}
+            options={badgeOptions}
+            onChange={setBadgeFilter}
+          />
+
+          {isAnyFilterActive && (
             <button
               type="button"
               onClick={handleResetFilters}
-              className="text-primary ml-1 inline-flex cursor-pointer items-center gap-1 text-[11px] font-semibold hover:underline"
+              className="text-primary inline-flex h-9 cursor-pointer items-center gap-1 rounded-lg px-2.5 text-xs font-semibold hover:underline"
             >
-              Clear all
+              <RotateCcw className="h-3 w-3" />
+              <span>Clear filters</span>
             </button>
-          </div>
-        )}
-      </div>
-
-      {/* CATALOG LISTINGS / TILE VIEW CONTAINER */}
-      <div className="space-y-3">
-        {/* Section Header with Results count & View Mode Switcher */}
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-3">
-            <h2 className="text-foreground text-sm font-bold tracking-tight sm:text-base">
-              Catalog Listings
-            </h2>
-            <span className="bg-muted text-muted-foreground rounded-full px-2.5 py-0.5 text-xs font-semibold">
-              {filteredProducts.length}{" "}
-              {filteredProducts.length === 1 ? "result" : "results"}
-            </span>
-          </div>
-
-          {/* VIEW MODE SWITCHER (List vs Tile) */}
-          <div className="border-border bg-muted/40 flex items-center rounded-full border p-0.5 shadow-2xs">
-            <button
-              type="button"
-              title="List View"
-              onClick={() => setViewMode("list")}
-              className={clsx(
-                "flex h-7.5 cursor-pointer items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-all",
-                viewMode === "list"
-                  ? "bg-card text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <List className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">List</span>
-            </button>
-            <button
-              type="button"
-              title="Tile / Grid View"
-              onClick={() => setViewMode("grid")}
-              className={clsx(
-                "flex h-7.5 cursor-pointer items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-all",
-                viewMode === "grid"
-                  ? "bg-card text-foreground font-semibold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <LayoutGrid className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Tile</span>
-            </button>
-          </div>
+          )}
         </div>
 
+        {/* 4. WORKSPACE CONTENT: TABLE / TILES / EMPTY */}
         {filteredProducts.length === 0 ? (
-          <div className="border-border bg-card flex min-h-[240px] flex-col items-center justify-center rounded-2xl border px-6 py-10 text-center shadow-2xs">
-            <div className="border-border bg-muted/50 text-muted-foreground mb-3.5 flex h-10 w-10 items-center justify-center rounded-full border shadow-2xs">
-              <ShoppingBag
-                className="text-muted-foreground h-5 w-5"
-                strokeWidth={ICON_STROKE}
-              />
+          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+            <div className="bg-surface-container text-on-surface-variant mb-3 flex h-12 w-12 items-center justify-center rounded-full">
+              <ShoppingBag className="h-6 w-6 stroke-[1.5]" />
             </div>
-            <h3 className="text-foreground text-sm font-bold sm:text-base">
-              No products found
-            </h3>
-            <p className="text-muted-foreground mt-1 max-w-sm text-xs sm:text-sm">
-              There are no catalog products matching the selected status, category,
-              stock, price, or search criteria.
+            <h3 className="text-on-surface text-base font-bold">No listings match</h3>
+            <p className="text-on-surface-variant mt-1 max-w-sm text-xs leading-relaxed">
+              Remove a filter or search for a different name, ID, or category to find
+              what you are looking for.
             </p>
             {isAnyFilterActive && (
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className={`border-border bg-card text-foreground hover:bg-muted mt-4 inline-flex h-8 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium shadow-2xs ${PRESSABLE} ${FOCUS_RING}`}
+                className="bg-secondary-container text-on-secondary-container mt-4 inline-flex h-9 cursor-pointer items-center rounded-full px-5 text-xs font-semibold shadow-xs"
               >
-                <RotateCcw
-                  className="text-muted-foreground h-3.5 w-3.5"
-                  strokeWidth={ICON_STROKE}
-                />
-                <span>Clear filters</span>
+                Clear filters
               </button>
             )}
           </div>
-        ) : viewMode === "grid" ? (
-          /* TILE / GRID VIEW */
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        ) : viewMode === "list" ? (
+          /* TABLE VIEW */
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs" role="table">
+              <thead>
+                <tr className="border-outline-variant/50 bg-surface-container-low text-on-surface-variant border-b text-[11px] font-semibold tracking-wider uppercase">
+                  <th className="w-12 px-4 py-3 text-center">
+                    <label className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full">
+                      <input
+                        type="checkbox"
+                        checked={isAllSelected}
+                        ref={(el) => {
+                          if (el) el.indeterminate = isIndeterminate;
+                        }}
+                        onChange={(e) => handleSelectAll(e.target.checked)}
+                        className="border-outline-variant text-primary accent-primary h-4 w-4 rounded border-2"
+                        aria-label="Select all listings"
+                      />
+                    </label>
+                  </th>
+                  <th className="min-w-[240px] px-4 py-3">Product</th>
+                  <th className="hidden px-4 py-3 md:table-cell">Category</th>
+                  <th className="px-4 py-3 text-right">Price</th>
+                  <th className="px-4 py-3">Stock</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="hidden px-4 py-3 lg:table-cell">Updated</th>
+                  <th className="px-4 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-outline-variant/30 divide-y">
+                {filteredProducts.map((p) => {
+                  const imgThumb = resolveProductImage(p);
+                  const isPublished = p.status === "published";
+                  const isSelected = selectedIds.has(p.id);
+                  const count = p.inventory_count ?? 0;
+                  const threshold = p.low_stock_threshold ?? 5;
+
+                  return (
+                    <tr
+                      key={p.id}
+                      className={clsx(
+                        "group transition-colors duration-150",
+                        isSelected
+                          ? "bg-primary/5 hover:bg-primary/8"
+                          : "hover:bg-surface-container-low/60"
+                      )}
+                    >
+                      {/* Checkbox */}
+                      <td className="w-12 px-4 py-3 text-center">
+                        <label className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleToggleSelect(p.id)}
+                            className="border-outline-variant text-primary accent-primary h-4 w-4 rounded border-2"
+                            aria-label={`Select ${p.name}`}
+                          />
+                        </label>
+                      </td>
+
+                      {/* Product Thumbnail + Name + Badges */}
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="border-outline-variant/40 bg-surface-container relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border">
+                            {imgThumb ? (
+                              /* eslint-disable-next-line @next/next/no-img-element */
+                              <img
+                                src={imgThumb}
+                                alt={p.name}
+                                className="h-full w-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            ) : (
+                              <ShoppingBag className="text-on-surface-variant/40 h-6 w-6" />
+                            )}
+                          </div>
+
+                          <div className="min-w-0">
+                            <span className="text-on-surface block truncate text-sm font-semibold">
+                              {p.name}
+                            </span>
+                            <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                              <span className="text-on-surface-variant font-mono text-[10px]">
+                                ID {p.id.slice(0, 8)}
+                              </span>
+                              {p.is_new_arrival && (
+                                <span className="bg-tertiary-container text-on-tertiary-container py-0.2 inline-flex items-center gap-1 rounded-sm px-1.5 text-[10px] font-bold">
+                                  <Sparkles className="h-2.5 w-2.5" /> New
+                                </span>
+                              )}
+                              {p.is_featured && (
+                                <span className="py-0.2 inline-flex items-center gap-1 rounded-sm bg-amber-100 px-1.5 text-[10px] font-bold text-amber-800">
+                                  <Star className="h-2.5 w-2.5 fill-current" /> Featured
+                                </span>
+                              )}
+                              {p.is_best_seller && (
+                                <span className="py-0.2 inline-flex items-center gap-1 rounded-sm bg-rose-100 px-1.5 text-[10px] font-bold text-rose-800">
+                                  <Flame className="h-2.5 w-2.5 fill-current" /> Best
+                                  Seller
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Category */}
+                      <td className="text-on-surface-variant hidden px-4 py-3 md:table-cell">
+                        {p.category || "—"}
+                      </td>
+
+                      {/* Price */}
+                      <td className="text-on-surface px-4 py-3 text-right font-mono text-sm font-semibold tabular-nums">
+                        ₹{(p.price_inr || 0).toLocaleString("en-IN")}
+                      </td>
+
+                      {/* Stock */}
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-on-surface font-mono text-sm font-semibold tabular-nums">
+                            {count}
+                          </span>
+                          {count === 0 ? (
+                            <span className="bg-error-container text-on-error-container inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold">
+                              Out of stock
+                            </span>
+                          ) : count <= threshold ? (
+                            <span className="bg-warning-container text-on-warning-container inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold">
+                              Low
+                            </span>
+                          ) : (
+                            <span className="bg-secondary-container text-on-secondary-container inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold">
+                              In stock
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Status with Inline Switch */}
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2.5">
+                          <MaterialSwitch
+                            checked={isPublished}
+                            disabled={loadingId === p.id}
+                            onChange={() => handleToggleStatus(p)}
+                            label={`Published: ${p.name}`}
+                          />
+                          <span className="text-on-surface-variant text-xs">
+                            {isPublished ? "Published" : "Draft"}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Updated Date */}
+                      <td className="text-on-surface-variant hidden px-4 py-3 lg:table-cell">
+                        {formatDate(p.updated_at || p.created_at)}
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEdit(p)}
+                            aria-label={`Edit ${p.name}`}
+                            className="text-on-surface-variant hover:bg-surface-container hover:text-on-surface flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-colors"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <ActionDropdown align="right" actions={getActionItems(p)} />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          /* TILES / GRID VIEW */
+          <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {filteredProducts.map((p) => {
               const imgThumb = resolveProductImage(p);
               const isPublished = p.status === "published";
-              const isLoadingThis = loadingId === p.id;
+              const isSelected = selectedIds.has(p.id);
               const count = p.inventory_count ?? 0;
               const threshold = p.low_stock_threshold ?? 5;
 
               return (
-                <div
+                <article
                   key={p.id}
-                  onClick={() => setSelectedProduct(p)}
-                  className="group border-border bg-card hover:border-foreground/30 relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                  className={clsx(
+                    "border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 flex flex-col overflow-hidden rounded-xl border transition-all",
+                    isSelected && "ring-primary border-primary ring-2"
+                  )}
                 >
-                  {/* Card Media Header */}
-                  <div className="bg-muted/30 relative aspect-4/3 w-full overflow-hidden">
+                  {/* Media Container */}
+                  <div className="bg-surface-container relative aspect-4/3 w-full overflow-hidden">
                     {imgThumb ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
                         src={imgThumb}
                         alt={p.name}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
                         }}
                       />
                     ) : (
-                      <div className="text-muted-foreground flex h-full w-full items-center justify-center">
-                        <ShoppingBag className="h-10 w-10 stroke-[1.5]" />
+                      <div className="text-on-surface-variant/40 flex h-full w-full items-center justify-center">
+                        <ShoppingBag className="h-10 w-10" />
                       </div>
                     )}
 
-                    {/* Floating Badges (Top-Left) */}
-                    <div className="absolute top-2.5 left-2.5 flex flex-col items-start gap-1">
-                      <StatusBadge
-                        status={isPublished ? "published" : "draft"}
-                        label={isPublished ? "Published" : "Draft"}
-                      />
-                      {p.is_featured && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs backdrop-blur-xs">
-                          <Star className="h-2.5 w-2.5 fill-white" /> Featured
-                        </span>
-                      )}
+                    {/* Checkbox overlay top-left */}
+                    <div className="absolute top-2 left-2">
+                      <label className="bg-surface/85 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full shadow-xs backdrop-blur-xs">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleToggleSelect(p.id)}
+                          className="border-outline-variant text-primary accent-primary h-4 w-4 rounded border-2"
+                          aria-label={`Select ${p.name}`}
+                        />
+                      </label>
+                    </div>
+
+                    {/* Badges top-right */}
+                    <div className="absolute top-2.5 right-2.5 flex flex-col items-end gap-1">
                       {p.is_new_arrival && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-indigo-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs backdrop-blur-xs">
+                        <span className="bg-tertiary-container text-on-tertiary-container inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-bold shadow-xs">
                           <Sparkles className="h-2.5 w-2.5" /> New
                         </span>
                       )}
-                      {p.is_best_seller && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs backdrop-blur-xs">
-                          <Flame className="h-2.5 w-2.5 fill-white" /> Best Seller
+                      {p.is_featured && (
+                        <span className="inline-flex items-center gap-1 rounded-sm bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
+                          <Star className="h-2.5 w-2.5 fill-current" /> Featured
                         </span>
                       )}
                     </div>
-
-                    {/* Top-Right Quick Details Button */}
-                    <button
-                      type="button"
-                      title="Inspect Details"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedProduct(p);
-                      }}
-                      className="bg-card/90 text-muted-foreground hover:bg-card hover:text-foreground absolute top-2.5 right-2.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full shadow-xs backdrop-blur-xs transition-all"
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                    </button>
                   </div>
 
-                  {/* Card Body */}
-                  <div className="flex flex-1 flex-col space-y-2 p-4">
-                    <div className="text-muted-foreground flex items-center justify-between text-[11px]">
-                      <span className="truncate font-medium">
-                        {p.category || "General"}
-                      </span>
-                      <span className="shrink-0 font-mono text-[10px]">
-                        {p.sku ? `SKU: ${p.sku}` : `ID: ${p.id.slice(0, 6)}...`}
-                      </span>
-                    </div>
-
-                    <h3 className="text-foreground group-hover:text-primary line-clamp-2 text-sm font-semibold tracking-tight transition-colors">
+                  {/* Body */}
+                  <div className="flex flex-1 flex-col p-4">
+                    <h3
+                      className="text-on-surface line-clamp-2 text-sm font-semibold"
+                      title={p.name}
+                    >
                       {p.name}
                     </h3>
+                    <p className="text-on-surface-variant mt-1 text-xs">
+                      {p.category || "General"}
+                    </p>
 
-                    <div className="mt-auto flex items-baseline justify-between pt-2">
-                      <span className="text-foreground font-mono text-base font-bold">
-                        ₹{p.price_inr ? p.price_inr.toLocaleString("en-IN") : "—"}
+                    <div className="mt-auto flex items-center justify-between pt-3">
+                      <span className="text-on-surface font-mono text-base font-bold tabular-nums">
+                        ₹{(p.price_inr || 0).toLocaleString("en-IN")}
                       </span>
 
-                      {/* Stock indicator badge */}
-                      <span
-                        className={clsx(
-                          "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium",
-                          count === 0
-                            ? "bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400"
-                            : count <= threshold
-                              ? "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400"
-                              : "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-on-surface font-mono text-xs font-semibold">
+                          {count}
+                        </span>
+                        {count === 0 ? (
+                          <span className="bg-error-container text-on-error-container inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                            Out of stock
+                          </span>
+                        ) : count <= threshold ? (
+                          <span className="bg-warning-container text-on-warning-container inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                            Low
+                          </span>
+                        ) : (
+                          <span className="bg-secondary-container text-on-secondary-container inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                            In stock
+                          </span>
                         )}
-                      >
-                        <span
-                          className={clsx(
-                            "h-1.5 w-1.5 rounded-full",
-                            count === 0
-                              ? "bg-rose-500"
-                              : count <= threshold
-                                ? "bg-amber-500"
-                                : "bg-emerald-500"
-                          )}
-                        />
-                        {count === 0
-                          ? "Out of stock"
-                          : count <= threshold
-                            ? `Low: ${count}`
-                            : `${count} in stock`}
-                      </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Card Footer Actions */}
-                  <div
-                    className="border-border/60 bg-muted/20 flex items-center justify-between border-t px-4 py-2.5"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {/* Primary Edit Button */}
-                    <Link href={editProductHref(p.id)}>
+                  {/* Footer */}
+                  <div className="border-outline-variant/40 flex items-center gap-2 border-t px-4 py-2.5">
+                    <MaterialSwitch
+                      checked={isPublished}
+                      disabled={loadingId === p.id}
+                      onChange={() => handleToggleStatus(p)}
+                      label={`Published: ${p.name}`}
+                    />
+                    <span className="text-on-surface-variant text-xs">
+                      {isPublished ? "Published" : "Draft"}
+                    </span>
+
+                    <div className="ml-auto flex items-center gap-1">
                       <button
                         type="button"
-                        className="border-border bg-card text-foreground hover:bg-muted hover:border-foreground/30 inline-flex h-7.5 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs font-semibold shadow-2xs transition-all active:scale-95"
+                        onClick={() => handleOpenEdit(p)}
+                        aria-label={`Edit ${p.name}`}
+                        className="text-on-surface-variant hover:bg-surface-container hover:text-on-surface flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-colors"
                       >
-                        <Edit className="text-muted-foreground h-3 w-3" />
-                        <span>Edit</span>
+                        <Edit className="h-4 w-4" />
                       </button>
-                    </Link>
-
-                    <div className="flex items-center gap-1.5">
-                      {/* Quick status toggle */}
-                      <button
-                        type="button"
-                        title={
-                          isPublished ? "Unpublish to Draft" : "Publish to Storefront"
-                        }
-                        onClick={() => handleToggleStatus(p)}
-                        disabled={isLoadingThis}
-                        className={clsx(
-                          "flex h-7.5 cursor-pointer items-center gap-1 rounded-full border px-2.5 text-[11px] font-medium shadow-2xs transition-all active:scale-95",
-                          isPublished
-                            ? "border-emerald-200 bg-emerald-50/60 text-emerald-700 hover:bg-emerald-100/70 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400"
-                            : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
-                        )}
-                      >
-                        {isLoadingThis ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                        ) : isPublished ? (
-                          <>
-                            <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                            <span>Live</span>
-                          </>
-                        ) : (
-                          <>
-                            <EyeOff className="text-muted-foreground h-3 w-3" />
-                            <span>Draft</span>
-                          </>
-                        )}
-                      </button>
-
-                      {/* Action Menu */}
                       <ActionDropdown align="right" actions={getActionItems(p)} />
                     </div>
                   </div>
-                </div>
+                </article>
               );
             })}
           </div>
-        ) : (
-          /* DESKTOP TABLE VIEW + MOBILE CARDS VIEW */
-          <>
-            {/* DESKTOP TABLE VIEW */}
-            <div className="border-border bg-card hidden overflow-hidden rounded-2xl border shadow-2xs sm:block">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[768px] text-left text-xs">
-                  <thead className="border-border bg-muted/40 text-muted-foreground border-b text-[11px] font-semibold tracking-wider uppercase">
-                    <tr>
-                      <th className="px-4 py-3">Product Details</th>
-                      <th className="px-4 py-3">Category</th>
-                      <th className="px-4 py-3">Price (INR)</th>
-                      <th className="px-4 py-3">Status</th>
-                      <th className="px-4 py-3">Last Updated</th>
-                      <th className="px-4 py-3 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-border/60 bg-card divide-y">
-                    {filteredProducts.map((p) => {
-                      const imgThumb = resolveProductImage(p);
-                      const isPublished = p.status === "published";
-                      const isLoadingThis = loadingId === p.id;
-                      const isSelected = selectedProduct?.id === p.id;
+        )}
+      </section>
 
-                      return (
-                        <tr
-                          key={p.id}
-                          onClick={() => setSelectedProduct(p)}
-                          className={`group cursor-pointer transition-colors duration-150 ${
-                            isSelected ? "bg-muted/60" : "hover:bg-muted/30"
-                          } ${isLoadingThis ? "pointer-events-none opacity-50" : ""}`}
-                        >
-                          <td className="px-4 py-3.5">
-                            <div className="flex items-center gap-3">
-                              <div className="border-border bg-muted/50 relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border">
-                                {imgThumb ? (
-                                  /* eslint-disable-next-line @next/next/no-img-element */
-                                  <img
-                                    src={imgThumb}
-                                    alt={p.name}
-                                    className="h-full w-full object-cover"
-                                    onError={(e) => {
-                                      e.currentTarget.style.display = "none";
-                                    }}
-                                  />
-                                ) : (
-                                  <ShoppingBag
-                                    className="text-muted-foreground h-5 w-5"
-                                    strokeWidth={ICON_STROKE}
-                                  />
-                                )}
-                              </div>
-                              <div className="min-w-0">
-                                <span className="text-foreground block truncate font-semibold group-hover:underline">
-                                  {p.name}
-                                </span>
-                                <div className="text-muted-foreground flex items-center gap-2 font-mono text-[10px]">
-                                  <span>ID: {p.id.slice(0, 10)}...</span>
-                                  {p.is_featured && (
-                                    <span className="inline-flex items-center gap-0.5 font-semibold text-amber-600">
-                                      ★ Featured
-                                    </span>
-                                  )}
-                                  {p.is_new_arrival && (
-                                    <span className="inline-flex items-center gap-0.5 font-semibold text-indigo-600">
-                                      ✨ New
-                                    </span>
-                                  )}
-                                  {p.is_best_seller && (
-                                    <span className="inline-flex items-center gap-0.5 font-semibold text-rose-600">
-                                      🔥 Best Seller
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
+      {/* 5. SLIDE-OVER QUICK EDIT DRAWER */}
+      {editingProduct && (
+        <SlideOverDrawer
+          isOpen={Boolean(editingProduct)}
+          onClose={() => setEditingProduct(null)}
+          title="Quick Edit Listing"
+          subtitle="Update core listing details without leaving the catalog."
+          maxWidth="lg"
+          footer={
+            <>
+              <Link
+                href={editProductHref(editingProduct.id)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1A1A18] transition-colors hover:text-[#C89D32]"
+              >
+                <span>Open full product editor</span>
+                <ExternalLink className="h-3.5 w-3.5 text-[#52524E]" />
+              </Link>
 
-                          <td className="text-muted-foreground px-4 py-3.5">
-                            {p.category || "-"}
-                          </td>
-
-                          <td className="text-foreground px-4 py-3.5 font-mono text-xs font-bold">
-                            ₹{p.price_inr ? p.price_inr.toLocaleString() : "—"}
-                          </td>
-
-                          <td className="px-4 py-3.5">
-                            <StatusBadge
-                              status={isPublished ? "published" : "draft"}
-                              label={isPublished ? "Published" : "Draft"}
-                            />
-                          </td>
-
-                          <td className="text-muted-foreground px-4 py-3.5 font-mono text-[11px]">
-                            {p.updated_at
-                              ? new Date(p.updated_at).toLocaleDateString("en-US", {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                })
-                              : "-"}
-                          </td>
-
-                          <td className="px-4 py-3.5 text-right">
-                            <div
-                              className="flex items-center justify-end gap-2"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {/* Quick Toggle Status */}
-                              <button
-                                type="button"
-                                title={
-                                  isPublished ? "Set to Draft" : "Publish to Storefront"
-                                }
-                                onClick={() => handleToggleStatus(p)}
-                                disabled={isLoadingThis}
-                                className={clsx(
-                                  "inline-flex h-8 cursor-pointer items-center gap-1 rounded-full border px-2.5 text-xs font-medium shadow-2xs transition-all active:scale-95",
-                                  isPublished
-                                    ? "border-emerald-200 bg-emerald-50/60 text-emerald-700 hover:bg-emerald-100/70 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400"
-                                    : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
-                                )}
-                              >
-                                {isLoadingThis ? (
-                                  <Loader2 className="text-muted-foreground h-3.5 w-3.5 animate-spin" />
-                                ) : isPublished ? (
-                                  <>
-                                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                                    <span className="hidden text-[11px] font-medium xl:inline">
-                                      Live
-                                    </span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <EyeOff className="text-muted-foreground h-3.5 w-3.5" />
-                                    <span className="hidden text-[11px] font-medium xl:inline">
-                                      Draft
-                                    </span>
-                                  </>
-                                )}
-                              </button>
-
-                              {/* Primary Edit Pill */}
-                              <Link href={editProductHref(p.id)}>
-                                <button
-                                  type="button"
-                                  className="border-border bg-card text-foreground hover:bg-muted hover:border-foreground/30 inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs font-semibold shadow-2xs transition-all active:scale-95"
-                                >
-                                  <Edit className="text-muted-foreground h-3.5 w-3.5" />
-                                  <span>Edit</span>
-                                </button>
-                              </Link>
-
-                              {/* Secondary Actions Dropdown */}
-                              <ActionDropdown
-                                align="right"
-                                actions={getActionItems(p)}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setEditingProduct(null)}
+                  className="rounded-full border border-[#E5E5E0] bg-white px-4 py-2 text-xs font-medium text-[#1A1A18] hover:bg-[#FAF8F4]"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={isSaving}
+                  onClick={handleSaveEdit}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#1A1A18] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#2E2E2B] disabled:opacity-60"
+                >
+                  {isSaving ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Save className="h-3.5 w-3.5" />
+                  )}
+                  <span>Save changes</span>
+                </Button>
+              </div>
+            </>
+          }
+        >
+          <div className="space-y-5">
+            {/* Product Context Card */}
+            <div className="flex items-center gap-3.5 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-3">
+              <QuickEditThumbnail product={editingProduct} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-bold text-[#1A1A18]">
+                  {editingProduct.name}
+                </p>
+                <div className="mt-1 flex flex-wrap items-center gap-1.5 font-mono text-[10px] text-[#52524E]">
+                  <span>
+                    SKU:{" "}
+                    {editingProduct.sku || editingProduct.id.slice(0, 8).toUpperCase()}
+                  </span>
+                  <span>•</span>
+                  <span>{editingProduct.inventory_count ?? 0} in stock</span>
+                </div>
+                <div className="mt-1.5 flex items-center gap-2">
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                      editingProduct.status === "published"
+                        ? "border border-[#E5E5E0] bg-white text-[#1A1A18]"
+                        : "border border-amber-300 bg-amber-50 text-amber-800"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        editingProduct.status === "published"
+                          ? "bg-[#1A1A18]"
+                          : "bg-amber-500"
+                      }`}
+                    />
+                    {editingProduct.status === "published" ? "Live" : "Draft"}
+                  </span>
+                  <span className="text-xs font-bold text-[#1A1A18]">
+                    ₹{editingProduct.price_inr?.toLocaleString("en-IN") ?? "0"}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* MOBILE CARDS VIEW (< sm) */}
-            <div className="space-y-3 sm:hidden">
-              {filteredProducts.map((p) => {
-                const imgThumb = resolveProductImage(p);
-                const isPublished = p.status === "published";
-                const isLoadingThis = loadingId === p.id;
-
-                return (
-                  <div
-                    key={p.id}
-                    onClick={() => setSelectedProduct(p)}
-                    className="border-border bg-card hover:border-foreground/30 cursor-pointer space-y-3 rounded-2xl border p-4 shadow-2xs transition-colors"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="border-border bg-muted/50 relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border">
-                          {imgThumb ? (
-                            /* eslint-disable-next-line @next/next/no-img-element */
-                            <img
-                              src={imgThumb}
-                              alt={p.name}
-                              className="h-full w-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.style.display = "none";
-                              }}
-                            />
-                          ) : (
-                            <ShoppingBag
-                              className="text-muted-foreground h-5 w-5"
-                              strokeWidth={ICON_STROKE}
-                            />
-                          )}
-                        </div>
-                        <div>
-                          <span className="text-foreground block text-sm font-semibold">
-                            {p.name}
-                          </span>
-                          <span className="text-muted-foreground block font-mono text-[10px]">
-                            {p.category || "General"} · ID: {p.id.slice(0, 8)}...
-                          </span>
-                        </div>
-                      </div>
-
-                      <StatusBadge
-                        status={isPublished ? "published" : "draft"}
-                        label={isPublished ? "Published" : "Draft"}
-                      />
-                    </div>
-
-                    <div className="border-border/60 flex items-center justify-between border-t pt-2.5 text-xs">
-                      <div>
-                        <span className="text-muted-foreground block text-[10px] font-semibold">
-                          Price
-                        </span>
-                        <span className="text-foreground font-mono text-xs font-bold">
-                          ₹{p.price_inr ? p.price_inr.toLocaleString() : "—"}
-                        </span>
-                      </div>
-
-                      <div
-                        className="flex items-center gap-1.5"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => handleToggleStatus(p)}
-                          disabled={isLoadingThis}
-                          className={`border-border bg-card text-foreground hover:bg-muted flex h-7.5 items-center gap-1 rounded-full border px-2.5 text-[11px] font-medium shadow-2xs ${PRESSABLE}`}
-                        >
-                          {isPublished ? "Draft" : "Publish"}
-                        </button>
-
-                        <Link href={editProductHref(p.id)}>
-                          <button
-                            type="button"
-                            className={`border-border bg-card text-foreground hover:bg-muted flex h-7.5 items-center gap-1 rounded-full border px-2.5 text-[11px] font-semibold shadow-2xs ${PRESSABLE}`}
-                          >
-                            <Edit className="text-muted-foreground h-3 w-3" />
-                            <span>Edit</span>
-                          </button>
-                        </Link>
-
-                        <ActionDropdown align="right" actions={getActionItems(p)} />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* SLIDE-OVER DRAWER: PRODUCT DETAILS INSPECTION */}
-      <SlideOverDrawer
-        isOpen={!!selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        title={selectedProduct ? selectedProduct.name : "Product Details"}
-      >
-        {selectedProduct && (
-          <div className="space-y-6 pb-6">
-            {/* Product Image preview */}
-            <div className="border-border bg-muted/40 relative aspect-video w-full overflow-hidden rounded-2xl border">
-              {resolveProductImage(selectedProduct) ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={resolveProductImage(selectedProduct)!}
-                  alt={selectedProduct.name}
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              ) : (
-                <div className="text-muted-foreground flex h-full w-full items-center justify-center">
-                  <ShoppingBag className="h-10 w-10" strokeWidth={ICON_STROKE} />
-                </div>
-              )}
+            {/* Product Title */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-[#1A1A18]">
+                Product Name
+              </label>
+              <input
+                type="text"
+                value={editForm.name}
+                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                placeholder="Product title"
+                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition-colors placeholder:text-[#52524E]/50 focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18] focus:outline-none"
+              />
             </div>
 
-            {/* Quick Actions Strip */}
-            <div className="flex flex-wrap items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleOpenEdit(selectedProduct)}
-                className={`border-border bg-card text-foreground hover:bg-muted h-8 gap-1.5 rounded-full text-xs shadow-2xs ${PRESSABLE}`}
-              >
-                <Edit className="h-3.5 w-3.5" />
-                <span>Quick Edit</span>
-              </Button>
-
-              <Link href={editProductHref(selectedProduct.id)}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={`border-border bg-card text-foreground hover:bg-muted h-8 gap-1.5 rounded-full text-xs shadow-2xs ${PRESSABLE}`}
-                >
-                  <Tag className="h-3.5 w-3.5" />
-                  <span>Full Studio Edit</span>
-                </Button>
-              </Link>
-
-              <Link
-                href={storefrontHref(selectedProduct.id)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={`border-border bg-card text-foreground hover:bg-muted h-8 gap-1.5 rounded-full text-xs shadow-2xs ${PRESSABLE}`}
-                >
-                  <ExternalLink className="h-3.5 w-3.5" />
-                  <span>View Storefront</span>
-                </Button>
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => handleToggleStatus(selectedProduct)}
-                className={`border-border bg-card text-foreground hover:bg-muted ml-auto flex h-8 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium shadow-2xs ${PRESSABLE}`}
-              >
-                {selectedProduct.status === "published" ? (
-                  <>
-                    <EyeOff className="h-3.5 w-3.5" />
-                    <span>Set Draft</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                    <span>Publish</span>
-                  </>
-                )}
-              </button>
+            {/* Category */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-[#1A1A18]">
+                Marketplace Category
+              </label>
+              <Select
+                value={editForm.category}
+                onChange={(val) => setEditForm({ ...editForm, category: val })}
+                options={quickEditCategoryOptions}
+                placeholder="Select category"
+              />
             </div>
 
-            {/* Specifications Card */}
-            <div className="border-border bg-card space-y-3 rounded-2xl border p-4 shadow-2xs">
-              <h4 className="text-foreground text-xs font-bold tracking-wider uppercase">
-                Product Specifications
-              </h4>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div>
-                  <span className="text-muted-foreground block">Category</span>
-                  <span className="text-foreground font-medium">
-                    {selectedProduct.category || "—"}
-                  </span>
-                </div>
-
-                <div>
-                  <span className="text-muted-foreground block">Price (INR)</span>
-                  <span className="text-foreground font-mono font-bold">
+            {/* Price & Status Grid */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#1A1A18]">
+                  Price (INR)
+                </label>
+                <div className="relative">
+                  <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-xs font-semibold text-[#52524E]">
                     ₹
-                    {selectedProduct.price_inr
-                      ? selectedProduct.price_inr.toLocaleString()
-                      : "—"}
                   </span>
-                </div>
-
-                <div>
-                  <span className="text-muted-foreground block">Status</span>
-                  <StatusBadge
-                    status={
-                      selectedProduct.status === "published" ? "published" : "draft"
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={editForm.price_inr}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, price_inr: e.target.value })
                     }
-                    label={
-                      selectedProduct.status === "published" ? "Published" : "Draft"
-                    }
+                    placeholder="0"
+                    className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 py-2.5 pr-3.5 pl-7 font-mono text-xs text-[#1A1A18] transition-colors placeholder:text-[#52524E]/50 focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18] focus:outline-none"
                   />
                 </div>
+              </div>
 
-                <div>
-                  <span className="text-muted-foreground block">Product ID</span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-muted-foreground font-mono text-[10px]">
-                      {selectedProduct.id.slice(0, 12)}...
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleCopyId(selectedProduct.id)}
-                      className="text-muted-foreground hover:text-foreground cursor-pointer"
-                      title="Copy full ID"
-                    >
-                      {copiedId ? (
-                        <Check className="h-3 w-3 text-emerald-600" />
-                      ) : (
-                        <Copy className="h-3 w-3" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {selectedProduct.sku && (
-                  <div>
-                    <span className="text-muted-foreground block">SKU</span>
-                    <span className="text-foreground font-mono font-medium">
-                      {selectedProduct.sku}
-                    </span>
-                  </div>
-                )}
-
-                {selectedProduct.inventory_count !== null &&
-                  selectedProduct.inventory_count !== undefined && (
-                    <div>
-                      <span className="text-muted-foreground block">Stock Level</span>
-                      <span className="text-foreground font-mono font-medium">
-                        {selectedProduct.inventory_count} units
-                      </span>
-                    </div>
-                  )}
-
-                {selectedProduct.created_by && (
-                  <div>
-                    <span className="text-muted-foreground block">Created By</span>
-                    <span className="text-muted-foreground font-mono text-[10px]">
-                      {selectedProduct.created_by.slice(0, 10)}...
-                    </span>
-                  </div>
-                )}
-
-                {selectedProduct.updated_by && (
-                  <div>
-                    <span className="text-muted-foreground block">Last Updated By</span>
-                    <span className="text-muted-foreground font-mono text-[10px]">
-                      {selectedProduct.updated_by.slice(0, 10)}...
-                    </span>
-                  </div>
-                )}
-
-                {selectedProduct.materials && selectedProduct.materials.length > 0 && (
-                  <div className="col-span-2">
-                    <span className="text-muted-foreground mb-1 block">Materials</span>
-                    <div className="flex flex-wrap gap-1">
-                      {selectedProduct.materials.map((m, i) => (
-                        <span
-                          key={i}
-                          className="bg-muted text-muted-foreground rounded-full px-2.5 py-0.5 text-[10px] font-medium"
-                        >
-                          {m}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#1A1A18]">
+                  Listing Status
+                </label>
+                <Select
+                  value={editForm.status}
+                  onChange={(val) => setEditForm({ ...editForm, status: val })}
+                  options={[
+                    { value: "published", label: "Published (Live)" },
+                    { value: "draft", label: "Draft (Hidden)" },
+                    { value: "archived", label: "Archived" },
+                  ]}
+                />
               </div>
             </div>
 
             {/* Description */}
-            <div className="border-border bg-card space-y-2 rounded-2xl border p-4 shadow-2xs">
-              <h4 className="text-foreground text-xs font-bold tracking-wider uppercase">
-                Craft Story & Description
-              </h4>
-              <p className="text-muted-foreground text-xs leading-relaxed whitespace-pre-wrap">
-                {selectedProduct.description ||
-                  "No description provided for this listing."}
-              </p>
-            </div>
-
-            {/* Danger Zone */}
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={() => handleDelete(selectedProduct)}
-                className={`flex w-full items-center justify-center gap-2 rounded-full border border-rose-200 bg-rose-50/50 p-2.5 text-xs font-semibold text-rose-700 shadow-2xs hover:bg-rose-100 ${PRESSABLE}`}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                <span>Delete This Product</span>
-              </button>
-            </div>
-          </div>
-        )}
-      </SlideOverDrawer>
-
-      {/* QUICK EDIT DRAWER / MODAL */}
-      <SlideOverDrawer
-        isOpen={!!editingProduct}
-        onClose={() => setEditingProduct(null)}
-        title="Quick Edit Product"
-      >
-        {editingProduct && (
-          <form onSubmit={handleSaveEdit} className="space-y-5 pb-6">
-            <p className="text-muted-foreground text-xs">
-              Update basic listing details quickly without navigating to the full editor
-              studio.
-            </p>
-
-            <div>
-              <label className="text-foreground mb-1 block text-xs font-semibold">
-                Product Title *
-              </label>
-              <input
-                type="text"
-                required
-                value={editForm.name}
-                onChange={(e) =>
-                  setEditForm((prev) => ({ ...prev, name: e.target.value }))
-                }
-                className={`border-border bg-background text-foreground placeholder:text-muted-foreground h-9 w-full rounded-xl border px-3 text-xs ${FOCUS_RING}`}
-              />
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-xs font-semibold">
-                Category
-              </label>
-              <select
-                value={editForm.category}
-                onChange={(e) =>
-                  setEditForm((prev) => ({ ...prev, category: e.target.value }))
-                }
-                className={`border-border bg-background text-foreground h-9 w-full rounded-xl border px-3 text-xs ${FOCUS_RING}`}
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-xs font-semibold">
-                Wholesale Price (INR ₹)
-              </label>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={editForm.price_inr}
-                onChange={(e) =>
-                  setEditForm((prev) => ({ ...prev, price_inr: e.target.value }))
-                }
-                className={`border-border bg-background text-foreground h-9 w-full rounded-xl border px-3 text-xs ${FOCUS_RING}`}
-              />
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-xs font-semibold">
-                Status
-              </label>
-              <select
-                value={editForm.status}
-                onChange={(e) =>
-                  setEditForm((prev) => ({ ...prev, status: e.target.value }))
-                }
-                className={`border-border bg-background text-foreground h-9 w-full rounded-xl border px-3 text-xs ${FOCUS_RING}`}
-              >
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-foreground mb-1 block text-xs font-semibold">
-                Description
-              </label>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-[#1A1A18]">
+                  Short Description
+                </label>
+                <span className="text-[10px] text-[#52524E]">
+                  {editForm.description.length} characters
+                </span>
+              </div>
               <textarea
                 rows={4}
                 value={editForm.description}
                 onChange={(e) =>
-                  setEditForm((prev) => ({ ...prev, description: e.target.value }))
+                  setEditForm({ ...editForm, description: e.target.value })
                 }
-                className={`border-border bg-background text-foreground placeholder:text-muted-foreground w-full rounded-xl border p-3 text-xs ${FOCUS_RING}`}
+                placeholder="Brief craft summary and buyer specifications..."
+                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 p-3 text-xs leading-relaxed text-[#1A1A18] transition-colors placeholder:text-[#52524E]/50 focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18] focus:outline-none"
               />
+              <p className="text-[10px] text-[#52524E]">
+                Shown in product search previews and category recommendation feeds.
+              </p>
             </div>
-
-            <div className="border-border flex items-center justify-end gap-2 border-t pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditingProduct(null)}
-                className={`border-border text-foreground hover:bg-muted h-9 rounded-full text-xs shadow-2xs ${PRESSABLE}`}
-              >
-                Cancel
-              </Button>
-
-              <Button
-                type="submit"
-                disabled={isSaving}
-                className={`bg-primary text-primary-foreground hover:bg-primary/90 h-9 gap-1.5 rounded-full text-xs font-semibold shadow-xs ${PRESSABLE}`}
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    <span>Saving...</span>
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-3.5 w-3.5" />
-                    <span>Save Changes</span>
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        )}
-      </SlideOverDrawer>
+          </div>
+        </SlideOverDrawer>
+      )}
     </div>
   );
 }

@@ -1,27 +1,27 @@
 "use client";
 
-import React, { useState, useEffect, useRef, startTransition } from "react";
+import React, { useState, useEffect, useRef, useMemo, startTransition } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
   ArrowLeft,
-  Eye,
-  Save,
+  ChevronRight,
   Send,
   CheckCircle2,
   Loader2,
-  X,
   Film,
-  Image as ImageIcon,
 } from "lucide-react";
 import { Button } from "../../../components/button";
 import {
   BasicInfoCard,
-  CatalogOwnershipCard,
-  type SellerOption,
+  PricingCard,
   InventoryCard,
-  MerchandisingCard,
+  StorefrontPreviewCard,
   PublishingCard,
+  MerchandisingCard,
+  CatalogOwnershipCard,
+  DangerZoneCard,
+  type SellerOption,
   MediaCard,
   type ProductImageItem,
   VariantsCard,
@@ -49,26 +49,40 @@ export interface ProductEditorFormProps {
   submitLabel?: string;
   categories?: string[];
   onUploadImage?: (file: File, index: number) => Promise<string | null>;
+  onDelete?: () => void;
+  isDeleting?: boolean;
+  createdDate?: string;
+  updatedDate?: string;
   initialValues?: {
     name?: string;
     priceInr?: string;
+    comparePrice?: string;
+    comparePriceInr?: string;
     category?: string;
-    materials?: string;
+    materials?: string | string[];
     description?: string;
     sku?: string;
     stockQty?: string;
     lowStockThreshold?: string;
     trackInventory?: boolean;
+    allowBackorders?: boolean;
     isFeatured?: boolean;
     isNewArrival?: boolean;
     isBestSeller?: boolean;
     status?: "published" | "draft";
     images?: ProductImageItem[];
+    createdDate?: string;
+    updatedDate?: string;
   };
 }
 
-const PRESSABLE =
-  "cursor-pointer transition-all duration-150 ease-out active:scale-[0.98]";
+const SECTION_JUMP_LINKS = [
+  { id: "sec-media", label: "Media" },
+  { id: "sec-basics", label: "Product info" },
+  { id: "sec-pricing", label: "Pricing" },
+  { id: "sec-inventory", label: "Inventory" },
+  { id: "variants", label: "Variants" },
+];
 
 export function ProductEditorForm({
   role,
@@ -87,18 +101,39 @@ export function ProductEditorForm({
   submitLabel,
   categories,
   onUploadImage,
+  onDelete,
+  isDeleting = false,
+  createdDate,
+  updatedDate,
   initialValues,
 }: ProductEditorFormProps) {
-  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   // 1. Basic Info State
   const [name, setName] = useState(initialValues?.name || "");
   const [priceInr, setPriceInr] = useState(initialValues?.priceInr || "");
+  const [comparePriceInr, setComparePriceInr] = useState(
+    initialValues?.comparePrice || initialValues?.comparePriceInr || ""
+  );
   const [category, setCategory] = useState(
     initialValues?.category || (categories && categories[0]) || "Wooden Toys & Crafts"
   );
-  const [materials, setMaterials] = useState(initialValues?.materials || "");
+
+  const [materials, setMaterials] = useState<string[]>(() => {
+    if (Array.isArray(initialValues?.materials)) {
+      return initialValues.materials;
+    }
+    if (
+      typeof initialValues?.materials === "string" &&
+      initialValues.materials.trim()
+    ) {
+      return initialValues.materials
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+    return ["Ankudu Softwood", "Natural Lacquer"];
+  });
   const [description, setDescription] = useState(initialValues?.description || "");
 
   // 2. Catalog Ownership State
@@ -112,12 +147,15 @@ export function ProductEditorForm({
 
   // 4. Inventory State
   const [sku, setSku] = useState(initialValues?.sku || "");
-  const [stockQty, setStockQty] = useState(initialValues?.stockQty || "");
+  const [stockQty, setStockQty] = useState(initialValues?.stockQty || "0");
   const [lowStockThreshold, setLowStockThreshold] = useState(
     initialValues?.lowStockThreshold || "5"
   );
   const [trackInventory, setTrackInventory] = useState(
     initialValues?.trackInventory ?? true
+  );
+  const [allowBackorders, setAllowBackorders] = useState(
+    initialValues?.allowBackorders ?? false
   );
 
   // 5. Merchandising State
@@ -127,7 +165,7 @@ export function ProductEditorForm({
     initialValues?.isBestSeller ?? false
   );
 
-  // 7. Publishing State
+  // 6. Publishing State
   const [status, setStatus] = useState<"published" | "draft">(
     initialValues?.status || "published"
   );
@@ -137,6 +175,45 @@ export function ProductEditorForm({
 
   const submittedStatusRef = useRef<"published" | "draft" | null>(null);
   const prevSuccessRef = useRef(false);
+
+  // Dirty State Tracking
+  const isDirty = useMemo(() => {
+    if (mode === "create") {
+      return Boolean(name || priceInr || description || images.length > 0);
+    }
+    return (
+      name !== (initialValues?.name || "") ||
+      priceInr !== (initialValues?.priceInr || "") ||
+      comparePriceInr !==
+        (initialValues?.comparePrice || initialValues?.comparePriceInr || "") ||
+      description !== (initialValues?.description || "") ||
+      category !== (initialValues?.category || "") ||
+      sku !== (initialValues?.sku || "") ||
+      stockQty !== (initialValues?.stockQty || "") ||
+      status !== (initialValues?.status || "published") ||
+      isFeatured !== (initialValues?.isFeatured ?? false) ||
+      isNewArrival !== (initialValues?.isNewArrival ?? true) ||
+      isBestSeller !== (initialValues?.isBestSeller ?? false) ||
+      trackInventory !== (initialValues?.trackInventory ?? true) ||
+      images.length !== (initialValues?.images?.length || 0)
+    );
+  }, [
+    name,
+    priceInr,
+    comparePriceInr,
+    description,
+    category,
+    sku,
+    stockQty,
+    status,
+    isFeatured,
+    isNewArrival,
+    isBestSeller,
+    trackInventory,
+    images.length,
+    mode,
+    initialValues,
+  ]);
 
   // Toast feedback on form completion
   useEffect(() => {
@@ -205,7 +282,7 @@ export function ProductEditorForm({
 
     const formData = new FormData(formElement);
 
-    // If a client-side upload handler is provided, upload images first
+    // If client-side image uploader is provided
     if (onUploadImage) {
       formData.delete("cover_image");
       formData.delete("gallery_images");
@@ -243,6 +320,18 @@ export function ProductEditorForm({
       } finally {
         setIsUploading(false);
       }
+    } else {
+      const existingCover = images[0]?.previewUrl;
+      if (existingCover && !formData.get("cover_image_path")) {
+        formData.set("cover_image_path", existingCover);
+      }
+      const galleryPaths = images
+        .slice(1)
+        .map((img) => img.previewUrl)
+        .filter(Boolean);
+      galleryPaths.forEach((p) => {
+        formData.append("gallery_image_paths", p);
+      });
     }
 
     formData.set("status", effectiveStatus);
@@ -252,221 +341,78 @@ export function ProductEditorForm({
     });
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      const topOffset = 80;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - topOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
-    <div className="mx-auto max-w-5xl space-y-6 pb-16">
-      {/* PAGE HEADER & ACTIONS */}
-      <div className="border-border bg-card flex flex-col gap-4 rounded-lg border p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="text-muted-foreground mb-1.5 flex items-center gap-2 text-xs">
+    <div className="w-full pb-10 text-[#1A1A18]">
+      {/* TOP STICKY APP BAR */}
+      <header className="sticky top-0 z-30 border-b border-[#E5E5E0] bg-[#FAF8F4]/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5">
+          {/* Left: Back Button + Breadcrumb + Title */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <Link
               href={cancelHref}
-              className="hover:text-foreground flex items-center gap-1 font-medium transition-colors"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#52524E] transition-colors hover:bg-black/5 sm:h-10 sm:w-10"
+              aria-label="Back to products"
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span>{role === "admin" ? "Catalog Desk" : "Products"}</span>
+              <ArrowLeft className="h-5 w-5" />
             </Link>
-            <span>/</span>
-            <span className="text-foreground font-semibold">
-              {mode === "edit" ? initialValues?.name || "Edit Listing" : "New Listing"}
-            </span>
-          </div>
-          <h1 className="text-foreground text-xl font-bold tracking-tight sm:text-2xl">
-            {mode === "edit"
-              ? `Edit: ${initialValues?.name || "Product"}`
-              : role === "admin"
-                ? "Add Catalog Product"
-                : "Add New Product"}
-          </h1>
-          <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
-            {mode === "edit"
-              ? "Update listing details, pricing, inventory specifications, and active status."
-              : role === "admin"
-                ? "Publish manufactured creations across all verified makers or official catalog."
-                : "Publish your manufactured creations to the GenZ marketplace."}
-          </p>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {manageReelsHref && (
-            <Button
-              type="button"
-              variant="outline"
-              asChild
-              className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-sm ${PRESSABLE}`}
-            >
-              <Link href={manageReelsHref}>
-                <Film className="text-muted-foreground h-3.5 w-3.5" />
-                <span>Reels {reelsCount !== undefined ? `(${reelsCount})` : ""}</span>
-              </Link>
-            </Button>
-          )}
-
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setStatus("draft");
-              executeSubmit("draft");
-            }}
-            disabled={isPending || isUploading}
-            className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-sm disabled:opacity-60 ${PRESSABLE}`}
-          >
-            {(isPending || isUploading) && submittingStatus === "draft" ? (
-              <>
-                <Loader2 className="text-muted-foreground h-3.5 w-3.5 animate-spin" />
-                <span>Saving Draft...</span>
-              </>
-            ) : (
-              <>
-                <Save className="text-muted-foreground h-3.5 w-3.5" />
-                <span>Save Draft</span>
-              </>
-            )}
-          </Button>
-
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setShowPreviewModal(true)}
-            className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-sm ${PRESSABLE}`}
-          >
-            <Eye className="text-muted-foreground h-3.5 w-3.5" />
-            <span>Preview</span>
-          </Button>
-
-          <Button
-            type="button"
-            onClick={() => {
-              const target = mode === "edit" ? status : "published";
-              executeSubmit(target);
-            }}
-            disabled={isPending || isUploading}
-            className={`h-9 items-center gap-1.5 rounded-full !bg-[#18181b] px-5 text-xs font-semibold !text-white shadow-sm hover:!bg-foreground disabled:opacity-60 ${PRESSABLE}`}
-          >
-            {isPending || isUploading ? (
-              <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
-                <span className="text-white">
-                  {isUploading
-                    ? "Uploading Media..."
-                    : submittingStatus === "draft"
-                      ? "Saving..."
-                      : mode === "edit"
-                        ? "Saving Changes..."
-                        : "Publishing..."}
+            <div>
+              <div className="flex items-center gap-1 text-[11px] text-[#52524E]">
+                <Link
+                  href={cancelHref}
+                  className="transition-colors hover:text-[#1A1A18]"
+                >
+                  {role === "admin" ? "Catalog" : "Products"}
+                </Link>
+                <ChevronRight className="h-3 w-3 opacity-40" />
+                <span className="font-medium text-[#1A1A18]">
+                  {mode === "edit" ? "Edit listing" : "New listing"}
                 </span>
-              </>
-            ) : (
-              <>
-                <Send className="h-3.5 w-3.5 text-white" />
-                <span className="text-white">
-                  {submitLabel ||
-                    (mode === "edit" ? "Save Changes" : "Publish Product")}
-                </span>
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
+              </div>
 
-      {/* SUCCESS ALERT */}
-      {state?.success && (
-        <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-xs font-semibold text-emerald-800 shadow-sm">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-            <span>Product listing saved and updated successfully!</span>
+              <div className="mt-0.5 flex items-center gap-2.5">
+                <h1 className="text-lg font-normal tracking-tight text-[#1A1A18] sm:text-xl">
+                  {mode === "edit" ? "Edit product" : "Add product"}
+                </h1>
+                {isDirty && (
+                  <span className="inline-flex h-5.5 items-center gap-1.5 rounded-sm bg-[#FEF3C7] px-2 text-[11px] font-medium text-[#92400E]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#B45309]" />
+                    Unsaved changes
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-          <Link
-            href={cancelHref}
-            className="font-medium text-emerald-700 underline hover:text-emerald-900"
-          >
-            Back to Catalog &rarr;
-          </Link>
-        </div>
-      )}
 
-      {/* ERROR ALERT */}
-      {state?.error && (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-xs font-semibold text-rose-800 shadow-sm">
-          {state.error}
-        </div>
-      )}
-
-      {/* FORM SECTIONS */}
-      <form
-        id="shared-product-editor-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          executeSubmit(status);
-        }}
-        noValidate
-        className="space-y-6"
-      >
-        {productId && <input type="hidden" name="id" value={productId} />}
-        {productId && <input type="hidden" name="productId" value={productId} />}
-
-        {/* 1. Media Uploader */}
-        <MediaCard images={images} onImagesChange={setImages} />
-
-        {/* 2. Basic Info */}
-        <BasicInfoCard
-          name={name}
-          onChangeName={setName}
-          priceInr={priceInr}
-          onChangePriceInr={setPriceInr}
-          category={category}
-          onChangeCategory={setCategory}
-          description={description}
-          onChangeDescription={setDescription}
-          materials={materials}
-          onChangeMaterials={setMaterials}
-          categories={categories}
-        />
-
-        {/* 3. Catalog Ownership */}
-        <CatalogOwnershipCard
-          sellers={sellers}
-          adminUserId={adminUserId}
-          selectedSellerId={selectedSellerId}
-          onChangeSellerId={setSelectedSellerId}
-          isSellerMode={role === "seller"}
-          sellerBusinessName={sellerBusinessName}
-        />
-
-        {/* 4. Product Variants */}
-        <VariantsCard basePrice={priceInr} productName={name} />
-
-        {/* 5. Inventory & Tracking */}
-        <InventoryCard
-          sku={sku}
-          onChangeSku={setSku}
-          stockQty={stockQty}
-          onChangeStockQty={setStockQty}
-          lowStockThreshold={lowStockThreshold}
-          onChangeLowStockThreshold={setLowStockThreshold}
-          trackInventory={trackInventory}
-          onToggleTrackInventory={setTrackInventory}
-        />
-
-        {/* 6. Merchandising & Badges */}
-        <MerchandisingCard
-          isFeatured={isFeatured}
-          onToggleFeatured={setIsFeatured}
-          isNewArrival={isNewArrival}
-          onToggleNewArrival={setIsNewArrival}
-          isBestSeller={isBestSeller}
-          onToggleBestSeller={setIsBestSeller}
-        />
-
-        {/* 7. Publishing Status */}
-        <PublishingCard status={status} onChangeStatus={setStatus} />
-
-        {/* BOTTOM ACTION BAR */}
-        <div className="border-border bg-card flex flex-col gap-3 rounded-lg border p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-muted-foreground text-xs">
-            Changes can be updated or unlisted anytime from your catalog desk.
-          </span>
+          {/* Right: Actions */}
           <div className="flex items-center gap-2">
+            {manageReelsHref && (
+              <Button
+                type="button"
+                variant="outline"
+                asChild
+                className="h-9 gap-1.5 rounded-full border border-[#E5E5E0] bg-white px-3 text-xs font-semibold text-[#1A1A18] hover:bg-[#FAF8F4]"
+              >
+                <Link href={manageReelsHref}>
+                  <Film className="h-3.5 w-3.5 text-[#52524E]" />
+                  <span>Reels {reelsCount !== undefined ? `(${reelsCount})` : ""}</span>
+                </Link>
+              </Button>
+            )}
+
             <Button
               type="button"
               variant="outline"
@@ -475,117 +421,242 @@ export function ProductEditorForm({
                 executeSubmit("draft");
               }}
               disabled={isPending || isUploading}
-              className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-sm disabled:opacity-60 ${PRESSABLE}`}
+              className="h-9 gap-2 rounded-full border border-[#E5E5E0] bg-transparent px-4 text-xs font-medium text-[#1A1A18] hover:bg-black/5 disabled:opacity-50 sm:h-10 sm:px-5 sm:text-sm"
             >
               {(isPending || isUploading) && submittingStatus === "draft" ? (
                 <>
-                  <Loader2 className="text-muted-foreground h-3.5 w-3.5 animate-spin" />
-                  <span>Saving Draft...</span>
+                  <Loader2 className="h-4 w-4 animate-spin text-[#52524E]" />
+                  <span>Saving...</span>
                 </>
               ) : (
-                <>
-                  <Save className="text-muted-foreground h-3.5 w-3.5" />
-                  <span>Save as Draft</span>
-                </>
+                <span>Save draft</span>
               )}
             </Button>
 
             <Button
-              type="submit"
+              type="button"
+              onClick={() => {
+                const target = mode === "edit" ? status : "published";
+                executeSubmit(target);
+              }}
               disabled={isPending || isUploading}
-              className={`h-9 items-center gap-1.5 rounded-full !bg-[#18181b] px-5 text-xs font-semibold !text-white shadow-sm hover:!bg-foreground disabled:opacity-60 ${PRESSABLE}`}
+              className="h-9 gap-2 rounded-full bg-[#1A1A18] px-5 text-xs font-medium text-white hover:bg-[#2E2E2B] disabled:opacity-50 sm:h-10 sm:px-6 sm:text-sm"
             >
               {isPending || isUploading ? (
                 <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
-                  <span className="text-white">
+                  <Loader2 className="h-4 w-4 animate-spin text-white" />
+                  <span>
                     {isUploading
-                      ? "Uploading Media..."
+                      ? "Uploading..."
                       : submittingStatus === "draft"
                         ? "Saving..."
-                        : mode === "edit"
-                          ? "Saving Changes..."
-                          : "Publishing..."}
+                        : "Saving..."}
                   </span>
                 </>
               ) : (
                 <>
-                  <Send className="h-3.5 w-3.5 text-white" />
-                  <span className="text-white">
-                    {submitLabel ||
-                      (mode === "edit" ? "Save Changes" : "Publish Product")}
-                  </span>
+                  <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span>{submitLabel || (mode === "edit" ? "Update" : "Publish")}</span>
                 </>
               )}
             </Button>
           </div>
         </div>
-      </form>
+      </header>
 
-      {/* LIVE PREVIEW MODAL */}
-      {showPreviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-foreground/50 backdrop-blur-xs transition-opacity"
-            onClick={() => setShowPreviewModal(false)}
-          />
-          <div className="border-border bg-card relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg border p-6 shadow-2xl">
-            <div className="border-border flex items-center justify-between border-b pb-3">
-              <span className="text-muted-foreground font-mono text-xs font-bold tracking-wider uppercase">
-                Storefront Buyer Preview
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowPreviewModal(false)}
-                className="text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer rounded-full p-1.5 transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
+      <main className="mx-auto max-w-7xl px-2 pt-2.5 pb-6 sm:px-4 sm:pt-3">
+        {/* QUICK JUMP NAVIGATION PILLS */}
+        <div className="mb-3.5 flex scrollbar-none items-center gap-1.5 overflow-x-auto pb-0.5">
+          {SECTION_JUMP_LINKS.map((link) => (
+            <button
+              key={link.id}
+              type="button"
+              onClick={() => scrollToSection(link.id)}
+              className="shrink-0 cursor-pointer rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1 text-xs font-medium text-[#52524E] transition-colors hover:border-[#1A1A18] hover:text-[#1A1A18]"
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
+
+        {/* SUCCESS NOTIFICATION */}
+        {state?.success && (
+          <div className="mb-4 flex items-center justify-between rounded-xl border border-[#E5E5E0] bg-white p-3.5 text-xs font-semibold text-[#1A1A18] shadow-xs">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-[#1A1A18]" />
+              <span>Listing saved and published successfully!</span>
+            </div>
+            <Link
+              href={cancelHref}
+              className="inline-flex items-center gap-1 font-semibold text-[#1A1A18] hover:underline"
+            >
+              <span>Back to catalog</span>
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
+
+        {/* ERROR NOTIFICATION */}
+        {state?.error && (
+          <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-900 shadow-xs">
+            {state.error}
+          </div>
+        )}
+
+        {/* 2-COLUMN MAIN FORM GRID */}
+        <form
+          id="shared-product-editor-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            executeSubmit(status);
+          }}
+          noValidate
+        >
+          {productId && <input type="hidden" name="id" value={productId} />}
+          {productId && <input type="hidden" name="productId" value={productId} />}
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+            {/* LEFT MAIN COLUMN (col-main) */}
+            <div className="space-y-4 lg:col-span-8">
+              {/* Section 1: Media & Photos */}
+              <div id="sec-media">
+                <MediaCard
+                  images={images}
+                  onImagesChange={setImages}
+                  isUploading={isUploading}
+                />
+              </div>
+
+              {/* Section 2: Basic Information & Craft Story */}
+              <BasicInfoCard
+                name={name}
+                onChangeName={setName}
+                category={category}
+                onChangeCategory={setCategory}
+                description={description}
+                onChangeDescription={setDescription}
+                materials={materials}
+                onChangeMaterials={setMaterials}
+                categories={categories}
+              />
+
+              {/* Section 3: Pricing */}
+              <PricingCard
+                priceInr={priceInr}
+                onChangePriceInr={setPriceInr}
+                comparePriceInr={comparePriceInr}
+                onChangeComparePriceInr={setComparePriceInr}
+              />
+
+              {/* Section 4: Inventory & Logistics */}
+              <InventoryCard
+                productName={name}
+                sku={sku}
+                onChangeSku={setSku}
+                stockQty={stockQty}
+                onChangeStockQty={setStockQty}
+                lowStockThreshold={lowStockThreshold}
+                onChangeLowStockThreshold={setLowStockThreshold}
+                trackInventory={trackInventory}
+                onToggleTrackInventory={setTrackInventory}
+                allowBackorders={allowBackorders}
+                onToggleBackorders={setAllowBackorders}
+              />
+
+              {/* Section 5: Variants */}
+              <VariantsCard basePrice={priceInr} productName={name} />
             </div>
 
-            <div className="mt-4 space-y-4">
-              <div className="border-border bg-muted/40 relative aspect-square w-full overflow-hidden rounded-lg border">
-                {coverPreview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={coverPreview}
-                    alt={name || "Product preview"}
-                    className="h-full w-full object-cover"
+            {/* RIGHT SIDEBAR COLUMN (col-side) */}
+            <div className="space-y-4 lg:col-span-4">
+              <div className="space-y-4 lg:sticky lg:top-16">
+                {/* 1. Storefront Buyer Preview Card */}
+                <StorefrontPreviewCard
+                  name={name}
+                  category={category}
+                  priceInr={priceInr}
+                  comparePriceInr={comparePriceInr}
+                  coverPreviewUrl={coverPreview}
+                  trackInventory={trackInventory}
+                  stockQty={stockQty}
+                  lowStockThreshold={lowStockThreshold}
+                  isFeatured={isFeatured}
+                  isNewArrival={isNewArrival}
+                  isBestSeller={isBestSeller}
+                />
+
+                {/* 2. Publishing Status Card */}
+                <div id="sec-publishing">
+                  <PublishingCard
+                    status={status}
+                    onChangeStatus={setStatus}
+                    createdDate={createdDate || initialValues?.createdDate}
+                    updatedDate={updatedDate || initialValues?.updatedDate}
                   />
-                ) : (
-                  <div className="text-muted-foreground flex h-full w-full flex-col items-center justify-center">
-                    <ImageIcon className="mb-2 h-10 w-10" />
-                    <span className="text-xs">No cover image uploaded</span>
-                  </div>
+                </div>
+
+                {/* 3. Merchandising Badges Card */}
+                <div id="sec-merchandising">
+                  <MerchandisingCard
+                    isFeatured={isFeatured}
+                    onToggleFeatured={setIsFeatured}
+                    isNewArrival={isNewArrival}
+                    onToggleNewArrival={setIsNewArrival}
+                    isBestSeller={isBestSeller}
+                    onToggleBestSeller={setIsBestSeller}
+                  />
+                </div>
+
+                {/* 4. Catalog Ownership Card */}
+                <div id="sec-ownership">
+                  <CatalogOwnershipCard
+                    sellers={sellers}
+                    adminUserId={adminUserId}
+                    selectedSellerId={selectedSellerId}
+                    onChangeSellerId={setSelectedSellerId}
+                    isSellerMode={role === "seller"}
+                    sellerBusinessName={sellerBusinessName}
+                  />
+                </div>
+
+                {/* 5. Danger Zone (Edit Mode Only) */}
+                {mode === "edit" && onDelete && (
+                  <DangerZoneCard onDelete={onDelete} isDeleting={isDeleting} />
                 )}
               </div>
-
-              <div>
-                <span className="bg-muted text-muted-foreground rounded-full px-3 py-1 font-mono text-[10px] font-semibold">
-                  {category}
-                </span>
-                <h3 className="text-foreground mt-2 text-base font-bold tracking-tight">
-                  {name || "Untitled Product"}
-                </h3>
-                <span className="text-foreground font-mono text-lg font-bold">
-                  ₹{priceInr ? Number(priceInr).toLocaleString() : "0.00"}
-                </span>
-              </div>
-
-              {description && (
-                <div className="border-border border-t pt-3">
-                  <span className="text-foreground mb-1 block text-xs font-bold">
-                    Craft Story
-                  </span>
-                  <p className="text-muted-foreground text-xs leading-relaxed whitespace-pre-wrap">
-                    {description}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
+        </form>
+      </main>
+
+      {/* MOBILE STICKY BOTTOM ACTIONS */}
+      <div className="fixed right-0 bottom-0 left-0 z-30 border-t border-[#E5E5E0] bg-[#FAF8F4]/95 px-4 py-3 shadow-lg backdrop-blur-md lg:hidden">
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              setStatus("draft");
+              executeSubmit("draft");
+            }}
+            disabled={isPending || isUploading}
+            className="h-10 flex-1 cursor-pointer rounded-full border border-[#E5E5E0] bg-white px-4 text-xs font-semibold text-[#1A1A18] transition-colors hover:bg-[#FAF8F4] disabled:opacity-50"
+          >
+            Save draft
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const target = mode === "edit" ? status : "published";
+              executeSubmit(target);
+            }}
+            disabled={isPending || isUploading}
+            className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[#1A1A18] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#2E2E2B] disabled:opacity-50"
+          >
+            <Send className="h-3.5 w-3.5" />
+            <span>{mode === "edit" ? "Update" : "Publish"}</span>
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }

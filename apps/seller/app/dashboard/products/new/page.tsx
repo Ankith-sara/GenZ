@@ -16,7 +16,11 @@ export default async function NewProductPage() {
 
     if (profile) {
       businessName = profile.business_name || businessName;
-      if (profile.description && typeof profile.description === "string" && profile.description.startsWith("{")) {
+      if (
+        profile.description &&
+        typeof profile.description === "string" &&
+        profile.description.startsWith("{")
+      ) {
         try {
           const meta = JSON.parse(profile.description);
           businessName = (meta.business_name as string) || businessName;
@@ -28,11 +32,8 @@ export default async function NewProductPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1440px] pb-16">
-      <SellerProductForm
-        sellerId={session.userId}
-        sellerBusinessName={businessName}
-      />
+    <div className="w-full">
+      <SellerProductForm sellerId={session.userId} sellerBusinessName={businessName} />
     </div>
   );
 }

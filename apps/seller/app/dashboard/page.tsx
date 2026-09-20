@@ -298,7 +298,7 @@ export default async function SellerDashboardPage() {
                 <Link
                   key={item.id}
                   href={item.href}
-                  className="hover:bg-surface-container-low group flex items-start gap-3 px-5 py-4 transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary"
+                  className="hover:bg-surface-container-low group focus-visible:outline-primary flex items-start gap-3 px-5 py-4 transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
                 >
                   <div
                     className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
@@ -312,7 +312,9 @@ export default async function SellerDashboardPage() {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-on-surface text-xs font-bold">{item.title}</span>
+                      <span className="text-on-surface text-xs font-bold">
+                        {item.title}
+                      </span>
                       <span
                         className={`rounded-full border px-2 py-0.5 text-[9px] font-bold tracking-wider uppercase ${
                           item.level === "required"
@@ -426,10 +428,16 @@ export default async function SellerDashboardPage() {
 
       <div className="flex flex-wrap items-center gap-2 text-[11px]">
         <span className="text-on-surface-variant font-semibold">Fulfillment:</span>
-        <Link href="/dashboard/orders" className="bg-warning-container text-on-warning-container rounded-full px-2.5 py-1 font-semibold hover:opacity-80">
+        <Link
+          href="/dashboard/orders"
+          className="bg-warning-container text-on-warning-container rounded-full px-2.5 py-1 font-semibold hover:opacity-80"
+        >
           {pendingOrders.length} pending
         </Link>
-        <Link href="/dashboard/orders" className="bg-secondary-container text-on-secondary-container rounded-full px-2.5 py-1 font-semibold hover:opacity-80">
+        <Link
+          href="/dashboard/orders"
+          className="bg-secondary-container text-on-secondary-container rounded-full px-2.5 py-1 font-semibold hover:opacity-80"
+        >
           {shippedOrders.length} shipped
         </Link>
         <span className="bg-success-container text-on-success-container rounded-full px-2.5 py-1 font-semibold">
@@ -621,84 +629,94 @@ export default async function SellerDashboardPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-2 md:hidden">
-            {scopedOrders.slice(0, 5).map((order) => (
-              <Link
-                key={`mobile-${order.id}`}
-                href="/dashboard/orders"
-                className="border-outline-variant/50 bg-surface-container-low hover:bg-surface-container flex items-center justify-between gap-3 rounded-xl border p-3"
-              >
-                <div className="min-w-0">
-                  <div className="text-on-surface truncate text-xs font-bold">{order.id}</div>
-                  <div className="text-on-surface-variant mt-0.5 text-[11px]">
-                    {order.shippingAddress?.city || "Standard Shipping"} · {(order.items || []).length} item{(order.items || []).length !== 1 ? "s" : ""}
-                  </div>
-                </div>
-                <div className="shrink-0 text-right">
-                  <div className="text-on-surface text-xs font-bold">{formatInr(order.totalAmount)}</div>
-                  <span className="text-on-surface-variant text-[10px] font-semibold capitalize">{order.status}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="hidden overflow-x-auto md:block">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-outline-variant/40 text-on-surface-variant border-b text-[11px] font-semibold tracking-wider uppercase">
-                  <th className="pb-2.5">Order ID</th>
-                  <th className="pb-2.5">Destination</th>
-                  <th className="pb-2.5">Items</th>
-                  <th className="pb-2.5">Amount</th>
-                  <th className="pb-2.5">Status</th>
-                  <th className="pb-2.5 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-outline-variant/30 divide-y">
-                {scopedOrders.slice(0, 5).map((order) => (
-                  <tr
-                    key={order.id}
-                    className="hover:bg-surface-container-low/70 transition-colors"
-                  >
-                    <td className="text-on-surface py-3 font-semibold">{order.id}</td>
-                    <td className="text-on-surface-variant py-3">
-                      {order.shippingAddress?.city || "Standard Shipping"}
-                    </td>
-                    <td className="text-on-surface-variant py-3">
+          <>
+            <div className="space-y-2 md:hidden">
+              {scopedOrders.slice(0, 5).map((order) => (
+                <Link
+                  key={`mobile-${order.id}`}
+                  href="/dashboard/orders"
+                  className="border-outline-variant/50 bg-surface-container-low hover:bg-surface-container flex items-center justify-between gap-3 rounded-xl border p-3"
+                >
+                  <div className="min-w-0">
+                    <div className="text-on-surface truncate text-xs font-bold">
+                      {order.id}
+                    </div>
+                    <div className="text-on-surface-variant mt-0.5 text-[11px]">
+                      {order.shippingAddress?.city || "Standard Shipping"} ·{" "}
                       {(order.items || []).length} item
                       {(order.items || []).length !== 1 ? "s" : ""}
-                    </td>
-                    <td className="text-on-surface py-3 font-semibold">
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-on-surface text-xs font-bold">
                       {formatInr(order.totalAmount)}
-                    </td>
-                    <td className="py-3">
-                      <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${
-                          order.status === "delivered"
-                            ? "bg-success-container text-on-success-container border-success/20 border"
-                            : order.status === "shipped"
-                              ? "bg-secondary-container text-on-secondary-container border-secondary/20 border"
-                              : order.status === "processing"
-                                ? "bg-primary-container text-on-primary-container border-primary/20 border"
-                                : "bg-warning-container text-on-warning-container border-warning/20 border"
-                        }`}
-                      >
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="py-3 text-right">
-                      <Link
-                        href="/dashboard/orders"
-                        className="border-outline-variant/60 text-on-surface hover:bg-surface-container rounded-full border px-3 py-1 text-xs font-semibold transition-colors"
-                      >
-                        Manage
-                      </Link>
-                    </td>
+                    </div>
+                    <span className="text-on-surface-variant text-[10px] font-semibold capitalize">
+                      {order.status}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-outline-variant/40 text-on-surface-variant border-b text-[11px] font-semibold tracking-wider uppercase">
+                    <th className="pb-2.5">Order ID</th>
+                    <th className="pb-2.5">Destination</th>
+                    <th className="pb-2.5">Items</th>
+                    <th className="pb-2.5">Amount</th>
+                    <th className="pb-2.5">Status</th>
+                    <th className="pb-2.5 text-right">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-outline-variant/30 divide-y">
+                  {scopedOrders.slice(0, 5).map((order) => (
+                    <tr
+                      key={order.id}
+                      className="hover:bg-surface-container-low/70 transition-colors"
+                    >
+                      <td className="text-on-surface py-3 font-semibold">{order.id}</td>
+                      <td className="text-on-surface-variant py-3">
+                        {order.shippingAddress?.city || "Standard Shipping"}
+                      </td>
+                      <td className="text-on-surface-variant py-3">
+                        {(order.items || []).length} item
+                        {(order.items || []).length !== 1 ? "s" : ""}
+                      </td>
+                      <td className="text-on-surface py-3 font-semibold">
+                        {formatInr(order.totalAmount)}
+                      </td>
+                      <td className="py-3">
+                        <span
+                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${
+                            order.status === "delivered"
+                              ? "bg-success-container text-on-success-container border-success/20 border"
+                              : order.status === "shipped"
+                                ? "bg-secondary-container text-on-secondary-container border-secondary/20 border"
+                                : order.status === "processing"
+                                  ? "bg-primary-container text-on-primary-container border-primary/20 border"
+                                  : "bg-warning-container text-on-warning-container border-warning/20 border"
+                          }`}
+                        >
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="py-3 text-right">
+                        <Link
+                          href="/dashboard/orders"
+                          className="border-outline-variant/60 text-on-surface hover:bg-surface-container rounded-full border px-3 py-1 text-xs font-semibold transition-colors"
+                        >
+                          Manage
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </section>
 

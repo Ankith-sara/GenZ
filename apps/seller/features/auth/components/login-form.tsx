@@ -322,7 +322,7 @@ export function LoginForm({ redirectTo, disableOtp = true }: LoginFormProps) {
             </>
           ) : isSuccess ? (
             <>
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+              <CheckCircle2 className="h-4 w-4 text-amber-500" />
               <span>Authenticated! Entering Desk...</span>
             </>
           ) : (
