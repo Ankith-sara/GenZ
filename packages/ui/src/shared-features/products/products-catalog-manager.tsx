@@ -353,43 +353,17 @@ export function ProductsCatalogManager({
     const totalCount = products.length;
     const publishedCount = products.filter((p) => p.status === "published").length;
     const draftCount = products.filter((p) => p.status !== "published").length;
-    const lowStockCount = products.filter((p) => {
-      const count = p.inventory_count ?? 0;
-      const threshold = p.low_stock_threshold ?? 5;
-      return count > 0 && count <= threshold;
-    }).length;
-    const inStockCount = products.filter((p) => {
-      const count = p.inventory_count ?? 0;
-      const threshold = p.low_stock_threshold ?? 5;
-      return count > threshold;
-    }).length;
-    const outOfStockCount = products.filter(
-      (p) => (p.inventory_count ?? 0) === 0
-    ).length;
     const featuredCount = products.filter((p) => Boolean(p.is_featured)).length;
     const newArrivalCount = products.filter((p) => Boolean(p.is_new_arrival)).length;
     const bestSellerCount = products.filter((p) => Boolean(p.is_best_seller)).length;
-
-    const catalogValuation = products.reduce((sum, p) => {
-      const price = p.price_inr || 0;
-      const units =
-        p.inventory_count !== null && p.inventory_count !== undefined
-          ? p.inventory_count
-          : 1;
-      return sum + price * units;
-    }, 0);
 
     return {
       totalCount,
       publishedCount,
       draftCount,
-      lowStockCount,
-      inStockCount,
-      outOfStockCount,
       featuredCount,
       newArrivalCount,
       bestSellerCount,
-      catalogValuation,
     };
   }, [products]);
 
@@ -430,14 +404,6 @@ export function ProductsCatalogManager({
 
       const matchesCategory = categoryFilter === "all" || p.category === categoryFilter;
 
-      const count = p.inventory_count ?? 0;
-      const threshold = p.low_stock_threshold ?? 5;
-      const matchesStock =
-        stockFilter === "all" ||
-        (stockFilter === "in_stock" && count > threshold) ||
-        (stockFilter === "low_stock" && count > 0 && count <= threshold) ||
-        (stockFilter === "out_of_stock" && count === 0);
-
       const price = p.price_inr || 0;
       const matchesPrice =
         priceRangeFilter === "all" ||
@@ -456,7 +422,6 @@ export function ProductsCatalogManager({
         matchesSearch &&
         matchesStatus &&
         matchesCategory &&
-        matchesStock &&
         matchesPrice &&
         matchesBadge
       );
@@ -892,7 +857,7 @@ export function ProductsCatalogManager({
             ₹{kpis.catalogValuation.toLocaleString("en-IN")}
           </p>
           <span className="text-muted-foreground text-[11px]">
-            Total inventory value
+            Catalog value
           </span>
         </div>
       </div>
@@ -935,16 +900,6 @@ export function ProductsCatalogManager({
               onChange={setCategoryFilter}
             />
 
-            {/* Inventory / Stock Filter */}
-            <FilterDropdown
-              label="Inventory"
-              icon={<Package className="h-3.5 w-3.5" />}
-              value={stockFilter}
-              options={stockOptions}
-              onChange={setStockFilter}
-            />
-
-            {/* Price Range Filter */}
             <FilterDropdown
               label="Price"
               icon={<Tag className="h-3.5 w-3.5" />}
@@ -1025,18 +980,6 @@ export function ProductsCatalogManager({
                 <button
                   type="button"
                   onClick={() => setCategoryFilter("all")}
-                  className="ml-0.5 cursor-pointer hover:text-rose-500"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
-            {stockFilter !== "all" && (
-              <span className="border-border bg-card text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-2xs">
-                Stock: {stockOptions.find((o) => o.value === stockFilter)?.label}
-                <button
-                  type="button"
-                  onClick={() => setStockFilter("all")}
                   className="ml-0.5 cursor-pointer hover:text-rose-500"
                 >
                   <X className="h-3 w-3" />
@@ -1257,7 +1200,6 @@ export function ProductsCatalogManager({
                         ₹{p.price_inr ? p.price_inr.toLocaleString("en-IN") : "—"}
                       </span>
 
-                      {/* Stock indicator badge */}
                       <span
                         className={clsx(
                           "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium",
