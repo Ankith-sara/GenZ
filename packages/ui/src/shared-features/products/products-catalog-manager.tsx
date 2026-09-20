@@ -355,7 +355,7 @@ export function ProductsCatalogManager({
     const draftCount = products.filter((p) => p.status !== "published").length;
     const featuredCount = products.filter((p) => Boolean(p.is_featured)).length;
     const newArrivalCount = products.filter((p) => Boolean(p.is_new_arrival)).length;
-    const bestSellerCount = products.filter((p) => Boolean(p.is_best_seller)).length;
+    const averagePrice = products.length ? products.reduce((sum, p) => sum + (p.price_inr || 0), 0) / products.length : 0;
 
     return {
       totalCount,
@@ -364,6 +364,7 @@ export function ProductsCatalogManager({
       featuredCount,
       newArrivalCount,
       bestSellerCount,
+      averagePrice,
     };
   }, [products]);
 
@@ -762,103 +763,23 @@ export function ProductsCatalogManager({
         </div>
       </div>
 
-      {/* KPI METRIC CARDS */}
-      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-5">
-        <div
-          onClick={() => {
-            setStatusFilter("all");
-                  }}
-          className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
-            statusFilter === "all" && stockFilter === "all"
-              ? "ring-primary/10 border-primary/40 ring-2"
-              : ""
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Total Catalog
-            </span>
-            <Package className="text-muted-foreground h-4 w-4" />
-          </div>
-          <p className="text-foreground mt-1.5 text-2xl font-bold">{kpis.totalCount}</p>
-          <span className="text-muted-foreground text-[11px]">All listed items</span>
-        </div>
-
-        <div
-          onClick={() => {
-            setStatusFilter("published");
-          }}
-          className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
-            statusFilter === "published"
-              ? "border-emerald-500/40 ring-2 ring-emerald-500/10"
-              : ""
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Published Live
-            </span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-          </div>
-          <p className="mt-1.5 text-2xl font-bold text-emerald-700">
-            {kpis.publishedCount}
-          </p>
-          <span className="text-[11px] text-emerald-700">Active on storefront</span>
-        </div>
-
-        <div
-          onClick={() => {
-            setStatusFilter("draft");
-          }}
-          className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
-            statusFilter === "draft"
-              ? "border-amber-500/40 ring-2 ring-amber-500/10"
-              : ""
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">Drafts</span>
-            <Clock className="h-4 w-4 text-amber-600" />
-          </div>
-          <p className="mt-1.5 text-2xl font-bold text-amber-700">{kpis.draftCount}</p>
-          <span className="text-[11px] text-amber-700">Needs publishing</span>
-        </div>
-
-        <div
-          onClick={() => {
-            setStockFilter(stockFilter === "low_stock" ? "all" : "low_stock");
-          }}
-          className={`bg-card border-border hover:border-foreground/30 cursor-pointer rounded-2xl border p-4 shadow-2xs transition-all ${
-            stockFilter === "low_stock"
-              ? "border-rose-500/40 ring-2 ring-rose-500/10"
-              : ""
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Stock Alert
-            </span>
-            <AlertTriangle className="h-4 w-4 text-rose-600" />
-          </div>
-          <p className="mt-1.5 text-2xl font-bold text-rose-700">
-            {kpis.lowStockCount}
-          </p>
-          <span className="text-[11px] text-rose-700">Low or out of stock</span>
-        </div>
-
-        <div className="bg-card border-border col-span-2 rounded-2xl border p-4 shadow-2xs sm:col-span-1">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs font-medium">
-              Catalog Value
-            </span>
-            <Tag className="text-muted-foreground h-4 w-4" />
-          </div>
-          <p className="text-foreground mt-1.5 text-xl font-bold sm:text-2xl">
-            ₹{kpis.catalogValuation.toLocaleString("en-IN")}
-          </p>
-          <span className="text-muted-foreground text-[11px]">
-            Catalog value
-          </span>
+      {/* CATALOG SUMMARY */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <button type="button" onClick={() => setStatusFilter("all")} className="border-border bg-card hover:border-foreground/20 rounded-xl border p-4 text-left shadow-sm transition">
+          <span className="text-muted-foreground text-xs font-medium">Total products</span>
+          <p className="text-foreground mt-1 text-2xl font-bold">{kpis.totalCount}</p>
+        </button>
+        <button type="button" onClick={() => setStatusFilter("published")} className="border-border bg-card hover:border-foreground/20 rounded-xl border p-4 text-left shadow-sm transition">
+          <span className="text-muted-foreground text-xs font-medium">Published</span>
+          <p className="text-foreground mt-1 text-2xl font-bold">{kpis.publishedCount}</p>
+        </button>
+        <button type="button" onClick={() => setStatusFilter("draft")} className="border-border bg-card hover:border-foreground/20 rounded-xl border p-4 text-left shadow-sm transition">
+          <span className="text-muted-foreground text-xs font-medium">Drafts</span>
+          <p className="text-foreground mt-1 text-2xl font-bold">{kpis.draftCount}</p>
+        </button>
+        <div className="border-border bg-card rounded-xl border p-4 shadow-sm">
+          <span className="text-muted-foreground text-xs font-medium">Average price</span>
+          <p className="text-foreground mt-1 text-2xl font-bold">₹{Math.round(kpis.averagePrice).toLocaleString("en-IN")}</p>
         </div>
       </div>
 
