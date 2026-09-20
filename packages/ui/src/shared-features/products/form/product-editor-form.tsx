@@ -255,7 +255,7 @@ export function ProductEditorForm({
   return (
     <div className="mx-auto max-w-5xl space-y-6 pb-16">
       {/* PAGE HEADER & ACTIONS */}
-      <div className="border-border bg-card flex flex-col gap-4 rounded-2xl border p-5 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-border bg-card flex flex-col gap-4 rounded-lg border p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="text-muted-foreground mb-1.5 flex items-center gap-2 text-xs">
             <Link
@@ -292,7 +292,7 @@ export function ProductEditorForm({
               type="button"
               variant="outline"
               asChild
-              className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-full px-4 text-xs font-semibold shadow-2xs ${PRESSABLE}`}
+              className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-sm ${PRESSABLE}`}
             >
               <Link href={manageReelsHref}>
                 <Film className="text-muted-foreground h-3.5 w-3.5" />
@@ -309,7 +309,7 @@ export function ProductEditorForm({
               executeSubmit("draft");
             }}
             disabled={isPending || isUploading}
-            className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-full px-4 text-xs font-semibold shadow-2xs disabled:opacity-60 ${PRESSABLE}`}
+            className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-sm disabled:opacity-60 ${PRESSABLE}`}
           >
             {(isPending || isUploading) && submittingStatus === "draft" ? (
               <>
@@ -328,7 +328,7 @@ export function ProductEditorForm({
             type="button"
             variant="outline"
             onClick={() => setShowPreviewModal(true)}
-            className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-full px-4 text-xs font-semibold shadow-2xs ${PRESSABLE}`}
+            className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-sm ${PRESSABLE}`}
           >
             <Eye className="text-muted-foreground h-3.5 w-3.5" />
             <span>Preview</span>
@@ -341,7 +341,7 @@ export function ProductEditorForm({
               executeSubmit(target);
             }}
             disabled={isPending || isUploading}
-            className={`h-9 items-center gap-1.5 rounded-full !bg-[#18181b] px-5 text-xs font-semibold !text-white shadow-xs hover:!bg-black disabled:opacity-60 ${PRESSABLE}`}
+            className={`h-9 items-center gap-1.5 rounded-full !bg-[#18181b] px-5 text-xs font-semibold !text-white shadow-sm hover:!bg-foreground disabled:opacity-60 ${PRESSABLE}`}
           >
             {isPending || isUploading ? (
               <>
@@ -371,7 +371,7 @@ export function ProductEditorForm({
 
       {/* SUCCESS ALERT */}
       {state?.success && (
-        <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-semibold text-emerald-800 shadow-xs">
+        <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-xs font-semibold text-emerald-800 shadow-sm">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>Product listing saved and updated successfully!</span>
@@ -387,7 +387,7 @@ export function ProductEditorForm({
 
       {/* ERROR ALERT */}
       {state?.error && (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs font-semibold text-rose-800 shadow-xs">
+        <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-xs font-semibold text-rose-800 shadow-sm">
           {state.error}
         </div>
       )}
@@ -462,7 +462,7 @@ export function ProductEditorForm({
         <PublishingCard status={status} onChangeStatus={setStatus} />
 
         {/* BOTTOM ACTION BAR */}
-        <div className="border-border bg-card flex flex-col gap-3 rounded-2xl border p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+        <div className="border-border bg-card flex flex-col gap-3 rounded-lg border p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
           <span className="text-muted-foreground text-xs">
             Changes can be updated or unlisted anytime from your catalog desk.
           </span>
@@ -475,7 +475,7 @@ export function ProductEditorForm({
                 executeSubmit("draft");
               }}
               disabled={isPending || isUploading}
-              className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-full px-4 text-xs font-semibold shadow-2xs disabled:opacity-60 ${PRESSABLE}`}
+              className={`border-border bg-card text-foreground hover:bg-muted h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-sm disabled:opacity-60 ${PRESSABLE}`}
             >
               {(isPending || isUploading) && submittingStatus === "draft" ? (
                 <>
@@ -493,7 +493,7 @@ export function ProductEditorForm({
             <Button
               type="submit"
               disabled={isPending || isUploading}
-              className={`h-9 items-center gap-1.5 rounded-full !bg-[#18181b] px-5 text-xs font-semibold !text-white shadow-xs hover:!bg-black disabled:opacity-60 ${PRESSABLE}`}
+              className={`h-9 items-center gap-1.5 rounded-full !bg-[#18181b] px-5 text-xs font-semibold !text-white shadow-sm hover:!bg-foreground disabled:opacity-60 ${PRESSABLE}`}
             >
               {isPending || isUploading ? (
                 <>
@@ -526,10 +526,10 @@ export function ProductEditorForm({
       {showPreviewModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-foreground/50 backdrop-blur-xs transition-opacity"
             onClick={() => setShowPreviewModal(false)}
           />
-          <div className="border-border bg-card relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border p-6 shadow-2xl">
+          <div className="border-border bg-card relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg border p-6 shadow-2xl">
             <div className="border-border flex items-center justify-between border-b pb-3">
               <span className="text-muted-foreground font-mono text-xs font-bold tracking-wider uppercase">
                 Storefront Buyer Preview
@@ -544,7 +544,7 @@ export function ProductEditorForm({
             </div>
 
             <div className="mt-4 space-y-4">
-              <div className="border-border bg-muted/40 relative aspect-square w-full overflow-hidden rounded-2xl border">
+              <div className="border-border bg-muted/40 relative aspect-square w-full overflow-hidden rounded-lg border">
                 {coverPreview ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
