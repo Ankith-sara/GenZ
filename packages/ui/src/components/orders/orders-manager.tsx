@@ -398,7 +398,14 @@ export function OrdersManager({
                       <tr
                         key={order.id}
                         onClick={() => handleOpenOrder(order)}
-                        className="cursor-pointer transition-colors hover:bg-zinc-50/60"
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            handleOpenOrder(order);
+                          }
+                        }}
+                        tabIndex={0}
+                        className="cursor-pointer transition-colors hover:bg-zinc-50/60 focus-visible:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-primary"
                       >
                         <td className="px-4 py-3.5 font-mono font-semibold text-zinc-900">
                           <div>{order.id}</div>
@@ -511,7 +518,15 @@ export function OrdersManager({
                   <div
                     key={order.id}
                     onClick={() => handleOpenOrder(order)}
-                    className="space-y-2.5 p-4 transition-colors active:bg-zinc-50"
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        handleOpenOrder(order);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    className="space-y-2.5 p-4 transition-colors active:bg-zinc-50 focus-visible:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-primary"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold text-zinc-900">
