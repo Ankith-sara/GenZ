@@ -5,7 +5,6 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { clsx } from "clsx";
 import {
-  Search,
   ShoppingBag,
   Edit,
   Eye,
@@ -23,6 +22,7 @@ import {
   ArrowUpDown,
   LayoutGrid,
   List,
+  Search,
   Sparkles,
   Star,
   Flame,
@@ -86,7 +86,7 @@ const ICON_STROKE = 1.75;
 const PRESSABLE =
   "cursor-pointer transition-all duration-150 ease-out active:scale-[0.98] disabled:active:scale-100 disabled:cursor-not-allowed";
 
-function resolveProductImage(p: SharedProductRecord): string | null {
+export function resolveProductImage(p: SharedProductRecord): string | null {
   const candidate =
     p.image_url ||
     (p.images && p.images.length > 0 ? p.images[0] : null) ||
