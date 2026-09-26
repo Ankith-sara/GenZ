@@ -116,7 +116,7 @@ export default async function HomePage() {
     // Graceful fallback if database connection is pending
   }
 
-  const liveSellersMapped: SuggestedSeller[] = dbSellers.map((s, idx) => {
+  const liveSellersMapped: SuggestedSeller[] = dbSellers.map((s) => {
     let meta: Record<string, unknown> = {};
     if (
       s.description &&
