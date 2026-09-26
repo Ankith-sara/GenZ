@@ -1,5 +1,5 @@
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@/features/auth/lib/require-role";
 import {
   VerificationsSplitClient,
   type SellerAppRecord,
@@ -10,7 +10,7 @@ export default async function AdminVerificationsPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireRole("admin");
+  await requirePermission("verifications:read");
   const { status: statusParam } = await searchParams;
   const activeStatus = statusParam || "pending";
 

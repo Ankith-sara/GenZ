@@ -51,12 +51,11 @@ function docsOfType(documents: SellerDocument[], docType: DocType) {
 }
 
 function StepUploader({
-  sellerId,
   docType,
   documents,
   onChange,
 }: {
-  sellerId: string;
+  sellerId?: string;
   docType: DocType;
   documents: SellerDocument[];
   onChange: () => void;

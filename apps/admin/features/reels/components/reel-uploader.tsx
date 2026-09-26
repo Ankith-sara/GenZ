@@ -11,10 +11,9 @@ import { uploadReelAction } from "@/features/reels/actions";
 
 export function ReelUploader({
   productId,
-  sellerId: _sellerId,
 }: {
   productId: string;
-  sellerId: string;
+  sellerId?: string;
 }) {
   const router = useRouter();
   const videoRef = useRef<HTMLInputElement>(null);

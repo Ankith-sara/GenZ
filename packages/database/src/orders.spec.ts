@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterAll, vi } from "vitest";
 import type { CreateOrderInput } from "./orders";
 
 // Mock Supabase admin client to isolate logic & fallback storage tests
@@ -205,5 +205,16 @@ describe("Orders Domain Service Specs", () => {
       expect(customerOrders.length).toBeGreaterThanOrEqual(1);
       expect(customerOrders.some((o) => o.id === order.id)).toBe(true);
     });
+  });
+
+  afterAll(() => {
+    const fs = require("fs");
+    const path = require("path");
+    const p = path.resolve(__dirname, "storage", "test-orders-store.json");
+    if (fs.existsSync(p)) {
+      try {
+        fs.unlinkSync(p);
+      } catch {}
+    }
   });
 });

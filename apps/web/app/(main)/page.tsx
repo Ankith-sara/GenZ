@@ -42,48 +42,6 @@ const homepageCategories = [
     count: "GI Heritage Craft",
     desc: "Lightweight Tella Poniki wood toys depicting Indian folklore and village life.",
   },
-  {
-    name: "Wooden Toys & Crafts",
-    href: "/discover?category=Wooden Toys & Crafts",
-    image: "/cat_toys.png",
-    count: "150+ Verified Products",
-    desc: "Eco-friendly, non-toxic traditional Indian toys & STEM blocks.",
-  },
-  {
-    name: "Home & Furniture",
-    href: "/discover?category=Home & Furniture",
-    image: "/cat_furniture.png",
-    count: "180+ Verified Products",
-    desc: "Solid wood furniture, handcrafted decor & living items.",
-  },
-  {
-    name: "Brass & Metal Crafts",
-    href: "/discover?category=Brass & Metal Crafts",
-    image: "/cat_brass.jpg",
-    count: "Ancient Dhokra Castings",
-    desc: "Heritage brass diyas, temple bells, engraved metalware & master statues.",
-  },
-  {
-    name: "Terracotta & Pottery",
-    href: "/discover?category=Terracotta & Pottery",
-    image: "/cat_pottery.jpg",
-    count: "Earthen Clay Guilds",
-    desc: "Hand-thrown terracotta pottery, festive clay diyas and studio ceramics.",
-  },
-  {
-    name: "Handloom & Textiles",
-    href: "/discover?category=Handloom & Textiles",
-    image: "/cat_handloom.jpg",
-    count: "Authentic Weaves",
-    desc: "Natural indigo Kalamkari, Ikat weaves & artisanal handblock fabrics.",
-  },
-  {
-    name: "Kitchen & Dining",
-    href: "/discover?category=Kitchen & Dining",
-    image: "/cat_kitchen.png",
-    count: "120+ Heritage Utensils",
-    desc: "Traditional bronze utensils, soapstone cookware & seasoned artisan cast ware.",
-  },
 ];
 
 export default async function HomePage() {
@@ -378,12 +336,12 @@ export default async function HomePage() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mx-auto grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
             {homepageCategories.map((cat) => (
               <Link
                 key={cat.name}
                 href={cat.href}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#E5E5E0] bg-white p-3.5 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-black/20 hover:shadow-xl sm:rounded-3xl sm:p-5"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#E5E5E0] bg-white p-3 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:border-black/20 hover:shadow-xl sm:rounded-3xl sm:p-5"
               >
                 <div>
                   <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100 sm:rounded-2xl">
@@ -392,27 +350,27 @@ export default async function HomePage() {
                       alt={cat.name}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                     />
                   </div>
 
                   <div className="mt-3 space-y-1 sm:mt-4 sm:space-y-1.5">
-                    <h3 className="font-nantes line-clamp-1 text-base font-bold tracking-tight text-[#1A1A18] transition-colors group-hover:text-amber-600 sm:line-clamp-none sm:text-2xl">
+                    <h3 className="font-nantes line-clamp-1 text-sm font-bold tracking-tight text-[#1A1A18] transition-colors group-hover:text-amber-600 sm:line-clamp-none sm:text-xl lg:text-2xl">
                       {cat.name}
                     </h3>
                     {cat.desc && (
-                      <p className="font-graphik line-clamp-2 text-[11px] leading-relaxed text-neutral-600 sm:text-xs">
+                      <p className="font-graphik line-clamp-2 text-[10px] leading-relaxed text-neutral-600 sm:text-xs">
                         {cat.desc}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="font-graphik mt-3.5 flex items-center justify-between border-t border-[#F0F0EC] pt-2.5 text-[11px] font-bold text-[#1A1A18] sm:mt-5 sm:pt-3.5 sm:text-xs">
-                  <span className="truncate pr-2 text-[10px] text-neutral-500 tabular-nums transition-colors group-hover:text-amber-800 sm:text-xs">
+                <div className="font-graphik mt-3 flex items-center justify-between border-t border-[#F0F0EC] pt-2 text-[10px] font-bold text-[#1A1A18] sm:mt-5 sm:pt-3.5 sm:text-xs">
+                  <span className="truncate pr-1 text-[9px] text-neutral-500 tabular-nums transition-colors group-hover:text-amber-800 sm:text-xs">
                     {cat.count}
                   </span>
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#E5E5E0] bg-[#FAF8F4] transition-all duration-300 group-hover:border-black group-hover:bg-black group-hover:text-white sm:h-8 sm:w-8">
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#E5E5E0] bg-[#FAF8F4] transition-all duration-300 group-hover:border-black group-hover:bg-black group-hover:text-white sm:h-8 sm:w-8">
                     <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5 sm:h-3.5 sm:w-3.5" />
                   </div>
                 </div>
@@ -422,13 +380,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* TRENDING PRODUCTS SHOWCASE (Directly on Homepage) */}
+      {/* TRENDING PRODUCTS SHOWCASE */}
       <HomepageProducts initialProducts={products} sellerMap={sellerMap} />
 
-      {/* SUGGESTED INDIAN MAKERS & ARTISANS (Instagram-Style Cards) */}
+      {/* SUGGESTED INDIAN MAKERS & ARTISANS */}
       <SuggestedSellers sellers={displaySellers} />
 
-      {/* TRUST MARQUEE & INSTITUTIONAL VALIDATION */}
+      {/* TRUST & FOUNDER TESTIMONIAL */}
       <section className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12">
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 text-center">
           <div className="text-brand-yellow-dark flex gap-1">
@@ -448,50 +406,6 @@ export default async function HomePage() {
                 Appala Sairam
               </h4>
               <p className="font-graphik text-smoke text-xs">Founder, GenZ</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mx-auto mt-10 flex max-w-7xl flex-col items-center justify-between gap-6 rounded-3xl border border-neutral-300/80 bg-white p-6 shadow-xs sm:mt-14 sm:flex-row sm:gap-8 sm:px-8 sm:py-6">
-          <span className="font-graphik shrink-0 text-center text-xs font-bold tracking-[0.25em] text-neutral-500 uppercase sm:text-left">
-            Institutional validation
-          </span>
-          <div className="grid w-full grid-cols-2 items-center justify-center gap-6 sm:flex sm:w-auto sm:flex-1 sm:flex-wrap sm:justify-end sm:gap-8 lg:gap-10">
-            <div className="relative mx-auto h-10 w-24 shrink-0 opacity-90 transition-opacity hover:opacity-100 sm:mx-0 sm:h-12 sm:w-28">
-              <Image
-                src="/sidbi_logo.png"
-                alt="SIDBI"
-                fill
-                className="object-contain mix-blend-multiply"
-                sizes="(max-width: 640px) 96px, 112px"
-              />
-            </div>
-            <div className="relative mx-auto h-10 w-24 shrink-0 opacity-90 transition-opacity hover:opacity-100 sm:mx-0 sm:h-12 sm:w-28">
-              <Image
-                src="/nsic_logo.png"
-                alt="NSIC"
-                fill
-                className="object-contain mix-blend-multiply"
-                sizes="(max-width: 640px) 96px, 112px"
-              />
-            </div>
-            <div className="relative mx-auto h-10 w-20 shrink-0 opacity-90 transition-opacity hover:opacity-100 sm:mx-0 sm:h-12 sm:w-24">
-              <Image
-                src="/dpiit_logo.png"
-                alt="DPIIT"
-                fill
-                className="object-contain mix-blend-multiply"
-                sizes="(max-width: 640px) 80px, 96px"
-              />
-            </div>
-            <div className="relative mx-auto h-12 w-28 shrink-0 opacity-90 transition-opacity hover:opacity-100 sm:mx-0 sm:h-14 sm:w-36">
-              <Image
-                src="/make_in_india.png"
-                alt="Make in India"
-                fill
-                className="object-contain mix-blend-multiply"
-                sizes="(max-width: 640px) 112px, 144px"
-              />
             </div>
           </div>
         </div>

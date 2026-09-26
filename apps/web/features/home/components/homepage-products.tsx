@@ -227,9 +227,11 @@ export function HomepageProducts({
     const coverUrl = productMediaUrl(p.cover_image_path);
     const seller = p.seller_id ? sellerMap[p.seller_id] : undefined;
     const artisan = seller?.business_name || "Verified Indian Maker";
-    const isEtikoppaka =
+    const isGI =
       p.category?.toLowerCase().includes("etikoppaka") ||
       p.name?.toLowerCase().includes("etikoppaka") ||
+      p.category?.toLowerCase().includes("kondapalli") ||
+      p.name?.toLowerCase().includes("kondapalli") ||
       false;
 
     return {
@@ -238,9 +240,9 @@ export function HomepageProducts({
       category: p.category?.trim() || "General Crafts",
       description: p.description,
       price_inr: p.price_inr ?? 0,
-      image: coverUrl || "/cat_toys.png",
+      image: coverUrl || "/etikoppaka_toys.png",
       artisan,
-      isGI: isEtikoppaka,
+      isGI,
       rawProduct: p,
     };
   });
@@ -257,16 +259,10 @@ export function HomepageProducts({
     categoryMap.get(cat)!.push(p);
   }
 
-  // Prioritize heritage/GI categories first, followed by others
+  // Prioritize heritage/GI categories first
   const priorityOrder = [
     "Etikoppaka Wooden Toys",
     "Kondapalli Toys",
-    "Wooden Toys & Crafts",
-    "Brass & Metal Crafts",
-    "Terracotta & Pottery",
-    "Handloom & Textiles",
-    "Home & Furniture",
-    "Kitchen & Dining",
   ];
 
   const sortedCategories = Array.from(categoryMap.keys()).sort((a, b) => {

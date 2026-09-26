@@ -27,6 +27,8 @@ export function ProductCard({
     isGI ??
     (product.category?.toLowerCase().includes("etikoppaka") ||
       product.name?.toLowerCase().includes("etikoppaka") ||
+      product.category?.toLowerCase().includes("kondapalli") ||
+      product.name?.toLowerCase().includes("kondapalli") ||
       false);
 
   return (

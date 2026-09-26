@@ -41,48 +41,6 @@ const categoriesList = [
     desc: "Lightweight Tella Poniki wood toys depicting Indian folklore and village life",
     badge: "GI Tag",
   },
-  {
-    name: "Wooden Toys & Crafts",
-    href: "/discover?category=Wooden Toys & Crafts",
-    image: "/cat_toys.png",
-    desc: "Eco-friendly, non-toxic traditional Indian toys & puzzle blocks",
-    badge: "Popular",
-  },
-  {
-    name: "Home & Furniture",
-    href: "/discover?category=Home & Furniture",
-    image: "/cat_furniture.png",
-    desc: "Solid wood furniture, handcrafted decor & living items",
-    badge: null,
-  },
-  {
-    name: "Brass & Metal Crafts",
-    href: "/discover?category=Brass & Metal Crafts",
-    image: "/cat_brass.jpg",
-    desc: "Ancient Dhokra brass statues, temple lamps & engraved heritage metalware",
-    badge: "Handmade",
-  },
-  {
-    name: "Terracotta & Pottery",
-    href: "/discover?category=Terracotta & Pottery",
-    image: "/cat_pottery.jpg",
-    desc: "Hand-thrown earthenware pottery, clay diyas & festive artisan decor",
-    badge: "Authentic",
-  },
-  {
-    name: "Handloom & Textiles",
-    href: "/discover?category=Handloom & Textiles",
-    image: "/cat_handloom.jpg",
-    desc: "Handwoven Kalamkari, Ikat weaves & artisanal handblock fabrics",
-    badge: "Heritage",
-  },
-  {
-    name: "Kitchen & Dining",
-    href: "/discover?category=Kitchen & Dining",
-    image: "/cat_kitchen.png",
-    desc: "Traditional bronze utensils, soapstone cookware & seasoned cast ware",
-    badge: null,
-  },
 ];
 
 export function Header({

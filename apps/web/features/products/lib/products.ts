@@ -12,12 +12,6 @@ export const PRODUCT_STATUS_LABEL: Record<ProductStatus, string> = {
 export const DEFAULT_PRODUCT_CATEGORIES = [
   "Etikoppaka Wooden Toys",
   "Kondapalli Toys",
-  "Wooden Toys & Crafts",
-  "Home & Furniture",
-  "Brass & Metal Crafts",
-  "Terracotta & Pottery",
-  "Handloom & Textiles",
-  "Kitchen & Dining",
 ] as const;
 
 export const TOY_CATEGORIES = DEFAULT_PRODUCT_CATEGORIES;

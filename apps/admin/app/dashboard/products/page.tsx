@@ -1,9 +1,9 @@
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@/features/auth/lib/require-role";
 import { ProductsTableClient } from "./products-table-client";
 
 export default async function AdminProductsPage() {
-  await requireRole("admin");
+  await requirePermission("products:read");
   const supabase = createAdminClient();
 
   const { data: products, error } = await supabase

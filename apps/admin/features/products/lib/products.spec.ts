@@ -44,10 +44,10 @@ describe("Products Domain Logic Specs", () => {
   });
 
   describe("TOY_CATEGORIES", () => {
-    it("contains curated category list including Etikoppaka Wooden Toys and Brass & Metal Crafts", () => {
+    it("contains curated category list including Etikoppaka Wooden Toys and Kondapalli Toys", () => {
       expect(TOY_CATEGORIES).toContain("Etikoppaka Wooden Toys");
       expect(TOY_CATEGORIES).toContain("Kondapalli Toys");
-      expect(TOY_CATEGORIES).toContain("Brass & Metal Crafts");
+      expect(TOY_CATEGORIES).toHaveLength(2);
     });
 
     it("defines default discover page size", () => {

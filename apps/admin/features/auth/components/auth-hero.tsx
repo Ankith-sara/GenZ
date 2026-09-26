@@ -1,4 +1,4 @@
-import { Building2, ShoppingBag, MessageSquare, Users, ShieldCheck } from "lucide-react";
+import { Building2, ShoppingBag, Users, ShieldCheck } from "lucide-react";
 
 export function AuthHero() {
   const operationalPillars = [

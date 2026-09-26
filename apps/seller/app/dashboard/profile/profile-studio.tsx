@@ -61,9 +61,6 @@ interface ProfileStudioProps {
 const CRAFT_CATEGORIES = [
   "Etikoppaka Wooden Toys",
   "Kondapalli Toys",
-  "Wooden Toys & Crafts",
-  "Home & Furniture",
-  "Handicrafts",
 ];
 
 export function SellerProfileStudio({

@@ -27,13 +27,8 @@ import {
 import { Select } from "../../../../components/select";
 
 export const DEFAULT_PRODUCT_CATEGORIES = [
-  "Kondapalli toys",
-  "Wooden toys & crafts",
   "Etikoppaka Wooden Toys",
-  "Pooja essentials",
-  "Home decor",
-  "Handicrafts",
-  "Festival & gifting sets",
+  "Kondapalli Toys",
 ];
 
 /* M3 Switch Component */

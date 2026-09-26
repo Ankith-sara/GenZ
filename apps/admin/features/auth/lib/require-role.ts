@@ -1,3 +1,3 @@
 import "server-only";
-export { requireRole } from "@genz/database/authorization";
+export { requireRole, requirePermission, getEmployeeForSession, hasPermission } from "@genz/database/authorization";
 

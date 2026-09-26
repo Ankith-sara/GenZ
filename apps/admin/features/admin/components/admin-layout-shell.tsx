@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { AdminSidebar } from "./admin-sidebar";
+import { ModuleNavbar } from "./module-navbar";
 import { CommandMenu } from "@genz/ui";
 import {
   Menu, Search, Bell, Calendar, ChevronDown, 
@@ -21,6 +22,12 @@ interface AdminLayoutShellProps {
     orders?: number;
     waitlist: number;
     contact: number;
+    tasks?: number;
+    contacts?: number;
+    leads?: number;
+    deals?: number;
+    onboarding?: number;
+    employees?: number;
   };
   firstName: string;
   dateRangeFormatted: string;
@@ -78,7 +85,11 @@ export function AdminLayoutShell({
 
   // Page title mapping for non-dashboard pages
   const getPageTitle = () => {
-    if (pathname === "/admin/dashboard") return null;
+    if (pathname === "/admin/dashboard" || pathname === "/dashboard") return null;
+    if (pathname?.includes("/crm/onboarding")) return "Seller Onboarding Process";
+    if (pathname?.includes("/crm")) return "Artisan CRM & Sourcing";
+    if (pathname?.includes("/tasks")) return "Task Management";
+    if (pathname?.includes("/employees")) return "Employee Management";
     if (pathname?.includes("/verifications")) return "Seller Verifications";
     if (pathname?.includes("/orders")) return "Customer Orders & Tracking";
     if (pathname?.includes("/users")) return "User Profiles";
@@ -129,6 +140,11 @@ export function AdminLayoutShell({
                 </h1>
               </div>
             )}
+          </div>
+
+          {/* Center Modular Switcher Navbar: Admin | Operations | CRM */}
+          <div className="hidden sm:flex items-center justify-center">
+            <ModuleNavbar counts={counts} />
           </div>
 
           {/* Right Header Toolbar */}

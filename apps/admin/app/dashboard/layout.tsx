@@ -95,6 +95,28 @@ export default async function AdminDashboardLayout({
     if (status === "pending") realPendingCount++;
   });
 
+  let pendingTasksCount = 0;
+  let activeOnboardingCount = 0;
+  let contactsCount = 0;
+  let leadsCount = 0;
+  let dealsCount = 0;
+  try {
+    const { getTasksList } = await import("@genz/database/tasks");
+    const { getSellerOnboardingList, getContactsList, getLeadsList, getDealsList } = await import("@genz/database/crm");
+    const [tasks, onboardings, contactsList, leadsList, dealsList] = await Promise.all([
+      getTasksList(),
+      getSellerOnboardingList(),
+      getContactsList(),
+      getLeadsList(),
+      getDealsList(),
+    ]);
+    pendingTasksCount = tasks.filter((t) => t.status !== "done" && t.status !== "cancelled").length;
+    activeOnboardingCount = onboardings.filter((o) => !o.live_on_marketplace).length;
+    contactsCount = contactsList.length;
+    leadsCount = leadsList.filter((l) => l.stage !== "converted" && l.stage !== "dropped").length;
+    dealsCount = dealsList.filter((d) => d.stage !== "contract_signed" && d.stage !== "lost").length;
+  } catch {}
+
   const counts = {
     users: usersCount ?? 0,
     pendingVerifications: realPendingCount,
@@ -102,6 +124,11 @@ export default async function AdminDashboardLayout({
     orders: ordersCount ?? 0,
     waitlist: waitlistCount ?? 0,
     contact: contactCount ?? 0,
+    tasks: pendingTasksCount,
+    contacts: contactsCount,
+    leads: leadsCount,
+    deals: dealsCount,
+    onboarding: activeOnboardingCount,
   };
 
   const adminName = session.profile?.full_name || "Admin User";

@@ -1,4 +1,4 @@
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@/features/auth/lib/require-role";
 import { getOrders } from "@genz/database/orders";
 
 import type { OrderRecord } from "@genz/types";
@@ -8,7 +8,7 @@ import { updateOrderStatusAction } from "./actions";
 export const dynamic = "force-dynamic";
 
 export default async function AdminOrdersPage() {
-  await requireRole("admin");
+  await requirePermission("orders:read");
 
   let allOrders: OrderRecord[] = [];
   try {

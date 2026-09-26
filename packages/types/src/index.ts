@@ -1,4 +1,8 @@
+import type { Role } from "./database";
 export * from "./database";
+export * from "./employees";
+export * from "./tasks";
+export * from "./crm";
 
 export interface Category {
   id: string;
@@ -11,7 +15,7 @@ export interface Category {
 export interface User {
   id: string;
   email: string;
-  role: "buyer" | "seller" | "admin" | "customer";
+  role: Role;
   full_name?: string | null;
   avatar_url?: string | null;
 }
@@ -19,12 +23,6 @@ export interface User {
 export const DEFAULT_PRODUCT_CATEGORIES = [
   "Etikoppaka Wooden Toys",
   "Kondapalli Toys",
-  "Wooden Toys & Crafts",
-  "Home & Furniture",
-  "Brass & Metal Crafts",
-  "Terracotta & Pottery",
-  "Handloom & Textiles",
-  "Kitchen & Dining",
 ] as const;
 
 export type ProductCategory = (typeof DEFAULT_PRODUCT_CATEGORIES)[number];

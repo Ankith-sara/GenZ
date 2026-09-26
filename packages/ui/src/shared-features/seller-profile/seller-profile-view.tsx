@@ -532,6 +532,8 @@ export function SellerProfileView({
                   const isGI =
                     p.category?.toLowerCase().includes("etikoppaka") ||
                     p.name?.toLowerCase().includes("etikoppaka") ||
+                    p.category?.toLowerCase().includes("kondapalli") ||
+                    p.name?.toLowerCase().includes("kondapalli") ||
                     p.category?.toLowerCase().includes("gi");
 
                   return (

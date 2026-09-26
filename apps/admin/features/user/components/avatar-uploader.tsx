@@ -8,11 +8,10 @@ import { validateFileContent } from "@/lib/file-validation";
 import { uploadAvatarAction } from "@/features/user/actions";
 
 export function AvatarUploader({
-  userId: _userId,
   fullName,
   currentUrl,
 }: {
-  userId: string;
+  userId?: string;
   fullName: string | null;
   currentUrl: string | null;
 }) {

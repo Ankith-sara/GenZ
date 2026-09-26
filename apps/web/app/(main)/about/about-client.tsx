@@ -63,161 +63,7 @@ export function ScrollReveal({
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Problem & Solution Section (Original Animated Line Component)
-// ─────────────────────────────────────────────────────────────────────────────
-function ProblemSolutionSection() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const el = wrapperRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const total = rect.height - window.innerHeight;
-      if (total <= 0) return;
-      const raw = -rect.top / total;
-      setProgress(Math.min(1, Math.max(0, raw)));
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  // Accelerated transition math for quick line animation and view switching
-  const problemOpacity = Math.min(1, Math.max(0, 1 - progress / 0.25));
-  const solutionOpacity = Math.min(1, Math.max(0, (progress - 0.25) / 0.25));
-  const isSolution = progress > 0.3;
-
-  const lineCount = 7;
-  const centerY = 175;
-  const lineSpacing = 42;
-
-  const lines = Array.from({ length: lineCount }, (_, i) => {
-    const yStart = centerY + (i - 3) * lineSpacing;
-    return {
-      id: i,
-      d: `M 0,${yStart} L 400,${yStart} C 650,${yStart} 850,${centerY} 1000,${centerY} L 2000,${centerY}`,
-    };
-  });
-
-  const pathLength = 2300;
-  // Quick drawing animation (multiplied speed so lines draw instantly as you scroll)
-  const drawProgress = Math.max(0, Math.min(1, progress * 2.2));
-  const dashOffset = pathLength * (1 - drawProgress);
-  const lineColor = isSolution ? "#FAE251" : "#1C1C1E";
-
-  return (
-    <section
-      ref={wrapperRef}
-      className="section_solution border-ash relative w-full border-b"
-      style={{ minHeight: "110vh" }}
-    >
-      <div
-        className="solution-inside sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden pt-24 pb-2 transition-colors duration-200 sm:pt-28 lg:pt-32"
-        style={{
-          backgroundColor: isSolution ? "#0B0B0B" : "#FAF7F0",
-        }}
-      >
-        <div className="padding-global is-text relative z-10 mx-auto w-full max-w-[1280px] px-6 sm:px-12">
-          <div className="container-medium relative min-h-[160px] max-w-3xl sm:min-h-[190px]">
-            {/* Problem View */}
-            <div
-              className="solution_component is-problem w-full transition-all duration-200 ease-out"
-              style={{
-                opacity: problemOpacity,
-                pointerEvents: problemOpacity > 0.1 ? "auto" : "none",
-                position: problemOpacity > 0.1 ? "relative" : "absolute",
-                inset: 0,
-              }}
-            >
-              <div className="mb-3 sm:mb-4">
-                <div className="tag border-ash inline-block rounded-full border bg-white px-4 py-1 shadow-xs">
-                  <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-                    The Problem
-                  </span>
-                </div>
-              </div>
-              <h3 className="font-nantes text-ink-black max-w-3xl text-2xl leading-[1.3] font-normal sm:text-3xl lg:text-4xl">
-                Fragmented brokers, unverified middlemen, and opaque import channels
-                slow intake and hide real Indian factory capacity.
-              </h3>
-              <p className="font-graphik text-smoke mt-3 max-w-2xl text-sm leading-relaxed sm:text-base">
-                Legacy sourcing forces buyers to navigate 30-40% broker markups,
-                unverified machinery claims, and risky overseas supply chains.
-              </p>
-            </div>
-
-            {/* Solution & Differentiation View */}
-            <div
-              className="solution_component is-solution w-full transition-all duration-200 ease-out"
-              style={{
-                opacity: solutionOpacity,
-                pointerEvents: solutionOpacity > 0.1 ? "auto" : "none",
-                position: solutionOpacity > 0.1 ? "relative" : "absolute",
-                inset: 0,
-              }}
-            >
-              <div className="mb-3 sm:mb-4">
-                <div className="tag border-brand-yellow/30 bg-brand-yellow/10 inline-block rounded-full border px-4 py-1 shadow-xs">
-                  <span className="font-graphik text-brand-yellow text-xs font-semibold tracking-[0.2em] uppercase">
-                    The Solution &amp; Differentiation
-                  </span>
-                </div>
-              </div>
-              <h3 className="font-nantes text-pure-white max-w-3xl text-2xl leading-[1.3] font-normal sm:text-3xl lg:text-4xl">
-                GenZ replaces opaque middleman chains with one direct platform for real
-                factory reels, import gap routing, and design innovation.
-              </h3>
-              <p className="font-graphik mt-3 max-w-2xl text-sm leading-relaxed text-neutral-300 sm:text-base">
-                Complete process transparency builds commercial trust — connecting
-                buyers directly to verified Indian sellers without markup stacking.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="solution-lottie-container pointer-events-none z-10 flex w-full items-center justify-center overflow-hidden opacity-90 sm:opacity-100">
-          <div className="solution-lottie w-full">
-            <svg
-              viewBox="0 0 2000 350"
-              width="100%"
-              height="100%"
-              preserveAspectRatio="none"
-              className="h-[30vh] max-h-[320px] w-full sm:h-[35vh]"
-            >
-              <g>
-                {lines.map((line) => (
-                  <path
-                    key={line.id}
-                    d={line.d}
-                    fill="none"
-                    stroke={lineColor}
-                    strokeWidth="3.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeDasharray={pathLength}
-                    strokeDashoffset={dashOffset}
-                    className="transition-colors duration-200 ease-in-out"
-                  />
-                ))}
-              </g>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Foundations of Trust Component (Original Sticky Track / Responsive Grid)
-// ─────────────────────────────────────────────────────────────────────────────
+// Foundations of Trust Component 
 function FoundationsOfTrustScrollSection() {
   const trustPillars = [
     {
@@ -603,13 +449,10 @@ export function AboutClient() {
         </div>
       </section>
 
-      {/* 2. THE SOLUTION & DIFFERENTIATION */}
-      <ProblemSolutionSection />
-
-      {/* 3. FOUNDATIONS OF TRUST */}
+      {/* 2. FOUNDATIONS OF TRUST */}
       <FoundationsOfTrustScrollSection />
 
-      {/* 4. INDIA 2030 VISION WITH STARTING WITH TOYS & OUR STORY 5 INTERACTIVE TIMELINE */}
+      {/* 3. INDIA 2030 VISION WITH STARTING WITH TOYS & OUR STORY 5 INTERACTIVE TIMELINE */}
       <section
         id="vision"
         className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12 md:py-28"
@@ -967,7 +810,7 @@ export function AboutClient() {
         </div>
       </section>
 
-      {/* 5. Call To Action & Institutional Verification Banner */}
+      {/* 4. Call To Action */}
       <section className="border-ash border-b bg-white py-20 sm:py-28">
         <ScrollReveal className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 text-center sm:px-12">
           <div className="tag border-ash inline-block rounded-full border bg-[#FAF7F0] px-4 py-1.5 shadow-xs">
@@ -1000,55 +843,6 @@ export function AboutClient() {
             </Button>
           </div>
         </ScrollReveal>
-
-        {/* Institutional Standards & Verification Card */}
-        <div className="mx-auto mt-20 max-w-[1280px] px-6 sm:px-12">
-          <ScrollReveal>
-            <div className="border-ash flex max-w-7xl flex-col items-center justify-between gap-6 rounded-2xl border bg-[#FAF7F0] p-6 shadow-xs sm:flex-row sm:gap-8 sm:px-8 sm:py-6">
-              <span className="font-graphik text-smoke shrink-0 text-center text-xs font-semibold tracking-[0.25em] uppercase sm:text-left">
-                Institutional Standards &amp; Verification
-              </span>
-              <div className="grid w-full grid-cols-2 items-center justify-center gap-6 sm:flex sm:w-auto sm:flex-1 sm:flex-wrap sm:justify-end sm:gap-8 lg:gap-10">
-                <div className="relative mx-auto h-10 w-24 shrink-0 sm:mx-0 sm:h-12 sm:w-28">
-                  <Image
-                    src="/sidbi_logo.png"
-                    alt="SIDBI"
-                    fill
-                    className="object-contain mix-blend-multiply"
-                    sizes="(max-width: 640px) 96px, 112px"
-                  />
-                </div>
-                <div className="relative mx-auto h-10 w-24 shrink-0 sm:mx-0 sm:h-12 sm:w-28">
-                  <Image
-                    src="/nsic_logo.png"
-                    alt="NSIC"
-                    fill
-                    className="object-contain mix-blend-multiply"
-                    sizes="(max-width: 640px) 96px, 112px"
-                  />
-                </div>
-                <div className="relative mx-auto h-10 w-20 shrink-0 sm:mx-0 sm:h-12 sm:w-24">
-                  <Image
-                    src="/dpiit_logo.png"
-                    alt="DPIIT"
-                    fill
-                    className="object-contain mix-blend-multiply"
-                    sizes="(max-width: 640px) 80px, 96px"
-                  />
-                </div>
-                <div className="relative mx-auto h-12 w-28 shrink-0 sm:mx-0 sm:h-14 sm:w-36">
-                  <Image
-                    src="/make_in_india.png"
-                    alt="Make in India"
-                    fill
-                    className="object-contain mix-blend-multiply"
-                    sizes="(max-width: 640px) 112px, 144px"
-                  />
-                </div>
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
       </section>
     </main>
   );

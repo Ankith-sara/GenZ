@@ -11,7 +11,11 @@
     "./admin": "./src/admin.ts",
     "./orders": "./src/orders.ts",
     "./auth": "./src/auth.ts",
-    "./authorization": "./src/authorization.ts"
+    "./authorization": "./src/authorization.ts",
+    "./crm": "./src/crm.ts",
+    "./employees": "./src/employees.ts",
+    "./roles": "./src/roles.ts",
+    "./tasks": "./src/tasks.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

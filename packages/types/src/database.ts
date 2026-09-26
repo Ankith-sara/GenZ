@@ -1,4 +1,14 @@
-export type Role = "buyer" | "seller" | "admin" | "customer";
+import type { Employee } from "./employees";
+import type { InternalTask } from "./tasks";
+import type {
+  CRMContact,
+  CRMLead,
+  CRMDeal,
+  SellerOnboardingTracker,
+  CRMActivityLog,
+} from "./crm";
+
+export type Role = "buyer" | "seller" | "admin" | "customer" | "emp";
 
 export type VerificationStatus = "not_submitted" | "pending" | "verified" | "rejected";
 
@@ -373,6 +383,63 @@ export type Database = {
           customer_email: string;
         };
         Update: Partial<OrderDbRow>;
+        Relationships: [];
+      };
+      employees: {
+        Row: Employee;
+        Insert: Partial<Employee> & { id: string; full_name: string; email: string };
+        Update: Partial<Employee>;
+        Relationships: [];
+      };
+      crm_contacts: {
+        Row: CRMContact;
+        Insert: Partial<CRMContact> & { name: string; phone: string };
+        Update: Partial<CRMContact>;
+        Relationships: [];
+      };
+      crm_leads: {
+        Row: CRMLead;
+        Insert: Partial<CRMLead> & {
+          artisan_or_business_name: string;
+          contact_person: string;
+          phone: string;
+          craft_category: string;
+        };
+        Update: Partial<CRMLead>;
+        Relationships: [];
+      };
+      crm_deals: {
+        Row: CRMDeal;
+        Insert: Partial<CRMDeal> & { lead_id: string; deal_name: string };
+        Update: Partial<CRMDeal>;
+        Relationships: [];
+      };
+      seller_onboarding_tracker: {
+        Row: SellerOnboardingTracker;
+        Insert: Partial<SellerOnboardingTracker> & {
+          seller_name: string;
+          contact_person: string;
+          email: string;
+          phone: string;
+          craft_category: string;
+        };
+        Update: Partial<SellerOnboardingTracker>;
+        Relationships: [];
+      };
+      internal_tasks: {
+        Row: InternalTask;
+        Insert: Partial<InternalTask> & { title: string };
+        Update: Partial<InternalTask>;
+        Relationships: [];
+      };
+      crm_activity_logs: {
+        Row: CRMActivityLog;
+        Insert: Partial<CRMActivityLog> & {
+          entity_type: string;
+          entity_id: string;
+          summary: string;
+        };
+        Update: Partial<CRMActivityLog>;
         Relationships: [];
       };
     };
