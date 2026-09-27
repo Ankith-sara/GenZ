@@ -30,10 +30,12 @@ export default async function DiscoverPage({
     .eq("status", "published");
 
   if (filters.q) {
-    query = query.textSearch("search_vector", filters.q, {
-      type: "websearch",
-      config: "english",
-    });
+    const cleanTerm = filters.q.trim().replace(/[%_]/g, "");
+    if (cleanTerm) {
+      query = query.or(
+        `name.ilike.%${cleanTerm}%,category.ilike.%${cleanTerm}%,description.ilike.%${cleanTerm}%`
+      );
+    }
   }
   if (filters.category) query = query.eq("category", filters.category);
   if (filters.min_price) query = query.gte("price_inr", Number(filters.min_price));

@@ -62,10 +62,12 @@ export async function GET(request: NextRequest) {
     .eq("status", "published");
 
   if (q) {
-    query = query.textSearch("search_vector", q, {
-      type: "websearch",
-      config: "english",
-    });
+    const cleanTerm = q.trim().replace(/[%_]/g, "");
+    if (cleanTerm) {
+      query = query.or(
+        `name.ilike.%${cleanTerm}%,category.ilike.%${cleanTerm}%,description.ilike.%${cleanTerm}%`
+      );
+    }
   }
   if (category) query = query.eq("category", category);
   if (min_price !== undefined) query = query.gte("price_inr", min_price);
