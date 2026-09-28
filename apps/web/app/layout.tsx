@@ -86,7 +86,7 @@ export default function RootLayout({
     logo: `${siteUrl}/logo.png`,
     description:
       "India's trusted B2C manufacturing and innovation platform connecting buyers with verified domestic makers.",
-    sameAs: ["https://www.instagram.com/genzonline.in"],
+    sameAs: ["https://www.instagram.com/genzonline4u"],
   };
 
   return (

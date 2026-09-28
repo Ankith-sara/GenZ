@@ -85,7 +85,7 @@ const defaultSections: FooterSection[] = [
 const defaultSocialLinks: FooterSocialLink[] = [
   {
     icon: <InstagramIcon className="h-5 w-5" />,
-    href: "https://www.instagram.com/genzonline.in",
+    href: "https://www.instagram.com/genzonline4u?stkn=MTNvaDM4cHJuOXV3dw%3D%3D#",
     label: "Instagram",
   },
   {

@@ -35,8 +35,8 @@ const CHANNELS = [
   {
     icon: Camera,
     label: "Official Instagram",
-    value: "@genzonline.in",
-    href: "https://www.instagram.com/genzonline.in",
+    value: "@genzonline4u",
+    href: "https://www.instagram.com/genzonline4u?stkn=MTNvaDM4cHJuOXV3dw%3D%3D#",
     desc: "Factory reels & ecosystem updates",
   },
   {
