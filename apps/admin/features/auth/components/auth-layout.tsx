@@ -34,7 +34,8 @@ export function AuthLayout({ redirectTo, error }: AuthLayoutProps) {
                 Admin Authentication
               </h2>
               <p className="font-graphik mt-2 text-xs leading-relaxed text-[#73736E] sm:text-sm">
-                Enter your authorized administrator credentials to manage platform operations, seller verifications, and marketplace governance.
+                Enter your authorized administrator credentials to manage platform
+                operations, seller verifications, and marketplace governance.
               </p>
             </div>
 
@@ -68,7 +69,9 @@ export function AuthLayout({ redirectTo, error }: AuthLayoutProps) {
                 <span className="w-full border-t border-[#E5E5E0]" />
               </div>
               <div className="relative flex justify-center text-[11px] font-medium tracking-wider uppercase">
-                <span className="bg-white px-3 text-[#73736E]">Or authenticate via</span>
+                <span className="bg-white px-3 text-[#73736E]">
+                  Or authenticate via
+                </span>
               </div>
             </div>
 

@@ -8,8 +8,11 @@ import { requireRole } from "@/features/auth/lib/require-role";
 import { parseMaterials } from "@/features/products/lib/products";
 import type { Product, ProductStatus, Role } from "@genz/types";
 import { checkRateLimit, logRateLimitAttempt, withRateLimit } from "@/lib/rate-limiter";
-import { productSchema, variantSchema } from "@/lib/validation";
-import { validateFileContentServer } from "@/lib/file-validation";
+import {
+  productSchema,
+  variantSchema,
+  validateFileContentServer,
+} from "@genz/validation";
 
 export interface ProductFormState {
   error?: string;

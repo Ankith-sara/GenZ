@@ -18,7 +18,10 @@ export async function getClientIp(): Promise<string> {
 
     const forwarded = headerList.get("x-forwarded-for");
     if (forwarded) {
-      const ips = forwarded.split(",").map((ip) => ip.trim()).filter(Boolean);
+      const ips = forwarded
+        .split(",")
+        .map((ip) => ip.trim())
+        .filter(Boolean);
       // Rightmost IP is appended by the nearest proxy (Vercel / Cloudflare / Nginx)
       if (ips.length > 0) {
         return ips[ips.length - 1];

@@ -11,6 +11,7 @@
     "./verification": "./src/verification.ts",
     "./resend": "./src/resend.ts",
     "./rate-limiter": "./src/rate-limiter.ts",
+    "./config": "./src/config.ts",
     "./vercel-analytics": "./src/vercel-analytics.ts",
     "./server": "./src/server.ts"
   },

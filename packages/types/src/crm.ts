@@ -9,10 +9,7 @@ export type CRMLeadStage =
   | "dropped";
 
 export type CRMDealStage =
-  | "proposal_sent"
-  | "terms_negotiating"
-  | "contract_signed"
-  | "lost";
+  "proposal_sent" | "terms_negotiating" | "contract_signed" | "lost";
 
 export type OnboardingStage =
   | "kyc_documents"
@@ -115,3 +112,19 @@ export type CRMActivityLog = {
   created_at: string;
   employee_name?: string | null;
 };
+
+export interface PlatformSellerCandidate {
+  seller_id: string;
+  name: string;
+  business_name: string;
+  email: string;
+  phone: string;
+  craft_category: string;
+  city: string;
+  state: string;
+  cluster_name: string;
+  is_verified: boolean;
+  product_count: number;
+  gi_certified?: boolean;
+  created_at: string;
+}

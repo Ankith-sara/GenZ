@@ -772,7 +772,7 @@ export function ProductsCatalogManager({
   // Filter dropdown configurations
   const statusOptions: FilterOption[] = [
     { value: "all", label: "All statuses", count: kpis.totalCount },
-    { value: "published", label: "Published", count: kpis.publishedCount },
+    { value: "published", label: "Live", count: kpis.publishedCount },
     { value: "draft", label: "Draft", count: kpis.draftCount },
   ];
 
@@ -896,26 +896,24 @@ export function ProductsCatalogManager({
 
       {/* 2. CATALOG SUMMARY & STOCK ALERT */}
       <section
-        className="grid grid-cols-1 gap-4 lg:grid-cols-12"
+        className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[1.7fr_1fr]"
         aria-label="Catalog summary"
       >
-        {/* 4-Item Stat Grid */}
-        <div className="border-outline-variant/60 bg-outline-variant/60 shadow-elevation-1 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border sm:grid-cols-4 lg:col-span-7 xl:col-span-8">
+        {/* 4-Item Stat Strip */}
+        <div className="border-outline-variant/50 bg-surface-container-lowest shadow-elevation-1 md:divide-outline-variant/40 grid grid-cols-2 divide-x-0 overflow-hidden rounded-3xl border md:grid-cols-4 md:divide-x">
           <button
             type="button"
             onClick={() => {
               setStatusFilter("all");
               setStockFilter("all");
             }}
-            className="bg-surface-container-lowest hover:bg-surface-container-low flex cursor-pointer flex-col gap-0.5 p-5 text-left transition-colors"
+            className="hover:bg-surface-container-low flex cursor-pointer flex-col justify-between px-6 py-4.5 text-left transition-colors"
           >
-            <span className="text-on-surface-variant text-xs font-semibold">
-              Listings
-            </span>
-            <span className="text-on-surface mt-1 font-mono text-2xl font-bold sm:text-3xl">
+            <p className="text-on-surface-variant text-sm font-medium">Listings</p>
+            <p className="text-on-surface my-1.5 text-3xl font-semibold tabular-nums">
               {kpis.totalCount}
-            </span>
-            <span className="text-on-surface-variant text-[11px]">In your catalog</span>
+            </p>
+            <p className="text-on-surface-variant text-xs">In your catalog</p>
           </button>
 
           <button
@@ -924,15 +922,13 @@ export function ProductsCatalogManager({
               setStatusFilter("published");
               setStockFilter("all");
             }}
-            className="bg-surface-container-lowest hover:bg-surface-container-low flex cursor-pointer flex-col gap-0.5 p-5 text-left transition-colors"
+            className="hover:bg-surface-container-low flex cursor-pointer flex-col justify-between px-6 py-4.5 text-left transition-colors"
           >
-            <span className="text-on-surface-variant text-xs font-semibold">Live</span>
-            <span className="text-on-surface mt-1 font-mono text-2xl font-bold sm:text-3xl">
+            <p className="text-on-surface-variant text-sm font-medium">Live</p>
+            <p className="text-on-surface my-1.5 text-3xl font-semibold tabular-nums">
               {kpis.publishedCount}
-            </span>
-            <span className="text-on-surface-variant text-[11px]">
-              Visible to buyers
-            </span>
+            </p>
+            <p className="text-on-surface-variant text-xs">Visible to buyers</p>
           </button>
 
           <button
@@ -941,126 +937,118 @@ export function ProductsCatalogManager({
               setStatusFilter("draft");
               setStockFilter("all");
             }}
-            className="bg-surface-container-lowest hover:bg-surface-container-low flex cursor-pointer flex-col gap-0.5 p-5 text-left transition-colors"
+            className="hover:bg-surface-container-low flex cursor-pointer flex-col justify-between px-6 py-4.5 text-left transition-colors"
           >
-            <span className="text-on-surface-variant text-xs font-semibold">
-              Drafts
-            </span>
-            <span className="text-on-surface mt-1 font-mono text-2xl font-bold sm:text-3xl">
+            <p className="text-on-surface-variant text-sm font-medium">Drafts</p>
+            <p className="text-on-surface my-1.5 text-3xl font-semibold tabular-nums">
               {kpis.draftCount}
-            </span>
-            <span className="text-on-surface-variant text-[11px]">
+            </p>
+            <p className="text-on-surface-variant text-xs">
               {kpis.draftCount > 0 ? "Ready to publish" : "Nothing waiting"}
-            </span>
+            </p>
           </button>
 
-          <div className="bg-surface-container-lowest flex flex-col gap-0.5 p-5 text-left">
-            <span className="text-on-surface-variant text-xs font-semibold">
+          <div className="flex flex-col justify-between px-6 py-4.5 text-left">
+            <p className="text-on-surface-variant text-sm font-medium">
               Inventory value
-            </span>
-            <span className="text-on-surface mt-1 font-mono text-2xl font-bold sm:text-3xl">
+            </p>
+            <p className="text-on-surface my-1.5 text-3xl font-semibold tabular-nums">
               ₹{kpis.catalogValuation.toLocaleString("en-IN")}
-            </span>
-            <span className="text-on-surface-variant text-[11px]">
+            </p>
+            <p className="text-on-surface-variant text-xs">
               {kpis.totalUnits} units in stock
-            </span>
+            </p>
           </div>
         </div>
 
         {/* Dynamic Stock Health Alert Box */}
         <div
           className={clsx(
-            "shadow-elevation-1 flex flex-col justify-between gap-3 rounded-2xl p-5 lg:col-span-5 xl:col-span-4",
+            "shadow-elevation-1 flex flex-col justify-between rounded-3xl p-5 transition-all",
             needAttentionCount > 0
-              ? "bg-warning-container text-on-warning-container"
-              : "bg-secondary-container text-on-secondary-container"
+              ? "bg-[#ffe3d1] text-[#4a2410]"
+              : "bg-success-container text-on-success-container"
           )}
         >
-          <div className="flex items-center gap-2.5">
-            {needAttentionCount > 0 ? (
-              <AlertTriangle className="text-warning h-5 w-5 shrink-0" />
-            ) : (
-              <CheckCircle2 className="text-success h-5 w-5 shrink-0" />
-            )}
-            <span className="text-sm font-bold tracking-tight">
-              {needAttentionCount > 0 ? "Stock needs attention" : "Stock looks healthy"}
-            </span>
-          </div>
-
-          <p className="text-lg leading-snug font-normal">
-            {needAttentionCount > 0
-              ? `${needAttentionCount} of ${kpis.totalCount} listings are low or out of stock`
-              : "Every listing has more than 5 units in stock"}
-          </p>
-
-          {/* Proportional Segmented Progress Bar */}
-          <div
-            className="flex h-3 w-full gap-1 overflow-hidden rounded-full bg-black/10"
-            aria-hidden="true"
-          >
-            {kpis.totalCount > 0 ? (
-              <>
-                {kpis.outOfStockCount > 0 && (
-                  <div
-                    style={{
-                      width: `${(kpis.outOfStockCount / kpis.totalCount) * 100}%`,
-                    }}
-                    className="bg-error rounded-full transition-all"
-                  />
+          <div>
+            {/* Header row with inline action button */}
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-sm font-semibold">
+                {needAttentionCount > 0 ? (
+                  <AlertTriangle className="h-4 w-4 shrink-0 text-[#9a3412]" />
+                ) : (
+                  <CheckCircle2 className="text-success h-4 w-4 shrink-0" />
                 )}
-                {kpis.lowStockCount > 0 && (
-                  <div
-                    style={{
-                      width: `${(kpis.lowStockCount / kpis.totalCount) * 100}%`,
-                    }}
-                    className="bg-warning rounded-full transition-all"
-                  />
-                )}
-                {kpis.inStockCount > 0 && (
-                  <div
-                    style={{
-                      width: `${(kpis.inStockCount / kpis.totalCount) * 100}%`,
-                    }}
-                    className="bg-success rounded-full transition-all"
-                  />
-                )}
-              </>
-            ) : (
-              <div className="w-full bg-black/5" />
-            )}
-          </div>
-
-          {/* Legend and Action */}
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-            <div className="flex flex-wrap items-center gap-3 text-xs font-semibold">
-              {kpis.outOfStockCount > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <span className="bg-error h-2 w-2 rounded-full" />
-                  {kpis.outOfStockCount} out of stock
+                <span>
+                  {needAttentionCount > 0
+                    ? "Stock needs attention"
+                    : "Stock looks healthy"}
                 </span>
+              </div>
+              {needAttentionCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setStockFilter("attention")}
+                  className="inline-flex h-7.5 shrink-0 cursor-pointer items-center rounded-full bg-[#4a2410] px-3 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#381a0b]"
+                >
+                  Review {needAttentionCount}
+                </button>
               )}
-              {kpis.lowStockCount > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <span className="bg-warning h-2 w-2 rounded-full" />
-                  {kpis.lowStockCount} low (≤ 5)
-                </span>
-              )}
-              <span className="flex items-center gap-1.5">
-                <span className="bg-success h-2 w-2 rounded-full" />
-                {kpis.inStockCount} healthy
-              </span>
             </div>
 
-            {needAttentionCount > 0 && (
-              <button
-                type="button"
-                onClick={() => setStockFilter("attention")}
-                className="bg-on-warning-container text-warning-container inline-flex h-8 cursor-pointer items-center justify-center rounded-full px-3.5 text-xs font-semibold transition-opacity hover:opacity-90"
-              >
-                Review {needAttentionCount} listing
-                {needAttentionCount === 1 ? "" : "s"}
-              </button>
-            )}
+            <p className="mt-2 text-base leading-snug font-normal sm:text-lg">
+              {needAttentionCount > 0
+                ? `${needAttentionCount} of ${kpis.totalCount} listings are low or out of stock`
+                : "Every listing has healthy stock"}
+            </p>
+          </div>
+
+          <div className="pt-2">
+            {/* Proportional Segmented Progress Bar */}
+            <div
+              className="flex h-2 w-full overflow-hidden rounded-full bg-black/10"
+              aria-hidden="true"
+            >
+              {kpis.totalCount > 0 ? (
+                <>
+                  {kpis.outOfStockCount > 0 && (
+                    <span
+                      style={{
+                        width: `${(kpis.outOfStockCount / kpis.totalCount) * 100}%`,
+                      }}
+                      className="bg-[#ef4444]"
+                    />
+                  )}
+                  {kpis.lowStockCount > 0 && (
+                    <span
+                      style={{
+                        width: `${(kpis.lowStockCount / kpis.totalCount) * 100}%`,
+                      }}
+                      className="bg-warning"
+                    />
+                  )}
+                  {kpis.inStockCount > 0 && (
+                    <span
+                      style={{
+                        width: `${(kpis.inStockCount / kpis.totalCount) * 100}%`,
+                      }}
+                      className="bg-success"
+                    />
+                  )}
+                </>
+              ) : (
+                <span className="w-full bg-black/5" />
+              )}
+            </div>
+
+            {/* Legend */}
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium">
+              {kpis.outOfStockCount > 0 && (
+                <span>{kpis.outOfStockCount} out of stock</span>
+              )}
+              {kpis.lowStockCount > 0 && <span>{kpis.lowStockCount} low (≤ 5)</span>}
+              <span>{kpis.inStockCount} healthy</span>
+            </div>
           </div>
         </div>
       </section>
@@ -1403,11 +1391,13 @@ export function ProductsCatalogManager({
                             checked={isPublished}
                             disabled={loadingId === p.id}
                             onChange={() => handleToggleStatus(p)}
-                            label={`Published: ${p.name}`}
+                            label={`Status: ${p.name}`}
                           />
-                          <span className="text-on-surface-variant text-xs">
-                            {isPublished ? "Published" : "Draft"}
-                          </span>
+                          {!isPublished && (
+                            <span className="text-on-surface-variant text-xs font-medium">
+                              Draft
+                            </span>
+                          )}
                         </div>
                       </td>
 
@@ -1544,11 +1534,13 @@ export function ProductsCatalogManager({
                       checked={isPublished}
                       disabled={loadingId === p.id}
                       onChange={() => handleToggleStatus(p)}
-                      label={`Published: ${p.name}`}
+                      label={`Status: ${p.name}`}
                     />
-                    <span className="text-on-surface-variant text-xs">
-                      {isPublished ? "Published" : "Draft"}
-                    </span>
+                    {!isPublished && (
+                      <span className="text-on-surface-variant text-xs font-medium">
+                        Draft
+                      </span>
+                    )}
 
                     <div className="ml-auto flex items-center gap-1">
                       <button

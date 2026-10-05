@@ -17,7 +17,8 @@ export async function addEmployeeAction(formData: FormData) {
   const fullName = formData.get("fullName") as string;
   const email = formData.get("email") as string;
   const phone = (formData.get("phone") as string) || null;
-  const department = (formData.get("department") as EmployeeDepartment) || "seller_acquisition";
+  const department =
+    (formData.get("department") as EmployeeDepartment) || "seller_acquisition";
   const rolePreset = (formData.get("rolePreset") as string) || "crm_manager";
   const designationInput = (formData.get("designation") as string) || "";
   const permissionsRaw = formData.getAll("permissions") as string[];
@@ -85,7 +86,10 @@ export async function updateEmployeePermissionsAction(
   await requirePermission("employees:write");
 
   let roleLevel: RoleLevel = "staff";
-  if (role.toLowerCase().includes("super admin") || designation.toLowerCase().includes("super admin")) {
+  if (
+    role.toLowerCase().includes("super admin") ||
+    designation.toLowerCase().includes("super admin")
+  ) {
     roleLevel = "admin";
   } else if (
     role.toLowerCase().includes("manager") ||

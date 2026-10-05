@@ -51,12 +51,12 @@ export function SellerProfileModal({
       />
 
       {/* Modal Card */}
-      <div className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl sm:rounded-3xl bg-white shadow-2xl">
+      <div className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl bg-white shadow-2xl sm:rounded-3xl">
         {/* Floating Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-[#171717] hover:bg-neutral-200 transition-colors shadow-xs cursor-pointer"
+          className="absolute top-4 right-4 z-20 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-neutral-100 text-[#171717] shadow-xs transition-colors hover:bg-neutral-200"
           aria-label="Close Profile Modal"
         >
           <X className="h-5 w-5" />

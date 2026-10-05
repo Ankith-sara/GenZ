@@ -36,12 +36,8 @@ export function SellerStoryProfile({
   return (
     <div className="min-h-screen bg-[#FAF8F5] pb-24 text-[#1A1A18]">
       <div className="mx-auto max-w-4xl pt-6 sm:pt-10">
-        <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-[#E5E5E0] bg-white shadow-xs">
-          <SellerProfileView
-            seller={seller}
-            products={mappedProducts}
-            reels={reels}
-          />
+        <div className="overflow-hidden rounded-2xl border border-[#E5E5E0] bg-white shadow-xs sm:rounded-3xl">
+          <SellerProfileView seller={seller} products={mappedProducts} reels={reels} />
         </div>
       </div>
     </div>

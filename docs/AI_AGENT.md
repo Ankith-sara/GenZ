@@ -77,15 +77,19 @@ Before declaring completion, inspect the final diff for:
 Every completed task should report:
 
 **Changed**
+
 - files/features changed
 
 **Behavior**
+
 - what now works differently
 
 **Verification**
+
 - commands/tests run and their result
 
 **Known issues**
+
 - anything not verified or intentionally left unchanged
 
 ## Bug-fixing protocol

@@ -273,7 +273,8 @@ export function VerificationsSplitClient({
             Seller Verification
           </h1>
           <p className="text-xs text-[#737373] sm:text-sm">
-            Review seller applications, manufacturing verification, GST documentation, and compliance status.
+            Review seller applications, manufacturing verification, GST documentation,
+            and compliance status.
           </p>
         </div>
       </div>
@@ -304,7 +305,7 @@ export function VerificationsSplitClient({
       {/* RESPONSIVE SEGMENTED STATUS NAVIGATION & SEARCH TOOLBAR */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         {/* Horizontal Scrollable Status Tabs on Mobile */}
-        <div className="inline-flex max-w-full overflow-x-auto whitespace-nowrap scrollbar-none items-center gap-1.5 rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-1">
+        <div className="inline-flex max-w-full scrollbar-none items-center gap-1.5 overflow-x-auto rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-1 whitespace-nowrap">
           {[
             { value: "all", label: "All", count: counts.all },
             { value: "pending", label: "Pending Review", count: counts.pending },
@@ -385,7 +386,10 @@ export function VerificationsSplitClient({
               }}
               className={`mt-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#E5E5E5] bg-white px-3 text-xs font-medium text-[#171717] hover:bg-[#F5F5F4] ${PRESSABLE} ${FOCUS_RING}`}
             >
-              <RotateCcw className="h-3.5 w-3.5 text-[#737373]" strokeWidth={ICON_STROKE} />
+              <RotateCcw
+                className="h-3.5 w-3.5 text-[#737373]"
+                strokeWidth={ICON_STROKE}
+              />
               <span>Clear filters</span>
             </button>
           )}
@@ -395,7 +399,7 @@ export function VerificationsSplitClient({
         <div className="overflow-hidden rounded-xl border border-[#E5E5E5] bg-white shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[768px] text-left text-xs">
-              <thead className="border-b border-[#E5E5E5] bg-[#FAFAF9] text-[11px] font-semibold text-[#737373] uppercase tracking-wider">
+              <thead className="border-b border-[#E5E5E5] bg-[#FAFAF9] text-[11px] font-semibold tracking-wider text-[#737373] uppercase">
                 <tr>
                   <th className="px-4 py-3">Business</th>
                   <th className="px-4 py-3">Applicant</th>
@@ -415,9 +419,7 @@ export function VerificationsSplitClient({
                       key={app.id}
                       onClick={() => setSelectedId(app.id)}
                       className={`group cursor-pointer transition-colors duration-150 ${
-                        isSelected
-                          ? "bg-[#FAFAF9]"
-                          : "hover:bg-[#FAFAF9]/80"
+                        isSelected ? "bg-[#FAFAF9]" : "hover:bg-[#FAFAF9]/80"
                       }`}
                     >
                       <td className="px-4 py-3.5">
@@ -429,7 +431,7 @@ export function VerificationsSplitClient({
                             />
                           </div>
                           <div className="min-w-0">
-                            <span className="block font-semibold text-[#171717] group-hover:underline truncate">
+                            <span className="block truncate font-semibold text-[#171717] group-hover:underline">
                               {app.business_name}
                             </span>
                             <span className="block font-mono text-[10px] text-[#737373]">
@@ -521,7 +523,7 @@ export function VerificationsSplitClient({
             <div className="flex flex-col justify-between gap-4 rounded-xl border border-[#E5E5E5] bg-[#FAFAF9] p-4 sm:flex-row sm:items-center">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-semibold text-[#737373] uppercase tracking-wider">
+                  <span className="text-[11px] font-semibold tracking-wider text-[#737373] uppercase">
                     Current Status:
                   </span>
                   <StatusBadge status={selectedApp.status} />
@@ -534,7 +536,7 @@ export function VerificationsSplitClient({
                   <Button
                     onClick={openApproveModal}
                     disabled={isPending}
-                    className={`h-8 flex-1 sm:flex-initial rounded-lg bg-[#166534] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#14532D] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`h-8 flex-1 rounded-lg bg-[#166534] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#14532D] disabled:opacity-50 sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
                   >
                     <FileCheck
                       className="mr-1.5 h-3.5 w-3.5"
@@ -546,7 +548,7 @@ export function VerificationsSplitClient({
                   <Button
                     onClick={() => setShowRejectForm(true)}
                     disabled={isPending}
-                    className={`h-8 flex-1 sm:flex-initial rounded-lg border border-[#991B1B] bg-[#991B1B] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#7F1D1D] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`h-8 flex-1 rounded-lg border border-[#991B1B] bg-[#991B1B] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#7F1D1D] disabled:opacity-50 sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
                   >
                     <XCircle className="mr-1.5 h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
                     <span>Reject</span>
@@ -572,19 +574,19 @@ export function VerificationsSplitClient({
                   required
                   className={`w-full rounded-lg border border-[#FCA5A5] bg-white p-2.5 text-xs text-[#171717] transition-colors focus:border-[#991B1B] ${FOCUS_RING}`}
                 />
-                <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2">
+                <div className="flex flex-col-reverse items-center justify-end gap-2 sm:flex-row">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => setShowRejectForm(false)}
-                    className={`h-8 w-full sm:w-auto text-xs font-medium ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`h-8 w-full text-xs font-medium sm:w-auto ${PRESSABLE} ${FOCUS_RING}`}
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     disabled={isPending || !rejectionReason.trim()}
-                    className={`h-8 w-full sm:w-auto bg-[#991B1B] text-xs font-medium text-white hover:bg-[#7F1D1D] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
+                    className={`h-8 w-full bg-[#991B1B] text-xs font-medium text-white hover:bg-[#7F1D1D] disabled:opacity-50 sm:w-auto ${PRESSABLE} ${FOCUS_RING}`}
                   >
                     Confirm rejection
                   </Button>
@@ -661,7 +663,7 @@ export function VerificationsSplitClient({
 
             {/* Form Data Application Details View */}
             {selectedApp.form_data && (
-              <div className="space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-4 sm:p-5 shadow-xs">
+              <div className="space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-4 shadow-xs sm:p-5">
                 <h4 className="text-xs font-semibold tracking-wider text-[#171717] uppercase">
                   Submitted Application Details
                 </h4>
@@ -742,7 +744,7 @@ export function VerificationsSplitClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#171717]/50 p-4 backdrop-blur-xs">
           <form
             onSubmit={handleApproveSubmit}
-            className="w-full max-w-md space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-5 sm:p-6 shadow-lg"
+            className="w-full max-w-md space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-5 shadow-lg sm:p-6"
           >
             <div>
               <h3 className="text-base font-semibold text-[#171717]">
@@ -858,12 +860,12 @@ export function VerificationsSplitClient({
               </label>
             </div>
 
-            <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-1">
+            <div className="flex flex-col-reverse items-center justify-end gap-2 pt-1 sm:flex-row">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setShowApproveModal(false)}
-                className={`h-8 w-full sm:w-auto text-xs font-medium ${PRESSABLE} ${FOCUS_RING}`}
+                className={`h-8 w-full text-xs font-medium sm:w-auto ${PRESSABLE} ${FOCUS_RING}`}
               >
                 Cancel
               </Button>
@@ -871,7 +873,7 @@ export function VerificationsSplitClient({
               <Button
                 type="submit"
                 disabled={isPending}
-                className={`h-8 w-full sm:w-auto bg-[#166534] text-xs font-medium text-white hover:bg-[#14532D] disabled:opacity-50 ${PRESSABLE} ${FOCUS_RING}`}
+                className={`h-8 w-full bg-[#166534] text-xs font-medium text-white hover:bg-[#14532D] disabled:opacity-50 sm:w-auto ${PRESSABLE} ${FOCUS_RING}`}
               >
                 {isPending ? (
                   <Loader2
@@ -891,14 +893,16 @@ export function VerificationsSplitClient({
       {/* CREDENTIALS PROVISIONED SUMMARY MODAL */}
       {credentialsModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#171717]/50 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-5 sm:p-6 shadow-lg">
+          <div className="w-full max-w-md space-y-4 rounded-xl border border-[#E5E5E5] bg-white p-5 shadow-lg sm:p-6">
             <div className="border-b border-[#E5E5E5] pb-3">
               <h3 className="text-base font-semibold text-[#171717]">
                 Seller credentials provisioned
               </h3>
               <p className="text-xs text-[#737373]">
                 Account generated for{" "}
-                <strong className="text-[#171717]">{credentialsModal.businessName}</strong>
+                <strong className="text-[#171717]">
+                  {credentialsModal.businessName}
+                </strong>
               </p>
             </div>
 
@@ -1012,7 +1016,7 @@ export function VerificationsSplitClient({
               )}
             </div>
 
-            <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-1">
+            <div className="flex flex-col-reverse items-center justify-end gap-2 pt-1 sm:flex-row">
               <Button
                 type="button"
                 variant="outline"
@@ -1020,7 +1024,7 @@ export function VerificationsSplitClient({
                   const allText = `GenZ Seller Account Credentials\nBusiness: ${credentialsModal.businessName}\nLogin Email: ${credentialsModal.email}\nPassword: ${credentialsModal.password}`;
                   copyToClipboard(allText, "all");
                 }}
-                className={`h-8 w-full sm:w-auto text-xs font-medium ${PRESSABLE} ${FOCUS_RING}`}
+                className={`h-8 w-full text-xs font-medium sm:w-auto ${PRESSABLE} ${FOCUS_RING}`}
               >
                 {copiedAll ? (
                   <Check
@@ -1039,7 +1043,7 @@ export function VerificationsSplitClient({
                   setCredentialsModal(null);
                   setActiveStatusFilter("approved");
                 }}
-                className={`h-8 w-full sm:w-auto bg-[#171717] text-xs font-medium text-white hover:bg-[#262626] ${PRESSABLE} ${FOCUS_RING}`}
+                className={`h-8 w-full bg-[#171717] text-xs font-medium text-white hover:bg-[#262626] sm:w-auto ${PRESSABLE} ${FOCUS_RING}`}
               >
                 View approved sellers
               </Button>

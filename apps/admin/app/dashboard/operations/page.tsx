@@ -7,7 +7,8 @@ import { OperationsDashboardClient } from "./operations-dashboard-client";
 
 export const metadata = {
   title: "Operations Module Dashboard | Admin",
-  description: "Operational management of customer orders, products catalog, tasks, and verifications.",
+  description:
+    "Operational management of customer orders, products catalog, tasks, and verifications.",
 };
 
 export default async function OperationsMainPage() {
@@ -30,7 +31,10 @@ export default async function OperationsMainPage() {
     const supabase = createAdminClient();
     const [pRes, vRes] = await Promise.all([
       supabase.from("products").select("id", { count: "exact", head: true }),
-      supabase.from("seller_applications").select("id", { count: "exact", head: true }).eq("status", "pending"),
+      supabase
+        .from("seller_applications")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "pending"),
     ]);
     productCount = pRes.count ?? 0;
     pendingVerificationsCount = vRes.count ?? 0;

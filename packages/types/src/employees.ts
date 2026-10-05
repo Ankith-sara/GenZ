@@ -74,7 +74,8 @@ export const ADMIN_MODULE_PERMISSIONS: AdminModulePermissionConfig[] = [
   {
     id: "products",
     name: "Products & Catalog",
-    description: "GI artisan catalog, product curation, inventory items, and SKU publishing",
+    description:
+      "GI artisan catalog, product curation, inventory items, and SKU publishing",
     actions: [
       { key: "products:read", label: "View / Read", actionType: "read" },
       { key: "products:write", label: "Create & Edit", actionType: "write" },
@@ -84,7 +85,8 @@ export const ADMIN_MODULE_PERMISSIONS: AdminModulePermissionConfig[] = [
   {
     id: "orders",
     name: "Orders & Fulfillment",
-    description: "Customer orders, courier dispatches, tracking updates, and delivery fulfillment",
+    description:
+      "Customer orders, courier dispatches, tracking updates, and delivery fulfillment",
     actions: [
       { key: "orders:read", label: "View / Read", actionType: "read" },
       { key: "orders:write", label: "Create & Update", actionType: "write" },
@@ -94,7 +96,8 @@ export const ADMIN_MODULE_PERMISSIONS: AdminModulePermissionConfig[] = [
   {
     id: "tasks",
     name: "Internal Tasks",
-    description: "Operational Kanban assignments, sprint tasks, and status workflow progression",
+    description:
+      "Operational Kanban assignments, sprint tasks, and status workflow progression",
     actions: [
       { key: "tasks:read", label: "View / Read", actionType: "read" },
       { key: "tasks:write", label: "Create & Edit", actionType: "write" },
@@ -105,7 +108,8 @@ export const ADMIN_MODULE_PERMISSIONS: AdminModulePermissionConfig[] = [
   {
     id: "crm",
     name: "CRM & Seller Acquisition",
-    description: "Artisan pipeline, leads, master contacts, partnerships, and onboardings",
+    description:
+      "Artisan pipeline, leads, master contacts, partnerships, and onboardings",
     actions: [
       { key: "crm:read", label: "View / Read", actionType: "read" },
       { key: "crm:write", label: "Create & Edit", actionType: "write" },
@@ -116,7 +120,8 @@ export const ADMIN_MODULE_PERMISSIONS: AdminModulePermissionConfig[] = [
   {
     id: "employees",
     name: "Employees & Departments",
-    description: "Internal team members, department units, role levels, and access administration",
+    description:
+      "Internal team members, department units, role levels, and access administration",
     actions: [
       { key: "employees:read", label: "View / Read", actionType: "read" },
       { key: "employees:write", label: "Create & Edit", actionType: "write" },
@@ -126,7 +131,8 @@ export const ADMIN_MODULE_PERMISSIONS: AdminModulePermissionConfig[] = [
   {
     id: "verifications",
     name: "Seller KYC & Verifications",
-    description: "Government artisan ID checks, GI craft certificates, and business document audits",
+    description:
+      "Government artisan ID checks, GI craft certificates, and business document audits",
     actions: [
       { key: "verifications:read", label: "View / Read", actionType: "read" },
       { key: "verifications:write", label: "Approve / Reject", actionType: "write" },
@@ -136,7 +142,8 @@ export const ADMIN_MODULE_PERMISSIONS: AdminModulePermissionConfig[] = [
   {
     id: "system",
     name: "Analytics & System",
-    description: "Marketplace performance metrics, server activity, and system governance",
+    description:
+      "Marketplace performance metrics, server activity, and system governance",
     actions: [
       { key: "system:read", label: "View Analytics", actionType: "read" },
       { key: "system:write", label: "System Config", actionType: "write" },
@@ -169,7 +176,8 @@ export const PREDEFINED_ROLES: Record<string, PredefinedRole> = {
   super_admin: {
     id: "super_admin",
     name: "Super Admin",
-    description: "Full master access across all platform modules, configurations, and administrative actions",
+    description:
+      "Full master access across all platform modules, configurations, and administrative actions",
     role_level: "admin",
     permissions: [
       "crm:read",
@@ -199,7 +207,8 @@ export const PREDEFINED_ROLES: Record<string, PredefinedRole> = {
   crm_manager: {
     id: "crm_manager",
     name: "CRM Manager",
-    description: "Full management of Seller CRM, artisan onboarding, leads, pipeline deals, and assignable tasks",
+    description:
+      "Full management of Seller CRM, artisan onboarding, leads, pipeline deals, and assignable tasks",
     role_level: "manager",
     permissions: [
       "crm:read",
@@ -217,7 +226,8 @@ export const PREDEFINED_ROLES: Record<string, PredefinedRole> = {
   operation_manager: {
     id: "operation_manager",
     name: "Operation Manager",
-    description: "Complete operational control over orders, catalog products, fulfillment logistics, and verification audits",
+    description:
+      "Complete operational control over orders, catalog products, fulfillment logistics, and verification audits",
     role_level: "manager",
     permissions: [
       "orders:read",

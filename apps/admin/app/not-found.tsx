@@ -27,7 +27,8 @@ export default function NotFound() {
             Page Not Found
           </h1>
           <p className="text-xs text-[#737373] sm:text-sm">
-            The requested administrative route or page does not exist or has been relocated.
+            The requested administrative route or page does not exist or has been
+            relocated.
           </p>
         </div>
 
@@ -47,7 +48,10 @@ export default function NotFound() {
               variant="outline"
               className={`h-9 w-full items-center justify-center gap-2 rounded-lg border-[#E5E5E5] bg-white px-4 text-xs font-medium text-[#171717] hover:bg-[#F5F5F4] sm:w-auto ${PRESSABLE} ${FOCUS_RING}`}
             >
-              <ShoppingBag className="h-4 w-4 text-[#737373]" strokeWidth={ICON_STROKE} />
+              <ShoppingBag
+                className="h-4 w-4 text-[#737373]"
+                strokeWidth={ICON_STROKE}
+              />
               <span>Product Catalog</span>
             </Button>
           </Link>

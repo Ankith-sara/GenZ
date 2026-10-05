@@ -1,5 +1,5 @@
 import { createClient } from "@genz/database";
-import { CheckoutClient } from "./checkout-client";
+import { CheckoutClient } from "@/features/checkout";
 
 export const dynamic = "force-dynamic";
 

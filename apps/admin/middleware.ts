@@ -70,8 +70,7 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .maybeSingle();
 
-    const isAdmin =
-      profile?.role === "admin" || user.user_metadata?.role === "admin";
+    const isAdmin = profile?.role === "admin" || user.user_metadata?.role === "admin";
 
     if (isAuthOnly) {
       if (isAdmin) {

@@ -24,24 +24,31 @@ GenZ/
 ## Boundary rules
 
 ### apps/web
+
 Owns buyer-facing routes and public marketplace UX.
 
 ### apps/seller
+
 Owns seller-only workflows. Seller authorization must be enforced server-side; hiding a UI element is not authorization.
 
 ### apps/admin
+
 Owns privileged platform operations. Admin-only operations must use server-side authorization and the privileged database client only where required.
 
 ### packages/ui
+
 Contains reusable, domain-agnostic UI primitives and shared composites. Do not duplicate common UI primitives in apps.
 
 ### packages/types
+
 Contains shared domain models and API-facing types.
 
 ### packages/validation
+
 Contains reusable Zod validation schemas.
 
 ### packages/database
+
 Contains Supabase clients, repositories and persistence logic. Keep database access out of presentational components.
 
 ## Data flow

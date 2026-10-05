@@ -58,7 +58,9 @@ export function SocialLogin({ redirectTo = "" }: { redirectTo?: string }) {
           </svg>
         )}
         <span>
-          {loading ? "Connecting to Google Workspace..." : "Sign in with Google Workspace"}
+          {loading
+            ? "Connecting to Google Workspace..."
+            : "Sign in with Google Workspace"}
         </span>
       </button>
 

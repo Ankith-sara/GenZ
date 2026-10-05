@@ -3,6 +3,7 @@ export * from "./database";
 export * from "./employees";
 export * from "./tasks";
 export * from "./crm";
+export * from "./accounting";
 
 export interface Category {
   id: string;

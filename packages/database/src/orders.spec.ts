@@ -145,7 +145,8 @@ describe("Orders Domain Service Specs", () => {
       expect(delivered!.status).toBe("delivered");
       expect(delivered!.paymentStatus).toBe("paid");
 
-      const latestEvent = delivered!.trackingEvents[delivered!.trackingEvents.length - 1];
+      const latestEvent =
+        delivered!.trackingEvents[delivered!.trackingEvents.length - 1];
       expect(latestEvent.status).toBe("delivered");
       expect(latestEvent.title).toBe("Order Delivered");
     });
@@ -188,7 +189,9 @@ describe("Orders Domain Service Specs", () => {
       expect(sellerOrders.length).toBeGreaterThanOrEqual(1);
       expect(sellerOrders.some((o) => o.id === order.id)).toBe(true);
 
-      const unrelatedOrders = await ordersService.getOrders({ sellerId: "seller-does-not-exist" });
+      const unrelatedOrders = await ordersService.getOrders({
+        sellerId: "seller-does-not-exist",
+      });
       expect(unrelatedOrders).toHaveLength(0);
     });
 

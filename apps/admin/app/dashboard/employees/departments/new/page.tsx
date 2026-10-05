@@ -4,7 +4,8 @@ import { DepartmentEditorForm } from "../department-editor-form";
 
 export const metadata = {
   title: "Create Department | Admin",
-  description: "Create a new administrative department and configure its role permission matrix.",
+  description:
+    "Create a new administrative department and configure its role permission matrix.",
 };
 
 export default async function NewDepartmentPage() {

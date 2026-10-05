@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Package, Truck, CheckCircle2, ChevronDown, ChevronUp, Clock } from "lucide-react";
+import {
+  Package,
+  Truck,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+} from "lucide-react";
 import Link from "next/link";
 import type { OrderRecord } from "@genz/types";
 
@@ -53,24 +60,24 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
     }
   }, [initialOrders, expandedOrderId]);
 
-
   if (!isMounted) return null;
 
   if (orders.length === 0) {
     return (
-      <div className="py-16 text-center bg-white rounded-2xl border border-[#E5E5E0] p-8 shadow-xs">
-        <div className="bg-[#FAF7F0] text-[#D97706] border border-[#E5E5E0] mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl">
+      <div className="rounded-2xl border border-[#E5E5E0] bg-white p-8 py-16 text-center shadow-xs">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#E5E5E0] bg-[#FAF7F0] text-[#D97706]">
           <Package className="h-8 w-8" />
         </div>
-        <h2 className="font-serif text-[#1A1A18] text-2xl font-normal">
+        <h2 className="font-serif text-2xl font-normal text-[#1A1A18]">
           No orders found yet
         </h2>
-        <p className="text-sm text-[#73736E] mx-auto mt-2 max-w-sm leading-relaxed">
-          You haven&apos;t placed any orders yet. Add items to your basket and choose Cash on Delivery to track them here.
+        <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[#73736E]">
+          You haven&apos;t placed any orders yet. Add items to your basket and choose
+          Cash on Delivery to track them here.
         </p>
         <Link
           href="/discover"
-          className="bg-[#D97706] hover:bg-[#B45309] mt-6 inline-flex h-11 items-center justify-center rounded-xl px-8 text-xs font-semibold tracking-wider text-white uppercase shadow-sm"
+          className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-[#D97706] px-8 text-xs font-semibold tracking-wider text-white uppercase shadow-sm hover:bg-[#B45309]"
         >
           Browse Products
         </Link>
@@ -80,9 +87,19 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
 
   const steps = [
     { key: "placed", label: "Order Placed", desc: "Confirmed with COD", icon: Clock },
-    { key: "processing", label: "Processing", desc: "Maker packing items", icon: Package },
+    {
+      key: "processing",
+      label: "Processing",
+      desc: "Maker packing items",
+      icon: Package,
+    },
     { key: "shipped", label: "Shipped", desc: "Handed to courier", icon: Truck },
-    { key: "delivered", label: "Delivered", desc: "Delivered to address", icon: CheckCircle2 },
+    {
+      key: "delivered",
+      label: "Delivered",
+      desc: "Delivered to address",
+      icon: CheckCircle2,
+    },
   ];
 
   const getStepStatus = (orderStatus: string, stepKey: string) => {
@@ -97,7 +114,7 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-center justify-between border-b border-[#E5E5E0] pb-3">
-        <h2 className="font-serif text-[#1A1A18] text-xl font-normal">
+        <h2 className="font-serif text-xl font-normal text-[#1A1A18]">
           Recent Orders ({orders.length})
         </h2>
         <span className="text-xs text-[#73736E]">
@@ -111,28 +128,29 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
           const isExpanded = expandedOrderId === ordId;
           const status = (order.status || "placed").toLowerCase();
 
-          const statusBadge = {
-            placed: "bg-amber-50 text-amber-800 border-amber-300",
-            processing: "bg-blue-50 text-blue-800 border-blue-300",
-            shipped: "bg-purple-50 text-purple-800 border-purple-300",
-            delivered: "bg-emerald-50 text-emerald-800 border-emerald-300",
-            cancelled: "bg-rose-50 text-rose-800 border-rose-300",
-          }[status] || "bg-gray-100 text-gray-800 border-gray-300";
+          const statusBadge =
+            {
+              placed: "bg-amber-50 text-amber-800 border-amber-300",
+              processing: "bg-blue-50 text-blue-800 border-blue-300",
+              shipped: "bg-purple-50 text-purple-800 border-purple-300",
+              delivered: "bg-emerald-50 text-emerald-800 border-emerald-300",
+              cancelled: "bg-rose-50 text-rose-800 border-rose-300",
+            }[status] || "bg-gray-100 text-gray-800 border-gray-300";
 
           const extOrder = order as ExtendedOrder;
           const totalVal = order.totalAmount ?? extOrder.total ?? 0;
-          const createdDate = order.createdAt || extOrder.date || new Date().toISOString();
-
+          const createdDate =
+            order.createdAt || extOrder.date || new Date().toISOString();
 
           return (
             <div
               key={ordId}
-              className="border border-[#E5E5E0] bg-white overflow-hidden rounded-2xl shadow-xs transition-all"
+              className="overflow-hidden rounded-2xl border border-[#E5E5E0] bg-white shadow-xs transition-all"
             >
               {/* Header / Summary row */}
               <div
                 onClick={() => setExpandedOrderId(isExpanded ? null : ordId)}
-                className="hover:bg-[#FAF8F4]/50 flex cursor-pointer flex-col items-start justify-between gap-3 p-5 transition-colors select-none sm:flex-row sm:items-center"
+                className="flex cursor-pointer flex-col items-start justify-between gap-3 p-5 transition-colors select-none hover:bg-[#FAF8F4]/50 sm:flex-row sm:items-center"
               >
                 <div>
                   <div className="flex items-center gap-2.5">
@@ -144,11 +162,11 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
                     >
                       {status}
                     </span>
-                    <span className="bg-[#FEF3C7] text-[#92400E] px-2 py-0.5 rounded text-[10px] font-semibold uppercase">
+                    <span className="rounded bg-[#FEF3C7] px-2 py-0.5 text-[10px] font-semibold text-[#92400E] uppercase">
                       COD
                     </span>
                   </div>
-                  <p className="text-xs text-[#73736E] mt-1">
+                  <p className="mt-1 text-xs text-[#73736E]">
                     Placed on:{" "}
                     {new Date(createdDate).toLocaleDateString("en-IN", {
                       day: "numeric",
@@ -161,32 +179,32 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
                 </div>
                 <div className="flex w-full items-center justify-between gap-4 sm:w-auto sm:justify-end">
                   <div className="text-right">
-                    <span className="text-[#D97706] font-mono text-base font-bold block">
+                    <span className="block font-mono text-base font-bold text-[#D97706]">
                       ₹{totalVal.toLocaleString("en-IN")}
                     </span>
                     <span className="text-[10px] text-[#73736E]">Pay on delivery</span>
                   </div>
                   {isExpanded ? (
-                    <ChevronUp className="text-[#73736E] h-5 w-5" />
+                    <ChevronUp className="h-5 w-5 text-[#73736E]" />
                   ) : (
-                    <ChevronDown className="text-[#73736E] h-5 w-5" />
+                    <ChevronDown className="h-5 w-5 text-[#73736E]" />
                   )}
                 </div>
               </div>
 
               {/* Expandable details */}
               {isExpanded && (
-                <div className="border-t border-[#E5E5E0] bg-[#FAF8F4]/40 space-y-6 p-6">
+                <div className="space-y-6 border-t border-[#E5E5E0] bg-[#FAF8F4]/40 p-6">
                   {/* Stepper Timeline */}
                   <div>
-                    <h4 className="text-[11px] font-bold text-[#73736E] tracking-wider uppercase mb-5">
+                    <h4 className="mb-5 text-[11px] font-bold tracking-wider text-[#73736E] uppercase">
                       Live Delivery Progress
                     </h4>
                     <div className="relative grid grid-cols-4 items-center justify-between">
                       {/* Connecting Line */}
-                      <div className="bg-[#E5E5E0] pointer-events-none absolute top-4.5 right-[12.5%] left-[12.5%] z-0 h-0.5">
+                      <div className="pointer-events-none absolute top-4.5 right-[12.5%] left-[12.5%] z-0 h-0.5 bg-[#E5E5E0]">
                         <div
-                          className="bg-[#D97706] h-full transition-all duration-500"
+                          className="h-full bg-[#D97706] transition-all duration-500"
                           style={{
                             width:
                               status === "placed"
@@ -212,8 +230,8 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
                             <div
                               className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all ${
                                 stepStatus === "completed"
-                                  ? "bg-[#D97706] border-[#D97706] text-white shadow-xs"
-                                  : "bg-white border-[#E5E5E0] text-[#73736E]"
+                                  ? "border-[#D97706] bg-[#D97706] text-white shadow-xs"
+                                  : "border-[#E5E5E0] bg-white text-[#73736E]"
                               }`}
                             >
                               <Icon className="h-4 w-4" />
@@ -232,34 +250,41 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
 
                   {/* Courier & Tracking details if shipped */}
                   {(order.carrier || order.trackingNumber) && (
-                    <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-purple-900">
+                    <div className="flex flex-col justify-between gap-3 rounded-xl border border-purple-200 bg-purple-50 p-4 text-xs text-purple-900 sm:flex-row sm:items-center">
                       <div className="flex items-center gap-2">
-                        <Truck className="h-4 w-4 text-purple-700 shrink-0" />
+                        <Truck className="h-4 w-4 shrink-0 text-purple-700" />
                         <span>
-                          Carrier Partner: <strong>{order.carrier || "Standard Courier"}</strong>
+                          Carrier Partner:{" "}
+                          <strong>{order.carrier || "Standard Courier"}</strong>
                         </span>
                       </div>
                       <div>
-                        Tracking AWB: <strong className="font-mono bg-white px-2 py-0.5 rounded border border-purple-300">{order.trackingNumber}</strong>
+                        Tracking AWB:{" "}
+                        <strong className="rounded border border-purple-300 bg-white px-2 py-0.5 font-mono">
+                          {order.trackingNumber}
+                        </strong>
                       </div>
                     </div>
                   )}
 
                   {/* Items list */}
-                  <div className="bg-white rounded-xl border border-[#E5E5E0] p-4">
-                    <h5 className="text-[11px] font-bold text-[#73736E] uppercase tracking-wider mb-3">
+                  <div className="rounded-xl border border-[#E5E5E0] bg-white p-4">
+                    <h5 className="mb-3 text-[11px] font-bold tracking-wider text-[#73736E] uppercase">
                       Ordered Products
                     </h5>
                     <div className="divide-y divide-[#E5E5E0]">
                       {(order.items || []).map((item, idx) => (
-                        <div key={idx} className="py-2.5 flex items-center justify-between text-xs">
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between py-2.5 text-xs"
+                        >
                           <div className="flex items-center gap-3">
                             {item.image && (
                               /* eslint-disable-next-line @next/next/no-img-element */
                               <img
                                 src={item.image}
                                 alt={item.name || item.product_name || "Product"}
-                                className="w-10 h-10 object-cover rounded-lg border border-[#E5E5E0]"
+                                className="h-10 w-10 rounded-lg border border-[#E5E5E0] object-cover"
                               />
                             )}
                             <div>
@@ -279,7 +304,7 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
                             </div>
                           </div>
                           <div className="text-right">
-                            <span className="text-[#1A1A18] font-mono font-medium block">
+                            <span className="block font-mono font-medium text-[#1A1A18]">
                               ₹{(item.price * item.quantity).toLocaleString("en-IN")}
                             </span>
                             <span className="text-[10px] text-[#73736E]">
@@ -293,18 +318,22 @@ export function OrdersClient({ initialOrders = [] }: OrdersClientProps) {
 
                   {/* Shipping address details */}
                   {order.shippingAddress && (
-                    <div className="bg-white rounded-xl border border-[#E5E5E0] p-4 text-xs">
-                      <h5 className="text-[11px] font-bold text-[#73736E] uppercase tracking-wider mb-2">
+                    <div className="rounded-xl border border-[#E5E5E0] bg-white p-4 text-xs">
+                      <h5 className="mb-2 text-[11px] font-bold tracking-wider text-[#73736E] uppercase">
                         Delivery Destination
                       </h5>
                       <p className="font-semibold text-[#1A1A18]">
                         {order.shippingAddress.recipientName}
                       </p>
                       {order.shippingAddress.phone && (
-                        <p className="text-[#52524E]">📞 {order.shippingAddress.phone}</p>
+                        <p className="text-[#52524E]">
+                          📞 {order.shippingAddress.phone}
+                        </p>
                       )}
-                      <p className="text-[#52524E] mt-0.5">
-                        📍 {order.shippingAddress.addressLine}, {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}
+                      <p className="mt-0.5 text-[#52524E]">
+                        📍 {order.shippingAddress.addressLine},{" "}
+                        {order.shippingAddress.city}, {order.shippingAddress.state} -{" "}
+                        {order.shippingAddress.pincode}
                       </p>
                     </div>
                   )}

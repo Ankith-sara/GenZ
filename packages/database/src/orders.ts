@@ -8,6 +8,7 @@ import type {
   OrderTrackingEvent,
 } from "@genz/types";
 import { createAdminClient } from "./admin";
+import { postJournalEntry, recordOrderCommission } from "./accounting";
 
 export interface CreateOrderInput {
   customerId?: string | null;
@@ -15,7 +16,8 @@ export interface CreateOrderInput {
   customerEmail: string;
   customerPhone?: string;
   shippingAddress: ShippingAddress;
-  paymentMethod: "cod" | "online" | string;
+  paymentMethod: "cod" | "online" | "razorpay" | "upi_qr" | string;
+  paymentStatus?: "pending" | "paid" | "failed";
   items: OrderItem[];
   subtotal: number;
   tax: number;
@@ -27,38 +29,33 @@ export interface CreateOrderInput {
 // Persistent storage path shared across all apps in the monorepo
 function getStoragePath(): string {
   // Isolate tests so vitest runs never pollute production/real orders-store.json
-  if (process.env.NODE_ENV === "test" || process.env.VITEST) {
-    const testDir = path.resolve(process.cwd(), "packages/database/src/storage");
-    if (!fs.existsSync(testDir)) {
-      try {
-        fs.mkdirSync(testDir, { recursive: true });
-      } catch {}
-    }
-    return path.join(testDir, "test-orders-store.json");
+  const filename =
+    process.env.NODE_ENV === "test" || process.env.VITEST
+      ? "test-orders-store.json"
+      : "orders-store.json";
+
+  const primaryDir = path.resolve(process.cwd(), "packages/database/src/storage");
+  if (fs.existsSync(primaryDir)) {
+    return path.join(primaryDir, filename);
   }
 
-  // Use project root / packages / database / src / storage
-  const storageDir = path.resolve(process.cwd(), "packages/database/src/storage");
-  if (!fs.existsSync(storageDir)) {
-    // Fallback: search relative to this file or current working directory
-    try {
-      fs.mkdirSync(storageDir, { recursive: true });
-    } catch {
-      // In Next.js standalone or sub-app cwd
-      const altDir = path.resolve(process.cwd(), "../../packages/database/src/storage");
-      if (!fs.existsSync(altDir)) {
-        try {
-          fs.mkdirSync(altDir, { recursive: true });
-          return path.join(altDir, "orders-store.json");
-        } catch {
-          // fallback to tmp or current dir
-          return path.resolve(process.cwd(), "orders-store.json");
-        }
-      }
-      return path.join(altDir, "orders-store.json");
-    }
+  // When running inside an app directory like apps/web, apps/seller, apps/admin
+  const altDir = path.resolve(process.cwd(), "../../packages/database/src/storage");
+  if (fs.existsSync(altDir)) {
+    return path.join(altDir, filename);
   }
-  return path.join(storageDir, "orders-store.json");
+
+  const __dirnameDir = path.resolve(__dirname, "storage");
+  if (fs.existsSync(__dirnameDir)) {
+    return path.join(__dirnameDir, filename);
+  }
+
+  try {
+    fs.mkdirSync(primaryDir, { recursive: true });
+    return path.join(primaryDir, filename);
+  } catch {
+    return path.resolve(process.cwd(), filename);
+  }
 }
 
 function readLocalOrders(): OrderRecord[] {
@@ -118,7 +115,8 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<OrderR
     customerPhone: input.customerPhone,
     shippingAddress: input.shippingAddress,
     paymentMethod: input.paymentMethod || "cod",
-    paymentStatus: input.paymentMethod === "cod" ? "pending" : "paid",
+    paymentStatus:
+      input.paymentStatus || (input.paymentMethod === "cod" ? "pending" : "paid"),
     status: "placed",
     subtotal: input.subtotal,
     tax: input.tax,
@@ -169,6 +167,55 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<OrderR
     ...currentOrders.filter((o) => o.id !== newOrder.id),
   ];
   writeLocalOrders(updatedOrders);
+
+  // Trigger Native ECO Accounting Integrations
+  if (newOrder.paymentStatus === "paid" && newOrder.totalAmount > 0) {
+    try {
+      // 1. Post double-entry journal for gateway collection:
+      // Debit:  1020 Razorpay Gateway Clearing Account
+      // Credit: 2020 Customer Advances Account
+      await postJournalEntry({
+        referenceId: newOrder.id,
+        eventType: "order_paid",
+        narration: `Payment collection for Order ${newOrder.id} via ${newOrder.paymentMethod.toUpperCase()}`,
+        lines: [
+          {
+            accountId: "1020",
+            accountCode: "1020",
+            accountName: "Razorpay Gateway Clearing Account",
+            debit: newOrder.totalAmount,
+            credit: 0,
+          },
+          {
+            accountId: "2020",
+            accountCode: "2020",
+            accountName: "Customer Advances Account",
+            debit: 0,
+            credit: newOrder.totalAmount,
+          },
+        ],
+      });
+
+      // 2. Record commission accrual for each order item
+      for (const item of newOrder.items) {
+        const itemGross = Number(item.price || 0) * Number(item.quantity || 1);
+        if (itemGross > 0) {
+          await recordOrderCommission({
+            orderId: newOrder.id,
+            orderItemId: item.id || `item-${newOrder.id}`,
+            sellerId: item.sellerId || item.seller_id || "default-seller",
+            sellerName: item.sellerBusinessName,
+            productName: item.name || "Handcrafted Product",
+            grossValue: itemGross,
+            commissionRate: 10,
+            gstRate: 18,
+          });
+        }
+      }
+    } catch (accErr) {
+      console.warn("[OrdersService] Accounting hook notice:", accErr);
+    }
+  }
 
   return newOrder;
 }
@@ -365,6 +412,70 @@ export async function updateOrderStatus(
     updatedList.unshift(updatedOrder);
   }
   writeLocalOrders(updatedList);
+
+  // Revenue recognition journal on delivery
+  if (update.status === "delivered" && updatedOrder.totalAmount > 0) {
+    try {
+      const gross = updatedOrder.totalAmount;
+      const comm = Math.round(((gross * 10) / 100) * 100) / 100;
+      const commGst = Math.round(((comm * 18) / 100) * 100) / 100;
+      const tcs = Math.round(((gross * 1) / 100) * 100) / 100;
+      const tds = Math.round(((gross * 0.1) / 100) * 100) / 100;
+      const sellerNet = Math.round((gross - comm - commGst - tcs - tds) * 100) / 100;
+
+      await postJournalEntry({
+        referenceId: updatedOrder.id,
+        eventType: "order_delivered",
+        narration: `Revenue & Seller Liability Recognition on Delivery of Order ${updatedOrder.id}`,
+        lines: [
+          {
+            accountId: "2020",
+            accountCode: "2020",
+            accountName: "Customer Advances Account",
+            debit: gross,
+            credit: 0,
+          },
+          {
+            accountId: "2010",
+            accountCode: "2010",
+            accountName: "Seller Payables Clearing Account",
+            debit: 0,
+            credit: sellerNet,
+          },
+          {
+            accountId: "4010",
+            accountCode: "4010",
+            accountName: "Marketplace Commission Income",
+            debit: 0,
+            credit: comm,
+          },
+          {
+            accountId: "2050",
+            accountCode: "2050",
+            accountName: "Output GST on Commission Payable",
+            debit: 0,
+            credit: commGst,
+          },
+          {
+            accountId: "2030",
+            accountCode: "2030",
+            accountName: "Statutory GST-TCS Payable",
+            debit: 0,
+            credit: tcs,
+          },
+          {
+            accountId: "2040",
+            accountCode: "2040",
+            accountName: "Section 194-O TDS Payable",
+            debit: 0,
+            credit: tds,
+          },
+        ],
+      });
+    } catch (accErr) {
+      console.warn("[OrdersService] Delivery accounting hook notice:", accErr);
+    }
+  }
 
   return updatedOrder;
 }

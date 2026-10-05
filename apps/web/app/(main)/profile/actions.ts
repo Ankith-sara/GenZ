@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@genz/database";
 import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
-import { profileSchema, addressesSchema } from "@/lib/validation";
+import { profileSchema, addressesSchema } from "@genz/validation";
 
 export async function updateProfile(formData: {
   fullName: string;

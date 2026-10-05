@@ -4,9 +4,9 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { withRateLimit } from "@/lib/rate-limiter";
-import { adminRejectSchema } from "@/lib/validation";
-import { SITE_URL } from "@/lib/config";
-import { sendSellerApprovalEmail } from "@/lib/resend";
+import { adminRejectSchema } from "@genz/validation";
+import { SITE_URL } from "@genz/utils/config";
+import { sendSellerApprovalEmail } from "@genz/utils/resend";
 
 export interface ReviewState {
   error?: string;

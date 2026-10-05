@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@genz/database/server";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { ReviewActions } from "./review-actions";
 

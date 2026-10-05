@@ -2,7 +2,7 @@ import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import type { SellerProfile, SellerApplication, VerificationStatus } from "@genz/types";
-import { SellerProfileStudio } from "./profile-studio";
+import { SellerProfileStudio } from "@/features/profile";
 
 export const metadata = {
   title: "Maker Profile & Storefront Studio — GenZ Seller Portal",

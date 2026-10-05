@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ChevronRight, Film } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@genz/database/server";
 import { requireRole } from "@/features/auth/lib/require-role";
 import { ReelUploader } from "@/features/reels/components/reel-uploader";
 import { ReelManageList } from "@/features/reels/components/reel-manage-list";

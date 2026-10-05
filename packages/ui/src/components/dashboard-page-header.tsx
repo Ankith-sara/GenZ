@@ -19,7 +19,7 @@ export function DashboardPageHeader({
   return (
     <header
       className={cn(
-        "flex flex-col gap-4 border-b border-outline-variant/50 pb-5 sm:flex-row sm:items-end sm:justify-between",
+        "border-outline-variant/50 flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-end sm:justify-between",
         className
       )}
     >
@@ -38,7 +38,9 @@ export function DashboardPageHeader({
           </p>
         )}
       </div>
-      {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
+      {actions && (
+        <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>
+      )}
     </header>
   );
 }

@@ -37,7 +37,7 @@ export function ProductCard({
       className={`group block w-full text-left transition-all duration-300 ${className}`}
     >
       {/* 1. Tall Editorial Media Container */}
-      <div className="relative aspect-[4/5] w-full bg-[#F6F5F2] border border-[#EBEAE5]">
+      <div className="relative aspect-[4/5] w-full border border-[#EBEAE5] bg-[#F6F5F2]">
         <Image
           src={coverUrl}
           alt={product.name}
@@ -55,13 +55,13 @@ export function ProductCard({
         {/* Minimal Clean Badge at Bottom-Left */}
         {hasGI ? (
           <div className="absolute bottom-2.5 left-2.5 z-10 sm:bottom-3 sm:left-3">
-            <span className="rounded-[2px] bg-[#2E2E2A]/90 px-1.5 py-0.5 font-graphik text-[9px] font-semibold tracking-wider uppercase text-white shadow-xs backdrop-blur-xs sm:px-2 sm:text-[10px]">
+            <span className="font-graphik rounded-[2px] bg-[#2E2E2A]/90 px-1.5 py-0.5 text-[9px] font-semibold tracking-wider text-white uppercase shadow-xs backdrop-blur-xs sm:px-2 sm:text-[10px]">
               GI Tag
             </span>
           </div>
         ) : sellerVerified ? (
           <div className="absolute bottom-2.5 left-2.5 z-10 sm:bottom-3 sm:left-3">
-            <span className="rounded-[2px] bg-[#2E2E2A]/90 px-1.5 py-0.5 font-graphik text-[9px] font-semibold tracking-wider uppercase text-white shadow-xs backdrop-blur-xs sm:px-2 sm:text-[10px]">
+            <span className="font-graphik rounded-[2px] bg-[#2E2E2A]/90 px-1.5 py-0.5 text-[9px] font-semibold tracking-wider text-white uppercase shadow-xs backdrop-blur-xs sm:px-2 sm:text-[10px]">
               Verified
             </span>
           </div>
@@ -69,24 +69,24 @@ export function ProductCard({
 
         {/* "Quick View" Pill floating at bottom on hover */}
         <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center opacity-0 transition-all duration-300 ease-out group-hover:bottom-4 group-hover:opacity-100 sm:bottom-4 sm:group-hover:bottom-5">
-          <span className="rounded-full bg-black/90 px-3.5 py-1.5 font-graphik text-[11px] font-semibold text-white shadow-md backdrop-blur-xs sm:px-5 sm:py-2 sm:text-xs">
+          <span className="font-graphik rounded-full bg-black/90 px-3.5 py-1.5 text-[11px] font-semibold text-white shadow-md backdrop-blur-xs sm:px-5 sm:py-2 sm:text-xs">
             Quick View
           </span>
         </div>
       </div>
 
       <div className="mt-2.5 space-y-0.5 sm:mt-3 sm:space-y-1">
-        <p className="font-graphik text-[11px] font-normal text-neutral-400 truncate sm:text-xs">
+        <p className="font-graphik truncate text-[11px] font-normal text-neutral-400 sm:text-xs">
           by {artisan}
         </p>
 
         {/* Product Title */}
-        <h3 className="font-graphik text-xs font-semibold tracking-tight text-neutral-900 transition-colors group-hover:text-black sm:text-sm line-clamp-1">
+        <h3 className="font-graphik line-clamp-1 text-xs font-semibold tracking-tight text-neutral-900 transition-colors group-hover:text-black sm:text-sm">
           {product.name}
         </h3>
 
         {/* Price */}
-        <div className="pt-0.5 flex items-baseline gap-1.5">
+        <div className="flex items-baseline gap-1.5 pt-0.5">
           <span className="font-graphik text-xs font-bold tracking-tight text-neutral-900 sm:text-sm">
             {formatInr(product.price_inr)}
           </span>

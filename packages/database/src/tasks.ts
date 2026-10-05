@@ -1,4 +1,9 @@
-import type { InternalTask, TaskPriority, TaskStatus, EmployeeDepartment } from "@genz/types";
+import type {
+  InternalTask,
+  TaskPriority,
+  TaskStatus,
+  EmployeeDepartment,
+} from "@genz/types";
 import { createAdminClient } from "./admin";
 import fs from "fs";
 import path from "path";
@@ -52,7 +57,10 @@ export async function getTasksList(filters?: {
 }): Promise<InternalTask[]> {
   try {
     const supabase = createAdminClient();
-    let query = supabase.from("internal_tasks").select("*").order("created_at", { ascending: false });
+    let query = supabase
+      .from("internal_tasks")
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (filters?.department) query = query.eq("department", filters.department);
     if (filters?.status) query = query.eq("status", filters.status);
@@ -67,15 +75,19 @@ export async function getTasksList(filters?: {
 
   let list = readLocalTasks();
 
-  if (filters?.department) list = list.filter((t) => t.department === filters.department);
+  if (filters?.department)
+    list = list.filter((t) => t.department === filters.department);
   if (filters?.status) list = list.filter((t) => t.status === filters.status);
-  if (filters?.assignedTo) list = list.filter((t) => t.assigned_to === filters.assignedTo);
+  if (filters?.assignedTo)
+    list = list.filter((t) => t.assigned_to === filters.assignedTo);
   if (filters?.priority) list = list.filter((t) => t.priority === filters.priority);
 
   return list;
 }
 
-export async function createInternalTask(task: Omit<InternalTask, "id" | "created_at" | "updated_at">): Promise<InternalTask> {
+export async function createInternalTask(
+  task: Omit<InternalTask, "id" | "created_at" | "updated_at">
+): Promise<InternalTask> {
   const now = new Date().toISOString();
   const newTask: InternalTask = {
     ...task,
@@ -95,11 +107,17 @@ export async function createInternalTask(task: Omit<InternalTask, "id" | "create
   return newTask;
 }
 
-export async function updateInternalTaskStatus(taskId: string, status: TaskStatus): Promise<InternalTask | null> {
+export async function updateInternalTaskStatus(
+  taskId: string,
+  status: TaskStatus
+): Promise<InternalTask | null> {
   const now = new Date().toISOString();
   try {
     const supabase = createAdminClient();
-    await supabase.from("internal_tasks").update({ status, updated_at: now }).eq("id", taskId);
+    await supabase
+      .from("internal_tasks")
+      .update({ status, updated_at: now })
+      .eq("id", taskId);
   } catch (err) {}
 
   const list = readLocalTasks();

@@ -17,12 +17,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const params = new URLSearchParams();
-    for (const key of [
-      "q",
-      "category",
-      "min_price",
-      "max_price",
-    ] as const) {
+    for (const key of ["q", "category", "min_price", "max_price"] as const) {
       const value = String(formData.get(key) ?? "").trim();
       if (value) params.set(key, value);
     }
@@ -30,10 +25,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
   }
 
   const hasActiveFilters =
-    filters.q ||
-    filters.category ||
-    filters.min_price ||
-    filters.max_price;
+    filters.q || filters.category || filters.min_price || filters.max_price;
 
   return (
     <form

@@ -13,6 +13,7 @@ The platform has three roles:
 ## Core workflows
 
 ### Buyer
+
 1. Browse home/discovery.
 2. Search and filter products.
 3. Open a product and inspect seller/provenance information.
@@ -21,6 +22,7 @@ The platform has three roles:
 6. View order history and tracking.
 
 ### Seller
+
 1. Submit seller application.
 2. Wait for admin verification.
 3. Sign in after approval.
@@ -32,6 +34,7 @@ The platform has three roles:
 9. Manage inquiries and account/session information.
 
 ### Admin
+
 1. Authenticate through the admin portal.
 2. Review seller applications and documents.
 3. Approve/reject sellers using the authorized workflow.

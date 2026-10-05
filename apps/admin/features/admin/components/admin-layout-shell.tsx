@@ -6,8 +6,13 @@ import { AdminSidebar } from "./admin-sidebar";
 import { ModuleNavbar } from "./module-navbar";
 import { CommandMenu } from "@genz/ui";
 import {
-  Menu, Search, Bell, Calendar, ChevronDown, 
-  Building2, CheckCircle2,
+  Menu,
+  Search,
+  Bell,
+  Calendar,
+  ChevronDown,
+  Building2,
+  CheckCircle2,
 } from "lucide-react";
 
 interface AdminLayoutShellProps {
@@ -28,6 +33,7 @@ interface AdminLayoutShellProps {
     deals?: number;
     onboarding?: number;
     employees?: number;
+    pendingSettlements?: number;
   };
   firstName: string;
   dateRangeFormatted: string;
@@ -87,6 +93,7 @@ export function AdminLayoutShell({
   const getPageTitle = () => {
     if (pathname === "/admin/dashboard" || pathname === "/dashboard") return null;
     if (pathname?.includes("/crm/onboarding")) return "Seller Onboarding Process";
+    if (pathname?.includes("/finance")) return "Finance & ECO Accounting";
     if (pathname?.includes("/crm")) return "Artisan CRM & Sourcing";
     if (pathname?.includes("/tasks")) return "Task Management";
     if (pathname?.includes("/employees")) return "Employee Management";
@@ -116,48 +123,44 @@ export function AdminLayoutShell({
       {/* 2. MAIN CONTENT AREA */}
       <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         {/* STICKY TOP NAVIGATION BAR */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4]/85 px-4 backdrop-blur-md select-none sm:px-6 lg:px-8">
-          {/* Left Greeting / Page Title & Mobile Toggle */}
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4]/90 px-4 backdrop-blur-md select-none sm:px-6 lg:px-8">
+          {/* Left Context & Mobile Toggle */}
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => setMobileSidebarOpen(true)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E5E0] bg-white text-black hover:bg-[#EBEBE6] lg:hidden"
+              className="flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-lg border border-[#E5E5E0] bg-white text-black hover:bg-[#EBEBE6] lg:hidden"
               aria-label="Open Navigation Menu"
             >
               <Menu className="h-4 w-4" />
             </button>
 
-            {pageTitle ? (
-              <div>
-                <h1 className="font-graphik text-base font-bold text-[#1A1A18]">
-                  {pageTitle}
-                </h1>
-              </div>
-            ) : (
-              <div>
-                <h1 className="font-graphik text-base font-bold text-[#1A1A18]">
-                  {getGreeting()}, {firstName}
-                </h1>
-              </div>
-            )}
+            <div className="flex items-center gap-1.5 text-xs">
+              <span className="font-graphik hidden text-[#8C8C85] md:inline">
+                Studio
+              </span>
+              <span className="hidden text-[#D4D4CE] md:inline">/</span>
+              <span className="font-graphik max-w-[130px] truncate font-bold text-[#1A1A18] sm:max-w-[170px]">
+                {pageTitle || `${getGreeting()}, ${firstName}`}
+              </span>
+            </div>
           </div>
 
           {/* Center Modular Switcher Navbar: Admin | Operations | CRM */}
-          <div className="hidden sm:flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <ModuleNavbar counts={counts} />
           </div>
 
           {/* Right Header Toolbar */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             {/* Workspace Selector */}
-            <div className="relative hidden md:block">
+            <div className="relative hidden xl:block">
               <button
                 type="button"
                 onClick={() => setWorkspaceOpen((prev) => !prev)}
-                className="font-graphik flex items-center gap-2 rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1.5 text-xs font-semibold text-[#1A1A18] shadow-2xs hover:bg-[#FAF7F0]"
+                className="font-graphik flex items-center gap-1.5 rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#52524E] shadow-2xs hover:bg-[#FAF7F0] hover:text-black"
               >
-                <Building2 className="h-3.5 w-3.5 text-[#73736E]" />
-                <span>GenZ India Platform</span>
+                <Building2 className="h-3.5 w-3.5 text-[#8C8C85]" />
+                <span className="max-w-[110px] truncate">GenZ India</span>
                 <ChevronDown className="h-3 w-3 text-[#8C8C85]" />
               </button>
 
@@ -182,11 +185,11 @@ export function AdminLayoutShell({
             {/* Global Search Bar (⌘K) Trigger */}
             <button
               onClick={() => setCommandMenuOpen(true)}
-              className="font-graphik flex h-9 items-center gap-2 rounded-lg border border-[#E5E5E0] bg-white px-3 text-xs text-[#73736E] shadow-2xs transition-all hover:border-black/30 hover:text-black"
+              className="font-graphik flex h-8.5 items-center gap-2 rounded-lg border border-[#E5E5E0] bg-white px-2.5 text-xs text-[#73736E] shadow-2xs transition-all hover:border-black/30 hover:text-black"
             >
               <Search className="h-3.5 w-3.5 text-[#73736E]" />
-              <span className="hidden sm:inline">Search...</span>
-              <kbd className="hidden rounded border border-[#E5E5E0] bg-[#FAF7F0] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#73736E] sm:inline-block">
+              <span className="hidden md:inline">Search...</span>
+              <kbd className="hidden rounded border border-[#E5E5E0] bg-[#FAF7F0] px-1 py-0.5 font-mono text-[9px] font-bold text-[#73736E] sm:inline-block">
                 ⌘K
               </kbd>
             </button>
@@ -195,12 +198,12 @@ export function AdminLayoutShell({
             <div className="relative">
               <button
                 onClick={() => setNotifPopoverOpen((prev) => !prev)}
-                className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[#E5E5E0] bg-white text-[#52524E] shadow-2xs transition-all hover:bg-[#FAF7F0] hover:text-black"
+                className="relative flex h-8.5 w-8.5 items-center justify-center rounded-lg border border-[#E5E5E0] bg-white text-[#52524E] shadow-2xs transition-all hover:bg-[#FAF7F0] hover:text-black"
                 aria-label="Notifications"
               >
                 <Bell className="h-4 w-4" />
                 {counts.pendingVerifications > 0 && (
-                  <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-amber-500 ring-2 ring-white" />
+                  <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-amber-500 ring-2 ring-white" />
                 )}
               </button>
 
@@ -236,7 +239,7 @@ export function AdminLayoutShell({
             </div>
 
             {/* Date Range Filter Pill */}
-            <div className="font-graphik hidden items-center gap-2 rounded-lg border border-[#E5E5E0] bg-white px-3 py-1.5 text-xs font-semibold text-[#1A1A18] shadow-2xs sm:flex">
+            <div className="font-graphik hidden items-center gap-1.5 rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1.5 text-xs font-semibold text-[#1A1A18] shadow-2xs 2xl:flex">
               <Calendar className="h-3.5 w-3.5 text-[#73736E]" />
               <span>{dateRangeFormatted}</span>
             </div>

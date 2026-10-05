@@ -4,7 +4,8 @@ import { RolesViewClient } from "./roles-view-client";
 
 export const metadata = {
   title: "Roles & Permissions | Admin",
-  description: "Manage platform roles, access levels, and granular page CRUD permissions.",
+  description:
+    "Manage platform roles, access levels, and granular page CRUD permissions.",
 };
 
 export default async function RolesPage() {

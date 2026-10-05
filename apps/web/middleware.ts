@@ -52,7 +52,6 @@ export async function middleware(request: NextRequest) {
   const isAuthOnly = path.startsWith("/login") || path.startsWith("/signup");
   const isProtected = path.startsWith("/profile");
 
-
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";

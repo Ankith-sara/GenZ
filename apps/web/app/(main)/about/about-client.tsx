@@ -63,7 +63,7 @@ export function ScrollReveal({
   );
 }
 
-// Foundations of Trust Component 
+// Foundations of Trust Component
 function FoundationsOfTrustScrollSection() {
   const trustPillars = [
     {

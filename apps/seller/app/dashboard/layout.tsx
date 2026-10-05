@@ -1,6 +1,6 @@
 import { requireRole } from "@/features/auth/lib/require-role";
 import { createClient } from "@genz/database";
-import { DashboardSidebar } from "@/components/ui/organisms/dashboard-sidebar";
+import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { signOut } from "@/app/login/actions";
 import { SearchTriggerButton } from "@genz/ui";
 import { SellerHeaderNotifications } from "./header-notifications";

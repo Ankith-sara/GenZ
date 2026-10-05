@@ -86,10 +86,9 @@ function main() {
   // 1. Get staged code files
   let stagedFiles = [];
   try {
-    const raw = execSync(
-      "git diff --cached --name-only --diff-filter=ACMR",
-      { encoding: "utf8" }
-    );
+    const raw = execSync("git diff --cached --name-only --diff-filter=ACMR", {
+      encoding: "utf8",
+    });
     stagedFiles = raw
       .split("\n")
       .map((s) => s.trim())

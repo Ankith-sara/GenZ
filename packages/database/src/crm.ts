@@ -3,11 +3,9 @@ import type {
   CRMLead,
   CRMDeal,
   SellerOnboardingTracker,
-  CRMActivityLog,
-  CRMContactStatus,
   CRMLeadStage,
   CRMDealStage,
-  OnboardingStage,
+  PlatformSellerCandidate,
 } from "@genz/types";
 import { createAdminClient } from "./admin";
 import fs from "fs";
@@ -34,7 +32,7 @@ function readLocalJson<T>(fileName: string): T[] {
     if (fs.existsSync(filePath)) {
       return JSON.parse(fs.readFileSync(filePath, "utf-8")) as T[];
     }
-  } catch (err) {}
+  } catch {}
   return [];
 }
 
@@ -42,66 +40,27 @@ function writeLocalJson<T>(fileName: string, data: T[]) {
   try {
     const filePath = getCrmStoragePath(fileName);
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
-  } catch (err) {}
+  } catch {}
 }
 
 // 0. PLATFORM SELLER SYNC HELPER
-export interface PlatformSellerCandidate {
-  seller_id: string;
-  name: string;
-  business_name: string;
-  email: string;
-  phone: string;
-  craft_category: string;
-  city: string;
-  state: string;
-  cluster_name: string;
-  is_verified: boolean;
-  product_count: number;
-  gi_certified: boolean;
-  created_at: string;
-}
+export type { PlatformSellerCandidate };
 
-const FALLBACK_PLATFORM_SELLERS: PlatformSellerCandidate[] = [
-  {
-    seller_id: "fab03143-9d65-47cf-bdc0-53db548b1005",
-    name: "Polumuri Nageswara Rao",
-    business_name: "Etikoppaka Heritage Lacquer Toys",
-    email: "polumurinageswararao@gmail.com",
-    phone: "+91 9704569603",
-    craft_category: "Etikoppaka Wooden Lacquerware",
-    city: "Etikoppaka",
-    state: "Andhra Pradesh",
-    cluster_name: "Etikoppaka Lacquer Craft Cluster",
-    is_verified: true,
-    product_count: 11,
-    gi_certified: true,
-    created_at: "2026-09-06T14:56:55.333Z",
-  },
-  {
-    seller_id: "62ab002c-aa73-4807-adb3-df26e26a7475",
-    name: "Ashok Kumar",
-    business_name: "Abburi Narasimha Rao",
-    email: "ashokkumar@gmail.com",
-    phone: "+91 9652784225",
-    craft_category: "Kondapalli Traditional Toys",
-    city: "Kondapalle",
-    state: "Andhra Pradesh",
-    cluster_name: "Kondapalli Toys Colony Cluster",
-    is_verified: true,
-    product_count: 8,
-    gi_certified: true,
-    created_at: "2026-09-16T19:05:55.234Z",
-  },
-];
-
-export async function getPlatformSellersFromDatabase(): Promise<PlatformSellerCandidate[]> {
+export async function getPlatformSellersFromDatabase(): Promise<
+  PlatformSellerCandidate[]
+> {
   try {
     const supabase = createAdminClient();
 
     const [appsRes, profilesRes, userProfilesRes, productsRes] = await Promise.all([
-      supabase.from("seller_applications").select("*").order("created_at", { ascending: false }),
-      supabase.from("seller_profiles").select("*").order("created_at", { ascending: false }),
+      supabase
+        .from("seller_applications")
+        .select("*")
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("seller_profiles")
+        .select("*")
+        .order("created_at", { ascending: false }),
       supabase.from("profiles").select("id, full_name, phone"),
       supabase.from("products").select("seller_id"),
     ]);
@@ -118,7 +77,10 @@ export async function getPlatformSellersFromDatabase(): Promise<PlatformSellerCa
       }
     });
 
-    const userProfileMap = new Map<string, { full_name?: string | null; phone?: string | null }>();
+    const userProfileMap = new Map<
+      string,
+      { full_name?: string | null; phone?: string | null }
+    >();
     userProfiles.forEach((u) => {
       userProfileMap.set(u.id, u);
     });
@@ -128,24 +90,32 @@ export async function getPlatformSellersFromDatabase(): Promise<PlatformSellerCa
     const seenIds = new Set<string>();
 
     profiles.forEach((sp) => {
-      const spAny = sp as any;
+      const spObj = sp as unknown as Record<string, unknown>;
       const matchedApp = apps.find(
         (a) =>
           a.id === sp.id ||
-          (a.email && spAny.email && a.email.toLowerCase() === spAny.email.toLowerCase()) ||
-          (a.business_name && sp.business_name && a.business_name.toLowerCase() === sp.business_name.toLowerCase())
+          (a.email &&
+            spObj.email &&
+            a.email.toLowerCase() === String(spObj.email).toLowerCase()) ||
+          (a.business_name &&
+            sp.business_name &&
+            a.business_name.toLowerCase() === sp.business_name.toLowerCase())
       );
+      const appFormData = (matchedApp?.form_data || {}) as Record<string, unknown>;
       const userProfile = userProfileMap.get(sp.id);
-      const email = (spAny.email || matchedApp?.email || "").toLowerCase().trim();
-      const phone = spAny.phone || matchedApp?.phone || userProfile?.phone || "";
+      const email = ((spObj.email as string) || matchedApp?.email || "")
+        .toLowerCase()
+        .trim();
+      const phone =
+        (spObj.phone as string) || matchedApp?.phone || userProfile?.phone || "";
       const name =
         matchedApp?.full_name ||
         userProfile?.full_name ||
         sp.business_name ||
         "Artisan Master";
       const businessName = sp.business_name || matchedApp?.business_name || name;
-      const city = sp.city || (matchedApp?.form_data as any)?.city || "Andhra Pradesh";
-      const state = sp.state || (matchedApp?.form_data as any)?.state || "Andhra Pradesh";
+      const city = sp.city || (appFormData.city as string) || "Andhra Pradesh";
+      const state = sp.state || (appFormData.state as string) || "Andhra Pradesh";
 
       const isEtikoppaka =
         city.toLowerCase().includes("etikoppaka") ||
@@ -159,14 +129,14 @@ export async function getPlatformSellersFromDatabase(): Promise<PlatformSellerCa
       const craftCategory = isEtikoppaka
         ? "Etikoppaka Wooden Lacquerware"
         : isKondapalli
-        ? "Kondapalli Traditional Toys"
-        : (matchedApp?.form_data as any)?.craft_category || "Traditional Craft & Handloom";
+          ? "Kondapalli Traditional Toys"
+          : (appFormData.craft_category as string) || "Traditional Craft & Handloom";
 
       const clusterName = isEtikoppaka
         ? "Etikoppaka Lacquer Craft Cluster"
         : isKondapalli
-        ? "Kondapalli Toys Colony Cluster"
-        : `${city} Artisan Cluster`;
+          ? "Kondapalli Toys Colony Cluster"
+          : `${city} Artisan Cluster`;
 
       const pCount = productCounts[sp.id] || 0;
 
@@ -185,7 +155,7 @@ export async function getPlatformSellersFromDatabase(): Promise<PlatformSellerCa
         cluster_name: clusterName,
         is_verified: sp.status === "verified" || matchedApp?.status === "approved",
         product_count: pCount,
-        gi_certified: isEtikoppaka || isKondapalli || Boolean((matchedApp?.form_data as any)?.gi_certified),
+        gi_certified: isEtikoppaka || isKondapalli || Boolean(appFormData.gi_certified),
         created_at: sp.created_at || matchedApp?.created_at || new Date().toISOString(),
       });
     });
@@ -194,11 +164,13 @@ export async function getPlatformSellersFromDatabase(): Promise<PlatformSellerCa
       const email = a.email?.toLowerCase().trim();
       if ((email && seenEmails.has(email)) || seenIds.has(a.id)) return;
 
-      const formData = (a.form_data || {}) as Record<string, any>;
-      const name = a.full_name || formData.owner_name || "Applicant Artisan";
-      const businessName = a.business_name || formData.business_name || name;
-      const city = formData.city || "Andhra Pradesh";
-      const state = formData.state || "Andhra Pradesh";
+      const formData = (a.form_data || {}) as Record<string, unknown>;
+      const name =
+        a.full_name || (formData.owner_name as string) || "Applicant Artisan";
+      const businessName =
+        a.business_name || (formData.business_name as string) || name;
+      const city = (formData.city as string) || "Andhra Pradesh";
+      const state = (formData.state as string) || "Andhra Pradesh";
 
       const isEtikoppaka =
         city.toLowerCase().includes("etikoppaka") ||
@@ -212,14 +184,14 @@ export async function getPlatformSellersFromDatabase(): Promise<PlatformSellerCa
       const craftCategory = isEtikoppaka
         ? "Etikoppaka Wooden Lacquerware"
         : isKondapalli
-        ? "Kondapalli Traditional Toys"
-        : formData.craft_category || "Traditional Craft & Handloom";
+          ? "Kondapalli Traditional Toys"
+          : (formData.craft_category as string) || "Traditional Craft & Handloom";
 
       const clusterName = isEtikoppaka
         ? "Etikoppaka Lacquer Craft Cluster"
         : isKondapalli
-        ? "Kondapalli Toys Colony Cluster"
-        : `${city} Artisan Cluster`;
+          ? "Kondapalli Toys Colony Cluster"
+          : `${city} Artisan Cluster`;
 
       if (email) seenEmails.add(email);
       seenIds.add(a.id);
@@ -241,10 +213,11 @@ export async function getPlatformSellersFromDatabase(): Promise<PlatformSellerCa
       });
     });
 
-    if (results.length > 0) return results;
-  } catch (err) {}
-
-  return FALLBACK_PLATFORM_SELLERS;
+    return results;
+  } catch (err) {
+    console.error("Error fetching platform sellers from database:", err);
+    return [];
+  }
 }
 
 // 1. CONTACTS
@@ -252,16 +225,21 @@ export async function getContactsList(): Promise<CRMContact[]> {
   let list: CRMContact[] = [];
   try {
     const supabase = createAdminClient();
-    const { data, error } = await supabase.from("crm_contacts").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("crm_contacts")
+      .select("*")
+      .order("created_at", { ascending: false });
     if (!error && data && data.length > 0) list = data as CRMContact[];
-  } catch (err) {}
+  } catch {}
 
   if (list.length === 0) {
     list = readLocalJson<CRMContact>("crm-contacts-store.json");
   }
 
   const platformSellers = await getPlatformSellersFromDatabase();
-  const existingEmails = new Set(list.map((c) => c.email?.toLowerCase().trim()).filter(Boolean));
+  const existingEmails = new Set(
+    list.map((c) => c.email?.toLowerCase().trim()).filter(Boolean)
+  );
   const existingNames = new Set(list.map((c) => c.name.toLowerCase().trim()));
 
   platformSellers.forEach((s) => {
@@ -290,7 +268,9 @@ export async function getContactsList(): Promise<CRMContact[]> {
   return list;
 }
 
-export async function createCRMContact(contact: Omit<CRMContact, "id" | "created_at" | "updated_at">): Promise<CRMContact> {
+export async function createCRMContact(
+  contact: Omit<CRMContact, "id" | "created_at" | "updated_at">
+): Promise<CRMContact> {
   const now = new Date().toISOString();
   const newContact: CRMContact = {
     ...contact,
@@ -301,7 +281,7 @@ export async function createCRMContact(contact: Omit<CRMContact, "id" | "created
   try {
     const supabase = createAdminClient();
     await supabase.from("crm_contacts").insert(newContact);
-  } catch (err) {}
+  } catch {}
   const list = readLocalJson<CRMContact>("crm-contacts-store.json");
   list.unshift(newContact);
   writeLocalJson("crm-contacts-store.json", list);
@@ -319,7 +299,7 @@ export async function updateCRMContact(
       .from("crm_contacts")
       .update({ ...updates, updated_at: now })
       .eq("id", contactId);
-  } catch (err) {}
+  } catch {}
   const list = readLocalJson<CRMContact>("crm-contacts-store.json");
   const idx = list.findIndex((c) => c.id === contactId);
   if (idx >= 0) {
@@ -335,16 +315,21 @@ export async function getLeadsList(): Promise<CRMLead[]> {
   let list: CRMLead[] = [];
   try {
     const supabase = createAdminClient();
-    const { data, error } = await supabase.from("crm_leads").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("crm_leads")
+      .select("*")
+      .order("created_at", { ascending: false });
     if (!error && data && data.length > 0) list = data as CRMLead[];
-  } catch (err) {}
+  } catch {}
 
   if (list.length === 0) {
     list = readLocalJson<CRMLead>("crm-leads-store.json");
   }
 
   const platformSellers = await getPlatformSellersFromDatabase();
-  const existingEmails = new Set(list.map((l) => l.email?.toLowerCase().trim()).filter(Boolean));
+  const existingEmails = new Set(
+    list.map((l) => l.email?.toLowerCase().trim()).filter(Boolean)
+  );
   const existingNames = new Set(list.map((l) => l.contact_person.toLowerCase().trim()));
 
   platformSellers.forEach((s) => {
@@ -376,7 +361,9 @@ export async function getLeadsList(): Promise<CRMLead[]> {
   return list;
 }
 
-export async function createCRMLead(lead: Omit<CRMLead, "id" | "created_at" | "updated_at">): Promise<CRMLead> {
+export async function createCRMLead(
+  lead: Omit<CRMLead, "id" | "created_at" | "updated_at">
+): Promise<CRMLead> {
   const now = new Date().toISOString();
   const newLead: CRMLead = {
     ...lead,
@@ -387,19 +374,25 @@ export async function createCRMLead(lead: Omit<CRMLead, "id" | "created_at" | "u
   try {
     const supabase = createAdminClient();
     await supabase.from("crm_leads").insert(newLead);
-  } catch (err) {}
+  } catch {}
   const list = readLocalJson<CRMLead>("crm-leads-store.json");
   list.unshift(newLead);
   writeLocalJson("crm-leads-store.json", list);
   return newLead;
 }
 
-export async function updateLeadStage(leadId: string, stage: CRMLeadStage): Promise<CRMLead | null> {
+export async function updateLeadStage(
+  leadId: string,
+  stage: CRMLeadStage
+): Promise<CRMLead | null> {
   const now = new Date().toISOString();
   try {
     const supabase = createAdminClient();
-    await supabase.from("crm_leads").update({ stage, updated_at: now }).eq("id", leadId);
-  } catch (err) {}
+    await supabase
+      .from("crm_leads")
+      .update({ stage, updated_at: now })
+      .eq("id", leadId);
+  } catch {}
   const list = readLocalJson<CRMLead>("crm-leads-store.json");
   const idx = list.findIndex((l) => l.id === leadId);
   if (idx >= 0) {
@@ -421,7 +414,7 @@ export async function updateCRMLead(
       .from("crm_leads")
       .update({ ...updates, updated_at: now })
       .eq("id", leadId);
-  } catch (err) {}
+  } catch {}
   const list = readLocalJson<CRMLead>("crm-leads-store.json");
   const idx = list.findIndex((l) => l.id === leadId);
   if (idx >= 0) {
@@ -437,9 +430,12 @@ export async function getDealsList(): Promise<CRMDeal[]> {
   let list: CRMDeal[] = [];
   try {
     const supabase = createAdminClient();
-    const { data, error } = await supabase.from("crm_deals").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("crm_deals")
+      .select("*")
+      .order("created_at", { ascending: false });
     if (!error && data && data.length > 0) list = data as CRMDeal[];
-  } catch (err) {}
+  } catch {}
 
   if (list.length === 0) {
     list = readLocalJson<CRMDeal>("crm-deals-store.json");
@@ -452,7 +448,11 @@ export async function getDealsList(): Promise<CRMDeal[]> {
   platformSellers.forEach((s) => {
     if (!s.is_verified) return;
     const dealName = `${s.business_name} Master Partnership`;
-    if (existingLeadIds.has(`lead-${s.seller_id}`) || existingNames.has(dealName.toLowerCase().trim())) return;
+    if (
+      existingLeadIds.has(`lead-${s.seller_id}`) ||
+      existingNames.has(dealName.toLowerCase().trim())
+    )
+      return;
 
     list.push({
       id: `deal-${s.seller_id}`,
@@ -473,7 +473,9 @@ export async function getDealsList(): Promise<CRMDeal[]> {
   return list;
 }
 
-export async function createCRMDeal(deal: Omit<CRMDeal, "id" | "created_at" | "updated_at">): Promise<CRMDeal> {
+export async function createCRMDeal(
+  deal: Omit<CRMDeal, "id" | "created_at" | "updated_at">
+): Promise<CRMDeal> {
   const now = new Date().toISOString();
   const newDeal: CRMDeal = {
     ...deal,
@@ -484,19 +486,25 @@ export async function createCRMDeal(deal: Omit<CRMDeal, "id" | "created_at" | "u
   try {
     const supabase = createAdminClient();
     await supabase.from("crm_deals").insert(newDeal);
-  } catch (err) {}
+  } catch {}
   const list = readLocalJson<CRMDeal>("crm-deals-store.json");
   list.unshift(newDeal);
   writeLocalJson("crm-deals-store.json", list);
   return newDeal;
 }
 
-export async function updateDealStage(dealId: string, stage: CRMDealStage): Promise<CRMDeal | null> {
+export async function updateDealStage(
+  dealId: string,
+  stage: CRMDealStage
+): Promise<CRMDeal | null> {
   const now = new Date().toISOString();
   try {
     const supabase = createAdminClient();
-    await supabase.from("crm_deals").update({ stage, updated_at: now }).eq("id", dealId);
-  } catch (err) {}
+    await supabase
+      .from("crm_deals")
+      .update({ stage, updated_at: now })
+      .eq("id", dealId);
+  } catch {}
   const list = readLocalJson<CRMDeal>("crm-deals-store.json");
   const idx = list.findIndex((d) => d.id === dealId);
   if (idx >= 0) {
@@ -518,7 +526,7 @@ export async function updateCRMDeal(
       .from("crm_deals")
       .update({ ...updates, updated_at: now })
       .eq("id", dealId);
-  } catch (err) {}
+  } catch {}
   const list = readLocalJson<CRMDeal>("crm-deals-store.json");
   const idx = list.findIndex((d) => d.id === dealId);
   if (idx >= 0) {
@@ -534,16 +542,21 @@ export async function getSellerOnboardingList(): Promise<SellerOnboardingTracker
   let list: SellerOnboardingTracker[] = [];
   try {
     const supabase = createAdminClient();
-    const { data, error } = await supabase.from("seller_onboarding_tracker").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("seller_onboarding_tracker")
+      .select("*")
+      .order("created_at", { ascending: false });
     if (!error && data && data.length > 0) list = data as SellerOnboardingTracker[];
-  } catch (err) {}
+  } catch {}
 
   if (list.length === 0) {
     list = readLocalJson<SellerOnboardingTracker>("crm-onboarding-store.json");
   }
 
   const platformSellers = await getPlatformSellersFromDatabase();
-  const existingEmails = new Set(list.map((o) => o.email?.toLowerCase().trim()).filter(Boolean));
+  const existingEmails = new Set(
+    list.map((o) => o.email?.toLowerCase().trim()).filter(Boolean)
+  );
   const existingNames = new Set(list.map((o) => o.seller_name.toLowerCase().trim()));
 
   platformSellers.forEach((s) => {
@@ -561,7 +574,12 @@ export async function getSellerOnboardingList(): Promise<SellerOnboardingTracker
       craft_category: s.craft_category,
       city: s.city,
       state: s.state,
-      current_stage: s.product_count > 0 ? "live_on_marketplace" : s.is_verified ? "catalog_ingestion" : "kyc_documents",
+      current_stage:
+        s.product_count > 0
+          ? "live_on_marketplace"
+          : s.is_verified
+            ? "catalog_ingestion"
+            : "kyc_documents",
       kyc_completed: s.is_verified,
       catalog_completed: s.product_count > 0,
       quality_check_completed: s.product_count > 0,
@@ -576,7 +594,9 @@ export async function getSellerOnboardingList(): Promise<SellerOnboardingTracker
   return list;
 }
 
-export async function createSellerOnboarding(item: Omit<SellerOnboardingTracker, "id" | "created_at" | "updated_at">): Promise<SellerOnboardingTracker> {
+export async function createSellerOnboarding(
+  item: Omit<SellerOnboardingTracker, "id" | "created_at" | "updated_at">
+): Promise<SellerOnboardingTracker> {
   const now = new Date().toISOString();
   const newItem: SellerOnboardingTracker = {
     ...item,
@@ -587,19 +607,25 @@ export async function createSellerOnboarding(item: Omit<SellerOnboardingTracker,
   try {
     const supabase = createAdminClient();
     await supabase.from("seller_onboarding_tracker").insert(newItem);
-  } catch (err) {}
+  } catch {}
   const list = readLocalJson<SellerOnboardingTracker>("crm-onboarding-store.json");
   list.unshift(newItem);
   writeLocalJson("crm-onboarding-store.json", list);
   return newItem;
 }
 
-export async function updateOnboardingStage(id: string, updates: Partial<SellerOnboardingTracker>): Promise<SellerOnboardingTracker | null> {
+export async function updateOnboardingStage(
+  id: string,
+  updates: Partial<SellerOnboardingTracker>
+): Promise<SellerOnboardingTracker | null> {
   const now = new Date().toISOString();
   try {
     const supabase = createAdminClient();
-    await supabase.from("seller_onboarding_tracker").update({ ...updates, updated_at: now }).eq("id", id);
-  } catch (err) {}
+    await supabase
+      .from("seller_onboarding_tracker")
+      .update({ ...updates, updated_at: now })
+      .eq("id", id);
+  } catch {}
   const list = readLocalJson<SellerOnboardingTracker>("crm-onboarding-store.json");
   const idx = list.findIndex((o) => o.id === id);
   if (idx >= 0) {

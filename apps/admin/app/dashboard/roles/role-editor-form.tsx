@@ -29,7 +29,9 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
   const [name, setName] = useState(initialRole?.name || "");
   const [code, setCode] = useState(initialRole?.code || "");
   const [description, setDescription] = useState(initialRole?.description || "");
-  const [roleLevel, setRoleLevel] = useState<RoleLevel>(initialRole?.role_level || "manager");
+  const [roleLevel, setRoleLevel] = useState<RoleLevel>(
+    initialRole?.role_level || "manager"
+  );
   const [selectedPermissions, setSelectedPermissions] = useState<PermissionKey[]>(
     initialRole?.permissions && initialRole.permissions.length > 0
       ? initialRole.permissions
@@ -142,7 +144,8 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
         router.refresh();
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "An unexpected error occurred";
+      const message =
+        err instanceof Error ? err.message : "An unexpected error occurred";
       setErrorMessage(message);
       setIsSubmitting(false);
     }
@@ -155,7 +158,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
         <div className="space-y-1">
           <Link
             href="/dashboard/roles"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 transition-colors hover:text-neutral-900"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Back to Roles
@@ -169,7 +172,8 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
                 {isEditing ? `Edit Role: ${initialRole?.name}` : "Create New Role"}
               </h1>
               <p className="text-xs text-neutral-500">
-                Define role authority level and configure page-level CRUD permissions across the platform.
+                Define role authority level and configure page-level CRUD permissions
+                across the platform.
               </p>
             </div>
           </div>
@@ -178,7 +182,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard/roles"
-            className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 hover:text-neutral-900 transition-colors"
+            className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-700 shadow-xs transition-colors hover:bg-neutral-50 hover:text-neutral-900"
           >
             Cancel
           </Link>
@@ -186,7 +190,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
             type="submit"
             form="role-editor-form"
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-neutral-800 disabled:opacity-50 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-neutral-800 disabled:opacity-50"
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">
@@ -220,7 +224,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
             <button
               type="button"
               onClick={() => applyPreset("super_admin")}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-800 shadow-2xs hover:bg-neutral-900 hover:text-white transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-800 shadow-2xs transition-all hover:bg-neutral-900 hover:text-white"
             >
               <Shield className="h-3.5 w-3.5 text-[#C89D32]" />
               Super Administrator
@@ -228,7 +232,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
             <button
               type="button"
               onClick={() => applyPreset("crm_manager")}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 shadow-2xs hover:bg-amber-100 transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 shadow-2xs transition-all hover:bg-amber-100"
             >
               <Users className="h-3.5 w-3.5 text-amber-700" />
               CRM Manager
@@ -236,7 +240,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
             <button
               type="button"
               onClick={() => applyPreset("operation_manager")}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-900 shadow-2xs hover:bg-indigo-100 transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-900 shadow-2xs transition-all hover:bg-indigo-100"
             >
               <Briefcase className="h-3.5 w-3.5 text-indigo-700" />
               Operation Manager (Orders & Products)
@@ -254,7 +258,9 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
                 1
               </span>
               <div>
-                <h2 className="text-base font-bold text-neutral-900">Role Information</h2>
+                <h2 className="text-base font-bold text-neutral-900">
+                  Role Information
+                </h2>
                 <p className="text-xs text-neutral-500">
                   Role identity, code slug, and hierarchical authority level
                 </p>
@@ -293,7 +299,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 placeholder="e.g. SUPER_ADMIN, OPERATION_MANAGER"
-                className="mt-1.5 block w-full font-mono rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-medium text-neutral-900 focus:border-neutral-900 focus:bg-white focus:outline-hidden"
+                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 font-mono text-xs font-medium text-neutral-900 focus:border-neutral-900 focus:bg-white focus:outline-hidden"
               />
               <p className="mt-1 text-[11px] text-neutral-400">
                 Unique system key for programmatic role resolution.
@@ -309,7 +315,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Explain the administrative scope and responsibilities assigned to this role..."
-                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-medium text-neutral-900 focus:border-neutral-900 focus:bg-white focus:outline-hidden resize-none"
+                className="mt-1.5 block w-full resize-none rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-medium text-neutral-900 focus:border-neutral-900 focus:bg-white focus:outline-hidden"
               />
             </div>
 
@@ -327,7 +333,8 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
                 <option value="staff">Staff (Operational Execution)</option>
               </select>
               <p className="mt-1 text-[11px] text-neutral-400">
-                Admins bypass individual permission checks; Managers & Staff require explicit module permissions.
+                Admins bypass individual permission checks; Managers & Staff require
+                explicit module permissions.
               </p>
             </div>
           </div>
@@ -335,7 +342,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
 
         {/* Section 2: Role Permission Matrix (CRUD per Admin Page) */}
         <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs">
-          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-neutral-100 pb-4">
+          <div className="mb-6 flex flex-col gap-2 border-b border-neutral-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2.5">
               <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-100 text-xs font-bold text-neutral-800">
                 2
@@ -345,12 +352,13 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
                   <h2 className="text-base font-bold text-neutral-900">
                     Granular Page CRUD Permissions Matrix
                   </h2>
-                  <span className="rounded-full bg-indigo-50 border border-indigo-200 px-2 py-0.5 text-[10px] font-bold text-indigo-800">
+                  <span className="rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[10px] font-bold text-indigo-800">
                     {selectedPermissions.length} active permissions
                   </span>
                 </div>
                 <p className="text-xs text-neutral-500">
-                  Select permissions for each admin module: Products CRUD, Tasks CRUD, Orders CRUD, CRM CRUD, etc.
+                  Select permissions for each admin module: Products CRUD, Tasks CRUD,
+                  Orders CRUD, CRM CRUD, etc.
                 </p>
               </div>
             </div>
@@ -359,7 +367,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
               <button
                 type="button"
                 onClick={() => setSelectedPermissions([...allAvailablePermissions])}
-                className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 px-2.5 py-1 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors"
+                className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 px-2.5 py-1 text-xs font-semibold text-neutral-700 transition-colors hover:bg-neutral-50"
               >
                 <CheckSquare className="h-3.5 w-3.5 text-emerald-600" />
                 Select All
@@ -367,7 +375,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
               <button
                 type="button"
                 onClick={() => setSelectedPermissions([])}
-                className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 px-2.5 py-1 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors"
+                className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 px-2.5 py-1 text-xs font-semibold text-neutral-700 transition-colors hover:bg-neutral-50"
               >
                 <Square className="h-3.5 w-3.5 text-neutral-400" />
                 Clear All
@@ -379,8 +387,12 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
           <div className="space-y-4">
             {ADMIN_MODULE_PERMISSIONS.map((module) => {
               const moduleKeys = module.actions.map((a) => a.key);
-              const allChecked = moduleKeys.every((k) => selectedPermissions.includes(k));
-              const someChecked = moduleKeys.some((k) => selectedPermissions.includes(k));
+              const allChecked = moduleKeys.every((k) =>
+                selectedPermissions.includes(k)
+              );
+              const someChecked = moduleKeys.some((k) =>
+                selectedPermissions.includes(k)
+              );
 
               return (
                 <div
@@ -394,20 +406,24 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-neutral-900">{module.name}</span>
+                        <span className="text-xs font-bold text-neutral-900">
+                          {module.name}
+                        </span>
                         {module.id === "products" || module.id === "orders" ? (
-                          <span className="rounded-md bg-amber-50 border border-amber-200/60 px-1.5 py-0.5 text-[9px] font-bold text-amber-800">
+                          <span className="rounded-md border border-amber-200/60 bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-800">
                             Operations Core
                           </span>
                         ) : null}
                       </div>
-                      <p className="text-[11px] text-neutral-500">{module.description}</p>
+                      <p className="text-[11px] text-neutral-500">
+                        {module.description}
+                      </p>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => toggleModuleAll(module.actions)}
-                      className="self-start sm:self-auto text-[11px] font-semibold text-neutral-600 hover:text-neutral-900 transition-colors"
+                      className="self-start text-[11px] font-semibold text-neutral-600 transition-colors hover:text-neutral-900 sm:self-auto"
                     >
                       {allChecked ? "Deselect Module" : "Select Module All"}
                     </button>
@@ -420,7 +436,7 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
                       return (
                         <label
                           key={act.key}
-                          className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 text-xs font-medium cursor-pointer transition-all ${
+                          className={`flex cursor-pointer items-center gap-2.5 rounded-lg border px-3 py-2 text-xs font-medium transition-all ${
                             isChecked
                               ? "border-neutral-900 bg-neutral-900 text-white shadow-2xs"
                               : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50"
@@ -457,14 +473,14 @@ export function RoleEditorForm({ initialRole }: RoleEditorFormProps) {
         <div className="flex items-center justify-end gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-xs">
           <Link
             href="/dashboard/roles"
-            className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors"
+            className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-xs font-semibold text-neutral-700 transition-colors hover:bg-neutral-50"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-neutral-800 disabled:opacity-50 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-neutral-800 disabled:opacity-50"
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">

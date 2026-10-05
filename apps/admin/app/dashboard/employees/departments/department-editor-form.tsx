@@ -3,10 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft, Building2, Shield, Save, Sparkles,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowLeft, Building2, Shield, Save, Sparkles, ArrowRight } from "lucide-react";
 import type { Department, Employee } from "@genz/types";
 import { addDepartmentAction, updateDepartmentAction } from "./actions";
 
@@ -25,9 +22,15 @@ export function DepartmentEditorForm({
   const [name, setName] = useState(initialDepartment?.name || "");
   const [code, setCode] = useState(initialDepartment?.code || "");
   const [description, setDescription] = useState(initialDepartment?.description || "");
-  const [headEmployeeId, setHeadEmployeeId] = useState(initialDepartment?.head_employee_id || "");
-  const [defaultRole, setDefaultRole] = useState(initialDepartment?.default_role || "Operation Manager");
-  const [status, setStatus] = useState<"active" | "inactive">(initialDepartment?.status || "active");
+  const [headEmployeeId, setHeadEmployeeId] = useState(
+    initialDepartment?.head_employee_id || ""
+  );
+  const [defaultRole, setDefaultRole] = useState(
+    initialDepartment?.default_role || "Operation Manager"
+  );
+  const [status, setStatus] = useState<"active" | "inactive">(
+    initialDepartment?.status || "active"
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -36,22 +39,30 @@ export function DepartmentEditorForm({
     if (preset === "tech") {
       setName("Technology & Platform");
       setCode("TECH");
-      setDescription("Core marketplace engineering, cloud infrastructure, AI models, and database systems");
+      setDescription(
+        "Core marketplace engineering, cloud infrastructure, AI models, and database systems"
+      );
       setDefaultRole("Super Admin");
     } else if (preset === "sales") {
       setName("Sales & Seller Acquisition");
       setCode("SALES");
-      setDescription("GI artisan outreach, master craftsperson onboarding, cluster sourcing, and partnership pipelines");
+      setDescription(
+        "GI artisan outreach, master craftsperson onboarding, cluster sourcing, and partnership pipelines"
+      );
       setDefaultRole("CRM Manager");
     } else if (preset === "operations") {
       setName("Operations & Fulfillment");
       setCode("OPERATIONS");
-      setDescription("Customer orders, catalog products curation, courier logistics dispatching, and quality audits");
+      setDescription(
+        "Customer orders, catalog products curation, courier logistics dispatching, and quality audits"
+      );
       setDefaultRole("Operation Manager");
     } else if (preset === "support") {
       setName("Customer & Artisan Support");
       setCode("SUPPORT");
-      setDescription("Buyer order inquiries, artisan helpline, delivery resolutions, and satisfaction monitoring");
+      setDescription(
+        "Buyer order inquiries, artisan helpline, delivery resolutions, and satisfaction monitoring"
+      );
       setDefaultRole("Operation Manager");
     }
   };
@@ -88,7 +99,8 @@ export function DepartmentEditorForm({
         router.refresh();
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "An unexpected error occurred";
+      const message =
+        err instanceof Error ? err.message : "An unexpected error occurred";
       setErrorMessage(message);
       setIsSubmitting(false);
     }
@@ -101,7 +113,7 @@ export function DepartmentEditorForm({
         <div className="space-y-1">
           <Link
             href="/dashboard/employees/departments"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 transition-colors hover:text-neutral-900"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Back to Departments
@@ -112,10 +124,13 @@ export function DepartmentEditorForm({
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-neutral-900">
-                {isEditing ? `Edit Department: ${initialDepartment?.name}` : "Create New Department"}
+                {isEditing
+                  ? `Edit Department: ${initialDepartment?.name}`
+                  : "Create New Department"}
               </h1>
               <p className="text-xs text-neutral-500">
-                Configure organizational units, department leadership, and default employee designation.
+                Configure organizational units, department leadership, and default
+                employee designation.
               </p>
             </div>
           </div>
@@ -124,7 +139,7 @@ export function DepartmentEditorForm({
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard/employees/departments"
-            className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 hover:text-neutral-900 transition-colors"
+            className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-700 shadow-xs transition-colors hover:bg-neutral-50 hover:text-neutral-900"
           >
             Cancel
           </Link>
@@ -132,7 +147,7 @@ export function DepartmentEditorForm({
             type="submit"
             form="department-editor-form"
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-neutral-800 disabled:opacity-50 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-neutral-800 disabled:opacity-50"
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">
@@ -166,28 +181,28 @@ export function DepartmentEditorForm({
             <button
               type="button"
               onClick={() => applyPreset("tech")}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-800 shadow-2xs hover:bg-neutral-900 hover:text-white transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-800 shadow-2xs transition-all hover:bg-neutral-900 hover:text-white"
             >
               Technology & Platform
             </button>
             <button
               type="button"
               onClick={() => applyPreset("sales")}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 shadow-2xs hover:bg-amber-100 transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 shadow-2xs transition-all hover:bg-amber-100"
             >
               Sales & Acquisition
             </button>
             <button
               type="button"
               onClick={() => applyPreset("operations")}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-900 shadow-2xs hover:bg-indigo-100 transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-900 shadow-2xs transition-all hover:bg-indigo-100"
             >
               Operations & Logistics
             </button>
             <button
               type="button"
               onClick={() => applyPreset("support")}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-900 shadow-2xs hover:bg-teal-100 transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-900 shadow-2xs transition-all hover:bg-teal-100"
             >
               Customer Support
             </button>
@@ -204,7 +219,9 @@ export function DepartmentEditorForm({
                 1
               </span>
               <div>
-                <h2 className="text-base font-bold text-neutral-900">Organizational Department Information</h2>
+                <h2 className="text-base font-bold text-neutral-900">
+                  Organizational Department Information
+                </h2>
                 <p className="text-xs text-neutral-500">
                   Basic administrative identifiers, organizational name, and code
                 </p>
@@ -243,7 +260,7 @@ export function DepartmentEditorForm({
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 placeholder="e.g. TECH, SALES, OPERATIONS, SUPPORT"
-                className="mt-1.5 block w-full font-mono rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-medium text-neutral-900 focus:border-neutral-900 focus:bg-white focus:outline-hidden"
+                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 font-mono text-xs font-medium text-neutral-900 focus:border-neutral-900 focus:bg-white focus:outline-hidden"
               />
               <p className="mt-1 text-[11px] text-neutral-400">
                 Unique uppercase code for organization mapping and employee filtering.
@@ -259,7 +276,7 @@ export function DepartmentEditorForm({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe this department's role within the organization..."
-                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-medium text-neutral-900 focus:border-neutral-900 focus:bg-white focus:outline-hidden resize-none"
+                className="mt-1.5 block w-full resize-none rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-medium text-neutral-900 focus:border-neutral-900 focus:bg-white focus:outline-hidden"
               />
             </div>
 
@@ -307,7 +324,7 @@ export function DepartmentEditorForm({
                 Department Status
               </label>
               <div className="mt-2.5 flex items-center gap-6">
-                <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-neutral-800">
+                <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-neutral-800">
                   <input
                     type="radio"
                     name="status"
@@ -321,7 +338,7 @@ export function DepartmentEditorForm({
                     Active
                   </span>
                 </label>
-                <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-neutral-600">
+                <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-neutral-600">
                   <input
                     type="radio"
                     name="status"
@@ -344,19 +361,22 @@ export function DepartmentEditorForm({
         <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-700 border border-amber-200">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 text-amber-700">
                 <Shield className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-neutral-900">Need to manage Roles & CRUD Permissions?</h3>
+                <h3 className="text-xs font-bold text-neutral-900">
+                  Need to manage Roles & CRUD Permissions?
+                </h3>
                 <p className="text-[11px] text-neutral-500">
-                  Roles (Super Admin, CRM Manager, Operation Manager) with page-by-page CRUD matrices are managed in the Roles Management section.
+                  Roles (Super Admin, CRM Manager, Operation Manager) with page-by-page
+                  CRUD matrices are managed in the Roles Management section.
                 </p>
               </div>
             </div>
             <Link
               href="/dashboard/roles"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-3.5 py-2 text-xs font-semibold text-neutral-800 hover:bg-neutral-50 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-300 bg-white px-3.5 py-2 text-xs font-semibold text-neutral-800 transition-colors hover:bg-neutral-50"
             >
               <span>Manage Roles</span>
               <ArrowRight className="h-3.5 w-3.5 text-neutral-500" />
@@ -368,14 +388,14 @@ export function DepartmentEditorForm({
         <div className="flex items-center justify-end gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-xs">
           <Link
             href="/dashboard/employees/departments"
-            className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors"
+            className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-xs font-semibold text-neutral-700 transition-colors hover:bg-neutral-50"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-neutral-800 disabled:opacity-50 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-neutral-800 disabled:opacity-50"
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">

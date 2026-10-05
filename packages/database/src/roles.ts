@@ -1,8 +1,4 @@
-import type {
-  RoleDefinition,
-  RoleLevel,
-  PermissionKey,
-} from "@genz/types";
+import type { RoleDefinition, RoleLevel, PermissionKey } from "@genz/types";
 import { PREDEFINED_ROLES } from "@genz/types";
 import { getEmployeesList } from "./employees";
 import { createAdminClient } from "./admin";
@@ -33,7 +29,8 @@ export const DEFAULT_ROLES: RoleDefinition[] = [
     id: "role-super-admin",
     name: "Super Administrator",
     code: "SUPER_ADMIN",
-    description: "Complete master administrative access across all system modules, governance, and audit trails",
+    description:
+      "Complete master administrative access across all system modules, governance, and audit trails",
     role_level: "admin",
     is_system: true,
     permissions: PREDEFINED_ROLES.super_admin.permissions,
@@ -44,7 +41,8 @@ export const DEFAULT_ROLES: RoleDefinition[] = [
     id: "role-crm-manager",
     name: "CRM Manager",
     code: "CRM_MANAGER",
-    description: "Full management over Seller Acquisition CRM, artisan sourcing, leads pipeline, and merchant KYC verification",
+    description:
+      "Full management over Seller Acquisition CRM, artisan sourcing, leads pipeline, and merchant KYC verification",
     role_level: "manager",
     is_system: true,
     permissions: PREDEFINED_ROLES.crm_manager.permissions,
@@ -55,7 +53,8 @@ export const DEFAULT_ROLES: RoleDefinition[] = [
     id: "role-operation-manager",
     name: "Operation Manager",
     code: "OPERATION_MANAGER",
-    description: "Full operational authority over customer Orders fulfillment, catalog Products curation, Kanban tasks, and logistics dispatches",
+    description:
+      "Full operational authority over customer Orders fulfillment, catalog Products curation, Kanban tasks, and logistics dispatches",
     role_level: "manager",
     is_system: true,
     permissions: PREDEFINED_ROLES.operation_manager.permissions,
@@ -129,9 +128,11 @@ export async function getRolesList(): Promise<RoleDefinition[]> {
         empRoleId === rId ||
         empRole === rCode ||
         empRole === rName ||
-        (rCode === "super_admin" && (empRole.includes("super admin") || e.role_level === "admin")) ||
+        (rCode === "super_admin" &&
+          (empRole.includes("super admin") || e.role_level === "admin")) ||
         (rCode === "crm_manager" && empRole.includes("crm")) ||
-        (rCode === "operation_manager" && (empRole.includes("operation") || empRole.includes("ops")))
+        (rCode === "operation_manager" &&
+          (empRole.includes("operation") || empRole.includes("ops")))
       );
     }).length;
 
@@ -144,14 +145,18 @@ export async function getRolesList(): Promise<RoleDefinition[]> {
 
 export async function getRoleById(id: string): Promise<RoleDefinition | null> {
   const roles = await getRolesList();
-  return roles.find((r) => r.id === id || r.code.toLowerCase() === id.toLowerCase()) || null;
+  return (
+    roles.find((r) => r.id === id || r.code.toLowerCase() === id.toLowerCase()) || null
+  );
 }
 
 export async function upsertRole(
   role: Partial<RoleDefinition> & { name: string; code: string; role_level?: RoleLevel }
 ): Promise<RoleDefinition> {
   const now = new Date().toISOString();
-  const id = role.id || `role-${role.code.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now().toString(36)}`;
+  const id =
+    role.id ||
+    `role-${role.code.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now().toString(36)}`;
 
   const fullRole: RoleDefinition = {
     id,

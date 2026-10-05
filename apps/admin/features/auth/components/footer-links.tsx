@@ -7,10 +7,7 @@ export function FooterLinks() {
         <Shield className="h-3.5 w-3.5 text-[#8C8C85]" />
         <span>Confidential & Proprietary · GenZ Platform Ops</span>
       </div>
-      <span className="text-[#8C8C85]">
-        Restricted to Authorized Personnel
-      </span>
+      <span className="text-[#8C8C85]">Restricted to Authorized Personnel</span>
     </footer>
   );
 }
-

@@ -260,10 +260,7 @@ export function HomepageProducts({
   }
 
   // Prioritize heritage/GI categories first
-  const priorityOrder = [
-    "Etikoppaka Wooden Toys",
-    "Kondapalli Toys",
-  ];
+  const priorityOrder = ["Etikoppaka Wooden Toys", "Kondapalli Toys"];
 
   const sortedCategories = Array.from(categoryMap.keys()).sort((a, b) => {
     const idxA = priorityOrder.indexOf(a);

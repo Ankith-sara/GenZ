@@ -134,7 +134,8 @@ describe("Employee Management Repository", () => {
 
 describe("Department Governance & Role Templates", () => {
   it("retrieves standard department list with member counts", async () => {
-    const { getDepartmentsList, upsertDepartment, deleteDepartment } = await import("./employees");
+    const { getDepartmentsList, upsertDepartment, deleteDepartment } =
+      await import("./employees");
     const depts = await getDepartmentsList();
     expect(depts.length).toBeGreaterThanOrEqual(3);
 
@@ -184,7 +185,8 @@ describe("Department Governance & Role Templates", () => {
   });
 
   it("creates, updates, and deletes department unit", async () => {
-    const { getDepartmentsList, upsertDepartment, deleteDepartment } = await import("./employees");
+    const { getDepartmentsList, upsertDepartment, deleteDepartment } =
+      await import("./employees");
     const newDept = await upsertDepartment({
       name: "Handloom Craft Cluster Hub",
       code: "HANDLOOM_HUB",

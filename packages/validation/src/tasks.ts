@@ -2,7 +2,13 @@ import { z } from "zod";
 import { employeeDepartmentSchema } from "./employees";
 
 export const taskPrioritySchema = z.enum(["low", "medium", "high", "urgent"]);
-export const taskStatusSchema = z.enum(["todo", "in_progress", "in_review", "done", "cancelled"]);
+export const taskStatusSchema = z.enum([
+  "todo",
+  "in_progress",
+  "in_review",
+  "done",
+  "cancelled",
+]);
 export const taskEntityTypeSchema = z.enum([
   "crm_contact",
   "crm_lead",

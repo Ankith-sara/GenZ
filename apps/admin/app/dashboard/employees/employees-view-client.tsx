@@ -3,9 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  Users, UserPlus, Briefcase,
-  CheckCircle2, Eye, Sliders,
-  Building2, Shield,
+  Users,
+  UserPlus,
+  Briefcase,
+  CheckCircle2,
+  Eye,
+  Sliders,
+  Building2,
+  Shield,
 } from "lucide-react";
 import type {
   Employee,
@@ -112,7 +117,10 @@ export function EmployeesViewClient({
   const [inspectEmployee, setInspectEmployee] = useState<Employee | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [feedbackMsg, setFeedbackMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [feedbackMsg, setFeedbackMsg] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   // Modal form states for Add Employee
   const [addRolePreset, setAddRolePreset] = useState<string>("crm_manager");
@@ -122,7 +130,9 @@ export function EmployeesViewClient({
 
   // Modal form states for Edit Employee
   const [editRolePreset, setEditRolePreset] = useState<string>("crm_manager");
-  const [editSelectedPerms, setEditSelectedPerms] = useState<Set<PermissionKey>>(new Set());
+  const [editSelectedPerms, setEditSelectedPerms] = useState<Set<PermissionKey>>(
+    new Set()
+  );
 
   const handleOpenAddModal = () => {
     setAddRolePreset("crm_manager");
@@ -236,7 +246,10 @@ export function EmployeesViewClient({
 
     setIsSubmitting(false);
     setInspectEmployee(null);
-    setFeedbackMsg({ type: "success", text: "Permissions & Role updated successfully" });
+    setFeedbackMsg({
+      type: "success",
+      text: "Permissions & Role updated successfully",
+    });
     setTimeout(() => setFeedbackMsg(null), 3000);
   };
 
@@ -251,7 +264,11 @@ export function EmployeesViewClient({
     return matchesDept && matchesSearch;
   });
 
-  const getRoleBadge = (roleName?: string, designation?: string, roleLevel?: RoleLevel) => {
+  const getRoleBadge = (
+    roleName?: string,
+    designation?: string,
+    roleLevel?: RoleLevel
+  ) => {
     const r = (roleName || designation || "").toLowerCase();
     if (r.includes("super admin") || roleLevel === "admin") {
       return (
@@ -263,7 +280,7 @@ export function EmployeesViewClient({
     }
     if (r.includes("crm") || roleLevel === "manager") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 shadow-xs">
+        <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 shadow-xs">
           <Users className="h-2.5 w-2.5 text-amber-700" />
           CRM Manager
         </span>
@@ -271,14 +288,14 @@ export function EmployeesViewClient({
     }
     if (r.includes("operation")) {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 text-[10px] font-bold text-indigo-900 shadow-xs">
+        <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[10px] font-bold text-indigo-900 shadow-xs">
           <Briefcase className="h-2.5 w-2.5 text-indigo-700" />
           Operation Manager
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-[#FAF8F4] border border-[#E5E5E0] px-2.5 py-0.5 text-[10px] font-medium text-[#1A1A18]">
+      <span className="inline-flex items-center gap-1 rounded-full border border-[#E5E5E0] bg-[#FAF8F4] px-2.5 py-0.5 text-[10px] font-medium text-[#1A1A18]">
         {roleName || designation || "Staff Associate"}
       </span>
     );
@@ -303,13 +320,16 @@ export function EmployeesViewClient({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-[#1A1A18]">Employees & Governance</span>
+              <span className="text-xs font-semibold text-[#1A1A18]">
+                Employees & Governance
+              </span>
             </div>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-[#1A1A18]">
               Team Directory & Role-Based Access Control
             </h1>
             <p className="mt-0.5 text-xs text-[#73736E]">
-              Manage internal employees, roles (Super Admin, CRM Manager, Operation Manager), and CRUD page permissions.
+              Manage internal employees, roles (Super Admin, CRM Manager, Operation
+              Manager), and CRUD page permissions.
             </p>
           </div>
 
@@ -338,7 +358,7 @@ export function EmployeesViewClient({
           </div>
           <Link
             href="/dashboard/employees/departments"
-            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] hover:bg-neutral-100 hover:text-black transition"
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] transition hover:bg-neutral-100 hover:text-black"
           >
             Departments ({departments.length > 0 ? departments.length : 6})
           </Link>
@@ -361,55 +381,59 @@ export function EmployeesViewClient({
       {/* Metrics Row */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-2xl border border-[#E5E5E0] bg-white p-4 shadow-xs">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#73736E]">
+          <span className="text-[11px] font-semibold tracking-wider text-[#73736E] uppercase">
             Total Staff
           </span>
           <p className="mt-1 text-2xl font-bold tracking-tight text-[#1A1A18]">
             {employees.length}
           </p>
-          <p className="text-[11px] text-[#73736E] mt-0.5">Active team members</p>
+          <p className="mt-0.5 text-[11px] text-[#73736E]">Active team members</p>
         </div>
 
         <div className="rounded-2xl border border-[#E5E5E0] bg-white p-4 shadow-xs">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#73736E]">
+          <span className="text-[11px] font-semibold tracking-wider text-[#73736E] uppercase">
             Super Admins
           </span>
           <p className="mt-1 text-2xl font-bold tracking-tight text-[#1A1A18]">
-            {employees.filter((e) => (e.role || e.designation || "").toLowerCase().includes("admin")).length || 1}
+            {employees.filter((e) =>
+              (e.role || e.designation || "").toLowerCase().includes("admin")
+            ).length || 1}
           </p>
-          <p className="text-[11px] text-[#73736E] mt-0.5">Full master access</p>
+          <p className="mt-0.5 text-[11px] text-[#73736E]">Full master access</p>
         </div>
 
         <div className="rounded-2xl border border-[#E5E5E0] bg-white p-4 shadow-xs">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#73736E]">
+          <span className="text-[11px] font-semibold tracking-wider text-[#73736E] uppercase">
             Managers
           </span>
           <p className="mt-1 text-2xl font-bold tracking-tight text-[#1A1A18]">
-            {employees.filter((e) => (e.role || e.designation || "").toLowerCase().includes("manager")).length || 3}
+            {employees.filter((e) =>
+              (e.role || e.designation || "").toLowerCase().includes("manager")
+            ).length || 3}
           </p>
-          <p className="text-[11px] text-[#73736E] mt-0.5">CRM & Operations leads</p>
+          <p className="mt-0.5 text-[11px] text-[#73736E]">CRM & Operations leads</p>
         </div>
 
         <div className="rounded-2xl border border-[#E5E5E0] bg-white p-4 shadow-xs">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#73736E]">
+          <span className="text-[11px] font-semibold tracking-wider text-[#73736E] uppercase">
             Departments
           </span>
           <p className="mt-1 text-2xl font-bold tracking-tight text-[#1A1A18]">
             {departments.length > 0 ? departments.length : 6}
           </p>
-          <p className="text-[11px] text-[#73736E] mt-0.5">Operational units</p>
+          <p className="mt-0.5 text-[11px] text-[#73736E]">Operational units</p>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-md">
+        <div className="relative max-w-md flex-1">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, role, code, or department..."
-            className="w-full rounded-xl border border-[#E5E5E0] bg-white py-2 pl-3 pr-3 text-xs text-[#1A1A18] placeholder-[#73736E] outline-none transition focus:border-[#1A1A18]"
+            className="w-full rounded-xl border border-[#E5E5E0] bg-white py-2 pr-3 pl-3 text-xs text-[#1A1A18] placeholder-[#73736E] transition outline-none focus:border-[#1A1A18]"
           />
         </div>
 
@@ -469,7 +493,7 @@ export function EmployeesViewClient({
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FAF8F4] border border-[#E5E5E0] font-bold text-[#1A1A18]">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] font-bold text-[#1A1A18]">
                       {emp.full_name
                         .split(" ")
                         .map((n) => n[0])
@@ -477,7 +501,9 @@ export function EmployeesViewClient({
                         .join("")}
                     </div>
                     <div>
-                      <h3 className="font-bold text-[#1A1A18] text-sm">{emp.full_name}</h3>
+                      <h3 className="text-sm font-bold text-[#1A1A18]">
+                        {emp.full_name}
+                      </h3>
                       <span className="font-mono text-[10px] text-[#73736E]">
                         {emp.employee_code}
                       </span>
@@ -503,21 +529,21 @@ export function EmployeesViewClient({
 
                   <div className="flex items-center justify-between">
                     <span className="text-[#73736E]">Department</span>
-                    <span className="font-medium text-[#1A1A18] uppercase text-[11px]">
+                    <span className="text-[11px] font-medium text-[#1A1A18] uppercase">
                       {emp.department}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-[#73736E]">Designation</span>
-                    <span className="text-[#1A1A18] font-medium text-[11px]">
+                    <span className="text-[11px] font-medium text-[#1A1A18]">
                       {emp.designation || emp.role}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-[#73736E]">Contact</span>
-                    <span className="text-[#1A1A18] font-mono text-[11px] truncate max-w-[150px]">
+                    <span className="max-w-[150px] truncate font-mono text-[11px] text-[#1A1A18]">
                       {emp.email}
                     </span>
                   </div>
@@ -525,33 +551,35 @@ export function EmployeesViewClient({
 
                 {/* Page Access Badges */}
                 <div className="mt-4 border-t border-[#F0F0EC] pt-3">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#73736E]">
+                  <span className="text-[10px] font-bold tracking-wider text-[#73736E] uppercase">
                     Allowed Dashboard Pages (Read)
                   </span>
                   <div className="mt-1.5 flex flex-wrap gap-1">
                     {accessiblePages.map((pg) => (
                       <span
                         key={pg}
-                        className="inline-flex items-center gap-0.5 rounded-md bg-[#FAF8F4] border border-[#E5E5E0] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#1A1A18]"
+                        className="inline-flex items-center gap-0.5 rounded-md border border-[#E5E5E0] bg-[#FAF8F4] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#1A1A18]"
                       >
                         <Eye className="h-2.5 w-2.5 text-[#C89D32]" />
                         {pg}
                       </span>
                     ))}
                     {accessiblePages.length === 0 && (
-                      <span className="text-[10px] text-[#A3A39E]">No page permissions assigned</span>
+                      <span className="text-[10px] text-[#A3A39E]">
+                        No page permissions assigned
+                      </span>
                     )}
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 border-t border-[#F0F0EC] pt-3 flex items-center justify-between">
+              <div className="mt-4 flex items-center justify-between border-t border-[#F0F0EC] pt-3">
                 <span className="text-[11px] text-[#73736E]">
                   {emp.permissions?.length || 0} permissions
                 </span>
                 <button
                   onClick={() => handleOpenEditModal(emp)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#E5E5E0] bg-white px-3 py-1.5 text-xs font-semibold text-[#1A1A18] hover:bg-[#FAF8F4] transition"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#E5E5E0] bg-white px-3 py-1.5 text-xs font-semibold text-[#1A1A18] transition hover:bg-[#FAF8F4]"
                 >
                   <Sliders className="h-3 w-3 text-[#73736E]" />
                   Configure Roles & CRUD
@@ -565,19 +593,20 @@ export function EmployeesViewClient({
       {/* CONFIGURE PERMISSIONS & ROLES MODAL (EDIT) */}
       {inspectEmployee && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xl">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
               <div>
-                <h3 className="font-bold text-[#1A1A18] text-base">
+                <h3 className="text-base font-bold text-[#1A1A18]">
                   Configure Roles & CRUD Page Permissions
                 </h3>
-                <p className="text-xs text-[#73736E] mt-0.5">
-                  {inspectEmployee.full_name} ({inspectEmployee.employee_code}) - {inspectEmployee.email}
+                <p className="mt-0.5 text-xs text-[#73736E]">
+                  {inspectEmployee.full_name} ({inspectEmployee.employee_code}) -{" "}
+                  {inspectEmployee.email}
                 </p>
               </div>
               <button
                 onClick={() => setInspectEmployee(null)}
-                className="text-neutral-400 hover:text-black font-semibold"
+                className="font-semibold text-neutral-400 hover:text-black"
               >
                 ✕
               </button>
@@ -586,7 +615,7 @@ export function EmployeesViewClient({
             <form onSubmit={handleSavePermissions} className="mt-4 space-y-4">
               {/* Role Preset Selector */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A18] mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-[#1A1A18] uppercase">
                   Assigned Role Template *
                 </label>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -595,7 +624,7 @@ export function EmployeesViewClient({
                     onClick={() => handleRolePresetChangeForEdit("super_admin")}
                     className={`rounded-xl border p-2.5 text-left text-xs transition ${
                       editRolePreset === "super_admin"
-                        ? "border-[#1A1A18] bg-[#1A1A18] text-white font-semibold"
+                        ? "border-[#1A1A18] bg-[#1A1A18] font-semibold text-white"
                         : "border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] hover:border-black"
                     }`}
                   >
@@ -603,7 +632,9 @@ export function EmployeesViewClient({
                       <Shield className="h-3 w-3 text-[#C89D32]" />
                       Super Admin
                     </div>
-                    <p className={`text-[10px] mt-0.5 ${editRolePreset === "super_admin" ? "text-neutral-300" : "text-[#73736E]"}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${editRolePreset === "super_admin" ? "text-neutral-300" : "text-[#73736E]"}`}
+                    >
                       Full CRUD All
                     </p>
                   </button>
@@ -613,7 +644,7 @@ export function EmployeesViewClient({
                     onClick={() => handleRolePresetChangeForEdit("crm_manager")}
                     className={`rounded-xl border p-2.5 text-left text-xs transition ${
                       editRolePreset === "crm_manager"
-                        ? "border-[#1A1A18] bg-[#1A1A18] text-white font-semibold"
+                        ? "border-[#1A1A18] bg-[#1A1A18] font-semibold text-white"
                         : "border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] hover:border-black"
                     }`}
                   >
@@ -621,7 +652,9 @@ export function EmployeesViewClient({
                       <Users className="h-3 w-3 text-amber-500" />
                       CRM Manager
                     </div>
-                    <p className={`text-[10px] mt-0.5 ${editRolePreset === "crm_manager" ? "text-neutral-300" : "text-[#73736E]"}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${editRolePreset === "crm_manager" ? "text-neutral-300" : "text-[#73736E]"}`}
+                    >
                       CRM + Tasks
                     </p>
                   </button>
@@ -631,7 +664,7 @@ export function EmployeesViewClient({
                     onClick={() => handleRolePresetChangeForEdit("operation_manager")}
                     className={`rounded-xl border p-2.5 text-left text-xs transition ${
                       editRolePreset === "operation_manager"
-                        ? "border-[#1A1A18] bg-[#1A1A18] text-white font-semibold"
+                        ? "border-[#1A1A18] bg-[#1A1A18] font-semibold text-white"
                         : "border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] hover:border-black"
                     }`}
                   >
@@ -639,7 +672,9 @@ export function EmployeesViewClient({
                       <Briefcase className="h-3 w-3 text-indigo-400" />
                       Operation Manager
                     </div>
-                    <p className={`text-[10px] mt-0.5 ${editRolePreset === "operation_manager" ? "text-neutral-300" : "text-[#73736E]"}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${editRolePreset === "operation_manager" ? "text-neutral-300" : "text-[#73736E]"}`}
+                    >
                       Orders + Catalog
                     </p>
                   </button>
@@ -649,7 +684,7 @@ export function EmployeesViewClient({
                     onClick={() => handleRolePresetChangeForEdit("custom")}
                     className={`rounded-xl border p-2.5 text-left text-xs transition ${
                       editRolePreset === "custom"
-                        ? "border-[#1A1A18] bg-[#1A1A18] text-white font-semibold"
+                        ? "border-[#1A1A18] bg-[#1A1A18] font-semibold text-white"
                         : "border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] hover:border-black"
                     }`}
                   >
@@ -657,7 +692,9 @@ export function EmployeesViewClient({
                       <Sliders className="h-3 w-3 text-[#73736E]" />
                       Custom Role
                     </div>
-                    <p className={`text-[10px] mt-0.5 ${editRolePreset === "custom" ? "text-neutral-300" : "text-[#73736E]"}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${editRolePreset === "custom" ? "text-neutral-300" : "text-[#73736E]"}`}
+                    >
                       Manual Select
                     </p>
                   </button>
@@ -666,28 +703,32 @@ export function EmployeesViewClient({
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A18]">Role Title</label>
+                  <label className="block text-xs font-semibold text-[#1A1A18]">
+                    Role Title
+                  </label>
                   <input
                     name="role"
                     defaultValue={
                       editRolePreset === "super_admin"
                         ? "Super Admin"
                         : editRolePreset === "crm_manager"
-                        ? "CRM Manager"
-                        : editRolePreset === "operation_manager"
-                        ? "Operation Manager"
-                        : inspectEmployee.role || inspectEmployee.designation
+                          ? "CRM Manager"
+                          : editRolePreset === "operation_manager"
+                            ? "Operation Manager"
+                            : inspectEmployee.role || inspectEmployee.designation
                     }
                     className="mt-1 w-full rounded-xl border border-[#E5E5E0] p-2 text-xs text-[#1A1A18] outline-none focus:border-[#1A1A18]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A18]">Department</label>
+                  <label className="block text-xs font-semibold text-[#1A1A18]">
+                    Department
+                  </label>
                   <select
                     name="department"
                     defaultValue={inspectEmployee.department}
-                    className="mt-1 w-full rounded-xl border border-[#E5E5E0] p-2 text-xs text-[#1A1A18] outline-none bg-white focus:border-[#1A1A18]"
+                    className="mt-1 w-full rounded-xl border border-[#E5E5E0] bg-white p-2 text-xs text-[#1A1A18] outline-none focus:border-[#1A1A18]"
                   >
                     {departments.length > 0 ? (
                       departments.map((d) => (
@@ -706,11 +747,13 @@ export function EmployeesViewClient({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A18]">Account Status</label>
+                  <label className="block text-xs font-semibold text-[#1A1A18]">
+                    Account Status
+                  </label>
                   <select
                     name="status"
                     defaultValue={inspectEmployee.status}
-                    className="mt-1 w-full rounded-xl border border-[#E5E5E0] p-2 text-xs text-[#1A1A18] outline-none bg-white focus:border-[#1A1A18]"
+                    className="mt-1 w-full rounded-xl border border-[#E5E5E0] bg-white p-2 text-xs text-[#1A1A18] outline-none focus:border-[#1A1A18]"
                   >
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -725,15 +768,17 @@ export function EmployeesViewClient({
                 </label>
                 <input
                   name="designation"
-                  defaultValue={inspectEmployee.designation || inspectEmployee.role || ""}
+                  defaultValue={
+                    inspectEmployee.designation || inspectEmployee.role || ""
+                  }
                   className="mt-1 w-full rounded-xl border border-[#E5E5E0] p-2 text-xs text-[#1A1A18] outline-none focus:border-[#1A1A18]"
                 />
               </div>
 
               {/* GRANULAR CRUD MATRIX */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A18]">
+                <div className="mb-2 flex items-center justify-between">
+                  <label className="block text-xs font-bold tracking-wider text-[#1A1A18] uppercase">
                     Granular CRUD & Page Access Matrix
                   </label>
                   <span className="text-[11px] text-[#73736E]">
@@ -741,57 +786,67 @@ export function EmployeesViewClient({
                   </span>
                 </div>
 
-                <div className="space-y-2 border border-[#E5E5E0] rounded-xl p-3 bg-[#FAF8F4] max-h-64 overflow-y-auto">
+                <div className="max-h-64 space-y-2 overflow-y-auto rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-3">
                   {MODULE_PERMISSIONS.map((mod) => {
                     const hasRead = editSelectedPerms.has(mod.readKey);
                     const hasWrite = editSelectedPerms.has(mod.writeKey);
-                    const hasDelete = mod.deleteKey ? editSelectedPerms.has(mod.deleteKey) : false;
-                    const hasSpecial = mod.specialKey ? editSelectedPerms.has(mod.specialKey) : false;
+                    const hasDelete = mod.deleteKey
+                      ? editSelectedPerms.has(mod.deleteKey)
+                      : false;
+                    const hasSpecial = mod.specialKey
+                      ? editSelectedPerms.has(mod.specialKey)
+                      : false;
 
                     return (
                       <div
                         key={mod.module}
                         className="rounded-xl border border-[#E5E5E0] bg-white p-3 shadow-2xs"
                       >
-                        <div className="flex items-center justify-between pb-2 border-b border-[#F0F0EC]">
-                          <span className="font-bold text-xs text-[#1A1A18]">{mod.module}</span>
-                          <span className="font-mono text-[10px] text-[#73736E] bg-[#FAF8F4] px-1.5 py-0.5 rounded border border-[#E5E5E0]">
+                        <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-2">
+                          <span className="text-xs font-bold text-[#1A1A18]">
+                            {mod.module}
+                          </span>
+                          <span className="rounded border border-[#E5E5E0] bg-[#FAF8F4] px-1.5 py-0.5 font-mono text-[10px] text-[#73736E]">
                             {hasRead ? "Page Enabled" : "Page Locked"}
                           </span>
                         </div>
 
                         <div className="mt-2.5 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
                           {/* READ / ACCESS */}
-                          <label className="flex items-center gap-2 cursor-pointer">
+                          <label className="flex cursor-pointer items-center gap-2">
                             <input
                               type="checkbox"
                               checked={hasRead}
                               onChange={() => toggleEditPerm(mod.readKey)}
                               className="h-3.5 w-3.5 rounded border-[#E5E5E0] text-black focus:ring-black"
                             />
-                            <span className="font-semibold text-[11px] text-[#1A1A18]">
+                            <span className="text-[11px] font-semibold text-[#1A1A18]">
                               Read (Page)
                             </span>
                           </label>
 
                           {/* CREATE / WRITE */}
-                          <label className="flex items-center gap-2 cursor-pointer">
+                          <label className="flex cursor-pointer items-center gap-2">
                             <input
                               type="checkbox"
                               checked={hasWrite}
                               onChange={() => toggleEditPerm(mod.writeKey)}
                               className="h-3.5 w-3.5 rounded border-[#E5E5E0] text-black focus:ring-black"
                             />
-                            <span className="text-[11px] text-[#73736E]">Create / Edit</span>
+                            <span className="text-[11px] text-[#73736E]">
+                              Create / Edit
+                            </span>
                           </label>
 
                           {/* DELETE */}
                           {mod.deleteKey && (
-                            <label className="flex items-center gap-2 cursor-pointer">
+                            <label className="flex cursor-pointer items-center gap-2">
                               <input
                                 type="checkbox"
                                 checked={hasDelete}
-                                onChange={() => mod.deleteKey && toggleEditPerm(mod.deleteKey)}
+                                onChange={() =>
+                                  mod.deleteKey && toggleEditPerm(mod.deleteKey)
+                                }
                                 className="h-3.5 w-3.5 rounded border-[#E5E5E0] text-black focus:ring-black"
                               />
                               <span className="text-[11px] text-[#73736E]">Delete</span>
@@ -800,15 +855,19 @@ export function EmployeesViewClient({
 
                           {/* SPECIAL */}
                           {mod.specialKey && (
-                            <label className="flex items-center gap-2 cursor-pointer">
+                            <label className="flex cursor-pointer items-center gap-2">
                               <input
                                 type="checkbox"
                                 checked={hasSpecial}
-                                onChange={() => mod.specialKey && toggleEditPerm(mod.specialKey)}
+                                onChange={() =>
+                                  mod.specialKey && toggleEditPerm(mod.specialKey)
+                                }
                                 className="h-3.5 w-3.5 rounded border-[#E5E5E0] text-black focus:ring-black"
                               />
                               <span className="text-[11px] text-[#73736E]">
-                                {mod.specialKey.includes("admin") ? "Onboard Admin" : "Assign"}
+                                {mod.specialKey.includes("admin")
+                                  ? "Onboard Admin"
+                                  : "Assign"}
                               </span>
                             </label>
                           )}
@@ -819,7 +878,7 @@ export function EmployeesViewClient({
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-[#F0F0EC]">
+              <div className="flex justify-end gap-2 border-t border-[#F0F0EC] pt-3">
                 <button
                   type="button"
                   onClick={() => setInspectEmployee(null)}
@@ -843,17 +902,18 @@ export function EmployeesViewClient({
       {/* ADD EMPLOYEE MODAL */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xl">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
               <div>
-                <h3 className="font-bold text-[#1A1A18] text-base">Add New Employee</h3>
+                <h3 className="text-base font-bold text-[#1A1A18]">Add New Employee</h3>
                 <p className="text-xs text-[#73736E]">
-                  Assign standard role templates (Super Admin, CRM Manager, Operation Manager) with granular CRUD access.
+                  Assign standard role templates (Super Admin, CRM Manager, Operation
+                  Manager) with granular CRUD access.
                 </p>
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-neutral-400 hover:text-black font-semibold"
+                className="font-semibold text-neutral-400 hover:text-black"
               >
                 ✕
               </button>
@@ -862,7 +922,7 @@ export function EmployeesViewClient({
             <form onSubmit={handleAddEmployee} className="mt-4 space-y-4">
               {/* Role Presets */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A18] mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-[#1A1A18] uppercase">
                   Select Role Template *
                 </label>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -871,7 +931,7 @@ export function EmployeesViewClient({
                     onClick={() => handleRolePresetChangeForAdd("super_admin")}
                     className={`rounded-xl border p-2.5 text-left text-xs transition ${
                       addRolePreset === "super_admin"
-                        ? "border-[#1A1A18] bg-[#1A1A18] text-white font-semibold"
+                        ? "border-[#1A1A18] bg-[#1A1A18] font-semibold text-white"
                         : "border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] hover:border-black"
                     }`}
                   >
@@ -879,7 +939,9 @@ export function EmployeesViewClient({
                       <Shield className="h-3 w-3 text-[#C89D32]" />
                       Super Admin
                     </div>
-                    <p className={`text-[10px] mt-0.5 ${addRolePreset === "super_admin" ? "text-neutral-300" : "text-[#73736E]"}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${addRolePreset === "super_admin" ? "text-neutral-300" : "text-[#73736E]"}`}
+                    >
                       Full CRUD All
                     </p>
                   </button>
@@ -889,7 +951,7 @@ export function EmployeesViewClient({
                     onClick={() => handleRolePresetChangeForAdd("crm_manager")}
                     className={`rounded-xl border p-2.5 text-left text-xs transition ${
                       addRolePreset === "crm_manager"
-                        ? "border-[#1A1A18] bg-[#1A1A18] text-white font-semibold"
+                        ? "border-[#1A1A18] bg-[#1A1A18] font-semibold text-white"
                         : "border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] hover:border-black"
                     }`}
                   >
@@ -897,7 +959,9 @@ export function EmployeesViewClient({
                       <Users className="h-3 w-3 text-amber-500" />
                       CRM Manager
                     </div>
-                    <p className={`text-[10px] mt-0.5 ${addRolePreset === "crm_manager" ? "text-neutral-300" : "text-[#73736E]"}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${addRolePreset === "crm_manager" ? "text-neutral-300" : "text-[#73736E]"}`}
+                    >
                       CRM + Tasks
                     </p>
                   </button>
@@ -907,7 +971,7 @@ export function EmployeesViewClient({
                     onClick={() => handleRolePresetChangeForAdd("operation_manager")}
                     className={`rounded-xl border p-2.5 text-left text-xs transition ${
                       addRolePreset === "operation_manager"
-                        ? "border-[#1A1A18] bg-[#1A1A18] text-white font-semibold"
+                        ? "border-[#1A1A18] bg-[#1A1A18] font-semibold text-white"
                         : "border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] hover:border-black"
                     }`}
                   >
@@ -915,7 +979,9 @@ export function EmployeesViewClient({
                       <Briefcase className="h-3 w-3 text-indigo-400" />
                       Operation Manager
                     </div>
-                    <p className={`text-[10px] mt-0.5 ${addRolePreset === "operation_manager" ? "text-neutral-300" : "text-[#73736E]"}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${addRolePreset === "operation_manager" ? "text-neutral-300" : "text-[#73736E]"}`}
+                    >
                       Orders + Catalog
                     </p>
                   </button>
@@ -925,7 +991,7 @@ export function EmployeesViewClient({
                     onClick={() => handleRolePresetChangeForAdd("custom")}
                     className={`rounded-xl border p-2.5 text-left text-xs transition ${
                       addRolePreset === "custom"
-                        ? "border-[#1A1A18] bg-[#1A1A18] text-white font-semibold"
+                        ? "border-[#1A1A18] bg-[#1A1A18] font-semibold text-white"
                         : "border-[#E5E5E0] bg-[#FAF8F4] text-[#1A1A18] hover:border-black"
                     }`}
                   >
@@ -933,7 +999,9 @@ export function EmployeesViewClient({
                       <Sliders className="h-3 w-3 text-[#73736E]" />
                       Custom Role
                     </div>
-                    <p className={`text-[10px] mt-0.5 ${addRolePreset === "custom" ? "text-neutral-300" : "text-[#73736E]"}`}>
+                    <p
+                      className={`mt-0.5 text-[10px] ${addRolePreset === "custom" ? "text-neutral-300" : "text-[#73736E]"}`}
+                    >
                       Manual Select
                     </p>
                   </button>
@@ -944,7 +1012,9 @@ export function EmployeesViewClient({
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A18]">Full Name *</label>
+                  <label className="block text-xs font-semibold text-[#1A1A18]">
+                    Full Name *
+                  </label>
                   <input
                     name="fullName"
                     required
@@ -954,7 +1024,9 @@ export function EmployeesViewClient({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A18]">Email Address *</label>
+                  <label className="block text-xs font-semibold text-[#1A1A18]">
+                    Email Address *
+                  </label>
                   <input
                     name="email"
                     type="email"
@@ -967,7 +1039,9 @@ export function EmployeesViewClient({
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A18]">Phone</label>
+                  <label className="block text-xs font-semibold text-[#1A1A18]">
+                    Phone
+                  </label>
                   <input
                     name="phone"
                     placeholder="+91 98450 11223"
@@ -976,10 +1050,12 @@ export function EmployeesViewClient({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A18]">Department</label>
+                  <label className="block text-xs font-semibold text-[#1A1A18]">
+                    Department
+                  </label>
                   <select
                     name="department"
-                    className="mt-1 w-full rounded-xl border border-[#E5E5E0] p-2.5 text-xs text-[#1A1A18] outline-none bg-white focus:border-[#1A1A18]"
+                    className="mt-1 w-full rounded-xl border border-[#E5E5E0] bg-white p-2.5 text-xs text-[#1A1A18] outline-none focus:border-[#1A1A18]"
                   >
                     {departments.length > 0 ? (
                       departments.map((d) => (
@@ -998,17 +1074,19 @@ export function EmployeesViewClient({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A18]">Role Title</label>
+                  <label className="block text-xs font-semibold text-[#1A1A18]">
+                    Role Title
+                  </label>
                   <input
                     name="designation"
                     defaultValue={
                       addRolePreset === "super_admin"
                         ? "Super Admin"
                         : addRolePreset === "crm_manager"
-                        ? "CRM Manager"
-                        : addRolePreset === "operation_manager"
-                        ? "Operation Manager"
-                        : "Staff Associate"
+                          ? "CRM Manager"
+                          : addRolePreset === "operation_manager"
+                            ? "Operation Manager"
+                            : "Staff Associate"
                     }
                     className="mt-1 w-full rounded-xl border border-[#E5E5E0] p-2.5 text-xs text-[#1A1A18] outline-none focus:border-[#1A1A18]"
                   />
@@ -1017,8 +1095,8 @@ export function EmployeesViewClient({
 
               {/* CRUD PERMISSIONS CHECKBOX MATRIX */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A18]">
+                <div className="mb-2 flex items-center justify-between">
+                  <label className="block text-xs font-bold tracking-wider text-[#1A1A18] uppercase">
                     Granular CRUD & Page Access Matrix
                   </label>
                   <span className="text-[11px] text-[#73736E]">
@@ -1026,57 +1104,67 @@ export function EmployeesViewClient({
                   </span>
                 </div>
 
-                <div className="space-y-2 border border-[#E5E5E0] rounded-xl p-3 bg-[#FAF8F4] max-h-64 overflow-y-auto">
+                <div className="max-h-64 space-y-2 overflow-y-auto rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-3">
                   {MODULE_PERMISSIONS.map((mod) => {
                     const hasRead = addSelectedPerms.has(mod.readKey);
                     const hasWrite = addSelectedPerms.has(mod.writeKey);
-                    const hasDelete = mod.deleteKey ? addSelectedPerms.has(mod.deleteKey) : false;
-                    const hasSpecial = mod.specialKey ? addSelectedPerms.has(mod.specialKey) : false;
+                    const hasDelete = mod.deleteKey
+                      ? addSelectedPerms.has(mod.deleteKey)
+                      : false;
+                    const hasSpecial = mod.specialKey
+                      ? addSelectedPerms.has(mod.specialKey)
+                      : false;
 
                     return (
                       <div
                         key={mod.module}
                         className="rounded-xl border border-[#E5E5E0] bg-white p-3 shadow-2xs"
                       >
-                        <div className="flex items-center justify-between pb-2 border-b border-[#F0F0EC]">
-                          <span className="font-bold text-xs text-[#1A1A18]">{mod.module}</span>
-                          <span className="font-mono text-[10px] text-[#73736E] bg-[#FAF8F4] px-1.5 py-0.5 rounded border border-[#E5E5E0]">
+                        <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-2">
+                          <span className="text-xs font-bold text-[#1A1A18]">
+                            {mod.module}
+                          </span>
+                          <span className="rounded border border-[#E5E5E0] bg-[#FAF8F4] px-1.5 py-0.5 font-mono text-[10px] text-[#73736E]">
                             {hasRead ? "Page Enabled" : "Page Locked"}
                           </span>
                         </div>
 
                         <div className="mt-2.5 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
                           {/* READ / ACCESS */}
-                          <label className="flex items-center gap-2 cursor-pointer">
+                          <label className="flex cursor-pointer items-center gap-2">
                             <input
                               type="checkbox"
                               checked={hasRead}
                               onChange={() => toggleAddPerm(mod.readKey)}
                               className="h-3.5 w-3.5 rounded border-[#E5E5E0] text-black focus:ring-black"
                             />
-                            <span className="font-semibold text-[11px] text-[#1A1A18]">
+                            <span className="text-[11px] font-semibold text-[#1A1A18]">
                               Read (Page)
                             </span>
                           </label>
 
                           {/* CREATE / WRITE */}
-                          <label className="flex items-center gap-2 cursor-pointer">
+                          <label className="flex cursor-pointer items-center gap-2">
                             <input
                               type="checkbox"
                               checked={hasWrite}
                               onChange={() => toggleAddPerm(mod.writeKey)}
                               className="h-3.5 w-3.5 rounded border-[#E5E5E0] text-black focus:ring-black"
                             />
-                            <span className="text-[11px] text-[#73736E]">Create / Edit</span>
+                            <span className="text-[11px] text-[#73736E]">
+                              Create / Edit
+                            </span>
                           </label>
 
                           {/* DELETE */}
                           {mod.deleteKey && (
-                            <label className="flex items-center gap-2 cursor-pointer">
+                            <label className="flex cursor-pointer items-center gap-2">
                               <input
                                 type="checkbox"
                                 checked={hasDelete}
-                                onChange={() => mod.deleteKey && toggleAddPerm(mod.deleteKey)}
+                                onChange={() =>
+                                  mod.deleteKey && toggleAddPerm(mod.deleteKey)
+                                }
                                 className="h-3.5 w-3.5 rounded border-[#E5E5E0] text-black focus:ring-black"
                               />
                               <span className="text-[11px] text-[#73736E]">Delete</span>
@@ -1085,15 +1173,19 @@ export function EmployeesViewClient({
 
                           {/* SPECIAL */}
                           {mod.specialKey && (
-                            <label className="flex items-center gap-2 cursor-pointer">
+                            <label className="flex cursor-pointer items-center gap-2">
                               <input
                                 type="checkbox"
                                 checked={hasSpecial}
-                                onChange={() => mod.specialKey && toggleAddPerm(mod.specialKey)}
+                                onChange={() =>
+                                  mod.specialKey && toggleAddPerm(mod.specialKey)
+                                }
                                 className="h-3.5 w-3.5 rounded border-[#E5E5E0] text-black focus:ring-black"
                               />
                               <span className="text-[11px] text-[#73736E]">
-                                {mod.specialKey.includes("admin") ? "Onboard Admin" : "Assign"}
+                                {mod.specialKey.includes("admin")
+                                  ? "Onboard Admin"
+                                  : "Assign"}
                               </span>
                             </label>
                           )}
@@ -1104,7 +1196,7 @@ export function EmployeesViewClient({
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-[#F0F0EC]">
+              <div className="flex justify-end gap-2 border-t border-[#F0F0EC] pt-3">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}

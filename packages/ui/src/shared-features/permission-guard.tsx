@@ -29,9 +29,6 @@ export function PermissionGuard({
 /**
  * Helper to check role permissions in client components.
  */
-export function hasRolePermission(
-  currentRole: Role,
-  allowedRoles: Role[]
-): boolean {
+export function hasRolePermission(currentRole: Role, allowedRoles: Role[]): boolean {
   return allowedRoles.includes(currentRole);
 }

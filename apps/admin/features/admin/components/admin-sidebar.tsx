@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ComponentType, type PointerEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -17,7 +17,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ChevronsUpDown,
-  ChevronDown,
   X,
   LogOut,
   CheckSquare,
@@ -25,14 +24,18 @@ import {
   Target,
   Briefcase,
   ClipboardCheck,
+  FileBarChart,
+  Shield,
+  Landmark,
+  Receipt,
+  Scale,
 } from "lucide-react";
 import { signOut } from "@/app/login/actions";
 
+export type AdminModule = "admin" | "operations" | "crm" | "finance";
+
 interface AdminSidebarProps {
-  adminUser?: {
-    full_name?: string | null;
-    email?: string | null;
-  };
+  adminUser?: { full_name?: string | null; email?: string | null };
   counts?: {
     users?: number;
     pendingVerifications?: number;
@@ -46,679 +49,574 @@ interface AdminSidebarProps {
     deals?: number;
     onboarding?: number;
     employees?: number;
+    pendingSettlements?: number;
   };
   isOpen?: boolean;
   onClose?: () => void;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
+  activeModule?: AdminModule;
 }
-
-/* ------------------------------------------------------------------ */
-/* Material 3 primitives: state-layer ripple + elevation + motion      */
-/* ------------------------------------------------------------------ */
 
 type IconType = ComponentType<{ className?: string }>;
-
-interface NavItemData {
+type NavItem = {
   label: string;
   href: string;
   icon: IconType;
   badge?: number | null;
+  /** "attention" = needs action (amber pill), "plain" = just a count */
+  tone?: "attention" | "plain";
   exact?: boolean;
-}
+};
+type NavSection = { title: string; items: NavItem[] };
+type ModuleConfig = {
+  title: string;
+  subtitle: string;
+  icon: IconType;
+  /** Tonal colours for the module card */
+  card: string;
+  iconBox: string;
+  sections: NavSection[];
+};
 
-interface RippleItem {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-}
+/* M3 state layer: hover 8%, pressed 12%, painted with a pseudo-element so it works on any background */
+const STATE_LAYER =
+  "relative isolate overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-current before:opacity-0 before:transition-opacity before:duration-200 hover:before:opacity-[0.08] focus-visible:before:opacity-[0.12] active:before:opacity-[0.12]";
+const FOCUS_RING =
+  "focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none";
 
-// M3 "standard" easing curve, used for every interactive transition below.
-const M3_EASE = "ease-[cubic-bezier(0.2,0,0,1)]";
-// M3 elevation tokens (level 1 for temporary/modal surfaces, level 2 for menus).
-const M3_ELEVATION_1 = "shadow-[0_1px_2px_rgba(0,0,0,0.30),0_1px_3px_1px_rgba(0,0,0,0.15)]";
-const M3_ELEVATION_2 = "shadow-[0_1px_2px_rgba(0,0,0,0.30),0_2px_6px_2px_rgba(0,0,0,0.15)]";
-
-function useRipple() {
-  const [ripples, setRipples] = useState<RippleItem[]>([]);
-  const nextId = useRef(0);
-
-  const addRipple = (event: PointerEvent<HTMLElement>) => {
-    const el = event.currentTarget;
-    const rect = el.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height) * 1.8;
-    const id = nextId.current++;
-
-    setRipples((prev) => [
-      ...prev,
-      {
-        id,
-        x: event.clientX - rect.left - size / 2,
-        y: event.clientY - rect.top - size / 2,
-        size,
-      },
-    ]);
-
-    window.setTimeout(() => {
-      setRipples((prev) => prev.filter((r) => r.id !== id));
-    }, 500);
+function buildModules(
+  c: NonNullable<AdminSidebarProps["counts"]>
+): Record<AdminModule, ModuleConfig> {
+  return {
+    crm: {
+      title: "Artisan CRM",
+      subtitle: "Sourcing & pipeline hub",
+      icon: Users,
+      card: "bg-emerald-50 text-emerald-950",
+      iconBox: "bg-emerald-700 text-white",
+      sections: [
+        {
+          title: "Pipeline & sourcing",
+          items: [
+            {
+              label: "CRM Overview",
+              href: "/dashboard/crm",
+              icon: LayoutGrid,
+              exact: true,
+            },
+            {
+              label: "Artisan Contacts",
+              href: "/dashboard/crm/contacts",
+              icon: Users,
+              badge: c.contacts,
+            },
+            {
+              label: "Sourcing Leads",
+              href: "/dashboard/crm/leads",
+              icon: Target,
+              badge: c.leads,
+            },
+            {
+              label: "Pipeline Deals",
+              href: "/dashboard/crm/deals",
+              icon: Briefcase,
+              badge: c.deals,
+            },
+            {
+              label: "Seller Onboarding",
+              href: "/dashboard/crm/onboarding",
+              icon: ClipboardCheck,
+              badge: c.onboarding,
+              tone: "attention",
+            },
+          ],
+        },
+        {
+          title: "Reports & config",
+          items: [
+            {
+              label: "CRM Reports",
+              href: "/dashboard/reports?module=crm",
+              icon: FileBarChart,
+            },
+            { label: "CRM Settings", href: "/dashboard/crm/settings", icon: Settings },
+          ],
+        },
+      ],
+    },
+    operations: {
+      title: "Operations Hub",
+      subtitle: "Orders, catalog & KYC",
+      icon: Briefcase,
+      card: "bg-blue-50 text-blue-950",
+      iconBox: "bg-blue-700 text-white",
+      sections: [
+        {
+          title: "Operations & catalog",
+          items: [
+            {
+              label: "Operations Hub",
+              href: "/dashboard/operations",
+              icon: LayoutGrid,
+              exact: true,
+            },
+            {
+              label: "Orders & Shipping",
+              href: "/dashboard/orders",
+              icon: Package,
+              badge: c.orders,
+            },
+            {
+              label: "Products Catalog",
+              href: "/dashboard/products",
+              icon: ShoppingBag,
+              badge: c.products,
+            },
+            {
+              label: "Tasks",
+              href: "/dashboard/tasks",
+              icon: CheckSquare,
+              badge: c.tasks,
+              tone: "attention",
+            },
+            {
+              label: "Verifications (KYC)",
+              href: "/dashboard/verifications",
+              icon: ShieldCheck,
+              badge: c.pendingVerifications,
+              tone: "attention",
+            },
+          ],
+        },
+        {
+          title: "Reports & config",
+          items: [
+            {
+              label: "Operations Reports",
+              href: "/dashboard/reports?module=operations",
+              icon: FileBarChart,
+            },
+            {
+              label: "Operations Settings",
+              href: "/dashboard/operations/settings",
+              icon: Settings,
+            },
+          ],
+        },
+      ],
+    },
+    admin: {
+      title: "Platform Admin",
+      subtitle: "Governance & employees",
+      icon: Shield,
+      card: "bg-[#EFEDE6] text-[#1A1A18]",
+      iconBox: "bg-[#1A1A18] text-amber-400",
+      sections: [
+        {
+          title: "Organization",
+          items: [
+            {
+              label: "Executive Dashboard",
+              href: "/dashboard",
+              icon: LayoutGrid,
+              exact: true,
+            },
+            { label: "Team Employees", href: "/dashboard/employees", icon: UserCog },
+            {
+              label: "Departments",
+              href: "/dashboard/employees/departments",
+              icon: Building2,
+            },
+            {
+              label: "User Profiles",
+              href: "/dashboard/users",
+              icon: Users,
+              badge: c.users,
+            },
+          ],
+        },
+        {
+          title: "Inquiries",
+          items: [
+            {
+              label: "Waitlist Signups",
+              href: "/dashboard/waitlist",
+              icon: UserCheck,
+              badge: c.waitlist,
+            },
+            {
+              label: "Contact Inquiries",
+              href: "/dashboard/contact",
+              icon: Mail,
+              badge: c.contact,
+            },
+          ],
+        },
+        {
+          title: "Governance & system",
+          items: [
+            {
+              label: "Platform Analytics",
+              href: "/dashboard?view=analytics",
+              icon: BarChart3,
+            },
+            { label: "Audit Logs", href: "/dashboard?view=logs", icon: ShieldCheck },
+            { label: "Platform Settings", href: "/dashboard/settings", icon: Settings },
+            { label: "Roles & Permissions", href: "/dashboard/roles", icon: Shield },
+          ],
+        },
+      ],
+    },
+    finance: {
+      title: "Finance & ECO Core",
+      subtitle: "Settlements, Ledger & GST",
+      icon: Landmark,
+      card: "bg-amber-50 text-amber-950",
+      iconBox: "bg-amber-700 text-white",
+      sections: [
+        {
+          title: "Ledger & Settlements",
+          items: [
+            {
+              label: "Finance Overview",
+              href: "/dashboard/finance",
+              icon: LayoutGrid,
+              exact: true,
+            },
+            {
+              label: "Seller Settlements",
+              href: "/dashboard/finance?tab=settlements",
+              icon: Building2,
+              badge: c.pendingSettlements,
+              tone: "attention",
+            },
+            {
+              label: "Commission Invoices",
+              href: "/dashboard/finance?tab=commissions",
+              icon: FileBarChart,
+            },
+            {
+              label: "General Ledger",
+              href: "/dashboard/finance?tab=ledger",
+              icon: Scale,
+            },
+            {
+              label: "5-Way Reconciliation",
+              href: "/dashboard/finance?tab=reconciliation",
+              icon: ShieldCheck,
+            },
+          ],
+        },
+        {
+          title: "Compliance & Audit",
+          items: [
+            {
+              label: "Statutory GST & TDS",
+              href: "/dashboard/finance?tab=statutory",
+              icon: Receipt,
+            },
+            {
+              label: "Trial Balance Audit",
+              href: "/dashboard/finance?tab=ledger",
+              icon: CheckSquare,
+            },
+          ],
+        },
+      ],
+    },
   };
-
-  return { ripples, addRipple };
 }
 
-function RippleLayer({ ripples }: { ripples: RippleItem[] }) {
-  if (ripples.length === 0) return null;
-  return (
-    <>
-      {ripples.map((r) => (
-        <span
-          key={r.id}
-          aria-hidden="true"
-          className="md-ripple pointer-events-none absolute rounded-full"
-          style={{ left: r.x, top: r.y, width: r.size, height: r.size }}
-        />
-      ))}
-    </>
-  );
-}
-
-function CircularIconButton({
-  onClick,
-  ariaLabel,
-  title,
-  className = "",
-  children,
-}: {
-  onClick?: () => void;
-  ariaLabel?: string;
-  title?: string;
-  className?: string;
-  children: ReactNode;
-}) {
-  const { ripples, addRipple } = useRipple();
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      onPointerDown={addRipple}
-      aria-label={ariaLabel}
-      title={title}
-      className={`relative isolate overflow-hidden rounded-full transition-colors duration-200 ${M3_EASE} ${className}`}
-    >
-      <RippleLayer ripples={ripples} />
-      <span className="relative z-10 flex items-center justify-center">{children}</span>
-    </button>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Top-level nav item — supports the sidebar's global collapse (icon   */
-/* only, with the badge shrinking to a dot, exactly as before)         */
-/* ------------------------------------------------------------------ */
-
-function PrimaryNavLink({
-  href,
-  label,
-  icon: Icon,
+/* ─── Nav item ─── */
+function NavLink({
+  item,
   active,
-  badge,
   collapsed,
+  onNavigate,
 }: {
-  href: string;
-  label: string;
-  icon: IconType;
+  item: NavItem;
   active: boolean;
-  badge?: number | null;
-  collapsed?: boolean;
+  collapsed: boolean;
+  onNavigate?: () => void;
 }) {
-  const { ripples, addRipple } = useRipple();
-  const hasBadge = badge !== null && badge !== undefined && badge > 0;
-
-  return (
-    <Link
-      href={href}
-      title={collapsed ? label : undefined}
-      onPointerDown={addRipple}
-      className={`font-graphik group relative isolate flex items-center justify-between overflow-hidden rounded-full px-3 py-2.5 text-xs font-semibold transition-colors duration-200 ${M3_EASE} ${
-        collapsed ? "justify-center px-0" : ""
-      } ${
-        active
-          ? "bg-[#EBEBE6] font-bold text-black"
-          : "text-[#52524E] hover:bg-[#EBEBE6]/60 hover:text-black"
-      }`}
-    >
-      <RippleLayer ripples={ripples} />
-      <div className="relative z-10 flex items-center gap-3">
-        <Icon className={`h-4 w-4 shrink-0 ${active ? "text-black" : "text-[#52524E] group-hover:text-black"}`} />
-        {!collapsed && <span>{label}</span>}
-      </div>
-      {hasBadge && (
-        <span
-          className={`relative z-10 rounded-full border border-amber-300 bg-amber-100 font-mono font-bold text-amber-900 ${
-            collapsed ? "h-2 w-2 p-0 text-[0px]" : "px-2 py-0.5 text-[10px]"
-          }`}
-        >
-          {!collapsed && badge}
-        </span>
-      )}
-    </Link>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Sub-nav item — used inside the CRM / Operations / Inquiries /       */
-/* System groups, in both their collapsed (icon-only) and expanded     */
-/* (dense, indented) forms                                             */
-/* ------------------------------------------------------------------ */
-
-function SubNavLink({
-  href,
-  label,
-  icon: Icon,
-  active,
-  badge,
-  badgeColor = "neutral",
-  collapsed,
-}: {
-  href: string;
-  label: string;
-  icon: IconType;
-  active: boolean;
-  badge?: number | null;
-  badgeColor?: "emerald" | "neutral";
-  collapsed?: boolean;
-}) {
-  const { ripples, addRipple } = useRipple();
-  const badgeClasses =
-    badgeColor === "emerald"
-      ? "border-emerald-300 bg-emerald-100 text-emerald-900"
-      : "border-neutral-300 bg-neutral-200 text-neutral-800";
-  const hasBadge = badge !== null && badge !== undefined && badge > 0;
+  const Icon = item.icon;
+  const count = typeof item.badge === "number" && item.badge > 0 ? item.badge : null;
+  const tone = active
+    ? "bg-secondary-container text-on-secondary-container"
+    : "text-on-surface-variant hover:text-on-surface";
 
   if (collapsed) {
     return (
       <Link
-        href={href}
-        title={label}
-        onPointerDown={addRipple}
-        className={`font-graphik group relative isolate flex items-center justify-center overflow-hidden rounded-full py-2 text-xs font-semibold transition-colors duration-200 ${M3_EASE} ${
-          active
-            ? "bg-[#EBEBE6] font-bold text-black"
-            : "text-[#52524E] hover:bg-[#EBEBE6]/60 hover:text-black"
-        }`}
+        href={item.href}
+        onClick={onNavigate}
+        title={count ? `${item.label} (${count})` : item.label}
+        aria-label={item.label}
+        aria-current={active ? "page" : undefined}
+        className={`${STATE_LAYER} ${FOCUS_RING} mx-auto flex h-12 w-12 items-center justify-center rounded-2xl transition-colors ${tone}`}
       >
-        <RippleLayer ripples={ripples} />
-        <Icon className="relative z-10 h-4 w-4 shrink-0 text-[#52524E] group-hover:text-black" />
+        <Icon className="h-5 w-5" />
+        {count && item.tone === "attention" && (
+          <span className="bg-warning ring-surface-container-lowest absolute top-2 right-2 h-2 w-2 rounded-full ring-2" />
+        )}
       </Link>
     );
   }
 
   return (
     <Link
-      href={href}
-      onPointerDown={addRipple}
-      className={`font-graphik group relative isolate flex items-center justify-between overflow-hidden rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors duration-200 ${M3_EASE} ${
-        active
-          ? "bg-[#EBEBE6] font-bold text-black"
-          : "text-[#52524E] hover:bg-[#EBEBE6]/60 hover:text-black"
-      }`}
+      href={item.href}
+      onClick={onNavigate}
+      aria-current={active ? "page" : undefined}
+      className={`${STATE_LAYER} ${FOCUS_RING} flex h-12 items-center gap-3 rounded-full pr-4 pl-4 text-sm transition-colors ${tone} ${active ? "font-semibold" : "font-medium"}`}
     >
-      <RippleLayer ripples={ripples} />
-      <div className="relative z-10 flex items-center gap-2.5">
-        <Icon className={`h-3.5 w-3.5 shrink-0 ${active ? "text-black" : "text-[#73736E] group-hover:text-black"}`} />
-        <span>{label}</span>
-      </div>
-      {hasBadge && (
-        <span className={`relative z-10 rounded-full border px-1.5 py-0.2 font-mono text-[9px] font-bold ${badgeClasses}`}>
-          {badge}
+      <Icon className="h-5 w-5 shrink-0" />
+      <span className="flex-1 truncate">{item.label}</span>
+      {count !== null && (
+        <span
+          className={`min-w-6 rounded-full px-2 py-0.5 text-center text-xs font-semibold tabular-nums ${
+            item.tone === "attention"
+              ? "bg-warning-container text-on-warning-container"
+              : active
+                ? ""
+                : "text-on-surface-variant"
+          }`}
+        >
+          {count}
         </span>
       )}
     </Link>
   );
 }
 
-function CollapsedIconGroup({
-  items,
-  isLinkActive,
-}: {
-  items: NavItemData[];
-  isLinkActive: (href: string, exact?: boolean) => boolean;
-}) {
-  return (
-    <div className="space-y-1 border-t border-[#EBEBE6] pt-2">
-      {items.map((item) => (
-        <SubNavLink
-          key={item.href}
-          href={item.href}
-          label={item.label}
-          icon={item.icon}
-          active={isLinkActive(item.href, item.exact)}
-          collapsed
-        />
-      ))}
-    </div>
-  );
-}
-
-function ExpandedSubGroup({
-  items,
-  isLinkActive,
-  badgeColor = "neutral",
-}: {
-  items: NavItemData[];
-  isLinkActive: (href: string, exact?: boolean) => boolean;
-  badgeColor?: "emerald" | "neutral";
-}) {
-  return (
-    <div className="ml-3.5 space-y-1 border-l border-[#E5E5E0] pl-2.5 pt-0.5">
-      {items.map((item) => (
-        <SubNavLink
-          key={item.href}
-          href={item.href}
-          label={item.label}
-          icon={item.icon}
-          active={isLinkActive(item.href, item.exact)}
-          badge={item.badge ?? null}
-          badgeColor={badgeColor}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Expandable section header (CRM & Pipeline / Operations / Inquiries  */
-/* / System) — M3 pill container, state-layer ripple, aggregated badge */
-/* ------------------------------------------------------------------ */
-
-function SectionHeader({
-  icon: Icon,
-  label,
-  isActive,
-  open,
-  onToggle,
-  badgeCount = 0,
-  badgeColor = "neutral",
-}: {
-  icon: IconType;
-  label: string;
-  isActive: boolean;
-  open: boolean;
-  onToggle: () => void;
-  badgeCount?: number;
-  badgeColor?: "emerald" | "neutral";
-}) {
-  const { ripples, addRipple } = useRipple();
-  const badgeClasses =
-    badgeColor === "emerald"
-      ? "border-emerald-300 bg-emerald-100 text-emerald-900"
-      : "border-neutral-300 bg-neutral-200 text-neutral-800";
-
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      onPointerDown={addRipple}
-      className={`font-graphik group relative isolate flex w-full items-center justify-between overflow-hidden rounded-full px-3 py-2.5 text-xs font-semibold transition-colors duration-200 ${M3_EASE} ${
-        isActive
-          ? "bg-[#EBEBE6]/80 font-bold text-black"
-          : "text-[#52524E] hover:bg-[#EBEBE6]/50 hover:text-black"
-      }`}
-    >
-      <RippleLayer ripples={ripples} />
-      <span className="relative z-10 flex items-center gap-3">
-        <Icon
-          className={`h-4 w-4 shrink-0 transition-colors ${
-            isActive ? "text-black" : "text-[#52524E] group-hover:text-black"
-          }`}
-        />
-        <span>{label}</span>
-      </span>
-      <span className="relative z-10 flex items-center gap-1.5">
-        {badgeCount > 0 && !open && (
-          <span className={`rounded-full border px-1.5 py-0.2 font-mono text-[9px] font-bold ${badgeClasses}`}>
-            {badgeCount}
-          </span>
-        )}
-        <ChevronDown
-          className={`h-3.5 w-3.5 text-[#8C8C85] transition-transform duration-200 ${M3_EASE} ${
-            open ? "rotate-0" : "-rotate-90"
-          }`}
-        />
-      </span>
-    </button>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Sidebar                                                             */
-/* ------------------------------------------------------------------ */
-
+/* MAIN */
 export function AdminSidebar({
   adminUser,
-  counts,
+  counts = {},
   isOpen = false,
   onClose,
   isCollapsed = false,
   onToggleCollapse,
+  activeModule: propModule,
 }: AdminSidebarProps) {
-  const pathname = usePathname();
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const profileRipple = useRipple();
-  const signOutRipple = useRipple();
+  const pathname = usePathname() ?? "";
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  // Active route checks
-  const isCrmRoute = Boolean(pathname?.startsWith("/dashboard/crm"));
-  const isOpsRoute = Boolean(
-    pathname?.startsWith("/dashboard/orders") ||
-      pathname?.startsWith("/dashboard/products") ||
-      pathname?.startsWith("/dashboard/tasks") ||
-      pathname?.startsWith("/dashboard/verifications")
-  );
-  const isInquiriesRoute = Boolean(
-    pathname?.startsWith("/dashboard/waitlist") ||
-      pathname?.startsWith("/dashboard/contact")
-  );
-  const isSystemRoute = Boolean(
-    pathname?.startsWith("/dashboard/settings") ||
-      pathname?.includes("view=analytics") ||
-      pathname?.includes("view=logs")
-  );
+  useEffect(() => {
+    if (!menuOpen) return;
+    const down = (e: MouseEvent) =>
+      !menuRef.current?.contains(e.target as Node) && setMenuOpen(false);
+    const key = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    document.addEventListener("mousedown", down);
+    document.addEventListener("keydown", key);
+    return () => {
+      document.removeEventListener("mousedown", down);
+      document.removeEventListener("keydown", key);
+    };
+  }, [menuOpen]);
 
-  // Accordion open/close states
-  const [crmUserToggled, setCrmUserToggled] = useState<boolean | null>(null);
-  const [opsUserToggled, setOpsUserToggled] = useState<boolean | null>(null);
-  const [inquiriesUserToggled, setInquiriesUserToggled] = useState<boolean | null>(null);
-  const [systemUserToggled, setSystemUserToggled] = useState<boolean | null>(null);
+  const currentModule: AdminModule =
+    propModule ??
+    (pathname.startsWith("/dashboard/crm")
+      ? "crm"
+      : pathname.startsWith("/dashboard/finance")
+        ? "finance"
+        : ["operations", "orders", "products", "tasks", "verifications"].some((p) =>
+              pathname.startsWith(`/dashboard/${p}`)
+            )
+          ? "operations"
+          : "admin");
 
-  const crmOpen = crmUserToggled ?? (isCrmRoute || true);
-  const opsOpen = opsUserToggled ?? (isOpsRoute || true);
-  const inquiriesOpen = inquiriesUserToggled ?? isInquiriesRoute;
-  const systemOpen = systemUserToggled ?? isSystemRoute;
+  const mod = buildModules(counts)[currentModule];
+  const ModIcon = mod.icon;
 
-  const setCrmOpen = (val: boolean | ((prev: boolean) => boolean)) => {
-    setCrmUserToggled((prev) => (typeof val === "function" ? val(prev ?? (isCrmRoute || true)) : val));
+  /* Pick ONE active item: the most specific match, so "Team Employees" doesn't light up on /employees/departments */
+  const matches = (it: NavItem) => {
+    const [path, query] = it.href.split("?");
+    if (query)
+      return (
+        pathname === path &&
+        typeof window !== "undefined" &&
+        window.location.search.includes(query)
+      );
+    if (it.exact || it.href === "/dashboard") return pathname === it.href;
+    return pathname === it.href || pathname.startsWith(`${it.href}/`);
   };
-  const setOpsOpen = (val: boolean | ((prev: boolean) => boolean)) => {
-    setOpsUserToggled((prev) => (typeof val === "function" ? val(prev ?? (isOpsRoute || true)) : val));
-  };
-  const setInquiriesOpen = (val: boolean | ((prev: boolean) => boolean)) => {
-    setInquiriesUserToggled((prev) => (typeof val === "function" ? val(prev ?? isInquiriesRoute) : val));
-  };
-  const setSystemOpen = (val: boolean | ((prev: boolean) => boolean)) => {
-    setSystemUserToggled((prev) => (typeof val === "function" ? val(prev ?? isSystemRoute) : val));
-  };
+  const activeHref = mod.sections
+    .flatMap((s) => s.items)
+    .filter(matches)
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
-  const mainNav: NavItemData[] = [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutGrid, badge: null, exact: true },
-    { label: "Employees", href: "/dashboard/employees", icon: UserCog, badge: null, exact: false },
-    { label: "Departments", href: "/dashboard/employees/departments", icon: Building2, badge: null, exact: false },
-    { label: "Users", href: "/dashboard/users", icon: Users, badge: null, exact: false },
-  ];
-
-  const crmNav: NavItemData[] = [
-    { label: "Contacts", href: "/dashboard/crm/contacts", icon: Users, badge: counts?.contacts ?? null, exact: false },
-    { label: "Leads", href: "/dashboard/crm/leads", icon: Target, badge: counts?.leads ?? null, exact: false },
-    { label: "Deals", href: "/dashboard/crm/deals", icon: Briefcase, badge: counts?.deals ?? null, exact: false },
-    { label: "Onboarding", href: "/dashboard/crm/onboarding", icon: ClipboardCheck, badge: counts?.onboarding ?? 0, exact: false },
-  ];
-
-  const opsNav: NavItemData[] = [
-    { label: "Orders", href: "/dashboard/orders", icon: Package, badge: null, exact: false },
-    { label: "Products", href: "/dashboard/products", icon: ShoppingBag, badge: null, exact: false },
-    { label: "Tasks", href: "/dashboard/tasks", icon: CheckSquare, badge: counts?.tasks ?? 0, exact: false },
-    { label: "Verifications", href: "/dashboard/verifications", icon: ShieldCheck, badge: counts?.pendingVerifications ?? 0, exact: false },
-  ];
-
-  const inquiriesNav: NavItemData[] = [
-    { label: "Waitlist", href: "/dashboard/waitlist", icon: UserCheck, badge: counts?.waitlist ?? 0 },
-    { label: "Messages", href: "/dashboard/contact", icon: Mail, badge: counts?.contact ?? 0 },
-  ];
-
-  const systemNav: NavItemData[] = [
-    { label: "Analytics", href: "/dashboard?view=analytics", icon: BarChart3 },
-    { label: "Audit Logs", href: "/dashboard?view=logs", icon: ShieldCheck },
-    { label: "Settings", href: "/dashboard/settings", icon: Settings },
-  ];
-
-  // Aggregated badge counts
-  const crmBadgeCount =
-    (counts?.contacts ?? 0) + (counts?.leads ?? 0) + (counts?.deals ?? 0) + (counts?.onboarding ?? 0);
-  const opsBadgeCount = counts?.tasks ?? 0;
-  const inquiriesBadgeCount = (counts?.waitlist ?? 0) + (counts?.contact ?? 0);
-
-  const isLinkActive = (href: string, exact = false) => {
-    if (exact) return pathname === href;
-    if (href === "/dashboard") return pathname === "/dashboard";
-    return pathname === href || pathname?.startsWith(`${href}/`);
-  };
+  const name = adminUser?.full_name || "Admin User";
 
   return (
     <>
-      {/* Material 3 state-layer ripple keyframes (plain <style>, no build-step dependency) */}
-      <style>{`
-        @keyframes md-ripple-fx {
-          to {
-            transform: scale(1);
-            opacity: 0;
-          }
-        }
-        .md-ripple {
-          transform: scale(0);
-          background: currentColor;
-          opacity: 0.16;
-          animation: md-ripple-fx 480ms cubic-bezier(0.2, 0, 0, 1) forwards;
-        }
-      `}</style>
-
-      {/* Mobile Dark Backdrop (M3 scrim) */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs transition-opacity lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
           onClick={onClose}
           aria-hidden="true"
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-dvh max-h-dvh flex-col justify-between border-r border-[#E5E5E0] bg-[#FAF8F4] p-3 text-[#1A1A18] transition-all duration-200 ${M3_EASE} select-none lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:max-h-screen lg:shrink-0 ${
-          isCollapsed ? "w-[72px]" : "w-[260px]"
-        } ${
-          isOpen ? `translate-x-0 ${M3_ELEVATION_1}` : "-translate-x-full lg:translate-x-0"
-        }`}
+        aria-label="Main navigation"
+        className={`border-outline-variant/50 text-on-surface fixed inset-y-0 left-0 z-50 flex h-dvh flex-col border-r bg-[#FAF8F4] transition-[width,transform] duration-300 ease-[cubic-bezier(0.2,0,0,1)] select-none lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:shrink-0 ${
+          isCollapsed ? "w-[80px] px-3" : "w-[280px] px-3"
+        } ${isOpen ? "shadow-elevation-2 translate-x-0 rounded-r-3xl lg:rounded-none" : "-translate-x-full lg:translate-x-0"}`}
       >
-        {/* Top Brand Header (Fixed Top) */}
-        <div className="flex h-12 shrink-0 items-center justify-between px-2 mb-2">
-          <Link
-            href="/dashboard"
-            className={`flex items-center gap-2.5 ${isCollapsed ? "w-full justify-center" : ""}`}
-          >
-            <div className="font-graphik flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black text-xs font-bold text-white shadow-2xs">
-              GZ
-            </div>
-            {!isCollapsed && (
-              <div>
-                <span className="font-graphik block text-sm leading-tight font-bold text-black">
-                  GenZ Studio
+        {/* Brand row */}
+        <div
+          className={`flex h-16 shrink-0 items-center ${isCollapsed ? "justify-center" : "justify-between pl-2"}`}
+        >
+          {!isCollapsed && (
+            <Link
+              href="/dashboard"
+              className={`${FOCUS_RING} flex items-center gap-3 rounded-full`}
+            >
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
+                GZ
+              </span>
+              <span className="leading-tight">
+                <span className="block text-base font-semibold">GenZ Studio</span>
+                <span className="text-on-surface-variant block text-xs">
+                  Studio Portal
                 </span>
-                <span className="font-graphik block text-[10px] text-[#73736E]">Studio Portal</span>
-              </div>
-            )}
-          </Link>
-
-          {/* Mobile close button */}
+              </span>
+            </Link>
+          )}
+          {onToggleCollapse && (
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className={`${STATE_LAYER} ${FOCUS_RING} text-on-surface-variant hidden h-10 w-10 items-center justify-center rounded-full lg:flex`}
+            >
+              {isCollapsed ? (
+                <PanelLeftOpen className="h-5 w-5" />
+              ) : (
+                <PanelLeftClose className="h-5 w-5" />
+              )}
+            </button>
+          )}
           {onClose && (
-            <CircularIconButton
+            <button
+              type="button"
               onClick={onClose}
-              ariaLabel="Close menu"
-              className="p-1 text-[#73736E] hover:bg-[#EBEBE6] hover:text-black lg:hidden"
+              aria-label="Close menu"
+              className={`${STATE_LAYER} ${FOCUS_RING} text-on-surface-variant flex h-10 w-10 items-center justify-center rounded-full lg:hidden`}
             >
               <X className="h-5 w-5" />
-            </CircularIconButton>
+            </button>
           )}
+        </div>
 
-          {/* Desktop collapse toggle */}
-          {onToggleCollapse && (
-            <CircularIconButton
-              onClick={onToggleCollapse}
-              title={isCollapsed ? "Expand Sidebar (260px)" : "Collapse Sidebar (72px)"}
-              className="hidden p-1 text-[#73736E] hover:bg-[#EBEBE6] hover:text-black lg:block"
+        {/* Module card (pinned, does not scroll away) */}
+        <div className={`shrink-0 pb-2 ${isCollapsed ? "flex justify-center" : ""}`}>
+          {isCollapsed ? (
+            <span
+              title={mod.title}
+              className={`flex h-12 w-12 items-center justify-center rounded-2xl ${mod.iconBox}`}
             >
-              {isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-            </CircularIconButton>
+              <ModIcon className="h-5 w-5" />
+            </span>
+          ) : (
+            <div className={`flex items-center gap-3 rounded-2xl p-3 ${mod.card}`}>
+              <span
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${mod.iconBox}`}
+              >
+                <ModIcon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0 leading-tight">
+                <p className="truncate text-sm font-semibold">{mod.title}</p>
+                <p className="truncate text-xs opacity-75">{mod.subtitle}</p>
+              </div>
+            </div>
           )}
         </div>
 
-        {/* Scrollable Middle Navigation Section */}
-        <div className="sidebar-scroll flex-1 overflow-y-auto overflow-x-hidden min-h-0 space-y-4 pr-1">
-          {/* MAIN SECTION */}
-          <div className="space-y-1">
-            {!isCollapsed && (
-              <p className="font-graphik mb-1.5 px-3 text-[10px] font-bold tracking-widest text-[#8C8C85] uppercase">
-                MAIN
-              </p>
-            )}
-
-            {mainNav.map((item) => (
-              <PrimaryNavLink
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                icon={item.icon}
-                active={isLinkActive(item.href, item.exact)}
-                badge={item.badge}
-                collapsed={isCollapsed}
-              />
-            ))}
-          </div>
-
-          {/* CRM & PIPELINE */}
-          {isCollapsed ? (
-            <CollapsedIconGroup items={crmNav} isLinkActive={isLinkActive} />
-          ) : (
-            <div className="space-y-1">
-              <SectionHeader
-                icon={Briefcase}
-                label="CRM & Pipeline"
-                isActive={isCrmRoute}
-                open={crmOpen}
-                onToggle={() => setCrmOpen((prev) => !prev)}
-                badgeCount={crmBadgeCount}
-                badgeColor="emerald"
-              />
-              {crmOpen && <ExpandedSubGroup items={crmNav} isLinkActive={isLinkActive} badgeColor="emerald" />}
-            </div>
-          )}
-
-          {/* OPERATIONS */}
-          {isCollapsed ? (
-            <CollapsedIconGroup items={opsNav} isLinkActive={isLinkActive} />
-          ) : (
-            <div className="space-y-1">
-              <SectionHeader
-                icon={CheckSquare}
-                label="Operations"
-                isActive={isOpsRoute}
-                open={opsOpen}
-                onToggle={() => setOpsOpen((prev) => !prev)}
-                badgeCount={opsBadgeCount}
-                badgeColor="neutral"
-              />
-              {opsOpen && <ExpandedSubGroup items={opsNav} isLinkActive={isLinkActive} badgeColor="neutral" />}
-            </div>
-          )}
-
-          {/* INQUIRIES */}
-          {isCollapsed ? (
-            <CollapsedIconGroup items={inquiriesNav} isLinkActive={isLinkActive} />
-          ) : (
-            <div className="space-y-1">
-              <SectionHeader
-                icon={Mail}
-                label="Inquiries"
-                isActive={isInquiriesRoute}
-                open={inquiriesOpen}
-                onToggle={() => setInquiriesOpen((prev) => !prev)}
-                badgeCount={inquiriesBadgeCount}
-                badgeColor="neutral"
-              />
-              {inquiriesOpen && (
-                <ExpandedSubGroup items={inquiriesNav} isLinkActive={isLinkActive} badgeColor="neutral" />
+        {/* Scrollable navigation */}
+        <nav className="sidebar-scroll min-h-0 flex-1 [scrollbar-width:thin] space-y-1 overflow-x-hidden overflow-y-auto pb-2">
+          {mod.sections.map((section, i) => (
+            <div
+              key={section.title}
+              className={i > 0 ? "border-outline-variant/50 mt-2 border-t pt-2" : ""}
+            >
+              {!isCollapsed && (
+                <p className="text-on-surface-variant px-4 pt-2 pb-1.5 text-xs font-medium tracking-wide">
+                  {section.title}
+                </p>
               )}
+              <div className="space-y-0.5">
+                {section.items.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    item={item}
+                    active={item.href === activeHref}
+                    collapsed={isCollapsed}
+                    onNavigate={onClose}
+                  />
+                ))}
+              </div>
             </div>
-          )}
+          ))}
+        </nav>
 
-          {/* SYSTEM */}
-          {isCollapsed ? (
-            <CollapsedIconGroup items={systemNav} isLinkActive={isLinkActive} />
-          ) : (
-            <div className="space-y-1">
-              <SectionHeader
-                icon={Settings}
-                label="System"
-                isActive={isSystemRoute}
-                open={systemOpen}
-                onToggle={() => setSystemOpen((prev) => !prev)}
-              />
-              {systemOpen && <ExpandedSubGroup items={systemNav} isLinkActive={isLinkActive} />}
-            </div>
-          )}
-        </div>
-
-        {/* BOTTOM PROFILE SECTION (Fixed Bottom) */}
-        <div className="relative shrink-0 border-t border-[#E5E5E0] pt-3 mt-2">
+        {/* Profile (pinned) */}
+        <div
+          ref={menuRef}
+          className="border-outline-variant/50 relative shrink-0 border-t py-3"
+        >
           <button
             type="button"
-            onClick={() => setProfileMenuOpen((prev) => !prev)}
-            onPointerDown={profileRipple.addRipple}
-            className={`font-graphik relative isolate flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-full p-2 transition-colors duration-200 ${M3_EASE} hover:bg-[#EBEBE6] ${
-              isCollapsed ? "justify-center" : ""
-            }`}
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            className={`${STATE_LAYER} ${FOCUS_RING} flex w-full cursor-pointer items-center gap-3 rounded-full p-2 text-left ${isCollapsed ? "justify-center" : ""}`}
           >
-            <RippleLayer ripples={profileRipple.ripples} />
-            <div className="relative z-10 flex items-center gap-2.5 overflow-hidden">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#C89D32] font-mono text-xs font-bold text-white shadow-2xs">
-                {(adminUser?.full_name || "A")[0].toUpperCase()}
-              </div>
-              {!isCollapsed && (
-                <div className="overflow-hidden text-left">
-                  <span className="block truncate text-xs leading-tight font-bold text-black">
-                    {adminUser?.full_name || "Admin User"}
-                  </span>
-                  <span className="block truncate text-[10px] font-medium text-[#73736E]">Studio Manager</span>
-                </div>
-              )}
-            </div>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C89D32] text-sm font-bold text-white">
+              {name[0].toUpperCase()}
+            </span>
             {!isCollapsed && (
-              <ChevronsUpDown className="relative z-10 h-3.5 w-3.5 shrink-0 text-[#8C8C85]" />
+              <>
+                <span className="min-w-0 flex-1 leading-tight">
+                  <span className="block truncate text-sm font-semibold">{name}</span>
+                  <span className="text-on-surface-variant block truncate text-xs">
+                    Studio Manager
+                  </span>
+                </span>
+                <ChevronsUpDown className="text-on-surface-variant mr-1 h-4 w-4 shrink-0" />
+              </>
             )}
           </button>
 
-          {/* Profile Dropup Menu */}
-          {profileMenuOpen && (
+          {menuOpen && (
             <div
-              className={`animate-in fade-in-90 zoom-in-95 absolute bottom-full left-0 z-50 mb-2 w-full min-w-[200px] overflow-hidden rounded-xl border border-[#E5E5E0] bg-white p-1 ${M3_ELEVATION_2} duration-100`}
+              role="menu"
+              className={`bg-surface-container-lowest shadow-elevation-2 absolute bottom-full z-50 mb-2 overflow-hidden rounded-2xl py-2 ${
+                isCollapsed ? "left-0 w-64" : "inset-x-0"
+              }`}
             >
-              <div className="border-b border-[#F0F0EC] p-2.5">
-                <p className="font-graphik truncate text-xs font-bold text-black">
-                  {adminUser?.full_name || "Admin User"}
-                </p>
-                <p className="font-graphik truncate text-[10px] text-[#73736E]">
+              <div className="px-4 pt-1 pb-3">
+                <p className="truncate text-sm font-semibold">{name}</p>
+                <p className="text-on-surface-variant truncate text-xs">
                   {adminUser?.email || "admin@genz.in"}
                 </p>
               </div>
-
-              <form action={signOut}>
+              <form
+                action={signOut}
+                className="border-outline-variant/50 border-t pt-1"
+              >
                 <button
                   type="submit"
-                  onPointerDown={signOutRipple.addRipple}
-                  className={`font-graphik relative isolate flex w-full items-center gap-2 overflow-hidden rounded-lg px-3 py-2 text-xs font-medium text-rose-600 transition-colors duration-200 ${M3_EASE} hover:bg-rose-50`}
+                  role="menuitem"
+                  className={`${STATE_LAYER} ${FOCUS_RING} flex h-12 w-full cursor-pointer items-center gap-3 px-4 text-sm font-medium text-[#ef4444]`}
                 >
-                  <RippleLayer ripples={signOutRipple.ripples} />
-                  <LogOut className="relative z-10 h-3.5 w-3.5" />
-                  <span className="relative z-10">Sign Out</span>
+                  <LogOut className="h-4 w-4" />
+                  Sign out
                 </button>
               </form>
             </div>

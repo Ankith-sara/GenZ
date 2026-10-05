@@ -5,21 +5,27 @@
 For every non-trivial change, define:
 
 ### Goal
+
 One sentence describing the required outcome.
 
 ### Current behavior
+
 What the system does today, based on code inspection.
 
 ### Target behavior
+
 What should happen after the change.
 
 ### Scope
+
 Apps/packages/files likely affected.
 
 ### Constraints
+
 Security, UX, architecture, performance or compatibility requirements.
 
 ### Verification
+
 Tests and checks required to prove completion.
 
 ## Priority

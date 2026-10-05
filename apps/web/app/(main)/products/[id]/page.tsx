@@ -2,12 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@genz/database/server";
 import { productMediaUrl, formatInr } from "@/features/products/lib/products";
-import { VerifiedBadge } from "@/components/ui/atoms/verified-badge";
+import { VerifiedBadge } from "@genz/ui";
 import { ProductWishlistButton } from "@/features/products/components/product-wishlist-button";
 import { ProductPurchaseSection } from "./product-purchase-section";
-
 
 export async function generateMetadata({
   params,
@@ -72,10 +71,15 @@ export default async function PublicProductPage({
       .maybeSingle();
     if (sProf) {
       let bName = sProf.business_name;
-      if (sProf.description && typeof sProf.description === "string" && sProf.description.startsWith("{")) {
+      if (
+        sProf.description &&
+        typeof sProf.description === "string" &&
+        sProf.description.startsWith("{")
+      ) {
         try {
           const meta = JSON.parse(sProf.description);
-          bName = (meta.business_name as string) || (meta.owner_name as string) || bName;
+          bName =
+            (meta.business_name as string) || (meta.owner_name as string) || bName;
         } catch {}
       }
       seller = {
@@ -265,7 +269,6 @@ export default async function PublicProductPage({
               />
             </div>
           </div>
-
 
           {(reels ?? []).length > 0 && (
             <div className="mt-16">

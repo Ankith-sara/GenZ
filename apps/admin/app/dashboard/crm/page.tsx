@@ -9,7 +9,8 @@ import { CRMDashboardClient } from "./crm-dashboard-client";
 
 export const metadata = {
   title: "CRM Module Dashboard | Admin",
-  description: "Executive oversight of artisan sourcing, CRM leads, pipeline deals, and onboarding.",
+  description:
+    "Executive oversight of artisan sourcing, CRM leads, pipeline deals, and onboarding.",
 };
 
 export default async function CRMMainPage() {

@@ -29,10 +29,22 @@ export function LocationSelectGroup({
 }: LocationSelectGroupProps) {
   const majorIsos = useMemo(
     () => [
-      "IN", "AE", "SG", "SA",
-      "MY", "TH", "VN", "ID",
-      "BD", "LK", "NP", "JP",
-      "KR", "CN", "HK", "US",
+      "IN",
+      "AE",
+      "SG",
+      "SA",
+      "MY",
+      "TH",
+      "VN",
+      "ID",
+      "BD",
+      "LK",
+      "NP",
+      "JP",
+      "KR",
+      "CN",
+      "HK",
+      "US",
       "GB",
     ],
     []

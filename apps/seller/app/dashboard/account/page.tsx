@@ -2,7 +2,7 @@ import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import type { SellerProfile, SellerApplication, VerificationStatus } from "@genz/types";
-import { SellerAccountClient } from "./account-client";
+import { SellerAccountClient } from "@/features/account";
 
 interface ApplicationFormData {
   business_name?: string;

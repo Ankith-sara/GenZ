@@ -189,11 +189,7 @@ export type SellerPublicProfile = {
 };
 
 export type OrderStatus =
-  | "placed"
-  | "processing"
-  | "shipped"
-  | "delivered"
-  | "cancelled";
+  "placed" | "processing" | "shipped" | "delivered" | "cancelled";
 
 export interface ShippingAddress {
   recipientName: string;
@@ -440,6 +436,48 @@ export type Database = {
           summary: string;
         };
         Update: Partial<CRMActivityLog>;
+        Relationships: [];
+      };
+      accounting_accounts: {
+        Row: Record<string, unknown>;
+        Insert: Record<string, unknown>;
+        Update: Record<string, unknown>;
+        Relationships: [];
+      };
+      accounting_journals: {
+        Row: Record<string, unknown>;
+        Insert: Record<string, unknown>;
+        Update: Record<string, unknown>;
+        Relationships: [];
+      };
+      accounting_journal_lines: {
+        Row: Record<string, unknown>;
+        Insert: Record<string, unknown>;
+        Update: Record<string, unknown>;
+        Relationships: [];
+      };
+      seller_commissions: {
+        Row: Record<string, unknown>;
+        Insert: Record<string, unknown>;
+        Update: Record<string, unknown>;
+        Relationships: [];
+      };
+      seller_settlement_batches: {
+        Row: Record<string, unknown>;
+        Insert: Record<string, unknown>;
+        Update: Record<string, unknown>;
+        Relationships: [];
+      };
+      seller_settlement_items: {
+        Row: Record<string, unknown>;
+        Insert: Record<string, unknown>;
+        Update: Record<string, unknown>;
+        Relationships: [];
+      };
+      reconciliation_exceptions: {
+        Row: Record<string, unknown>;
+        Insert: Record<string, unknown>;
+        Update: Record<string, unknown>;
         Relationships: [];
       };
     };

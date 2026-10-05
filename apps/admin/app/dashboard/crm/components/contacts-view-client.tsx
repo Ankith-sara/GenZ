@@ -26,7 +26,12 @@ import {
   ExternalLink,
   Clock,
 } from "lucide-react";
-import type { CRMContact, CRMContactStatus, SellerOnboardingTracker, OnboardingStage } from "@genz/types";
+import type {
+  CRMContact,
+  CRMContactStatus,
+  SellerOnboardingTracker,
+  OnboardingStage,
+} from "@genz/types";
 import { CRMNavHeader } from "./crm-nav-header";
 import {
   createContactAction,
@@ -84,7 +89,14 @@ const DISQUALIFIED = {
 
 const STATUS_STYLE_MAP: Record<
   string,
-  { key: string; label: string; containerBg: string; borderColor: string; textColor: string; indicatorColor: string }
+  {
+    key: string;
+    label: string;
+    containerBg: string;
+    borderColor: string;
+    textColor: string;
+    indicatorColor: string;
+  }
 > = {
   ...Object.fromEntries(CONTACT_STAGES.map((s) => [s.key, s])),
   [DISQUALIFIED.key]: DISQUALIFIED,
@@ -139,26 +151,29 @@ export function ContactsViewClient({
   }, [onboardings]);
 
   // Helper to find matched onboarding record for a contact
-  const getContactOnboarding = useCallback((c: CRMContact): SellerOnboardingTracker | undefined => {
-    const emailKey = c.email ? c.email.toLowerCase().trim() : "";
-    const phoneDigits = c.phone ? c.phone.replace(/[^0-9]/g, "") : "";
-    const nameKey = c.name ? c.name.toLowerCase().trim() : "";
-    const businessKey = c.business_name ? c.business_name.toLowerCase().trim() : "";
+  const getContactOnboarding = useCallback(
+    (c: CRMContact): SellerOnboardingTracker | undefined => {
+      const emailKey = c.email ? c.email.toLowerCase().trim() : "";
+      const phoneDigits = c.phone ? c.phone.replace(/[^0-9]/g, "") : "";
+      const nameKey = c.name ? c.name.toLowerCase().trim() : "";
+      const businessKey = c.business_name ? c.business_name.toLowerCase().trim() : "";
 
-    if (emailKey && onboardingLookup.byEmail.has(emailKey)) {
-      return onboardingLookup.byEmail.get(emailKey);
-    }
-    if (phoneDigits && onboardingLookup.byPhone.has(phoneDigits)) {
-      return onboardingLookup.byPhone.get(phoneDigits);
-    }
-    if (nameKey && onboardingLookup.byName.has(nameKey)) {
-      return onboardingLookup.byName.get(nameKey);
-    }
-    if (businessKey && onboardingLookup.byName.has(businessKey)) {
-      return onboardingLookup.byName.get(businessKey);
-    }
-    return undefined;
-  }, [onboardingLookup]);
+      if (emailKey && onboardingLookup.byEmail.has(emailKey)) {
+        return onboardingLookup.byEmail.get(emailKey);
+      }
+      if (phoneDigits && onboardingLookup.byPhone.has(phoneDigits)) {
+        return onboardingLookup.byPhone.get(phoneDigits);
+      }
+      if (nameKey && onboardingLookup.byName.has(nameKey)) {
+        return onboardingLookup.byName.get(nameKey);
+      }
+      if (businessKey && onboardingLookup.byName.has(businessKey)) {
+        return onboardingLookup.byName.get(businessKey);
+      }
+      return undefined;
+    },
+    [onboardingLookup]
+  );
 
   // Merge contacts with onboardings & ensure all onboarded sellers are represented
   const mergedContacts: CRMContact[] = useMemo(() => {
@@ -191,8 +206,8 @@ export function ContactsViewClient({
           (matched.craft_category?.toLowerCase().includes("kondapalli")
             ? "Kondapalli Craft Village"
             : matched.craft_category?.toLowerCase().includes("etikoppaka")
-            ? "Etikoppaka Cluster"
-            : null),
+              ? "Etikoppaka Cluster"
+              : null),
         notes: c.notes || matched.notes || null,
       };
     });
@@ -252,13 +267,25 @@ export function ContactsViewClient({
     const formData = new FormData(e.currentTarget);
     await updateContactAction(editingContact.id, {
       name: (formData.get("name") as string)?.trim(),
-      business_name: ((formData.get("business_name") as string) || (formData.get("businessName") as string))?.trim() || null,
+      business_name:
+        (
+          (formData.get("business_name") as string) ||
+          (formData.get("businessName") as string)
+        )?.trim() || null,
       phone: (formData.get("phone") as string)?.trim(),
       email: (formData.get("email") as string)?.trim() || null,
-      craft_category: ((formData.get("craft_category") as string) || (formData.get("craftCategory") as string))?.trim() || null,
+      craft_category:
+        (
+          (formData.get("craft_category") as string) ||
+          (formData.get("craftCategory") as string)
+        )?.trim() || null,
       city: (formData.get("city") as string)?.trim() || null,
       state: (formData.get("state") as string)?.trim() || null,
-      cluster_name: ((formData.get("cluster_name") as string) || (formData.get("clusterName") as string))?.trim() || null,
+      cluster_name:
+        (
+          (formData.get("cluster_name") as string) ||
+          (formData.get("clusterName") as string)
+        )?.trim() || null,
       source: (formData.get("source") as string) || "cluster_scouting",
       status: (formData.get("status") as CRMContactStatus) || "new",
       notes: (formData.get("notes") as string)?.trim() || null,
@@ -336,8 +363,8 @@ export function ContactsViewClient({
         statusFilter === "all"
           ? true
           : statusFilter === "onboarded"
-          ? Boolean(getContactOnboarding(c))
-          : c.status === statusFilter;
+            ? Boolean(getContactOnboarding(c))
+            : c.status === statusFilter;
 
       const matchesCategory =
         categoryFilter === "all" || c.craft_category === categoryFilter;
@@ -356,8 +383,7 @@ export function ContactsViewClient({
       if (sortBy === "name_asc") return a.name.localeCompare(b.name);
       if (sortBy === "name_desc") return b.name.localeCompare(a.name);
       return (
-        new Date(b.created_at || "").getTime() -
-        new Date(a.created_at || "").getTime()
+        new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime()
       );
     });
 
@@ -386,23 +412,23 @@ export function ContactsViewClient({
       />
 
       {/* UNIFIED TOOLBAR: Search, Filters, View Modes & Status Progression */}
-      <div className="space-y-2.5 rounded-xl border border-[#E5E5E0] bg-white p-2.5 sm:p-3 shadow-xs">
+      <div className="space-y-2.5 rounded-xl border border-[#E5E5E0] bg-white p-2.5 shadow-xs sm:p-3">
         {/* Top Control Bar: Search Input + Advanced Filter Toggle + View Mode Toggle */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           {/* Search Box */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#52524E]" />
+          <div className="relative max-w-md flex-1">
+            <Search className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-[#52524E]" />
             <input
               type="text"
               placeholder="Search artisan, business, cluster, phone, city…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-[#E5E5E0] bg-[#FAF8F4]/60 py-1.5 pl-9 pr-8 text-xs text-[#1A1A18] placeholder-[#52524E]/60 outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+              className="w-full rounded-lg border border-[#E5E5E0] bg-[#FAF8F4]/60 py-1.5 pr-8 pl-9 text-xs text-[#1A1A18] placeholder-[#52524E]/60 transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-[#52524E] hover:bg-[#E5E5E0] hover:text-[#1A1A18] transition"
+                className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-full p-0.5 text-[#52524E] transition hover:bg-[#E5E5E0] hover:text-[#1A1A18]"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -424,7 +450,7 @@ export function ContactsViewClient({
               <SlidersHorizontal className="h-3.5 w-3.5" />
               <span>Filters</span>
               {activeFilterCount > 0 && (
-                <span className="ml-1 rounded-full bg-white/20 text-white px-1.5 py-0.2 text-[10px] font-bold font-mono">
+                <span className="py-0.2 ml-1 rounded-full bg-white/20 px-1.5 font-mono text-[10px] font-bold text-white">
                   {activeFilterCount}
                 </span>
               )}
@@ -434,7 +460,7 @@ export function ContactsViewClient({
               <button
                 type="button"
                 onClick={resetFilters}
-                className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#52524E] hover:bg-[#FAF8F4] hover:text-[#1A1A18] transition"
+                className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#52524E] transition hover:bg-[#FAF8F4] hover:text-[#1A1A18]"
                 title="Reset all filters"
               >
                 <RotateCcw className="h-3 w-3" />
@@ -487,10 +513,10 @@ export function ContactsViewClient({
           >
             <span>All contacts</span>
             <span
-              className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono ${
+              className={`py-0.2 rounded-full px-1.5 font-mono text-[10px] ${
                 statusFilter === "all"
                   ? "bg-white/20 text-white"
-                  : "bg-white text-[#52524E] border border-[#E5E5E0]"
+                  : "border border-[#E5E5E0] bg-white text-[#52524E]"
               }`}
             >
               {mergedContacts.length}
@@ -500,19 +526,19 @@ export function ContactsViewClient({
           {/* Onboarded Sellers Chip with Craft Gold Accent (#C89D32) */}
           <button
             onClick={() => setStatusFilter("onboarded")}
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all border ${
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-all ${
               statusFilter === "onboarded"
-                ? "bg-[#1A1A18] text-[#C89D32] border-[#C89D32] shadow-xs"
+                ? "border-[#C89D32] bg-[#1A1A18] text-[#C89D32] shadow-xs"
                 : "border-[#C89D32]/40 bg-[#FAF8F4] text-[#C89D32] hover:bg-[#C89D32]/10"
             }`}
           >
-            <Sparkles className="h-3 w-3 text-[#C89D32] fill-current" />
+            <Sparkles className="h-3 w-3 fill-current text-[#C89D32]" />
             <span>Onboarded Sellers</span>
             <span
-              className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono font-bold ${
+              className={`py-0.2 rounded-full px-1.5 font-mono text-[10px] font-bold ${
                 statusFilter === "onboarded"
                   ? "bg-[#C89D32]/20 text-[#C89D32]"
-                  : "bg-white text-[#C89D32] border border-[#C89D32]/30"
+                  : "border border-[#C89D32]/30 bg-white text-[#C89D32]"
               }`}
             >
               {statusCounts["onboarded"] || 0}
@@ -526,22 +552,22 @@ export function ContactsViewClient({
               <button
                 key={s.key}
                 onClick={() => setStatusFilter(s.key)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all border ${
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-all ${
                   active
-                    ? "bg-[#1A1A18] text-white border-[#1A1A18] shadow-xs"
+                    ? "border-[#1A1A18] bg-[#1A1A18] text-white shadow-xs"
                     : "border-[#E5E5E0] bg-[#FAF8F4] text-[#52524E] hover:border-[#1A1A18]/40 hover:text-[#1A1A18]"
                 }`}
               >
                 <span
-                  className="h-1.5 w-1.5 rounded-full shrink-0"
+                  className="h-1.5 w-1.5 shrink-0 rounded-full"
                   style={{ background: s.indicatorColor }}
                 />
                 <span>{s.label}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono ${
+                  className={`py-0.2 rounded-full px-1.5 font-mono text-[10px] ${
                     active
                       ? "bg-white/20 text-white"
-                      : "bg-white text-[#52524E] border border-[#E5E5E0]"
+                      : "border border-[#E5E5E0] bg-white text-[#52524E]"
                   }`}
                 >
                   {statusCounts[s.key] || 0}
@@ -553,18 +579,18 @@ export function ContactsViewClient({
           {/* Disqualified Chip with Destructive Rose (#E11D48) */}
           <button
             onClick={() => setStatusFilter(DISQUALIFIED.key)}
-            className={`ml-auto inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all border ${
+            className={`ml-auto inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-all ${
               statusFilter === DISQUALIFIED.key
-                ? "bg-rose-600 text-white border-rose-600 shadow-xs"
+                ? "border-rose-600 bg-rose-600 text-white shadow-xs"
                 : "border-rose-200 bg-rose-50/60 text-rose-700 hover:bg-rose-100"
             }`}
           >
             <span>Disqualified</span>
             <span
-              className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono ${
+              className={`py-0.2 rounded-full px-1.5 font-mono text-[10px] ${
                 statusFilter === DISQUALIFIED.key
                   ? "bg-white/20 text-white"
-                  : "bg-white text-rose-700 border border-rose-200"
+                  : "border border-rose-200 bg-white text-rose-700"
               }`}
             >
               {statusCounts[DISQUALIFIED.key] || 0}
@@ -582,7 +608,7 @@ export function ContactsViewClient({
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3 py-2 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3 py-2 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
               >
                 <option value="all">All categories ({uniqueCategories.length})</option>
                 {uniqueCategories.map((cat) => (
@@ -600,7 +626,7 @@ export function ContactsViewClient({
               <select
                 value={stateFilter}
                 onChange={(e) => setStateFilter(e.target.value)}
-                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3 py-2 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3 py-2 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
               >
                 <option value="all">All states ({uniqueStates.length})</option>
                 {uniqueStates.map((st) => (
@@ -618,7 +644,7 @@ export function ContactsViewClient({
               <select
                 value={sourceFilter}
                 onChange={(e) => setSourceFilter(e.target.value)}
-                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3 py-2 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3 py-2 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
               >
                 <option value="all">All sources</option>
                 {uniqueSources.map((src) => (
@@ -635,8 +661,10 @@ export function ContactsViewClient({
               </label>
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as "recent" | "name_asc" | "name_desc")}
-                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3 py-2 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                onChange={(e) =>
+                  setSortBy(e.target.value as "recent" | "name_asc" | "name_desc")
+                }
+                className="w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3 py-2 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
               >
                 <option value="recent">Recently added</option>
                 <option value="name_asc">Artisan / Seller name, A–Z</option>
@@ -665,22 +693,20 @@ export function ContactsViewClient({
               </thead>
               <tbody className="divide-y divide-[#E5E5E0]/60">
                 {filteredContacts.map((contact) => {
-                  const style = STATUS_STYLE_MAP[contact.status] || STATUS_STYLE_MAP.new;
+                  const style =
+                    STATUS_STYLE_MAP[contact.status] || STATUS_STYLE_MAP.new;
                   const onboarding = getContactOnboarding(contact);
 
                   return (
-                    <tr
-                      key={contact.id}
-                      className="hover:bg-[#FAF8F4]/60 transition"
-                    >
+                    <tr key={contact.id} className="transition hover:bg-[#FAF8F4]/60">
                       {/* Name & Business */}
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-full bg-[#1A1A18] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1A1A18] text-xs font-bold text-white shadow-xs">
                             {contact.name.charAt(0)}
                           </div>
                           <div>
-                            <div className="font-semibold text-[#1A1A18] flex items-center gap-2">
+                            <div className="flex items-center gap-2 font-semibold text-[#1A1A18]">
                               <span>{contact.name}</span>
                               {onboarding && (
                                 <span
@@ -718,7 +744,7 @@ export function ContactsViewClient({
 
                       {/* Category */}
                       <td className="px-4 py-3.5 text-[#52524E]">
-                        <span className="rounded-full bg-[#FAF8F4] px-2.5 py-1 text-[11px] font-medium text-[#1A1A18] border border-[#E5E5E0]">
+                        <span className="rounded-full border border-[#E5E5E0] bg-[#FAF8F4] px-2.5 py-1 text-[11px] font-medium text-[#1A1A18]">
                           {contact.craft_category || "Traditional Crafts"}
                         </span>
                       </td>
@@ -726,7 +752,7 @@ export function ContactsViewClient({
                       {/* Location */}
                       <td className="px-4 py-3.5 text-[#52524E]">
                         <div className="flex items-center gap-1.5">
-                          <MapPin className="h-3.5 w-3.5 text-[#8C8C85] shrink-0" />
+                          <MapPin className="h-3.5 w-3.5 shrink-0 text-[#8C8C85]" />
                           <span>
                             {[contact.cluster_name, contact.city, contact.state]
                               .filter(Boolean)
@@ -737,7 +763,7 @@ export function ContactsViewClient({
 
                       {/* Status & Onboarding Stage */}
                       <td className="px-4 py-3.5">
-                        <div className="flex flex-col gap-1 items-start">
+                        <div className="flex flex-col items-start gap-1">
                           <span
                             className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold capitalize"
                             style={{
@@ -754,7 +780,7 @@ export function ContactsViewClient({
                           </span>
 
                           {onboarding && (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#C89D32] bg-[#FAF8F4] rounded-full border border-[#C89D32]/30 px-2 py-0.5">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-[#C89D32]/30 bg-[#FAF8F4] px-2 py-0.5 text-[10px] font-medium text-[#C89D32]">
                               {onboarding.live_on_marketplace ? (
                                 <>
                                   <CheckCircle2 className="h-3 w-3 text-[#C89D32]" />
@@ -763,7 +789,9 @@ export function ContactsViewClient({
                               ) : (
                                 <>
                                   <Clock className="h-3 w-3 text-[#C89D32]" />
-                                  <span>{ONBOARDING_STAGE_LABELS[onboarding.current_stage]}</span>
+                                  <span>
+                                    {ONBOARDING_STAGE_LABELS[onboarding.current_stage]}
+                                  </span>
                                 </>
                               )}
                             </span>
@@ -777,14 +805,14 @@ export function ContactsViewClient({
                           <button
                             type="button"
                             onClick={() => setSelectedContact(contact)}
-                            className="rounded-full border border-[#E5E5E0] bg-white px-3 py-1 text-xs font-semibold text-[#1A1A18] hover:bg-[#FAF8F4] transition"
+                            className="rounded-full border border-[#E5E5E0] bg-white px-3 py-1 text-xs font-semibold text-[#1A1A18] transition hover:bg-[#FAF8F4]"
                           >
                             Details
                           </button>
                           <button
                             type="button"
                             onClick={() => setEditingContact(contact)}
-                            className="inline-flex items-center gap-1 rounded-full border border-[#E5E5E0] bg-white px-3 py-1 text-xs font-semibold text-[#1A1A18] hover:bg-[#FAF8F4] transition"
+                            className="inline-flex items-center gap-1 rounded-full border border-[#E5E5E0] bg-white px-3 py-1 text-xs font-semibold text-[#1A1A18] transition hover:bg-[#FAF8F4]"
                           >
                             <Edit className="h-3 w-3" />
                             <span>Edit</span>
@@ -792,7 +820,7 @@ export function ContactsViewClient({
                           <button
                             onClick={() => handleConvertToLead(contact.id)}
                             disabled={isSubmitting}
-                            className="inline-flex items-center gap-1 rounded-full bg-[#1A1A18] px-3.5 py-1 text-xs font-semibold text-white transition hover:bg-[#2E2E2B] disabled:cursor-not-allowed disabled:opacity-40 shadow-xs"
+                            className="inline-flex items-center gap-1 rounded-full bg-[#1A1A18] px-3.5 py-1 text-xs font-semibold text-white shadow-xs transition hover:bg-[#2E2E2B] disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             <span>Promote</span>
                             <ArrowRight className="h-3 w-3" />
@@ -821,8 +849,8 @@ export function ContactsViewClient({
                 <div className="space-y-3.5">
                   {/* Card Header with Initial Avatar & Status */}
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-11 w-11 rounded-full bg-[#1A1A18] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#1A1A18] text-sm font-bold text-white shadow-xs">
                         {contact.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -830,7 +858,7 @@ export function ContactsViewClient({
                           {contact.name}
                         </h3>
                         {contact.business_name && (
-                          <p className="mt-0.5 truncate text-xs font-medium text-[#52524E] flex items-center gap-1.5">
+                          <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs font-medium text-[#52524E]">
                             <Building className="h-3 w-3 shrink-0 text-[#8C8C85]" />
                             <span>{contact.business_name}</span>
                           </p>
@@ -838,7 +866,7 @@ export function ContactsViewClient({
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-end gap-1.5 shrink-0">
+                    <div className="flex shrink-0 flex-col items-end gap-1.5">
                       <span
                         className="inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold capitalize"
                         style={{
@@ -865,12 +893,12 @@ export function ContactsViewClient({
 
                   {/* Onboarding Stage Banner if Onboarded */}
                   {onboarding && (
-                    <div className="rounded-xl bg-[#FAF8F4] p-2.5 border border-[#C89D32]/30 flex items-center justify-between text-xs">
+                    <div className="flex items-center justify-between rounded-xl border border-[#C89D32]/30 bg-[#FAF8F4] p-2.5 text-xs">
                       <div className="flex items-center gap-2">
                         {onboarding.live_on_marketplace ? (
-                          <ShieldCheck className="h-4 w-4 text-[#C89D32] shrink-0" />
+                          <ShieldCheck className="h-4 w-4 shrink-0 text-[#C89D32]" />
                         ) : (
-                          <Clock className="h-4 w-4 text-[#C89D32] shrink-0" />
+                          <Clock className="h-4 w-4 shrink-0 text-[#C89D32]" />
                         )}
                         <div>
                           <p className="text-[11px] font-bold text-[#1A1A18]">
@@ -879,14 +907,15 @@ export function ContactsViewClient({
                               : ONBOARDING_STAGE_LABELS[onboarding.current_stage]}
                           </p>
                           <p className="text-[10px] text-[#52524E]">
-                            KYC: {onboarding.kyc_completed ? "✓ Done" : "Pending"} • Catalog:{" "}
+                            KYC: {onboarding.kyc_completed ? "✓ Done" : "Pending"} •
+                            Catalog:{" "}
                             {onboarding.catalog_completed ? "✓ Ready" : "Pending"}
                           </p>
                         </div>
                       </div>
                       <Link
                         href="/dashboard/crm/onboarding"
-                        className="rounded-full bg-white p-1 text-[#1A1A18] border border-[#E5E5E0] hover:bg-[#FAF8F4] transition"
+                        className="rounded-full border border-[#E5E5E0] bg-white p-1 text-[#1A1A18] transition hover:bg-[#FAF8F4]"
                         title="View in Onboarding Process"
                       >
                         <ExternalLink className="h-3 w-3" />
@@ -933,12 +962,12 @@ export function ContactsViewClient({
 
                     <div className="flex flex-wrap items-center gap-1.5 pt-1">
                       {contact.craft_category && (
-                        <span className="rounded-full bg-[#FAF8F4] border border-[#E5E5E0] px-2.5 py-0.5 text-[11px] font-medium text-[#1A1A18]">
+                        <span className="rounded-full border border-[#E5E5E0] bg-[#FAF8F4] px-2.5 py-0.5 text-[11px] font-medium text-[#1A1A18]">
                           {contact.craft_category}
                         </span>
                       )}
                       {contact.source && (
-                        <span className="rounded-full bg-[#FAF8F4] border border-[#E5E5E0] px-2.5 py-0.5 text-[11px] text-[#52524E] capitalize">
+                        <span className="rounded-full border border-[#E5E5E0] bg-[#FAF8F4] px-2.5 py-0.5 text-[11px] text-[#52524E] capitalize">
                           {contact.source.replace(/_/g, " ")}
                         </span>
                       )}
@@ -946,7 +975,7 @@ export function ContactsViewClient({
                   </div>
 
                   {contact.notes && (
-                    <p className="mt-2 rounded-xl bg-[#FAF8F4] p-3 text-[11px] italic text-[#52524E] border border-[#E5E5E0] line-clamp-2">
+                    <p className="mt-2 line-clamp-2 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-3 text-[11px] text-[#52524E] italic">
                       “{contact.notes}”
                     </p>
                   )}
@@ -958,14 +987,14 @@ export function ContactsViewClient({
                     <button
                       type="button"
                       onClick={() => setSelectedContact(contact)}
-                      className="rounded-full border border-[#E5E5E0] bg-white px-3 py-1 text-xs font-semibold text-[#1A1A18] hover:bg-[#FAF8F4] transition"
+                      className="rounded-full border border-[#E5E5E0] bg-white px-3 py-1 text-xs font-semibold text-[#1A1A18] transition hover:bg-[#FAF8F4]"
                     >
                       Details
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditingContact(contact)}
-                      className="inline-flex items-center gap-1 rounded-full border border-[#E5E5E0] bg-white px-3 py-1 text-xs font-semibold text-[#1A1A18] hover:bg-[#FAF8F4] transition"
+                      className="inline-flex items-center gap-1 rounded-full border border-[#E5E5E0] bg-white px-3 py-1 text-xs font-semibold text-[#1A1A18] transition hover:bg-[#FAF8F4]"
                     >
                       <Edit className="h-3 w-3" />
                       <span>Edit</span>
@@ -1002,7 +1031,7 @@ export function ContactsViewClient({
           {activeFilterCount > 0 && (
             <button
               onClick={resetFilters}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#1A1A18] px-5 py-2 text-xs font-semibold text-white hover:bg-[#2E2E2B] transition shadow-xs"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#1A1A18] px-5 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-[#2E2E2B]"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               <span>Clear filters</span>
@@ -1022,11 +1051,11 @@ export function ContactsViewClient({
 
           {/* Right-Aligned Drawer Panel: border-l border-[#E5E5E0] bg-white text-[#1A1A18] shadow-2xl */}
           <div className="fixed inset-y-0 right-0 z-50 flex max-w-full pl-10">
-            <div className="w-screen max-w-lg md:max-w-xl border-l border-[#E5E5E0] bg-white text-[#1A1A18] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-200">
+            <div className="animate-in slide-in-from-right flex h-full w-screen max-w-lg flex-col border-l border-[#E5E5E0] bg-white text-[#1A1A18] shadow-2xl duration-200 md:max-w-xl">
               {/* Header: border-b border-[#E5E5E0] bg-[#FAF8F4] px-6 py-4 */}
               <div className="flex items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4] px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-[#1A1A18] text-white flex items-center justify-center font-bold shadow-xs">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1A1A18] font-bold text-white shadow-xs">
                     <UserPlus className="h-4 w-4" />
                   </div>
                   <div>
@@ -1042,7 +1071,7 @@ export function ContactsViewClient({
                 <button
                   type="button"
                   onClick={() => setShowAddContactDrawer(false)}
-                  className="rounded-full p-2 text-[#52524E] hover:bg-[#E5E5E0] hover:text-[#1A1A18] transition"
+                  className="rounded-full p-2 text-[#52524E] transition hover:bg-[#E5E5E0] hover:text-[#1A1A18]"
                   title="Close sideview drawer"
                 >
                   <X className="h-5 w-5" />
@@ -1052,12 +1081,12 @@ export function ContactsViewClient({
               {/* Drawer Body (Scrollable form with DESIGN.md Input standards) */}
               <form
                 onSubmit={handleCreateContact}
-                className="flex-1 overflow-y-auto px-6 py-5 space-y-5"
+                className="flex-1 space-y-5 overflow-y-auto px-6 py-5"
               >
                 {/* Group 1: Artisan & Workshop Identity */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                    <span className="text-[11px] font-bold tracking-wider text-[#1A1A18] uppercase">
                       1. Artisan &amp; Business
                     </span>
                     <div className="h-px flex-1 bg-[#E5E5E0]" />
@@ -1065,13 +1094,14 @@ export function ContactsViewClient({
 
                   <div>
                     <label className="block text-xs font-semibold text-[#1A1A18]">
-                      Artisan / Contact Person Name <span className="text-rose-600">*</span>
+                      Artisan / Contact Person Name{" "}
+                      <span className="text-rose-600">*</span>
                     </label>
                     <input
                       name="name"
                       required
                       placeholder="e.g. Polumuri Nageswara Rao"
-                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                     />
                   </div>
 
@@ -1082,7 +1112,7 @@ export function ContactsViewClient({
                     <input
                       name="business_name"
                       placeholder="e.g. Sri Venkateswara Kondapalli Toys Cooperative"
-                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                     />
                   </div>
                 </div>
@@ -1090,13 +1120,13 @@ export function ContactsViewClient({
                 {/* Group 2: Direct Communication Channels */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                    <span className="text-[11px] font-bold tracking-wider text-[#1A1A18] uppercase">
                       2. Communication Channels
                     </span>
                     <div className="h-px flex-1 bg-[#E5E5E0]" />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="block text-xs font-semibold text-[#1A1A18]">
                         Phone Number <span className="text-rose-600">*</span>
@@ -1105,7 +1135,7 @@ export function ContactsViewClient({
                         name="phone"
                         required
                         placeholder="+91 94401 23456"
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18] font-mono"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 font-mono text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
 
@@ -1117,7 +1147,7 @@ export function ContactsViewClient({
                         name="email"
                         type="email"
                         placeholder="artisan@guild.in"
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
                   </div>
@@ -1126,13 +1156,13 @@ export function ContactsViewClient({
                 {/* Group 3: Craft Lineage & Regional Geography */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                    <span className="text-[11px] font-bold tracking-wider text-[#1A1A18] uppercase">
                       3. Craft &amp; Location
                     </span>
                     <div className="h-px flex-1 bg-[#E5E5E0]" />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="block text-xs font-semibold text-[#1A1A18]">
                         Craft Category
@@ -1140,7 +1170,7 @@ export function ContactsViewClient({
                       <input
                         name="craft_category"
                         placeholder="e.g. Kondapalli Toys, Etikoppaka"
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
 
@@ -1151,12 +1181,12 @@ export function ContactsViewClient({
                       <input
                         name="cluster_name"
                         placeholder="e.g. Kondapalli Craft Village"
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="block text-xs font-semibold text-[#1A1A18]">
                         City / District
@@ -1164,7 +1194,7 @@ export function ContactsViewClient({
                       <input
                         name="city"
                         placeholder="e.g. Vijayawada, Visakhapatnam"
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
 
@@ -1175,7 +1205,7 @@ export function ContactsViewClient({
                       <input
                         name="state"
                         placeholder="e.g. Andhra Pradesh, Rajasthan"
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
                   </div>
@@ -1184,7 +1214,7 @@ export function ContactsViewClient({
                 {/* Group 4: Pipeline Source */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                    <span className="text-[11px] font-bold tracking-wider text-[#1A1A18] uppercase">
                       4. Sourcing Assessment
                     </span>
                     <div className="h-px flex-1 bg-[#E5E5E0]" />
@@ -1197,7 +1227,7 @@ export function ContactsViewClient({
                     <select
                       name="source"
                       defaultValue="field_visit"
-                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                     >
                       <option value="field_visit">Field / Cluster Scouting</option>
                       <option value="gi_registry">GI Registry Certification</option>
@@ -1215,17 +1245,17 @@ export function ContactsViewClient({
                       name="notes"
                       rows={3}
                       placeholder="Notes on traditional tools, workshop capacity, registered GI certificates, SKU readiness..."
-                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                     />
                   </div>
                 </div>
 
                 {/* Sticky Footer: border-t border-[#E5E5E0] bg-[#FAF8F4] px-6 py-3.5 flex items-center justify-between */}
-                <div className="sticky bottom-0 -mx-6 -mb-5 mt-6 flex items-center justify-between border-t border-[#E5E5E0] bg-[#FAF8F4] px-6 py-3.5">
+                <div className="sticky bottom-0 -mx-6 mt-6 -mb-5 flex items-center justify-between border-t border-[#E5E5E0] bg-[#FAF8F4] px-6 py-3.5">
                   <button
                     type="button"
                     onClick={() => setShowAddContactDrawer(false)}
-                    className="rounded-full border border-[#E5E5E0] bg-white px-4 py-2 text-xs font-medium text-[#1A1A18] hover:bg-[#FAF8F4] transition-colors"
+                    className="rounded-full border border-[#E5E5E0] bg-white px-4 py-2 text-xs font-medium text-[#1A1A18] transition-colors hover:bg-[#FAF8F4]"
                   >
                     Cancel
                   </button>
@@ -1233,7 +1263,7 @@ export function ContactsViewClient({
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#1A1A18] px-5 py-2 text-xs font-semibold text-white hover:bg-[#2E2E2B] transition-colors disabled:opacity-60 shadow-xs"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#1A1A18] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#2E2E2B] disabled:opacity-60"
                   >
                     {isSubmitting ? (
                       <>
@@ -1263,11 +1293,11 @@ export function ContactsViewClient({
           />
 
           <div className="fixed inset-y-0 right-0 z-50 flex max-w-full pl-10">
-            <div className="w-screen max-w-lg md:max-w-xl border-l border-[#E5E5E0] bg-white text-[#1A1A18] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-200">
+            <div className="animate-in slide-in-from-right flex h-full w-screen max-w-lg flex-col border-l border-[#E5E5E0] bg-white text-[#1A1A18] shadow-2xl duration-200 md:max-w-xl">
               {/* Header */}
               <div className="flex items-center justify-between border-b border-[#E5E5E0] bg-[#FAF8F4] px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-[#1A1A18] text-white flex items-center justify-center font-bold shadow-xs">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1A1A18] font-bold text-white shadow-xs">
                     <Edit className="h-4 w-4" />
                   </div>
                   <div>
@@ -1283,7 +1313,7 @@ export function ContactsViewClient({
                 <button
                   type="button"
                   onClick={() => setEditingContact(null)}
-                  className="rounded-full p-2 text-[#52524E] hover:bg-[#E5E5E0] hover:text-[#1A1A18] transition"
+                  className="rounded-full p-2 text-[#52524E] transition hover:bg-[#E5E5E0] hover:text-[#1A1A18]"
                   title="Close sideview drawer"
                 >
                   <X className="h-5 w-5" />
@@ -1293,11 +1323,11 @@ export function ContactsViewClient({
               {/* Form Body */}
               <form
                 onSubmit={handleUpdateContact}
-                className="flex-1 overflow-y-auto px-6 py-5 space-y-5"
+                className="flex-1 space-y-5 overflow-y-auto px-6 py-5"
               >
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                    <span className="text-[11px] font-bold tracking-wider text-[#1A1A18] uppercase">
                       Artisan &amp; Workshop Identity
                     </span>
                     <div className="h-px flex-1 bg-[#E5E5E0]" />
@@ -1305,13 +1335,14 @@ export function ContactsViewClient({
 
                   <div>
                     <label className="block text-xs font-semibold text-[#1A1A18]">
-                      Artisan / Contact Person Name <span className="text-rose-600">*</span>
+                      Artisan / Contact Person Name{" "}
+                      <span className="text-rose-600">*</span>
                     </label>
                     <input
                       name="name"
                       required
                       defaultValue={editingContact.name}
-                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                     />
                   </div>
 
@@ -1322,20 +1353,20 @@ export function ContactsViewClient({
                     <input
                       name="business_name"
                       defaultValue={editingContact.business_name || ""}
-                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                    <span className="text-[11px] font-bold tracking-wider text-[#1A1A18] uppercase">
                       Communication
                     </span>
                     <div className="h-px flex-1 bg-[#E5E5E0]" />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="block text-xs font-semibold text-[#1A1A18]">
                         Phone <span className="text-rose-600">*</span>
@@ -1344,7 +1375,7 @@ export function ContactsViewClient({
                         name="phone"
                         required
                         defaultValue={editingContact.phone}
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18] font-mono"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 font-mono text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
 
@@ -1356,7 +1387,7 @@ export function ContactsViewClient({
                         name="email"
                         type="email"
                         defaultValue={editingContact.email || ""}
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
                   </div>
@@ -1364,13 +1395,13 @@ export function ContactsViewClient({
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                    <span className="text-[11px] font-bold tracking-wider text-[#1A1A18] uppercase">
                       Craft &amp; Geography
                     </span>
                     <div className="h-px flex-1 bg-[#E5E5E0]" />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="block text-xs font-semibold text-[#1A1A18]">
                         Craft Category
@@ -1378,7 +1409,7 @@ export function ContactsViewClient({
                       <input
                         name="craft_category"
                         defaultValue={editingContact.craft_category || ""}
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
 
@@ -1389,12 +1420,12 @@ export function ContactsViewClient({
                       <input
                         name="cluster_name"
                         defaultValue={editingContact.cluster_name || ""}
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="block text-xs font-semibold text-[#1A1A18]">
                         City
@@ -1402,7 +1433,7 @@ export function ContactsViewClient({
                       <input
                         name="city"
                         defaultValue={editingContact.city || ""}
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
 
@@ -1413,7 +1444,7 @@ export function ContactsViewClient({
                       <input
                         name="state"
                         defaultValue={editingContact.state || ""}
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       />
                     </div>
                   </div>
@@ -1421,13 +1452,13 @@ export function ContactsViewClient({
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                    <span className="text-[11px] font-bold tracking-wider text-[#1A1A18] uppercase">
                       Pipeline Status &amp; Source
                     </span>
                     <div className="h-px flex-1 bg-[#E5E5E0]" />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="block text-xs font-semibold text-[#1A1A18]">
                         Status
@@ -1435,7 +1466,7 @@ export function ContactsViewClient({
                       <select
                         name="status"
                         defaultValue={editingContact.status}
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       >
                         <option value="new">New Scouted</option>
                         <option value="contacted">Contacted</option>
@@ -1451,12 +1482,16 @@ export function ContactsViewClient({
                       <select
                         name="source"
                         defaultValue={editingContact.source || "cluster_scouting"}
-                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                       >
-                        <option value="cluster_scouting">Field / Cluster Scouting</option>
+                        <option value="cluster_scouting">
+                          Field / Cluster Scouting
+                        </option>
                         <option value="gi_registry">GI Registry Certification</option>
                         <option value="referral">Seller / Artisan Referral</option>
-                        <option value="exhibition">Craft Exhibition / Trade Fair</option>
+                        <option value="exhibition">
+                          Craft Exhibition / Trade Fair
+                        </option>
                         <option value="inbound">Inbound Contact Application</option>
                       </select>
                     </div>
@@ -1470,16 +1505,16 @@ export function ContactsViewClient({
                       name="notes"
                       rows={3}
                       defaultValue={editingContact.notes || ""}
-                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] outline-none transition focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
+                      className="mt-1.5 w-full rounded-xl border border-[#E5E5E0] bg-[#FAF8F4]/50 px-3.5 py-2.5 text-xs text-[#1A1A18] transition outline-none focus:border-[#1A1A18] focus:bg-white focus:ring-1 focus:ring-[#1A1A18]"
                     />
                   </div>
                 </div>
 
-                <div className="sticky bottom-0 -mx-6 -mb-5 mt-6 flex items-center justify-between border-t border-[#E5E5E0] bg-[#FAF8F4] px-6 py-3.5">
+                <div className="sticky bottom-0 -mx-6 mt-6 -mb-5 flex items-center justify-between border-t border-[#E5E5E0] bg-[#FAF8F4] px-6 py-3.5">
                   <button
                     type="button"
                     onClick={() => setEditingContact(null)}
-                    className="rounded-full border border-[#E5E5E0] bg-white px-4 py-2 text-xs font-medium text-[#1A1A18] hover:bg-[#FAF8F4] transition-colors"
+                    className="rounded-full border border-[#E5E5E0] bg-white px-4 py-2 text-xs font-medium text-[#1A1A18] transition-colors hover:bg-[#FAF8F4]"
                   >
                     Cancel
                   </button>
@@ -1487,7 +1522,7 @@ export function ContactsViewClient({
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#1A1A18] px-5 py-2 text-xs font-semibold text-white hover:bg-[#2E2E2B] transition-colors disabled:opacity-60 shadow-xs"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#1A1A18] px-5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#2E2E2B] disabled:opacity-60"
                   >
                     {isSubmitting ? (
                       <>
@@ -1511,15 +1546,15 @@ export function ContactsViewClient({
       {/* CONTACT DETAILS CARD MODAL */}
       {selectedContact && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1A18]/40 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150">
+          <div className="animate-in zoom-in-95 w-full max-w-lg rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-2xl duration-150">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#E5E5E0] pb-4">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-[#1A1A18] text-white flex items-center justify-center font-bold text-base shadow-xs">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1A1A18] text-base font-bold text-white shadow-xs">
                   {selectedContact.name.charAt(0)}
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#1A1A18] text-lg">
+                  <h3 className="text-lg font-bold text-[#1A1A18]">
                     {selectedContact.name}
                   </h3>
                   <p className="text-xs text-[#52524E]">
@@ -1529,7 +1564,7 @@ export function ContactsViewClient({
               </div>
               <button
                 onClick={() => setSelectedContact(null)}
-                className="rounded-full p-2 text-[#52524E] hover:bg-[#FAF8F4] hover:text-[#1A1A18] transition"
+                className="rounded-full p-2 text-[#52524E] transition hover:bg-[#FAF8F4] hover:text-[#1A1A18]"
               >
                 ✕
               </button>
@@ -1541,48 +1576,75 @@ export function ContactsViewClient({
               if (!matchedOnboard) return null;
 
               return (
-                <div className="mt-4 rounded-xl bg-[#FAF8F4] p-4 border border-[#C89D32]/40 space-y-2">
+                <div className="mt-4 space-y-2 rounded-xl border border-[#C89D32]/40 bg-[#FAF8F4] p-4">
                   <div className="flex items-center justify-between">
                     <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#C89D32]">
                       <Sparkles className="h-4 w-4 fill-current" />
                       <span>Enrolled Onboarded Seller</span>
                     </span>
-                    <span className="rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#C89D32] border border-[#C89D32]/30 shadow-xs">
+                    <span className="rounded-full border border-[#C89D32]/30 bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#C89D32] shadow-xs">
                       {ONBOARDING_STAGE_LABELS[matchedOnboard.current_stage]}
                     </span>
                   </div>
 
                   <p className="text-xs text-[#52524E]">
-                    {matchedOnboard.notes || "Master artisan in verified onboarding progression."}
+                    {matchedOnboard.notes ||
+                      "Master artisan in verified onboarding progression."}
                   </p>
 
                   <div className="grid grid-cols-2 gap-2 pt-1 text-[11px] text-[#52524E]">
                     <div className="flex items-center gap-1.5">
-                      <span className={matchedOnboard.kyc_completed ? "text-[#C89D32] font-bold" : "text-[#8C8C85]"}>
+                      <span
+                        className={
+                          matchedOnboard.kyc_completed
+                            ? "font-bold text-[#C89D32]"
+                            : "text-[#8C8C85]"
+                        }
+                      >
                         {matchedOnboard.kyc_completed ? "✓" : "○"} KYC Verified
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className={matchedOnboard.catalog_completed ? "text-[#C89D32] font-bold" : "text-[#8C8C85]"}>
+                      <span
+                        className={
+                          matchedOnboard.catalog_completed
+                            ? "font-bold text-[#C89D32]"
+                            : "text-[#8C8C85]"
+                        }
+                      >
                         {matchedOnboard.catalog_completed ? "✓" : "○"} Catalog Ingested
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className={matchedOnboard.quality_check_completed ? "text-[#C89D32] font-bold" : "text-[#8C8C85]"}>
-                        {matchedOnboard.quality_check_completed ? "✓" : "○"} Quality Packaging
+                      <span
+                        className={
+                          matchedOnboard.quality_check_completed
+                            ? "font-bold text-[#C89D32]"
+                            : "text-[#8C8C85]"
+                        }
+                      >
+                        {matchedOnboard.quality_check_completed ? "✓" : "○"} Quality
+                        Packaging
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className={matchedOnboard.live_on_marketplace ? "text-[#C89D32] font-bold" : "text-[#8C8C85]"}>
-                        {matchedOnboard.live_on_marketplace ? "✓" : "○"} Live in Storefront
+                      <span
+                        className={
+                          matchedOnboard.live_on_marketplace
+                            ? "font-bold text-[#C89D32]"
+                            : "text-[#8C8C85]"
+                        }
+                      >
+                        {matchedOnboard.live_on_marketplace ? "✓" : "○"} Live in
+                        Storefront
                       </span>
                     </div>
                   </div>
 
-                  <div className="pt-2 flex justify-end">
+                  <div className="flex justify-end pt-2">
                     <Link
                       href="/dashboard/crm/onboarding"
-                      className="inline-flex items-center gap-1 rounded-full bg-[#1A1A18] px-3.5 py-1 text-[11px] font-semibold text-white shadow-xs hover:bg-[#2E2E2B] transition"
+                      className="inline-flex items-center gap-1 rounded-full bg-[#1A1A18] px-3.5 py-1 text-[11px] font-semibold text-white shadow-xs transition hover:bg-[#2E2E2B]"
                     >
                       <span>View in Onboarding Process</span>
                       <ExternalLink className="h-3 w-3" />
@@ -1594,12 +1656,12 @@ export function ContactsViewClient({
 
             {/* Metadata Grid */}
             <div className="mt-4 space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3 bg-[#FAF8F4] p-4 rounded-xl border border-[#E5E5E0]">
+              <div className="grid grid-cols-2 gap-3 rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] p-4">
                 <div>
                   <span className="text-[10px] font-bold text-[#8C8C85] uppercase">
                     Phone
                   </span>
-                  <p className="font-semibold text-[#1A1A18] mt-0.5 font-mono">
+                  <p className="mt-0.5 font-mono font-semibold text-[#1A1A18]">
                     {selectedContact.phone}
                   </p>
                 </div>
@@ -1607,7 +1669,7 @@ export function ContactsViewClient({
                   <span className="text-[10px] font-bold text-[#8C8C85] uppercase">
                     Email
                   </span>
-                  <p className="font-semibold text-[#1A1A18] mt-0.5 truncate">
+                  <p className="mt-0.5 truncate font-semibold text-[#1A1A18]">
                     {selectedContact.email || "Not specified"}
                   </p>
                 </div>
@@ -1615,7 +1677,7 @@ export function ContactsViewClient({
                   <span className="text-[10px] font-bold text-[#8C8C85] uppercase">
                     Craft Category
                   </span>
-                  <p className="font-semibold text-[#1A1A18] mt-0.5">
+                  <p className="mt-0.5 font-semibold text-[#1A1A18]">
                     {selectedContact.craft_category || "Traditional Craft"}
                   </p>
                 </div>
@@ -1623,7 +1685,7 @@ export function ContactsViewClient({
                   <span className="text-[10px] font-bold text-[#8C8C85] uppercase">
                     Contact Status
                   </span>
-                  <p className="font-semibold text-[#1A1A18] mt-0.5 capitalize">
+                  <p className="mt-0.5 font-semibold text-[#1A1A18] capitalize">
                     {selectedContact.status}
                   </p>
                 </div>
@@ -1631,7 +1693,7 @@ export function ContactsViewClient({
                   <span className="text-[10px] font-bold text-[#8C8C85] uppercase">
                     Cluster / Village
                   </span>
-                  <p className="font-semibold text-[#1A1A18] mt-0.5">
+                  <p className="mt-0.5 font-semibold text-[#1A1A18]">
                     {selectedContact.cluster_name || "N/A"}
                   </p>
                 </div>
@@ -1639,7 +1701,7 @@ export function ContactsViewClient({
                   <span className="text-[10px] font-bold text-[#8C8C85] uppercase">
                     Geographic Region
                   </span>
-                  <p className="font-semibold text-[#1A1A18] mt-0.5">
+                  <p className="mt-0.5 font-semibold text-[#1A1A18]">
                     {selectedContact.city}, {selectedContact.state}
                   </p>
                 </div>
@@ -1650,7 +1712,7 @@ export function ContactsViewClient({
                   <span className="text-[10px] font-bold text-[#8C8C85] uppercase">
                     Scouting Observations
                   </span>
-                  <p className="mt-1 text-xs text-[#52524E] bg-white p-3.5 rounded-xl border border-[#E5E5E0] leading-relaxed">
+                  <p className="mt-1 rounded-xl border border-[#E5E5E0] bg-white p-3.5 text-xs leading-relaxed text-[#52524E]">
                     {selectedContact.notes}
                   </p>
                 </div>
@@ -1671,7 +1733,7 @@ export function ContactsViewClient({
                       setSelectedContact(null);
                       setEditingContact(c);
                     }}
-                    className="inline-flex items-center gap-1 rounded-full border border-[#E5E5E0] bg-white px-4 py-2 font-semibold text-[#1A1A18] hover:bg-[#FAF8F4] transition"
+                    className="inline-flex items-center gap-1 rounded-full border border-[#E5E5E0] bg-white px-4 py-2 font-semibold text-[#1A1A18] transition hover:bg-[#FAF8F4]"
                   >
                     <Edit className="h-3.5 w-3.5" />
                     <span>Edit</span>
@@ -1679,7 +1741,7 @@ export function ContactsViewClient({
                   <button
                     onClick={() => handleConvertToLead(selectedContact.id)}
                     disabled={isSubmitting}
-                    className="rounded-full bg-[#1A1A18] px-5 py-2 font-semibold text-white hover:bg-[#2E2E2B] transition shadow-xs disabled:opacity-50"
+                    className="rounded-full bg-[#1A1A18] px-5 py-2 font-semibold text-white shadow-xs transition hover:bg-[#2E2E2B] disabled:opacity-50"
                   >
                     Promote to Lead
                   </button>

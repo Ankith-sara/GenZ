@@ -18,7 +18,7 @@ export default async function AdminOrdersPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
       <OrdersManager
         mode="admin"
         orders={allOrders}

@@ -25,7 +25,8 @@ import { ReportsViewClient } from "./reports-view-client";
 
 export const metadata = {
   title: "Reports & Analytics | Admin",
-  description: "Cross-modular reporting for Admin, Operations, and CRM platform workflows.",
+  description:
+    "Cross-modular reporting for Admin, Operations, and CRM platform workflows.",
 };
 
 interface ReportsPageProps {
@@ -78,7 +79,10 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
     const supabase = createAdminClient();
     const [pRes, vRes] = await Promise.all([
       supabase.from("products").select("id", { count: "exact", head: true }),
-      supabase.from("seller_applications").select("id", { count: "exact", head: true }).eq("status", "pending"),
+      supabase
+        .from("seller_applications")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "pending"),
     ]);
     productCount = pRes.count ?? 0;
     pendingVerificationsCount = vRes.count ?? 0;

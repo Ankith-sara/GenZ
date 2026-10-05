@@ -26,7 +26,10 @@ interface RolesViewClientProps {
 export function RolesViewClient({ roles }: RolesViewClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
-  const [feedbackMsg, setFeedbackMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [feedbackMsg, setFeedbackMsg] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const filteredRoles = roles.filter((r) => {
     const q = searchQuery.toLowerCase();
@@ -64,14 +67,14 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
         );
       case "manager":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 text-[10px] font-bold text-indigo-900 shadow-xs">
+          <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[10px] font-bold text-indigo-900 shadow-xs">
             <Briefcase className="h-2.5 w-2.5 text-indigo-700" />
             Manager Level
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 border border-neutral-200 px-2.5 py-0.5 text-[10px] font-semibold text-neutral-800">
+          <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-0.5 text-[10px] font-semibold text-neutral-800">
             Staff Level
           </span>
         );
@@ -87,18 +90,21 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
             <div className="flex items-center gap-2">
               <Link
                 href="/dashboard/employees"
-                className="text-xs font-semibold text-[#73736E] hover:text-[#1A1A18] transition-colors"
+                className="text-xs font-semibold text-[#73736E] transition-colors hover:text-[#1A1A18]"
               >
                 Team Directory
               </Link>
               <ChevronRight className="h-3.5 w-3.5 text-[#A3A39E]" />
-              <span className="text-xs font-semibold text-[#1A1A18]">Roles & Permissions</span>
+              <span className="text-xs font-semibold text-[#1A1A18]">
+                Roles & Permissions
+              </span>
             </div>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-[#1A1A18]">
               Role Governance & Access Control
             </h1>
             <p className="mt-0.5 text-xs text-[#73736E]">
-              Configure administrative roles (Super Administrator, CRM Manager, Operation Manager) with granular page CRUD permissions.
+              Configure administrative roles (Super Administrator, CRM Manager,
+              Operation Manager) with granular page CRUD permissions.
             </p>
           </div>
 
@@ -124,13 +130,13 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
         <div className="mt-4 flex items-center gap-2">
           <Link
             href="/dashboard/employees"
-            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] hover:bg-neutral-100 hover:text-black transition"
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] transition hover:bg-neutral-100 hover:text-black"
           >
             All Employees
           </Link>
           <Link
             href="/dashboard/employees/departments"
-            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] hover:bg-neutral-100 hover:text-black transition"
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] transition hover:bg-neutral-100 hover:text-black"
           >
             Departments
           </Link>
@@ -144,8 +150,8 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
         <div
           className={`flex items-center gap-2 rounded-xl p-3.5 text-xs font-medium ${
             feedbackMsg.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-              : "bg-red-50 text-red-800 border border-red-200"
+              ? "border border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border border-red-200 bg-red-50 text-red-800"
           }`}
         >
           <CheckCircle2 className="h-4 w-4" />
@@ -170,7 +176,9 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
 
         <div className="rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#73736E]">Active Staff Assigned</span>
+            <span className="text-xs font-medium text-[#73736E]">
+              Active Staff Assigned
+            </span>
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
               <Users className="h-4 w-4" />
             </div>
@@ -197,14 +205,14 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[#73736E]" />
+        <div className="relative max-w-md flex-1">
+          <Search className="absolute top-2.5 left-3 h-3.5 w-3.5 text-[#73736E]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search role name, code, or level..."
-            className="w-full rounded-xl border border-[#E5E5E0] bg-white py-2 pl-9 pr-3 text-xs text-[#1A1A18] placeholder-[#73736E] outline-none transition focus:border-[#1A1A18]"
+            className="w-full rounded-xl border border-[#E5E5E0] bg-white py-2 pr-3 pl-9 text-xs text-[#1A1A18] placeholder-[#73736E] transition outline-none focus:border-[#1A1A18]"
           />
         </div>
         <span className="text-xs text-[#73736E]">
@@ -231,14 +239,14 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FAF8F4] border border-[#E5E5E0] text-[#1A1A18] font-bold">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] font-bold text-[#1A1A18]">
                       <Shield className="h-5 w-5 text-[#C89D32]" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-[#1A1A18] text-sm group-hover:text-black">
+                      <h3 className="text-sm font-bold text-[#1A1A18] group-hover:text-black">
                         {role.name}
                       </h3>
-                      <span className="font-mono text-[10px] font-bold tracking-wider text-[#73736E] bg-neutral-100 px-2 py-0.5 rounded border border-[#E5E5E0]">
+                      <span className="rounded border border-[#E5E5E0] bg-neutral-100 px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider text-[#73736E]">
                         {role.code}
                       </span>
                     </div>
@@ -247,13 +255,13 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
                   <div>{getRoleLevelBadge(role.role_level)}</div>
                 </div>
 
-                <p className="mt-3 text-xs leading-relaxed text-[#73736E] line-clamp-2">
+                <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-[#73736E]">
                   {role.description || "No role description provided."}
                 </p>
 
                 {/* Permissions Highlight Badges */}
                 <div className="mt-3 rounded-xl border border-neutral-100 bg-neutral-50/60 p-2.5">
-                  <div className="flex items-center justify-between text-[11px] font-semibold text-neutral-700 mb-1.5">
+                  <div className="mb-1.5 flex items-center justify-between text-[11px] font-semibold text-neutral-700">
                     <span className="flex items-center gap-1">
                       <Lock className="h-3 w-3 text-neutral-500" />
                       Role Permissions
@@ -264,32 +272,32 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {hasOrders && (
-                      <span className="rounded-md bg-indigo-50 border border-indigo-200/60 px-1.5 py-0.5 text-[9px] font-bold text-indigo-800">
+                      <span className="rounded-md border border-indigo-200/60 bg-indigo-50 px-1.5 py-0.5 text-[9px] font-bold text-indigo-800">
                         Orders CRUD
                       </span>
                     )}
                     {hasProducts && (
-                      <span className="rounded-md bg-amber-50 border border-amber-200/60 px-1.5 py-0.5 text-[9px] font-bold text-amber-800">
+                      <span className="rounded-md border border-amber-200/60 bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-800">
                         Products CRUD
                       </span>
                     )}
                     {hasCrm && (
-                      <span className="rounded-md bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 text-[9px] font-bold text-emerald-800">
+                      <span className="rounded-md border border-emerald-200/60 bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold text-emerald-800">
                         CRM / Leads
                       </span>
                     )}
                     {hasTasks && (
-                      <span className="rounded-md bg-blue-50 border border-blue-200/60 px-1.5 py-0.5 text-[9px] font-bold text-blue-800">
+                      <span className="rounded-md border border-blue-200/60 bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold text-blue-800">
                         Tasks CRUD
                       </span>
                     )}
                     {hasEmployees && (
-                      <span className="rounded-md bg-purple-50 border border-purple-200/60 px-1.5 py-0.5 text-[9px] font-bold text-purple-800">
+                      <span className="rounded-md border border-purple-200/60 bg-purple-50 px-1.5 py-0.5 text-[9px] font-bold text-purple-800">
                         Employees
                       </span>
                     )}
                     {hasVerifications && (
-                      <span className="rounded-md bg-teal-50 border border-teal-200/60 px-1.5 py-0.5 text-[9px] font-bold text-teal-800">
+                      <span className="rounded-md border border-teal-200/60 bg-teal-50 px-1.5 py-0.5 text-[9px] font-bold text-teal-800">
                         KYC / GI
                       </span>
                     )}
@@ -298,7 +306,7 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
 
                 <div className="mt-4 flex items-center justify-between border-t border-[#F0F0EC] pt-3 text-xs">
                   <span className="text-[#73736E]">Active Staff Count</span>
-                  <span className="inline-flex items-center gap-1 rounded-md bg-[#FAF8F4] border border-[#E5E5E0] px-2 py-0.5 font-mono text-[11px] font-semibold text-[#1A1A18]">
+                  <span className="inline-flex items-center gap-1 rounded-md border border-[#E5E5E0] bg-[#FAF8F4] px-2 py-0.5 font-mono text-[11px] font-semibold text-[#1A1A18]">
                     <Users className="h-3 w-3 text-[#73736E]" />
                     {role.member_count ?? 0} members
                   </span>
@@ -308,7 +316,7 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
               <div className="mt-4 flex items-center justify-end gap-2 border-t border-[#F0F0EC] pt-3">
                 <Link
                   href={`/dashboard/roles/${role.id}/edit`}
-                  className="inline-flex items-center gap-1 rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#1A1A18] hover:bg-[#FAF8F4] transition"
+                  className="inline-flex items-center gap-1 rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#1A1A18] transition hover:bg-[#FAF8F4]"
                 >
                   <Edit2 className="h-3 w-3 text-[#73736E]" />
                   Edit Role
@@ -317,7 +325,7 @@ export function RolesViewClient({ roles }: RolesViewClientProps) {
                   <button
                     onClick={() => handleDelete(role.id, role.name)}
                     disabled={isDeletingId === role.id}
-                    className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 transition"
+                    className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 transition hover:bg-red-50 disabled:opacity-50"
                   >
                     <Trash2 className="h-3 w-3" />
                     Delete

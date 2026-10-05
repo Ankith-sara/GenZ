@@ -111,10 +111,10 @@ export async function getEmployeeForSession() {
   const session = await requireRole("admin");
   const { getEmployeesList } = await import("./employees");
   const employees = await getEmployeesList();
-  
+
   const userEmail = session.user?.email?.toLowerCase();
   const userId = session.userId;
-  
+
   const matched = employees.find(
     (e) => e.id === userId || (userEmail && e.email.toLowerCase() === userEmail)
   );
@@ -198,4 +198,3 @@ export function hasPermission(
   if (employee.role_level === "admin") return true;
   return Boolean(employee.permissions && employee.permissions.includes(permission));
 }
-

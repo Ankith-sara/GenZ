@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-export const crmContactStatusSchema = z.enum(["new", "contacted", "qualified", "disqualified"]);
+export const crmContactStatusSchema = z.enum([
+  "new",
+  "contacted",
+  "qualified",
+  "disqualified",
+]);
 
 export const crmLeadStageSchema = z.enum([
   "discovery",

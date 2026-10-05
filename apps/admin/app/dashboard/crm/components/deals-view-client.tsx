@@ -44,10 +44,28 @@ const FUNNEL_DEAL_STAGES: {
   tint: string;
   text: string;
 }[] = [
-    { key: "proposal_sent", label: "Proposal sent", dot: "#5D78C9", tint: "#EEF1FA", text: "#3B4F98" },
-    { key: "terms_negotiating", label: "Negotiating", dot: "#7A4FA0", tint: "#F4EEF9", text: "#5C3A79" },
-    { key: "contract_signed", label: "Contract signed", dot: "#3F7A55", tint: "#EAF4EC", text: "#2E5B3F" },
-  ];
+  {
+    key: "proposal_sent",
+    label: "Proposal sent",
+    dot: "#5D78C9",
+    tint: "#EEF1FA",
+    text: "#3B4F98",
+  },
+  {
+    key: "terms_negotiating",
+    label: "Negotiating",
+    dot: "#7A4FA0",
+    tint: "#F4EEF9",
+    text: "#5C3A79",
+  },
+  {
+    key: "contract_signed",
+    label: "Contract signed",
+    dot: "#3F7A55",
+    tint: "#EAF4EC",
+    text: "#2E5B3F",
+  },
+];
 
 const LOST_STAGE = {
   key: "lost" as const,
@@ -100,8 +118,10 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
     await updateDealAction(editingDeal.id, {
       deal_name: formData.get("dealName") as string,
       expected_sku_count: parseInt(formData.get("expectedSkuCount") as string, 10) || 0,
-      commission_rate_percent: parseFloat(formData.get("commissionRate") as string) || 0,
-      estimated_annual_value_inr: parseInt(formData.get("estimatedAnnualValue") as string, 10) || 0,
+      commission_rate_percent:
+        parseFloat(formData.get("commissionRate") as string) || 0,
+      estimated_annual_value_inr:
+        parseInt(formData.get("estimatedAnnualValue") as string, 10) || 0,
       target_onboarding_date: (formData.get("targetDate") as string) || null,
       stage: (formData.get("stage") as CRMDealStage) || editingDeal.stage,
       notes: (formData.get("notes") as string) || null,
@@ -135,9 +155,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
   const avgCommission = deals.length
     ? Math.round(
-      deals.reduce((acc, d) => acc + (d.commission_rate_percent || 0), 0) /
-      deals.length
-    )
+        deals.reduce((acc, d) => acc + (d.commission_rate_percent || 0), 0) /
+          deals.length
+      )
     : 0;
 
   const stageCounts = useMemo(() => {
@@ -168,8 +188,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
         deal.deal_name.toLowerCase().includes(q) ||
         (deal.lead_name && deal.lead_name.toLowerCase().includes(q));
 
-      const matchesStage =
-        selectedStage === "all" || deal.stage === selectedStage;
+      const matchesStage = selectedStage === "all" || deal.stage === selectedStage;
 
       const matchesCommission =
         commissionFilter === "all" ||
@@ -181,7 +200,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
     .sort((a, b) => {
       if (sortBy === "name_asc") return a.deal_name.localeCompare(b.deal_name);
       if (sortBy === "gmv_desc") {
-        return (b.estimated_annual_value_inr || 0) - (a.estimated_annual_value_inr || 0);
+        return (
+          (b.estimated_annual_value_inr || 0) - (a.estimated_annual_value_inr || 0)
+        );
       }
       if (sortBy === "commission_desc") {
         return (b.commission_rate_percent || 0) - (a.commission_rate_percent || 0);
@@ -190,13 +211,12 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
         return (b.expected_sku_count || 0) - (a.expected_sku_count || 0);
       }
       return (
-        new Date(b.created_at || "").getTime() -
-        new Date(a.created_at || "").getTime()
+        new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime()
       );
     });
 
   return (
-    <div className="space-y-5 bg-[#F5F6F3] -m-px p-px">
+    <div className="-m-px space-y-5 bg-[#F5F6F3] p-px">
       {/* Shared CRM Navigation Header */}
       <CRMNavHeader
         eyebrow="Commercial Agreements"
@@ -224,33 +244,31 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-[#E1E4DD] bg-white p-4">
           <div className="flex items-center justify-between text-[#73736E]">
-            <span className="text-xs font-medium uppercase tracking-wider">
+            <span className="text-xs font-medium tracking-wider uppercase">
               Active Deals
             </span>
             <Briefcase className="h-4 w-4 text-[#5D78C9]" />
           </div>
           <div className="mt-2">
-            <span className="text-2xl font-bold text-[#23231F] font-mono tabular-nums">
+            <span className="font-mono text-2xl font-bold text-[#23231F] tabular-nums">
               {activeDealsCount}
             </span>
-            <p className="text-[11px] text-[#73736E] mt-0.5">
-              Currently negotiating
-            </p>
+            <p className="mt-0.5 text-[11px] text-[#73736E]">Currently negotiating</p>
           </div>
         </div>
 
         <div className="rounded-xl border border-[#E1E4DD] bg-white p-4">
           <div className="flex items-center justify-between text-[#73736E]">
-            <span className="text-xs font-medium uppercase tracking-wider">
+            <span className="text-xs font-medium tracking-wider uppercase">
               Pipeline GMV
             </span>
             <IndianRupee className="h-4 w-4 text-[#3F7A55]" />
           </div>
           <div className="mt-2">
-            <span className="text-2xl font-bold text-[#2E5B3F] font-mono tabular-nums">
+            <span className="font-mono text-2xl font-bold text-[#2E5B3F] tabular-nums">
               ₹{totalGMV.toLocaleString("en-IN")}
             </span>
-            <p className="text-[11px] text-[#73736E] mt-0.5">
+            <p className="mt-0.5 text-[11px] text-[#73736E]">
               Estimated annual GMV potential
             </p>
           </div>
@@ -258,16 +276,16 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
         <div className="rounded-xl border border-[#E1E4DD] bg-white p-4">
           <div className="flex items-center justify-between text-[#73736E]">
-            <span className="text-xs font-medium uppercase tracking-wider">
+            <span className="text-xs font-medium tracking-wider uppercase">
               Avg Commission
             </span>
             <Percent className="h-4 w-4 text-[#7A4FA0]" />
           </div>
           <div className="mt-2">
-            <span className="text-2xl font-bold text-[#23231F] font-mono tabular-nums">
+            <span className="font-mono text-2xl font-bold text-[#23231F] tabular-nums">
               {avgCommission}%
             </span>
-            <p className="text-[11px] text-[#73736E] mt-0.5">
+            <p className="mt-0.5 text-[11px] text-[#73736E]">
               Target platform take rate
             </p>
           </div>
@@ -279,15 +297,17 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
         <div className="flex flex-wrap items-stretch gap-1.5">
           <button
             onClick={() => setSelectedStage("all")}
-            className={`flex items-center gap-2 rounded-lg border px-3.5 py-2.5 text-left transition ${selectedStage === "all"
+            className={`flex items-center gap-2 rounded-lg border px-3.5 py-2.5 text-left transition ${
+              selectedStage === "all"
                 ? "border-[#23231F] bg-[#23231F] text-white"
                 : "border-[#E1E4DD] bg-white text-[#4B4F49] hover:border-[#23231F]/40"
-              }`}
+            }`}
           >
             <span className="text-xs font-semibold">All deals</span>
             <span
-              className={`text-xs tabular-nums ${selectedStage === "all" ? "text-white/70" : "text-[#8C8C85]"
-                }`}
+              className={`text-xs tabular-nums ${
+                selectedStage === "all" ? "text-white/70" : "text-[#8C8C85]"
+              }`}
             >
               {deals.length}
             </span>
@@ -306,7 +326,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                   className="flex items-center gap-2 rounded-lg border px-3.5 py-2.5 text-left transition hover:border-[#23231F]/30"
                 >
                   <span
-                    className="flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold text-white shrink-0"
+                    className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-bold text-white"
                     style={{ background: s.dot }}
                   >
                     {i + 1}
@@ -319,12 +339,12 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                       {s.label}
                     </span>
                   </span>
-                  <span className="text-xs tabular-nums text-[#8C8C85]">
+                  <span className="text-xs text-[#8C8C85] tabular-nums">
                     {stageCounts[s.key] || 0}
                   </span>
                 </button>
                 {i < FUNNEL_DEAL_STAGES.length - 1 && (
-                  <ChevronRight className="mx-1 h-3.5 w-3.5 text-[#C7CAC2] shrink-0" />
+                  <ChevronRight className="mx-1 h-3.5 w-3.5 shrink-0 text-[#C7CAC2]" />
                 )}
               </div>
             );
@@ -335,13 +355,12 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
             style={{
               borderColor:
                 selectedStage === LOST_STAGE.key ? LOST_STAGE.dot : "#E1E4DD",
-              background:
-                selectedStage === LOST_STAGE.key ? LOST_STAGE.tint : "white",
+              background: selectedStage === LOST_STAGE.key ? LOST_STAGE.tint : "white",
             }}
             className="ml-auto flex items-center gap-2 rounded-lg border px-3.5 py-2.5 text-left transition hover:border-[#23231F]/30"
           >
             <span className="text-xs font-semibold text-[#6B655E]">Lost</span>
-            <span className="text-xs tabular-nums text-[#8C8C85]">
+            <span className="text-xs text-[#8C8C85] tabular-nums">
               {stageCounts[LOST_STAGE.key] || 0}
             </span>
           </button>
@@ -352,19 +371,19 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
       <div className="space-y-3 rounded-xl border border-[#E1E4DD] bg-white p-3.5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Search Box */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#8C8C85]" />
+          <div className="relative max-w-md flex-1">
+            <Search className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-[#8C8C85]" />
             <input
               type="text"
               placeholder="Search deals by contract name or seller…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg bg-[#F5F6F3] py-2 pl-9 pr-8 text-xs text-[#23231F] placeholder-[#8C8C85] outline-none focus:ring-1 focus:ring-[#3A4B99]"
+              className="w-full rounded-lg bg-[#F5F6F3] py-2 pr-8 pl-9 text-xs text-[#23231F] placeholder-[#8C8C85] outline-none focus:ring-1 focus:ring-[#3A4B99]"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8C8C85] hover:text-[#23231F]"
+                className="absolute top-1/2 right-2.5 -translate-y-1/2 text-[#8C8C85] hover:text-[#23231F]"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -376,10 +395,11 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
             <button
               type="button"
               onClick={() => setShowAdvancedFilters((prev) => !prev)}
-              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${showAdvancedFilters || activeFilterCount > 0
+              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
+                showAdvancedFilters || activeFilterCount > 0
                   ? "border-[#23231F] bg-[#23231F] text-white"
                   : "border-[#E1E4DD] bg-white text-[#52524E] hover:border-[#23231F]/30"
-                }`}
+              }`}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
               <span>Filters</span>
@@ -394,7 +414,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#73736E] hover:bg-[#F5F6F3] hover:text-[#23231F] transition"
+                className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#73736E] transition hover:bg-[#F5F6F3] hover:text-[#23231F]"
                 title="Reset all filters"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
@@ -406,10 +426,11 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
               <button
                 type="button"
                 onClick={() => setViewMode("tile")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition ${viewMode === "tile"
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition ${
+                  viewMode === "tile"
                     ? "bg-white text-[#23231F] shadow-sm"
                     : "text-[#73736E] hover:text-[#23231F]"
-                  }`}
+                }`}
                 title="Tile view"
               >
                 <LayoutGrid className="h-3.5 w-3.5" />
@@ -418,10 +439,11 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
               <button
                 type="button"
                 onClick={() => setViewMode("list")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition ${viewMode === "list"
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition ${
+                  viewMode === "list"
                     ? "bg-white text-[#23231F] shadow-sm"
                     : "text-[#73736E] hover:text-[#23231F]"
-                  }`}
+                }`}
                 title="List view"
               >
                 <List className="h-3.5 w-3.5" />
@@ -458,7 +480,11 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                 onChange={(e) =>
                   setSortBy(
                     e.target.value as
-                    | "recent" | "gmv_desc" | "commission_desc" | "skus_desc" | "name_asc"
+                      | "recent"
+                      | "gmv_desc"
+                      | "commission_desc"
+                      | "skus_desc"
+                      | "name_asc"
                   )
                 }
                 className="w-full rounded-lg border border-[#E1E4DD] bg-[#F5F6F3] px-2.5 py-1.5 text-xs text-[#23231F] outline-none focus:border-[#3A4B99]"
@@ -493,10 +519,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
               </thead>
               <tbody className="divide-y divide-[#F0F0EC]">
                 {filteredDeals.map((deal) => (
-                  <tr
-                    key={deal.id}
-                    className="hover:bg-[#F5F6F3]/70 transition"
-                  >
+                  <tr key={deal.id} className="transition hover:bg-[#F5F6F3]/70">
                     <td className="px-4 py-3">
                       <div className="font-semibold text-[#23231F]">
                         {deal.deal_name}
@@ -507,16 +530,14 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                         </div>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums text-[#23231F]">
+                    <td className="px-4 py-3 text-right font-mono text-[#23231F] tabular-nums">
                       {deal.expected_sku_count} SKUs
                     </td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums text-[#5C3A79] font-medium">
+                    <td className="px-4 py-3 text-right font-mono font-medium text-[#5C3A79] tabular-nums">
                       {deal.commission_rate_percent}%
                     </td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums font-semibold text-[#2E5B3F]">
-                      ₹{(deal.estimated_annual_value_inr || 0).toLocaleString(
-                        "en-IN"
-                      )}
+                    <td className="px-4 py-3 text-right font-mono font-semibold text-[#2E5B3F] tabular-nums">
+                      ₹{(deal.estimated_annual_value_inr || 0).toLocaleString("en-IN")}
                     </td>
                     <td className="px-4 py-3 text-[#4B4F49]">
                       {deal.target_onboarding_date || "Within 30 days"}
@@ -540,9 +561,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                         </button>
                         <button
                           onClick={() => handleMoveToOnboarding(deal.id)}
-                          disabled={
-                            isSubmitting || deal.stage === "contract_signed"
-                          }
+                          disabled={isSubmitting || deal.stage === "contract_signed"}
                           className="inline-flex items-center gap-1.5 rounded-lg bg-[#3A4B99] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#2E3C80] disabled:cursor-not-allowed disabled:opacity-40"
                         >
                           <span>Move to onboarding</span>
@@ -564,7 +583,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
             return (
               <div
                 key={deal.id}
-                className="flex flex-col justify-between rounded-xl border border-[#E1E4DD] bg-white pl-4 pr-5 py-5 transition hover:border-[#23231F]/25"
+                className="flex flex-col justify-between rounded-xl border border-[#E1E4DD] bg-white py-5 pr-5 pl-4 transition hover:border-[#23231F]/25"
                 style={{
                   borderLeft: `4px solid ${stageStyle?.dot || "#E1E4DD"}`,
                 }}
@@ -595,42 +614,40 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                   </div>
 
                   {/* Commercial Terms Summary Box */}
-                  <div className="rounded-lg bg-[#F5F6F3] p-3 space-y-2 text-xs border border-[#E1E4DD]/60">
-                    <div className="flex justify-between items-center">
+                  <div className="space-y-2 rounded-lg border border-[#E1E4DD]/60 bg-[#F5F6F3] p-3 text-xs">
+                    <div className="flex items-center justify-between">
                       <span className="text-[#73736E]">Target SKUs:</span>
-                      <span className="font-semibold text-[#23231F] flex items-center gap-1 font-mono">
+                      <span className="flex items-center gap-1 font-mono font-semibold text-[#23231F]">
                         <Package className="h-3 w-3 text-[#A6A79F]" />
                         {deal.expected_sku_count} SKUs
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <span className="text-[#73736E]">Commission rate:</span>
-                      <span className="font-semibold text-[#5C3A79] flex items-center gap-0.5 font-mono">
+                      <span className="flex items-center gap-0.5 font-mono font-semibold text-[#5C3A79]">
                         <Percent className="h-3 w-3" />
                         {deal.commission_rate_percent}%
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <span className="text-[#73736E]">Target go-live:</span>
-                      <span className="font-semibold text-[#23231F] flex items-center gap-1">
+                      <span className="flex items-center gap-1 font-semibold text-[#23231F]">
                         <Calendar className="h-3 w-3 text-[#A6A79F]" />
                         {deal.target_onboarding_date || "Within 30 days"}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center pt-1 border-t border-[#E1E4DD]/60">
+                    <div className="flex items-center justify-between border-t border-[#E1E4DD]/60 pt-1">
                       <span className="text-[#73736E]">Est. annual GMV:</span>
-                      <span className="font-bold text-[#2E5B3F] font-mono tabular-nums">
+                      <span className="font-mono font-bold text-[#2E5B3F] tabular-nums">
                         ₹
-                        {(deal.estimated_annual_value_inr || 0).toLocaleString(
-                          "en-IN"
-                        )}
+                        {(deal.estimated_annual_value_inr || 0).toLocaleString("en-IN")}
                       </span>
                     </div>
                   </div>
 
                   {/* Notes */}
                   {deal.notes && (
-                    <p className="mt-2 rounded-lg bg-[#F5F6F3] p-2.5 text-[11px] italic text-[#73736E] line-clamp-2">
+                    <p className="mt-2 line-clamp-2 rounded-lg bg-[#F5F6F3] p-2.5 text-[11px] text-[#73736E] italic">
                       “{deal.notes}”
                     </p>
                   )}
@@ -664,9 +681,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
                     <button
                       onClick={() => handleMoveToOnboarding(deal.id)}
-                      disabled={
-                        isSubmitting || deal.stage === "contract_signed"
-                      }
+                      disabled={isSubmitting || deal.stage === "contract_signed"}
                       className="inline-flex items-center gap-1.5 rounded-lg bg-[#3A4B99] px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-[#2E3C80] disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       <span>Move to onboarding</span>
@@ -710,8 +725,12 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
           <div className="w-full max-w-lg rounded-2xl border border-[#E1E4DD] bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
               <div>
-                <h3 className="text-base font-bold text-[#23231F]">Add Commercial Deal</h3>
-                <p className="text-xs text-[#73736E]">Create a contract agreement for platform onboarding</p>
+                <h3 className="text-base font-bold text-[#23231F]">
+                  Add Commercial Deal
+                </h3>
+                <p className="text-xs text-[#73736E]">
+                  Create a contract agreement for platform onboarding
+                </p>
               </div>
               <button
                 onClick={() => setShowAddDealModal(false)}
@@ -723,7 +742,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
             <form onSubmit={handleCreateDeal} className="mt-4 space-y-3">
               <div>
-                <label className="block text-[11px] font-medium text-[#73736E]">Deal Title *</label>
+                <label className="block text-[11px] font-medium text-[#73736E]">
+                  Deal Title *
+                </label>
                 <input
                   name="dealName"
                   required
@@ -734,7 +755,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#73736E]">Target SKU Count</label>
+                  <label className="block text-[11px] font-medium text-[#73736E]">
+                    Target SKU Count
+                  </label>
                   <input
                     name="expectedSkuCount"
                     type="number"
@@ -743,7 +766,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#73736E]">Commission Rate (%)</label>
+                  <label className="block text-[11px] font-medium text-[#73736E]">
+                    Commission Rate (%)
+                  </label>
                   <input
                     name="commissionRate"
                     type="number"
@@ -756,7 +781,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#73736E]">Estimated Annual GMV (₹)</label>
+                  <label className="block text-[11px] font-medium text-[#73736E]">
+                    Estimated Annual GMV (₹)
+                  </label>
                   <input
                     name="estimatedAnnualValue"
                     type="number"
@@ -765,7 +792,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#73736E]">Target Go-Live Date</label>
+                  <label className="block text-[11px] font-medium text-[#73736E]">
+                    Target Go-Live Date
+                  </label>
                   <input
                     name="targetDate"
                     type="date"
@@ -775,7 +804,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#73736E]">Deal Stage</label>
+                <label className="block text-[11px] font-medium text-[#73736E]">
+                  Deal Stage
+                </label>
                 <select
                   name="stage"
                   defaultValue="proposal_sent"
@@ -789,7 +820,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#73736E]">Commercial Notes</label>
+                <label className="block text-[11px] font-medium text-[#73736E]">
+                  Commercial Notes
+                </label>
                 <textarea
                   name="notes"
                   rows={2}
@@ -798,7 +831,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-[#F0F0EC]">
+              <div className="flex justify-end gap-2 border-t border-[#F0F0EC] pt-3">
                 <button
                   type="button"
                   onClick={() => setShowAddDealModal(false)}
@@ -825,8 +858,12 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
           <div className="w-full max-w-lg rounded-2xl border border-[#E1E4DD] bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-[#F0F0EC] pb-3">
               <div>
-                <h3 className="text-base font-bold text-[#23231F]">Edit Commercial Deal</h3>
-                <p className="text-xs text-[#73736E]">Update contract terms, commission, and launch schedule</p>
+                <h3 className="text-base font-bold text-[#23231F]">
+                  Edit Commercial Deal
+                </h3>
+                <p className="text-xs text-[#73736E]">
+                  Update contract terms, commission, and launch schedule
+                </p>
               </div>
               <button
                 onClick={() => setEditingDeal(null)}
@@ -838,7 +875,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
             <form onSubmit={handleUpdateDeal} className="mt-4 space-y-3">
               <div>
-                <label className="block text-[11px] font-medium text-[#73736E]">Deal Title *</label>
+                <label className="block text-[11px] font-medium text-[#73736E]">
+                  Deal Title *
+                </label>
                 <input
                   name="dealName"
                   required
@@ -849,7 +888,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#73736E]">Target SKU Count</label>
+                  <label className="block text-[11px] font-medium text-[#73736E]">
+                    Target SKU Count
+                  </label>
                   <input
                     name="expectedSkuCount"
                     type="number"
@@ -858,7 +899,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#73736E]">Commission Rate (%)</label>
+                  <label className="block text-[11px] font-medium text-[#73736E]">
+                    Commission Rate (%)
+                  </label>
                   <input
                     name="commissionRate"
                     type="number"
@@ -871,7 +914,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#73736E]">Estimated Annual GMV (₹)</label>
+                  <label className="block text-[11px] font-medium text-[#73736E]">
+                    Estimated Annual GMV (₹)
+                  </label>
                   <input
                     name="estimatedAnnualValue"
                     type="number"
@@ -880,7 +925,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#73736E]">Target Go-Live Date</label>
+                  <label className="block text-[11px] font-medium text-[#73736E]">
+                    Target Go-Live Date
+                  </label>
                   <input
                     name="targetDate"
                     type="date"
@@ -891,7 +938,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#73736E]">Deal Stage</label>
+                <label className="block text-[11px] font-medium text-[#73736E]">
+                  Deal Stage
+                </label>
                 <select
                   name="stage"
                   defaultValue={editingDeal.stage}
@@ -905,7 +954,9 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#73736E]">Commercial Notes</label>
+                <label className="block text-[11px] font-medium text-[#73736E]">
+                  Commercial Notes
+                </label>
                 <textarea
                   name="notes"
                   rows={2}
@@ -915,7 +966,7 @@ export function DealsViewClient({ deals, counts }: DealsViewClientProps) {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-[#F0F0EC]">
+              <div className="flex justify-end gap-2 border-t border-[#F0F0EC] pt-3">
                 <button
                   type="button"
                   onClick={() => setEditingDeal(null)}

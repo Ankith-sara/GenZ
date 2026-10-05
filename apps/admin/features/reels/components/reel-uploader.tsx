@@ -9,12 +9,7 @@ import { Input } from "@genz/ui";
 import { validateFileContent } from "@/lib/file-validation";
 import { uploadReelAction } from "@/features/reels/actions";
 
-export function ReelUploader({
-  productId,
-}: {
-  productId: string;
-  sellerId?: string;
-}) {
+export function ReelUploader({ productId }: { productId: string; sellerId?: string }) {
   const router = useRouter();
   const videoRef = useRef<HTMLInputElement>(null);
   const thumbRef = useRef<HTMLInputElement>(null);

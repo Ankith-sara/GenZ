@@ -14,9 +14,7 @@ import {
   ArrowRight,
   AlertTriangle,
 } from "lucide-react";
-import { Button } from "@/components/ui/atoms/button";
-import { Textarea } from "@/components/ui/atoms/textarea";
-import { Input } from "@/components/ui/atoms/input";
+import { Button, Textarea, Input } from "@genz/ui";
 import {
   approveSeller,
   rejectSeller,

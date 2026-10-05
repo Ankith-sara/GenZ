@@ -24,12 +24,10 @@ async function uploadImageToStorage(
   const safeName = `upload-${Date.now()}-${index}.${ext}`;
   const path = `${sellerId}/products/pending/${safeName}`;
 
-  const { error } = await supabase.storage
-    .from("product-media")
-    .upload(path, file, {
-      contentType: file.type,
-      upsert: true,
-    });
+  const { error } = await supabase.storage.from("product-media").upload(path, file, {
+    contentType: file.type,
+    upsert: true,
+  });
 
   if (error) {
     console.error(`Client upload error for image ${index}:`, error);

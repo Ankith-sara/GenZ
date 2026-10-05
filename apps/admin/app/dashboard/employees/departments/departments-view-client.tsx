@@ -3,8 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  Building2, Users, Plus, Search, Shield, Briefcase, 
-  ChevronRight, Edit2, Trash2, CheckCircle2,
+  Building2,
+  Users,
+  Plus,
+  Search,
+  Shield,
+  Briefcase,
+  ChevronRight,
+  Edit2,
+  Trash2,
+  CheckCircle2,
 } from "lucide-react";
 import type { Department, Employee } from "@genz/types";
 import { deleteDepartmentAction } from "./actions";
@@ -20,7 +28,10 @@ export function DepartmentsViewClient({
 }: DepartmentsViewClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
-  const [feedbackMsg, setFeedbackMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [feedbackMsg, setFeedbackMsg] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const filteredDepartments = departments.filter((d) => {
     const q = searchQuery.toLowerCase();
@@ -43,7 +54,10 @@ export function DepartmentsViewClient({
     if (res?.error) {
       setFeedbackMsg({ type: "error", text: res.error });
     } else {
-      setFeedbackMsg({ type: "success", text: `Department "${name}" removed successfully` });
+      setFeedbackMsg({
+        type: "success",
+        text: `Department "${name}" removed successfully`,
+      });
       setTimeout(() => setFeedbackMsg(null), 3000);
     }
   };
@@ -59,21 +73,21 @@ export function DepartmentsViewClient({
         );
       case "CRM Manager":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 shadow-xs">
+          <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 shadow-xs">
             <Users className="h-2.5 w-2.5 text-amber-700" />
             CRM Manager
           </span>
         );
       case "Operation Manager":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 text-[10px] font-bold text-indigo-900 shadow-xs">
+          <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[10px] font-bold text-indigo-900 shadow-xs">
             <Briefcase className="h-2.5 w-2.5 text-indigo-700" />
             Operation Manager
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 border border-[#E5E5E0] px-2.5 py-0.5 text-[10px] font-semibold text-neutral-800">
+          <span className="inline-flex items-center gap-1 rounded-full border border-[#E5E5E0] bg-neutral-100 px-2.5 py-0.5 text-[10px] font-semibold text-neutral-800">
             {roleName || "Standard Staff"}
           </span>
         );
@@ -89,7 +103,7 @@ export function DepartmentsViewClient({
             <div className="flex items-center gap-2">
               <Link
                 href="/dashboard/employees"
-                className="text-xs font-semibold text-[#73736E] hover:text-[#1A1A18] transition-colors"
+                className="text-xs font-semibold text-[#73736E] transition-colors hover:text-[#1A1A18]"
               >
                 Team Directory
               </Link>
@@ -100,7 +114,8 @@ export function DepartmentsViewClient({
               Department Governance & Organizational Units
             </h1>
             <p className="mt-0.5 text-xs text-[#73736E]">
-              Organize company divisions (Technology, Sales, Operations, Support), department heads, and team rosters.
+              Organize company divisions (Technology, Sales, Operations, Support),
+              department heads, and team rosters.
             </p>
           </div>
 
@@ -126,7 +141,7 @@ export function DepartmentsViewClient({
         <div className="mt-4 flex items-center gap-2">
           <Link
             href="/dashboard/employees"
-            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] hover:bg-neutral-100 hover:text-black transition"
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] transition hover:bg-neutral-100 hover:text-black"
           >
             All Employees ({employees.length})
           </Link>
@@ -135,7 +150,7 @@ export function DepartmentsViewClient({
           </div>
           <Link
             href="/dashboard/roles"
-            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] hover:bg-neutral-100 hover:text-black transition"
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#73736E] transition hover:bg-neutral-100 hover:text-black"
           >
             Roles & Permissions
           </Link>
@@ -146,8 +161,8 @@ export function DepartmentsViewClient({
         <div
           className={`flex items-center gap-2 rounded-xl p-3.5 text-xs font-medium ${
             feedbackMsg.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-              : "bg-red-50 text-red-800 border border-red-200"
+              ? "border border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border border-red-200 bg-red-50 text-red-800"
           }`}
         >
           <CheckCircle2 className="h-4 w-4" />
@@ -159,7 +174,9 @@ export function DepartmentsViewClient({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#73736E]">Active Departments</span>
+            <span className="text-xs font-medium text-[#73736E]">
+              Active Departments
+            </span>
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
               <Building2 className="h-4 w-4" />
             </div>
@@ -172,7 +189,9 @@ export function DepartmentsViewClient({
 
         <div className="rounded-2xl border border-[#E5E5E0] bg-white p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#73736E]">Assigned Workforce</span>
+            <span className="text-xs font-medium text-[#73736E]">
+              Assigned Workforce
+            </span>
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
               <Users className="h-4 w-4" />
             </div>
@@ -194,7 +213,7 @@ export function DepartmentsViewClient({
             <span className="text-2xl font-bold text-[#1A1A18]">RBAC Roles</span>
             <Link
               href="/dashboard/roles"
-              className="text-xs font-semibold text-neutral-600 hover:text-black flex items-center gap-1"
+              className="flex items-center gap-1 text-xs font-semibold text-neutral-600 hover:text-black"
             >
               <span>Manage &rarr;</span>
             </Link>
@@ -204,14 +223,14 @@ export function DepartmentsViewClient({
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[#73736E]" />
+        <div className="relative max-w-md flex-1">
+          <Search className="absolute top-2.5 left-3 h-3.5 w-3.5 text-[#73736E]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search department name, code, or department head..."
-            className="w-full rounded-xl border border-[#E5E5E0] bg-white py-2 pl-9 pr-3 text-xs text-[#1A1A18] placeholder-[#73736E] outline-none transition focus:border-[#1A1A18]"
+            className="w-full rounded-xl border border-[#E5E5E0] bg-white py-2 pr-3 pl-9 text-xs text-[#1A1A18] placeholder-[#73736E] transition outline-none focus:border-[#1A1A18]"
           />
         </div>
         <span className="text-xs text-[#73736E]">
@@ -229,14 +248,14 @@ export function DepartmentsViewClient({
             <div>
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FAF8F4] border border-[#E5E5E0] text-[#1A1A18] font-bold">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E5E5E0] bg-[#FAF8F4] font-bold text-[#1A1A18]">
                     <Building2 className="h-5 w-5 text-[#C89D32]" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#1A1A18] text-sm group-hover:text-black">
+                    <h3 className="text-sm font-bold text-[#1A1A18] group-hover:text-black">
                       {dept.name}
                     </h3>
-                    <span className="font-mono text-[10px] font-bold tracking-wider text-[#73736E] bg-neutral-100 px-2 py-0.5 rounded border border-[#E5E5E0]">
+                    <span className="rounded border border-[#E5E5E0] bg-neutral-100 px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider text-[#73736E]">
                       {dept.code}
                     </span>
                   </div>
@@ -253,7 +272,7 @@ export function DepartmentsViewClient({
                 </span>
               </div>
 
-              <p className="mt-3 text-xs leading-relaxed text-[#73736E] line-clamp-2">
+              <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-[#73736E]">
                 {dept.description || "No unit description provided."}
               </p>
 
@@ -272,7 +291,7 @@ export function DepartmentsViewClient({
 
                 <div className="flex items-center justify-between">
                   <span className="text-[#73736E]">Team Members</span>
-                  <span className="inline-flex items-center gap-1 rounded-md bg-[#FAF8F4] border border-[#E5E5E0] px-2 py-0.5 font-mono text-[11px] font-semibold text-[#1A1A18]">
+                  <span className="inline-flex items-center gap-1 rounded-md border border-[#E5E5E0] bg-[#FAF8F4] px-2 py-0.5 font-mono text-[11px] font-semibold text-[#1A1A18]">
                     <Users className="h-3 w-3 text-[#73736E]" />
                     {dept.member_count ?? 0} members
                   </span>
@@ -283,7 +302,7 @@ export function DepartmentsViewClient({
             <div className="mt-4 flex items-center justify-end gap-2 border-t border-[#F0F0EC] pt-3">
               <Link
                 href={`/dashboard/employees/departments/${dept.id}/edit`}
-                className="inline-flex items-center gap-1 rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#1A1A18] hover:bg-[#FAF8F4] transition"
+                className="inline-flex items-center gap-1 rounded-lg border border-[#E5E5E0] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#1A1A18] transition hover:bg-[#FAF8F4]"
               >
                 <Edit2 className="h-3 w-3 text-[#73736E]" />
                 Edit Department
@@ -291,7 +310,7 @@ export function DepartmentsViewClient({
               <button
                 onClick={() => handleDelete(dept.id, dept.name)}
                 disabled={isDeletingId === dept.id}
-                className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 transition"
+                className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 transition hover:bg-red-50 disabled:opacity-50"
               >
                 <Trash2 className="h-3 w-3" />
                 Delete

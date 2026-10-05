@@ -1,6 +1,6 @@
 import { createClient } from "@genz/database";
 import { requireRole } from "@/features/auth/lib/require-role";
-import { SettingsClient } from "./settings-client";
+import { SettingsClient } from "@/features/settings";
 
 export default async function AdminSettingsPage() {
   const session = await requireRole("admin");

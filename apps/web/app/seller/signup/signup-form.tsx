@@ -3,7 +3,14 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
-import { Button, Input, Label, Textarea, LocationSelectGroup, PhoneInputWithCountryCode } from "@genz/ui";
+import {
+  Button,
+  Input,
+  Label,
+  Textarea,
+  LocationSelectGroup,
+  PhoneInputWithCountryCode,
+} from "@genz/ui";
 import { signupSeller, type SellerSignupState } from "./actions";
 import { validateGstOrTradeId } from "@genz/validation";
 
@@ -39,13 +46,14 @@ export function SellerSignupForm() {
           Application Submitted Successfully!
         </h3>
         <p className="mx-auto max-w-md text-sm leading-relaxed text-neutral-600">
-          Thank you for applying to sell on GenZ. Our onboarding team will verify your business details and contact you via email with your dashboard access.
+          Thank you for applying to sell on GenZ. Our onboarding team will verify your
+          business details and contact you via email with your dashboard access.
         </p>
 
         <div className="mt-8 flex justify-center gap-4">
           <Button
             asChild
-            className="rounded-lg bg-black px-6 py-2.5 font-medium tracking-wider text-white hover:bg-neutral-850"
+            className="hover:bg-neutral-850 rounded-lg bg-black px-6 py-2.5 font-medium tracking-wider text-white"
           >
             <Link href="/">Return to Marketplace</Link>
           </Button>
@@ -96,7 +104,10 @@ export function SellerSignupForm() {
       {/* Basic Details */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="business_name" className="text-xs font-semibold text-neutral-700">
+          <Label
+            htmlFor="business_name"
+            className="text-xs font-semibold text-neutral-700"
+          >
             Business / Factory Name *
           </Label>
           <Input
@@ -110,7 +121,10 @@ export function SellerSignupForm() {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="owner_name" className="text-xs font-semibold text-neutral-700">
+          <Label
+            htmlFor="owner_name"
+            className="text-xs font-semibold text-neutral-700"
+          >
             Founder / Owner Name *
           </Label>
           <Input
@@ -159,7 +173,10 @@ export function SellerSignupForm() {
       {/* GST / Business Registration Number */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <Label htmlFor="gst_number" className="text-xs font-semibold text-neutral-700">
+          <Label
+            htmlFor="gst_number"
+            className="text-xs font-semibold text-neutral-700"
+          >
             GSTIN / MSME / Trade ID
           </Label>
           <span className="text-[11px] text-neutral-400">Optional for artisans</span>
@@ -210,7 +227,7 @@ export function SellerSignupForm() {
       <Button
         type="submit"
         disabled={isPending}
-        className="h-12 w-full rounded-lg bg-black text-sm font-semibold tracking-wide text-white transition-all hover:bg-neutral-850 disabled:opacity-50"
+        className="hover:bg-neutral-850 h-12 w-full rounded-lg bg-black text-sm font-semibold tracking-wide text-white transition-all disabled:opacity-50"
       >
         {isPending ? "Submitting Application..." : "Submit Seller Application"}
       </Button>

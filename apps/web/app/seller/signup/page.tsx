@@ -51,7 +51,8 @@ export default function WebSellerSignupPage() {
                 Sell Directly on GenZ
               </h1>
               <p className="font-graphik mt-3 text-sm leading-relaxed text-[#52524E]">
-                Empowering authentic Indian manufacturers, craft clusters, and innovative startups with direct buyer access.
+                Empowering authentic Indian manufacturers, craft clusters, and
+                innovative startups with direct buyer access.
               </p>
             </div>
 
@@ -97,7 +98,8 @@ export default function WebSellerSignupPage() {
                   Business Registration Form
                 </h2>
                 <p className="font-graphik mt-1 text-xs text-[#73736E]">
-                  Complete this short application to get your seller profile reviewed and approved.
+                  Complete this short application to get your seller profile reviewed
+                  and approved.
                 </p>
               </div>
 
@@ -108,7 +110,10 @@ export default function WebSellerSignupPage() {
               <div className="mt-8 border-t border-[#F0F0EC] pt-5 text-center">
                 <p className="text-xs text-[#73736E]">
                   Looking to buy or source products as a customer?{" "}
-                  <Link href="/signup" className="font-semibold text-black hover:underline">
+                  <Link
+                    href="/signup"
+                    className="font-semibold text-black hover:underline"
+                  >
                     Create Buyer Account
                   </Link>
                 </p>

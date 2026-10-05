@@ -74,7 +74,8 @@ const DEFAULT_DEPARTMENTS: Department[] = [
     id: "dept-tech-001",
     name: "Technology & Platform",
     code: "TECH",
-    description: "Core marketplace engineering, cloud infrastructure, AI models, and database systems",
+    description:
+      "Core marketplace engineering, cloud infrastructure, AI models, and database systems",
     head_employee_name: "Admin User",
     head_employee_id: "admin-master-id",
     default_role: "Super Admin",
@@ -86,7 +87,8 @@ const DEFAULT_DEPARTMENTS: Department[] = [
     id: "dept-sales-002",
     name: "Sales & Seller Acquisition",
     code: "SALES",
-    description: "GI artisan outreach, master craftsperson onboarding, cluster sourcing, and partnership pipelines",
+    description:
+      "GI artisan outreach, master craftsperson onboarding, cluster sourcing, and partnership pipelines",
     head_employee_name: "Pooja Hegde",
     head_employee_id: "emp-crm-001",
     default_role: "CRM Manager",
@@ -98,7 +100,8 @@ const DEFAULT_DEPARTMENTS: Department[] = [
     id: "dept-ops-003",
     name: "Operations & Fulfillment",
     code: "OPERATIONS",
-    description: "Customer orders, catalog products curation, courier logistics dispatching, and quality audits",
+    description:
+      "Customer orders, catalog products curation, courier logistics dispatching, and quality audits",
     head_employee_name: "Karan Mehta",
     head_employee_id: "emp-ops-001",
     default_role: "Operation Manager",
@@ -110,7 +113,8 @@ const DEFAULT_DEPARTMENTS: Department[] = [
     id: "dept-support-004",
     name: "Customer & Artisan Support",
     code: "SUPPORT",
-    description: "Buyer order inquiries, artisan helpline, delivery resolutions, and satisfaction monitoring",
+    description:
+      "Buyer order inquiries, artisan helpline, delivery resolutions, and satisfaction monitoring",
     head_employee_name: "Divya Nair",
     head_employee_id: "emp-sup-001",
     default_role: "Operation Manager",
@@ -121,7 +125,12 @@ const DEFAULT_DEPARTMENTS: Department[] = [
 ];
 
 function sanitizeDepartments(list: Department[]): Department[] {
-  const legacyCodes = new Set(["CATALOG_OPS", "SUPER_ADMIN", "CRM_MANAGER", "OPERATION_MANAGER"]);
+  const legacyCodes = new Set([
+    "CATALOG_OPS",
+    "SUPER_ADMIN",
+    "CRM_MANAGER",
+    "OPERATION_MANAGER",
+  ]);
   const cleaned = list.filter((d) => !legacyCodes.has(d.code?.toUpperCase()));
   if (cleaned.length === 0) {
     return DEFAULT_DEPARTMENTS.map((d) => ({ ...d }));
@@ -166,7 +175,10 @@ export async function getEmployeesList(filters?: {
 }): Promise<Employee[]> {
   try {
     const supabase = createAdminClient();
-    let query = supabase.from("employees").select("*").order("created_at", { ascending: false });
+    let query = supabase
+      .from("employees")
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (filters?.department) {
       query = query.eq("department", filters.department);
@@ -203,7 +215,8 @@ export async function upsertEmployee(
 
   const fullEmployee: Employee = {
     id,
-    employee_code: employee.employee_code || `GZ-EMP-${Math.floor(100 + Math.random() * 900)}`,
+    employee_code:
+      employee.employee_code || `GZ-EMP-${Math.floor(100 + Math.random() * 900)}`,
     full_name: employee.full_name,
     email: employee.email,
     phone: employee.phone || null,
@@ -213,7 +226,12 @@ export async function upsertEmployee(
     role_id: employee.role_id,
     status: employee.status || "active",
     role_level: employee.role_level || "staff",
-    permissions: employee.permissions || ["crm:read", "crm:write", "tasks:read", "tasks:write"],
+    permissions: employee.permissions || [
+      "crm:read",
+      "crm:write",
+      "tasks:read",
+      "tasks:write",
+    ],
     joined_at: employee.joined_at || now,
     created_at: employee.created_at || now,
     updated_at: now,
@@ -228,7 +246,9 @@ export async function upsertEmployee(
   } catch (err) {}
 
   const list = readLocalEmployees();
-  const idx = list.findIndex((e) => e.id === fullEmployee.id || e.email === fullEmployee.email);
+  const idx = list.findIndex(
+    (e) => e.id === fullEmployee.id || e.email === fullEmployee.email
+  );
   if (idx >= 0) {
     list[idx] = { ...list[idx], ...fullEmployee, updated_at: now };
   } else {
@@ -270,9 +290,14 @@ export async function getDepartmentsList(): Promise<Department[]> {
       return (
         empDept === dCode ||
         empDept === d.id?.toLowerCase() ||
-        (dCode === "super_admin" && (empDept === "admin" || empDept === "super_admin")) ||
-        (dCode === "crm_manager" && (empDept === "seller_acquisition" || empDept === "crm_manager")) ||
-        (dCode === "operation_manager" && (empDept === "operations" || empDept === "catalog_operations" || empDept === "operation_manager")) ||
+        (dCode === "super_admin" &&
+          (empDept === "admin" || empDept === "super_admin")) ||
+        (dCode === "crm_manager" &&
+          (empDept === "seller_acquisition" || empDept === "crm_manager")) ||
+        (dCode === "operation_manager" &&
+          (empDept === "operations" ||
+            empDept === "catalog_operations" ||
+            empDept === "operation_manager")) ||
         (dCode === "admin" && empDept === "admin") ||
         (dCode === "operations" && empDept === "operations") ||
         dName.includes(empDept)
@@ -288,14 +313,18 @@ export async function getDepartmentsList(): Promise<Department[]> {
 
 export async function getDepartmentById(id: string): Promise<Department | null> {
   const depts = await getDepartmentsList();
-  return depts.find((d) => d.id === id || d.code.toLowerCase() === id.toLowerCase()) || null;
+  return (
+    depts.find((d) => d.id === id || d.code.toLowerCase() === id.toLowerCase()) || null
+  );
 }
 
 export async function upsertDepartment(
   dept: Partial<Department> & { name: string; code: string }
 ): Promise<Department> {
   const now = new Date().toISOString();
-  const id = dept.id || `dept-${dept.code.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now().toString(36)}`;
+  const id =
+    dept.id ||
+    `dept-${dept.code.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now().toString(36)}`;
 
   const fullDept: Department = {
     id,

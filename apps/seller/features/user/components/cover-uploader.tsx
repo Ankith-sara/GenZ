@@ -17,7 +17,9 @@ export function CoverUploader({
 }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">(
+    "idle"
+  );
   const [error, setError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentUrl);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -69,7 +71,7 @@ export function CoverUploader({
   return (
     <div className="space-y-4">
       {/* Cover Banner Preview Box */}
-      <div className="relative h-32 sm:h-40 w-full overflow-hidden rounded-2xl border border-[#E5E5E0] bg-neutral-900 shadow-xs">
+      <div className="relative h-32 w-full overflow-hidden rounded-2xl border border-[#E5E5E0] bg-neutral-900 shadow-xs sm:h-40">
         {previewUrl ? (
           <Image
             src={previewUrl}
@@ -81,13 +83,15 @@ export function CoverUploader({
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-amber-950 via-stone-900 to-amber-900">
             <div className="text-center text-white/70">
-              <ImageIcon className="mx-auto h-8 w-8 text-white/50 mb-1" />
-              <p className="text-xs">No cover photo set. Default artisan banner will be used.</p>
+              <ImageIcon className="mx-auto mb-1 h-8 w-8 text-white/50" />
+              <p className="text-xs">
+                No cover photo set. Default artisan banner will be used.
+              </p>
             </div>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute bottom-3 left-3 text-white text-[11px] font-mono bg-black/60 px-2.5 py-0.5 rounded-full backdrop-blur-xs">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute bottom-3 left-3 rounded-full bg-black/60 px-2.5 py-0.5 font-mono text-[11px] text-white backdrop-blur-xs">
           Storefront Cover Preview
         </div>
       </div>
@@ -99,7 +103,7 @@ export function CoverUploader({
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          className="file:border-[#1A1A18] file:bg-white text-xs file:mr-3 file:h-9 file:rounded-lg file:border file:px-3 file:font-medium file:cursor-pointer text-neutral-600"
+          className="text-xs text-neutral-600 file:mr-3 file:h-9 file:cursor-pointer file:rounded-lg file:border file:border-[#1A1A18] file:bg-white file:px-3 file:font-medium"
         />
 
         {selectedFile && (
@@ -108,7 +112,7 @@ export function CoverUploader({
             onClick={handleUpload}
             size="sm"
             disabled={status === "uploading"}
-            className="bg-black hover:bg-neutral-850 text-white text-xs h-9 rounded-lg font-semibold px-4 shadow-sm"
+            className="hover:bg-neutral-850 h-9 rounded-lg bg-black px-4 text-xs font-semibold text-white shadow-sm"
           >
             <Upload className="mr-1.5 h-3.5 w-3.5" />
             {status === "uploading" ? "Uploading Cover…" : "Save Cover Banner"}
@@ -117,14 +121,14 @@ export function CoverUploader({
       </div>
 
       {status === "success" && (
-        <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-700">
           <CheckCircle2 className="h-4 w-4 text-emerald-600" />
           <span>Cover banner updated and published!</span>
         </div>
       )}
 
       {error && (
-        <div className="flex items-center gap-1.5 text-xs text-rose-700 font-medium">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-rose-700">
           <AlertCircle className="h-4 w-4 text-rose-600" />
           <span>{error}</span>
         </div>

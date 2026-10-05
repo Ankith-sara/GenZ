@@ -66,7 +66,8 @@ export function AdminProductEditClient({
             ? String(product.inventory_count)
             : "0",
         lowStockThreshold:
-          product.low_stock_threshold !== null && product.low_stock_threshold !== undefined
+          product.low_stock_threshold !== null &&
+          product.low_stock_threshold !== undefined
             ? String(product.low_stock_threshold)
             : "5",
         trackInventory: product.track_inventory ?? true,

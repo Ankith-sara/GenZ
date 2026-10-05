@@ -100,21 +100,35 @@ export default async function AdminDashboardLayout({
   let contactsCount = 0;
   let leadsCount = 0;
   let dealsCount = 0;
+  let pendingSettlementsCount = 0;
   try {
     const { getTasksList } = await import("@genz/database/tasks");
-    const { getSellerOnboardingList, getContactsList, getLeadsList, getDealsList } = await import("@genz/database/crm");
-    const [tasks, onboardings, contactsList, leadsList, dealsList] = await Promise.all([
-      getTasksList(),
-      getSellerOnboardingList(),
-      getContactsList(),
-      getLeadsList(),
-      getDealsList(),
-    ]);
-    pendingTasksCount = tasks.filter((t) => t.status !== "done" && t.status !== "cancelled").length;
+    const { getSellerOnboardingList, getContactsList, getLeadsList, getDealsList } =
+      await import("@genz/database/crm");
+    const { getSettlementBatches } = await import("@genz/database/accounting");
+    const [tasks, onboardings, contactsList, leadsList, dealsList, settlements] =
+      await Promise.all([
+        getTasksList(),
+        getSellerOnboardingList(),
+        getContactsList(),
+        getLeadsList(),
+        getDealsList(),
+        getSettlementBatches(),
+      ]);
+    pendingTasksCount = tasks.filter(
+      (t) => t.status !== "done" && t.status !== "cancelled"
+    ).length;
     activeOnboardingCount = onboardings.filter((o) => !o.live_on_marketplace).length;
     contactsCount = contactsList.length;
-    leadsCount = leadsList.filter((l) => l.stage !== "converted" && l.stage !== "dropped").length;
-    dealsCount = dealsList.filter((d) => d.stage !== "contract_signed" && d.stage !== "lost").length;
+    leadsCount = leadsList.filter(
+      (l) => l.stage !== "converted" && l.stage !== "dropped"
+    ).length;
+    dealsCount = dealsList.filter(
+      (d) => d.stage !== "contract_signed" && d.stage !== "lost"
+    ).length;
+    pendingSettlementsCount = settlements.filter(
+      (s) => s.status === "pending_approval"
+    ).length;
   } catch {}
 
   const counts = {
@@ -129,6 +143,7 @@ export default async function AdminDashboardLayout({
     leads: leadsCount,
     deals: dealsCount,
     onboarding: activeOnboardingCount,
+    pendingSettlements: pendingSettlementsCount,
   };
 
   const adminName = session.profile?.full_name || "Admin User";

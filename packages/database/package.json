@@ -15,7 +15,8 @@
     "./crm": "./src/crm.ts",
     "./employees": "./src/employees.ts",
     "./roles": "./src/roles.ts",
-    "./tasks": "./src/tasks.ts"
+    "./tasks": "./src/tasks.ts",
+    "./accounting": "./src/accounting.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

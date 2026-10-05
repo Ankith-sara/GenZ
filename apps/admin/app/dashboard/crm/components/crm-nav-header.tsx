@@ -82,12 +82,10 @@ export function CRMNavHeader({
           <h2 className="mt-0.5 text-2xl font-bold tracking-tight text-[#1A1A18]">
             {title}
           </h2>
-          <p className="mt-0.5 text-xs text-[#73736E] max-w-2xl">
-            {description}
-          </p>
+          <p className="mt-0.5 max-w-2xl text-xs text-[#73736E]">{description}</p>
         </div>
 
-        {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
+        {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
       </div>
 
       {/* 4-Step Interactive Pipeline Funnel */}
@@ -98,14 +96,14 @@ export function CRMNavHeader({
             <Link
               key={step.id}
               href={step.href}
-              className={`flex flex-col justify-between rounded-xl border p-3 sm:p-3.5 transition-all ${
+              className={`flex flex-col justify-between rounded-xl border p-3 transition-all sm:p-3.5 ${
                 step.active
                   ? "border-black bg-white shadow-xs ring-1 ring-black/10"
-                  : "border-[#E5E5E0] bg-white/70 hover:bg-white hover:border-[#1A1A18]/20"
+                  : "border-[#E5E5E0] bg-white/70 hover:border-[#1A1A18]/20 hover:bg-white"
               }`}
             >
               <div className="flex items-center justify-between text-[#73736E]">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A18]">
+                <span className="text-[10px] font-bold tracking-wider text-[#1A1A18] uppercase">
                   {step.number}. {step.label}
                 </span>
                 <Icon
@@ -117,16 +115,16 @@ export function CRMNavHeader({
 
               <div className="mt-2">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-xl sm:text-2xl font-bold text-[#1A1A18]">
+                  <span className="text-xl font-bold text-[#1A1A18] sm:text-2xl">
                     {step.count ?? 0}
                   </span>
                   {step.active && (
-                    <span className="text-[10px] font-semibold text-[#1A1A18] bg-[#FAF8F4] px-2 py-0.5 rounded-full border border-[#E5E5E0]">
+                    <span className="rounded-full border border-[#E5E5E0] bg-[#FAF8F4] px-2 py-0.5 text-[10px] font-semibold text-[#1A1A18]">
                       Active View
                     </span>
                   )}
                 </div>
-                <p className="text-[11px] text-[#73736E] mt-0.5 line-clamp-1">
+                <p className="mt-0.5 line-clamp-1 text-[11px] text-[#73736E]">
                   {step.subtext}
                 </p>
               </div>

@@ -12,6 +12,7 @@ node_modules/
 coverage/
 *test-orders-store.json
 *test-*-store.json
+*test-*.json
 
 # next.js build outputs
 .next/

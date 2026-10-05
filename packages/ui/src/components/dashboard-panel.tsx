@@ -21,14 +21,18 @@ export function DashboardPanel({
   return (
     <section
       className={cn(
-        "border-outline-variant/60 bg-surface-container-lowest rounded-2xl border shadow-elevation-1",
+        "border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 rounded-2xl border",
         className
       )}
     >
       {(title || description || actions) && (
         <div className="border-outline-variant/50 flex flex-col gap-3 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
-            {title && <h2 className="text-on-surface text-sm font-bold tracking-tight">{title}</h2>}
+            {title && (
+              <h2 className="text-on-surface text-sm font-bold tracking-tight">
+                {title}
+              </h2>
+            )}
             {description && (
               <p className="text-on-surface-variant mt-0.5 text-[11px] leading-relaxed">
                 {description}

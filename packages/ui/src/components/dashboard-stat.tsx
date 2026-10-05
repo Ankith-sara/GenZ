@@ -28,7 +28,7 @@ export function DashboardStat({
   return (
     <div
       className={cn(
-        "border-outline-variant/60 bg-surface-container-lowest min-w-0 rounded-2xl border p-4 shadow-elevation-1",
+        "border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 min-w-0 rounded-2xl border p-4",
         className
       )}
     >
@@ -37,11 +37,22 @@ export function DashboardStat({
           <p className="text-on-surface-variant truncate text-[10px] font-bold tracking-[0.12em] uppercase">
             {label}
           </p>
-          <p className="text-on-surface mt-2 text-2xl font-bold tracking-tight">{value}</p>
-          {detail && <p className="text-on-surface-variant mt-1 truncate text-[11px]">{detail}</p>}
+          <p className="text-on-surface mt-2 text-2xl font-bold tracking-tight">
+            {value}
+          </p>
+          {detail && (
+            <p className="text-on-surface-variant mt-1 truncate text-[11px]">
+              {detail}
+            </p>
+          )}
         </div>
         {icon && (
-          <span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-xl", toneClasses[tone])}>
+          <span
+            className={cn(
+              "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
+              toneClasses[tone]
+            )}
+          >
             {icon}
           </span>
         )}

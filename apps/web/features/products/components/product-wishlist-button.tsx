@@ -85,7 +85,7 @@ export function ProductWishlistButton({
       type="button"
       onClick={toggleWishlist}
       className={cn(
-        "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/85 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-110 hover:bg-white active:scale-95 focus:outline-none",
+        "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/85 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-110 hover:bg-white focus:outline-none active:scale-95",
         isWishlisted
           ? "bg-white text-rose-500 shadow-md"
           : "text-neutral-700 hover:text-black",

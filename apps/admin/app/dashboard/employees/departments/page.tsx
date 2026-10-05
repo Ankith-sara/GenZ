@@ -9,10 +9,5 @@ export default async function DepartmentsPage() {
     getEmployeesList(),
   ]);
 
-  return (
-    <DepartmentsViewClient
-      departments={departments}
-      employees={employees}
-    />
-  );
+  return <DepartmentsViewClient departments={departments} employees={employees} />;
 }

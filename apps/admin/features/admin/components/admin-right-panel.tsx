@@ -28,8 +28,7 @@ export function AdminRightPanel({
     const date = new Date(dateStr);
     const now = new Date();
     const diffMins = (now.getTime() - date.getTime()) / (1000 * 60);
-    if (diffMins <= 60)
-      return { label: "Online", color: "bg-emerald-500 text-white" };
+    if (diffMins <= 60) return { label: "Online", color: "bg-emerald-500 text-white" };
     if (diffMins <= 1440)
       return { label: "Active Today", color: "bg-amber-400 text-amber-950" };
     return { label: "Offline", color: "bg-rose-500 text-white" };
