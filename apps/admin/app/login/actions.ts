@@ -110,11 +110,39 @@ export async function directPasswordLogin(email: string, password: string) {
           .single();
 
         const role = profile?.role || authData.user.user_metadata?.role || "buyer";
-        if (role !== "admin") {
+        let isAuthorized = role === "admin" || role === "emp";
+
+        if (!isAuthorized && authData.user.email) {
+          const { getEmployeesList } = await import("@genz/database/employees");
+          const employees = await getEmployeesList();
+          const userEmail = authData.user.email.toLowerCase();
+          const matchedEmp = employees.find(
+            (e) => e.email.toLowerCase() === userEmail && e.status === "active"
+          );
+          if (matchedEmp) {
+            isAuthorized = true;
+            try {
+              const { createAdminClient } = await import("@genz/database/admin");
+              const supabaseAdmin = createAdminClient();
+              const staffRole = matchedEmp.role_level === "admin" ? "admin" : "emp";
+              await supabaseAdmin.auth.admin.updateUserById(authData.user.id, {
+                user_metadata: {
+                  ...authData.user.user_metadata,
+                  role: staffRole,
+                  full_name: matchedEmp.full_name,
+                },
+              });
+            } catch (syncErr) {
+              console.warn("[directPasswordLogin] metadata sync notice:", syncErr);
+            }
+          }
+        }
+
+        if (!isAuthorized) {
           await supabase.auth.signOut();
           return {
             error:
-              "Access denied. Only registered administrator accounts can access the Studio Admin Dashboard.",
+              "Access denied. Only registered administrator and employee accounts can access the Studio Admin Dashboard.",
           };
         }
       }
@@ -180,11 +208,39 @@ export async function verifyOtpLogin(email: string, token: string) {
           .single();
 
         const role = profile?.role || authData.user.user_metadata?.role || "buyer";
-        if (role !== "admin") {
+        let isAuthorized = role === "admin" || role === "emp";
+
+        if (!isAuthorized && authData.user.email) {
+          const { getEmployeesList } = await import("@genz/database/employees");
+          const employees = await getEmployeesList();
+          const userEmail = authData.user.email.toLowerCase();
+          const matchedEmp = employees.find(
+            (e) => e.email.toLowerCase() === userEmail && e.status === "active"
+          );
+          if (matchedEmp) {
+            isAuthorized = true;
+            try {
+              const { createAdminClient } = await import("@genz/database/admin");
+              const supabaseAdmin = createAdminClient();
+              const staffRole = matchedEmp.role_level === "admin" ? "admin" : "emp";
+              await supabaseAdmin.auth.admin.updateUserById(authData.user.id, {
+                user_metadata: {
+                  ...authData.user.user_metadata,
+                  role: staffRole,
+                  full_name: matchedEmp.full_name,
+                },
+              });
+            } catch (syncErr) {
+              console.warn("[verifyOtpLogin] metadata sync notice:", syncErr);
+            }
+          }
+        }
+
+        if (!isAuthorized) {
           await supabase.auth.signOut();
           return {
             error:
-              "Access denied. Only registered administrator accounts can access the Studio Admin Dashboard.",
+              "Access denied. Only registered administrator and employee accounts can access the Studio Admin Dashboard.",
           };
         }
       }

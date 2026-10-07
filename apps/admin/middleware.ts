@@ -70,10 +70,15 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .maybeSingle();
 
-    const isAdmin = profile?.role === "admin" || user.user_metadata?.role === "admin";
+    const userRole = user.user_metadata?.role || profile?.role;
+    const isStaff =
+      userRole === "admin" ||
+      userRole === "emp" ||
+      profile?.role === "admin" ||
+      profile?.role === "emp";
 
     if (isAuthOnly) {
-      if (isAdmin) {
+      if (isStaff) {
         const url = request.nextUrl.clone();
         url.pathname = "/dashboard";
         if (url.pathname !== path) {
@@ -83,7 +88,7 @@ export async function middleware(request: NextRequest) {
       return supabaseResponse;
     }
 
-    if (!isAuthOnly && !isAdmin) {
+    if (!isAuthOnly && !isStaff) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       url.searchParams.set("error", "forbidden_admin_only");

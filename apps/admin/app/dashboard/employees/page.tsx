@@ -1,6 +1,6 @@
 import { requirePermission } from "@/features/auth/lib/require-role";
 import { getEmployeesList, getDepartmentsList } from "@genz/database/employees";
-import { EmployeesViewClient } from "./employees-view-client";
+import { EmployeesViewClient } from "@/features/employees";
 
 export default async function EmployeesPage() {
   await requirePermission("employees:read");

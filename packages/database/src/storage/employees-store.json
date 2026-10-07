@@ -1,0 +1,42 @@
+[
+  {
+    "id": "d71ec654-2e48-4377-87bc-9c415fd55d68",
+    "employee_code": "GZ-EMP-547",
+    "full_name": "Vishal Alavadutha",
+    "email": "vishalavadutha789@gmail.com",
+    "phone": "+91 80968 87184",
+    "department": "tech",
+    "designation": "CRM Manager",
+    "role": "CRM Manager",
+    "role_id": "super_admin",
+    "status": "active",
+    "role_level": "admin",
+    "permissions": [
+      "crm:read",
+      "crm:write",
+      "crm:delete",
+      "crm:admin",
+      "tasks:read",
+      "tasks:write",
+      "tasks:delete",
+      "tasks:assign",
+      "employees:read",
+      "employees:write",
+      "employees:delete",
+      "products:read",
+      "products:write",
+      "products:delete",
+      "orders:read",
+      "orders:write",
+      "orders:delete",
+      "verifications:read",
+      "verifications:write",
+      "verifications:delete",
+      "system:read",
+      "system:write"
+    ],
+    "joined_at": "2026-10-07T17:55:13.851Z",
+    "created_at": "2026-10-07T17:55:13.851Z",
+    "updated_at": "2026-10-07T17:55:13.851Z"
+  }
+]

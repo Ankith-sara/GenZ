@@ -65,9 +65,9 @@ export async function GET(request: Request) {
       .eq("id", user.id)
       .single();
 
-    const currentRole = profile?.role ?? "buyer";
+    const currentRole = profile?.role ?? user.user_metadata?.role ?? "buyer";
 
-    if (currentRole === "admin") {
+    if (currentRole === "admin" || currentRole === "emp") {
       next = "/dashboard";
     } else {
       next = "/login?error=forbidden_admin_only";

@@ -3,7 +3,6 @@ import type {
   EmployeeDepartment,
   EmployeeStatus,
   Department,
-  PermissionKey,
 } from "@genz/types";
 import { createAdminClient } from "./admin";
 import fs from "fs";
@@ -191,7 +190,7 @@ export async function getEmployeesList(filters?: {
     if (!error && data && data.length > 0) {
       return data as Employee[];
     }
-  } catch (err) {
+  } catch {
     // Database table not present or connection offline - proceed to fallback
   }
 
@@ -207,33 +206,49 @@ export async function getEmployeesList(filters?: {
 }
 
 export async function upsertEmployee(
-  employee: Partial<Employee> & { email: string; full_name: string }
+  employee: Partial<Employee> & { email?: string; full_name?: string }
 ): Promise<Employee> {
   const now = new Date().toISOString();
-  const id = employee.id || crypto.randomUUID();
-  const roleName = employee.role || employee.designation || "Operations Associate";
+  const list = readLocalEmployees();
+  const existing = list.find(
+    (e) =>
+      (employee.id && e.id === employee.id) ||
+      (employee.email && e.email === employee.email)
+  );
+
+  const id = employee.id || existing?.id || crypto.randomUUID();
+  const roleName =
+    employee.role ||
+    employee.designation ||
+    existing?.role ||
+    existing?.designation ||
+    "Operations Associate";
 
   const fullEmployee: Employee = {
     id,
     employee_code:
-      employee.employee_code || `GZ-EMP-${Math.floor(100 + Math.random() * 900)}`,
-    full_name: employee.full_name,
-    email: employee.email,
-    phone: employee.phone || null,
-    department: employee.department || "seller_acquisition",
-    designation: employee.designation || roleName,
+      employee.employee_code ||
+      existing?.employee_code ||
+      `GZ-EMP-${Math.floor(100 + Math.random() * 900)}`,
+    full_name:
+      employee.full_name && employee.full_name.trim().length > 0
+        ? employee.full_name
+        : existing?.full_name || "Team Member",
+    email:
+      employee.email && employee.email.trim().length > 0
+        ? employee.email
+        : existing?.email || "",
+    phone: employee.phone !== undefined ? employee.phone : existing?.phone || null,
+    department: employee.department || existing?.department || "seller_acquisition",
+    designation: employee.designation || existing?.designation || roleName,
     role: roleName,
-    role_id: employee.role_id,
-    status: employee.status || "active",
-    role_level: employee.role_level || "staff",
-    permissions: employee.permissions || [
-      "crm:read",
-      "crm:write",
-      "tasks:read",
-      "tasks:write",
-    ],
-    joined_at: employee.joined_at || now,
-    created_at: employee.created_at || now,
+    role_id: employee.role_id || existing?.role_id,
+    status: employee.status || existing?.status || "active",
+    role_level: employee.role_level || existing?.role_level || "staff",
+    permissions: employee.permissions ||
+      existing?.permissions || ["crm:read", "crm:write", "tasks:read", "tasks:write"],
+    joined_at: employee.joined_at || existing?.joined_at || now,
+    created_at: existing?.created_at || employee.created_at || now,
     updated_at: now,
   };
 
@@ -243,9 +258,8 @@ export async function upsertEmployee(
     if (!error) {
       return fullEmployee;
     }
-  } catch (err) {}
+  } catch {}
 
-  const list = readLocalEmployees();
   const idx = list.findIndex(
     (e) => e.id === fullEmployee.id || e.email === fullEmployee.email
   );
@@ -258,6 +272,45 @@ export async function upsertEmployee(
   return fullEmployee;
 }
 
+export async function deleteEmployee(id: string): Promise<boolean> {
+  try {
+    const supabase = createAdminClient();
+    await supabase.from("employees").delete().eq("id", id);
+  } catch {}
+
+  const list = readLocalEmployees();
+  const filtered = list.filter((e) => e.id !== id);
+  writeLocalEmployees(filtered);
+  return true;
+}
+
+export async function toggleEmployeeStatus(id: string): Promise<Employee | null> {
+  const list = readLocalEmployees();
+  const emp = list.find((e) => e.id === id);
+  if (!emp) return null;
+
+  const nextStatus: EmployeeStatus = emp.status === "active" ? "inactive" : "active";
+  return upsertEmployee({
+    ...emp,
+    status: nextStatus,
+  });
+}
+
+interface SupabaseDepartmentsClient {
+  from: (table: string) => {
+    select: (cols: string) => {
+      order: (
+        col: string,
+        opts: { ascending: boolean }
+      ) => Promise<{ data: Department[] | null; error: unknown }>;
+    };
+    upsert: (val: Department) => Promise<{ error: unknown }>;
+    delete: () => {
+      eq: (col: string, val: string) => Promise<{ error: unknown }>;
+    };
+  };
+}
+
 /**
  * Department Management Functions
  */
@@ -267,7 +320,8 @@ export async function getDepartmentsList(): Promise<Department[]> {
   let depts: Department[] = [];
   try {
     const supabase = createAdminClient();
-    const { data, error } = await (supabase as any)
+    const client = supabase as unknown as SupabaseDepartmentsClient;
+    const { data, error } = await client
       .from("departments")
       .select("*")
       .order("name", { ascending: true });
@@ -275,7 +329,7 @@ export async function getDepartmentsList(): Promise<Department[]> {
     if (!error && data && data.length > 0) {
       depts = data as Department[];
     }
-  } catch (err) {}
+  } catch {}
 
   if (depts.length === 0) {
     depts = readLocalDepartments();
@@ -343,11 +397,12 @@ export async function upsertDepartment(
 
   try {
     const supabase = createAdminClient();
-    const { error } = await (supabase as any).from("departments").upsert(fullDept);
+    const client = supabase as unknown as SupabaseDepartmentsClient;
+    const { error } = await client.from("departments").upsert(fullDept);
     if (!error) {
       return fullDept;
     }
-  } catch (err) {}
+  } catch {}
 
   const list = readLocalDepartments();
   const idx = list.findIndex((d) => d.id === fullDept.id || d.code === fullDept.code);
@@ -363,8 +418,9 @@ export async function upsertDepartment(
 export async function deleteDepartment(id: string): Promise<boolean> {
   try {
     const supabase = createAdminClient();
-    await (supabase as any).from("departments").delete().eq("id", id);
-  } catch (err) {}
+    const client = supabase as unknown as SupabaseDepartmentsClient;
+    await client.from("departments").delete().eq("id", id);
+  } catch {}
 
   const list = readLocalDepartments();
   const filtered = list.filter((d) => d.id !== id);

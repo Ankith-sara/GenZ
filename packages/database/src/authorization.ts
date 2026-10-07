@@ -77,7 +77,35 @@ export async function requireRole(
   }
 
   const user = session.user;
-  const role = (session.profile?.role ?? user?.user_metadata?.role ?? "buyer") as Role;
+  const metaRole = user?.user_metadata?.role as Role | undefined;
+  const profileRole = session.profile?.role as Role | undefined;
+
+  let role: Role =
+    metaRole === "admin" || metaRole === "emp"
+      ? metaRole
+      : profileRole === "admin" || profileRole === "emp"
+        ? profileRole
+        : (profileRole ?? metaRole ?? "buyer");
+
+  if (role !== "admin" && role !== "emp" && user?.email) {
+    try {
+      const { getEmployeesList } = await import("./employees");
+      const employees = await getEmployeesList();
+      const userEmail = user.email.toLowerCase();
+      const matched = employees.find(
+        (e) => e.email.toLowerCase() === userEmail && e.status === "active"
+      );
+      if (matched) {
+        role = matched.role_level === "admin" ? "admin" : "emp";
+      }
+    } catch {
+      // ignore fallback error
+    }
+  }
+
+  if (session.profile) {
+    session.profile.role = role;
+  }
 
   const isAllowed =
     role === "admin" ||
