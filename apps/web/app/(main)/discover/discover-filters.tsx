@@ -4,13 +4,18 @@ import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { Button } from "@genz/ui";
 import { Input } from "@genz/ui";
-import { TOY_CATEGORIES } from "@/features/products/lib/products";
 import type { ProductFilters } from "./types";
 
 const selectClass =
   "h-11 rounded-none border border-ash bg-pure-white px-3.5 text-sm text-ink-black focus:outline-none focus:border-ink-black focus:ring-1 focus:ring-ink-black transition-colors w-full font-graphik";
 
-export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
+export function DiscoverFilters({
+  filters,
+  categories = [],
+}: {
+  filters: ProductFilters;
+  categories?: string[];
+}) {
   const router = useRouter();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -71,7 +76,7 @@ export function DiscoverFilters({ filters }: { filters: ProductFilters }) {
             className={selectClass}
           >
             <option value="">All Categories</option>
-            {TOY_CATEGORIES.map((c) => (
+            {categories.map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>

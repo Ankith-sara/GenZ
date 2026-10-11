@@ -1,30 +1,48 @@
-import { createClient } from "@genz/database";
-import { getOrders } from "@genz/database/orders";
+import { redirect } from "next/navigation";
+import { getUserAndProfile } from "@genz/database/auth";
+import { CustomersService } from "@genz/services/customers";
+import { RefundsService, getCustomerOrderActions } from "@genz/services/refunds";
 import type { OrderRecord } from "@genz/types";
 
-import { OrdersClient } from "./orders-client";
+import { OrdersClient, type CustomerOrderView } from "./orders-client";
 
 export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Middleware already redirects guests; this is the server-side guarantee.
+  const session = await getUserAndProfile();
+  if (!session) {
+    redirect("/login?redirectTo=/orders");
+  }
 
-  let initialOrders: OrderRecord[] = [];
+  let orders: OrderRecord[] = [];
   try {
-    if (user) {
-      initialOrders = await getOrders({ customerId: user.id });
-    }
-    if (initialOrders.length === 0) {
-      // Fetch latest orders for display/fallback
-      const recent = await getOrders();
-      initialOrders = recent.slice(0, 10);
-    }
+    // Only this user's own orders, never a cross-customer fallback.
+    orders = await CustomersService.getOrdersForViewer(session.userId);
   } catch (err) {
     console.warn("[OrdersPage] Fetch notice:", err);
   }
+
+  const refunds = await RefundsService.getRefundsForOrders(orders.map((o) => o.id));
+  const now = new Date();
+
+  const views: CustomerOrderView[] = orders.map((order) => {
+    const orderRefunds = refunds.filter((r) => r.orderId === order.id);
+    return {
+      order,
+      refunds: orderRefunds.map((r) => ({
+        id: r.id,
+        amount: r.amount,
+        type: r.type,
+        status: r.status,
+        method: r.method,
+        adminNote: r.adminNote,
+        createdAt: r.createdAt,
+        processedAt: r.processedAt,
+      })),
+      actions: getCustomerOrderActions(order, orderRefunds, now),
+    };
+  });
 
   return (
     <main className="min-h-screen flex-1 bg-[#FAF7F0] pb-24 font-sans text-[#1A1A18] antialiased">
@@ -46,7 +64,7 @@ export default async function OrdersPage() {
 
       {/* Orders List / Stepper */}
       <div className="mx-auto max-w-5xl px-6 py-10 sm:px-12">
-        <OrdersClient initialOrders={initialOrders} />
+        <OrdersClient initialOrders={views} />
       </div>
     </main>
   );

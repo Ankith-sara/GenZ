@@ -15,6 +15,7 @@ interface SellerProductEditClientProps {
   reelCount: number;
   sellerId: string;
   sellerBusinessName?: string;
+  categories?: string[];
 }
 
 async function uploadImageToStorage(
@@ -45,6 +46,7 @@ export function SellerProductEditClient({
   reelCount,
   sellerId,
   sellerBusinessName,
+  categories,
 }: SellerProductEditClientProps) {
   const updateProductWithId = updateProduct.bind(null, product.id);
   const [state, formAction, isPending] = useActionState<ProductFormState, FormData>(
@@ -91,11 +93,12 @@ export function SellerProductEditClient({
         manageReelsHref={`/dashboard/products/${product.id}/reels`}
         reelsCount={reelCount}
         submitLabel="Save Changes"
+        categories={categories}
         onUploadImage={(file, index) => uploadImageToStorage(file, sellerId, index)}
         initialValues={{
           name: product.name,
           priceInr: product.price_inr !== null ? String(product.price_inr) : "",
-          category: product.category || "Wooden Toys & Crafts",
+          category: product.category || "",
           description: product.description || "",
           materials: Array.isArray(product.materials)
             ? product.materials.join(", ")

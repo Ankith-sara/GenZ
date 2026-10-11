@@ -29,13 +29,17 @@ import {
   Landmark,
   Receipt,
   Scale,
+  RotateCcw,
 } from "lucide-react";
 import { signOut } from "@/app/login/actions";
+import { canOpenHref, type StaffAccess } from "../lib/route-permissions";
 
 export type AdminModule = "admin" | "operations" | "crm" | "finance";
 
 interface AdminSidebarProps {
   adminUser?: { full_name?: string | null; email?: string | null };
+  /** Hides links the signed-in staff member has no permission to open. */
+  access: StaffAccess;
   counts?: {
     users?: number;
     pendingVerifications?: number;
@@ -166,6 +170,11 @@ function buildModules(
               href: "/dashboard/orders",
               icon: Package,
               badge: c.orders,
+            },
+            {
+              label: "Refunds & Returns",
+              href: "/dashboard/refunds",
+              icon: RotateCcw,
             },
             {
               label: "Products Catalog",
@@ -393,6 +402,7 @@ function NavLink({
 /* MAIN */
 export function AdminSidebar({
   adminUser,
+  access,
   counts = {},
   isOpen = false,
   onClose,
@@ -423,13 +433,22 @@ export function AdminSidebar({
       ? "crm"
       : pathname.startsWith("/dashboard/finance")
         ? "finance"
-        : ["operations", "orders", "products", "tasks", "verifications"].some((p) =>
+        : ["operations", "orders", "refunds", "products", "tasks", "verifications"].some((p) =>
               pathname.startsWith(`/dashboard/${p}`)
             )
           ? "operations"
           : "admin");
 
-  const mod = buildModules(counts)[currentModule];
+  const fullModule = buildModules(counts)[currentModule];
+  const mod: ModuleConfig = {
+    ...fullModule,
+    sections: fullModule.sections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) => canOpenHref(access, item.href)),
+      }))
+      .filter((section) => section.items.length > 0),
+  };
   const ModIcon = mod.icon;
 
   /* Pick ONE active item: the most specific match, so "Team Employees" doesn't light up on /employees/departments */

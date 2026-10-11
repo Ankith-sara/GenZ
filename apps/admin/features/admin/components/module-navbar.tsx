@@ -3,8 +3,25 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Shield, Briefcase, Users, Landmark } from "lucide-react";
+import { canOpenHref, type StaffAccess } from "../lib/route-permissions";
+
+/** Routes per module, in landing-page order. A tab opens the first one the user may open. */
+const MODULE_ROUTES: Record<string, string[]> = {
+  admin: ["/dashboard"],
+  finance: ["/dashboard/finance"],
+  operations: [
+    "/dashboard/operations",
+    "/dashboard/orders",
+    "/dashboard/refunds",
+    "/dashboard/products",
+    "/dashboard/tasks",
+    "/dashboard/verifications",
+  ],
+  crm: ["/dashboard/crm", "/dashboard/crm/onboarding"],
+};
 
 interface ModuleNavbarProps {
+  access: StaffAccess;
   counts?: {
     pendingVerifications?: number;
     tasks?: number;
@@ -18,7 +35,7 @@ interface ModuleNavbarProps {
   };
 }
 
-export function ModuleNavbar({ counts }: ModuleNavbarProps) {
+export function ModuleNavbar({ access, counts }: ModuleNavbarProps) {
   const pathname = usePathname();
 
   // Determine active module
@@ -27,6 +44,7 @@ export function ModuleNavbar({ counts }: ModuleNavbarProps) {
   const isOpsActive = Boolean(
     pathname?.startsWith("/dashboard/operations") ||
     pathname?.startsWith("/dashboard/orders") ||
+    pathname?.startsWith("/dashboard/refunds") ||
     pathname?.startsWith("/dashboard/products") ||
     pathname?.startsWith("/dashboard/tasks") ||
     pathname?.startsWith("/dashboard/verifications")
@@ -36,7 +54,7 @@ export function ModuleNavbar({ counts }: ModuleNavbarProps) {
   const opsBadge = (counts?.tasks ?? 0) + (counts?.pendingVerifications ?? 0);
   const crmBadge = (counts?.leads ?? 0) + (counts?.onboarding ?? 0);
 
-  const modules = [
+  const allModules = [
     {
       id: "admin",
       label: "Admin",
@@ -74,6 +92,11 @@ export function ModuleNavbar({ counts }: ModuleNavbarProps) {
       activeColor: "text-emerald-400",
     },
   ];
+
+  const modules = allModules.flatMap((mod) => {
+    const landing = MODULE_ROUTES[mod.id]?.find((href) => canOpenHref(access, href));
+    return landing ? [{ ...mod, href: landing }] : [];
+  });
 
   return (
     <nav

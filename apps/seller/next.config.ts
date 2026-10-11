@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@genz/ui",
     "@genz/database",
+    "@genz/services",
     "@genz/utils",
     "@genz/validation",
     "@genz/types",

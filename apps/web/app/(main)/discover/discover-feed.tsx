@@ -77,44 +77,55 @@ export function DiscoverFeed({
   }, [loadMore]);
 
   if (products.length === 0) {
+    const hasFilters = Boolean(
+      filters.q || filters.category || filters.min_price || filters.max_price
+    );
     return (
       <div className="border-ash/40 flex flex-col items-center justify-center rounded-3xl border bg-white px-6 py-20 text-center shadow-xs">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-semibold text-amber-800">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-amber-500" />
-          <span>Artisan Cluster Onboarding</span>
-        </div>
         <h3 className="text-ink-black font-nantes text-3xl font-normal tracking-tight sm:text-4xl">
-          Coming Soon
+          No products found
         </h3>
         <p className="font-graphik mt-3 max-w-md text-sm leading-relaxed text-[#73736E]">
-          {filters.category ? (
+          {filters.q ? (
             <>
-              Authentic products for &ldquo;
+              No listings match &ldquo;
+              <strong className="font-semibold text-[#1A1A18]">{filters.q}</strong>
+              &rdquo;
+              {filters.category ? (
+                <>
+                  {" "}
+                  in &ldquo;
+                  <strong className="font-semibold text-[#1A1A18]">
+                    {filters.category}
+                  </strong>
+                  &rdquo;
+                </>
+              ) : null}
+              . Try a different search term or clear your filters.
+            </>
+          ) : filters.category ? (
+            <>
+              There are no products listed in &ldquo;
               <strong className="font-semibold text-[#1A1A18]">
                 {filters.category}
               </strong>
-              &rdquo; are currently being curated and onboarded from verified master
-              artisans. Check back shortly!
+              &rdquo; right now. Try another category or clear your filters.
             </>
-          ) : filters.q ? (
-            <>
-              We couldn&apos;t find an active listing matching &ldquo;
-              <strong className="font-semibold text-[#1A1A18]">{filters.q}</strong>
-              &rdquo;. Our craft team is adding new verified Indian makers daily!
-            </>
+          ) : hasFilters ? (
+            "No products match the selected filters. Try widening your price range or clearing your filters."
           ) : (
-            "We are actively cataloging verified Indian craft items for this selection. New artisan inventory will be available soon."
+            "There are no products listed yet. Please check back later."
           )}
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <button
-            onClick={() => {
-              window.location.href = "/discover";
-            }}
-            className="font-graphik h-11 cursor-pointer rounded-xl border-none bg-[#D97706] px-6 text-xs font-semibold tracking-wider text-white uppercase shadow-xs transition-all hover:bg-[#B45309]"
-          >
-            Explore All Products
-          </button>
+          {hasFilters && (
+            <Link
+              href="/discover"
+              className="font-graphik flex h-11 items-center justify-center rounded-xl bg-[#D97706] px-6 text-xs font-semibold tracking-wider text-white uppercase shadow-xs transition-all hover:bg-[#B45309]"
+            >
+              Clear filters
+            </Link>
+          )}
           <Link
             href="/"
             className="font-graphik flex h-11 items-center justify-center rounded-xl border border-[#E5E5E0] bg-white px-6 text-xs font-semibold tracking-wider text-[#1A1A18] uppercase transition-all hover:bg-[#FAF8F4]"

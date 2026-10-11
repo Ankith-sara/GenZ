@@ -3,15 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { PageHeader } from "@genz/ui";
-import {
-  Save,
-  RotateCcw,
-  CheckCircle2,
-  Percent,
-  Clock,
-  Layers,
-  ArrowLeft,
-} from "lucide-react";
+import { Save, RotateCcw, Info, Percent, Clock, Layers, ArrowLeft } from "lucide-react";
 
 interface CRMSettingsState {
   // Commission Tiers
@@ -48,13 +40,6 @@ const DEFAULT_CRM_SETTINGS: CRMSettingsState = {
 
 export function CRMSettingsClient() {
   const [settings, setSettings] = useState<CRMSettingsState>(DEFAULT_CRM_SETTINGS);
-  const [savedSuccess, setSavedSuccess] = useState(false);
-
-  const handleSave = () => {
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
-  };
-
   const handleReset = () => {
     setSettings(DEFAULT_CRM_SETTINGS);
   };
@@ -90,8 +75,10 @@ export function CRMSettingsClient() {
           </button>
           <button
             type="button"
-            onClick={handleSave}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-4 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-neutral-800"
+            disabled
+            aria-disabled="true"
+            title="Saving these settings is not available yet"
+            className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-xl bg-neutral-900 px-4 py-2 text-xs font-semibold text-white opacity-50 shadow-xs"
           >
             <Save className="h-3.5 w-3.5" />
             Save Changes
@@ -99,15 +86,16 @@ export function CRMSettingsClient() {
         </div>
       </div>
 
-      {savedSuccess && (
-        <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-xs font-medium text-emerald-800 shadow-2xs">
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-          <span>
-            CRM Module settings updated successfully. New commission tiers and SLA
-            policies are now active.
-          </span>
-        </div>
-      )}
+      <div
+        role="note"
+        className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50/80 p-4 text-xs font-medium text-amber-900 shadow-2xs"
+      >
+        <Info className="h-5 w-5 shrink-0 text-amber-600" />
+        <span>
+          CRM settings are not saved yet — this page is a preview of planned
+          configuration. Changes here have no effect and reset when you leave the page.
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Section 1: Artisan Commission & Pricing Tiers */}

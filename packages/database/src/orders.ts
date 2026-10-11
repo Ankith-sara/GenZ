@@ -4,8 +4,10 @@ import type {
   OrderRecord,
   OrderStatus,
   OrderItem,
+  PaymentStatus,
   ShippingAddress,
   OrderTrackingEvent,
+  OrderDbRow,
 } from "@genz/types";
 import { createAdminClient } from "./admin";
 import { postJournalEntry, recordOrderCommission } from "./accounting";
@@ -17,7 +19,9 @@ export interface CreateOrderInput {
   customerPhone?: string;
   shippingAddress: ShippingAddress;
   paymentMethod: "cod" | "online" | "razorpay" | "upi_qr" | string;
-  paymentStatus?: "pending" | "paid" | "failed";
+  paymentStatus?: PaymentStatus;
+  /** Verified gateway payment id (Razorpay `pay_...`). Never taken from the client unverified. */
+  paymentGatewayId?: string | null;
   items: OrderItem[];
   subtotal: number;
   tax: number;
@@ -117,6 +121,8 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<OrderR
     paymentMethod: input.paymentMethod || "cod",
     paymentStatus:
       input.paymentStatus || (input.paymentMethod === "cod" ? "pending" : "paid"),
+    paymentGatewayId: input.paymentGatewayId || null,
+    refundedAmount: 0,
     status: "placed",
     subtotal: input.subtotal,
     tax: input.tax,
@@ -131,7 +137,7 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<OrderR
   // Try saving to Supabase
   try {
     const supabase = createAdminClient();
-    const { error } = await supabase.from("orders").insert({
+    const row = {
       id: newOrder.id,
       customer_id: newOrder.customerId,
       customer_name: newOrder.customerName,
@@ -151,7 +157,20 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<OrderR
       notes: newOrder.notes,
       created_at: newOrder.createdAt,
       updated_at: newOrder.updatedAt,
-    });
+    };
+    const rowWithGateway: Partial<OrderDbRow> & typeof row = newOrder.paymentGatewayId
+      ? { ...row, payment_gateway_id: newOrder.paymentGatewayId }
+      : row;
+    let { error } = await supabase.from("orders").insert(rowWithGateway);
+
+    // Databases without migration 0026 have no payment_gateway_id column yet.
+    // Keep the order (the payment id is still recorded in notes) instead of losing it.
+    if (error && newOrder.paymentGatewayId && /payment_gateway_id/i.test(error.message)) {
+      console.warn(
+        "[OrdersService] orders.payment_gateway_id missing; apply migration 0026. Retrying without it."
+      );
+      ({ error } = await supabase.from("orders").insert(row));
+    }
 
     if (error) {
       console.warn("[OrdersService] Supabase insert notice:", error.message);
@@ -259,6 +278,8 @@ export async function getOrders(filter?: {
         shippingAddress: d.shipping_address as ShippingAddress,
         paymentMethod: String(d.payment_method || "cod"),
         paymentStatus: (d.payment_status as OrderRecord["paymentStatus"]) || "pending",
+        paymentGatewayId: d.payment_gateway_id ? String(d.payment_gateway_id) : null,
+        refundedAmount: Number(d.refunded_amount || 0),
         status: (d.status as OrderStatus) || "pending",
         subtotal: Number(d.subtotal),
         tax: Number(d.tax),
@@ -313,7 +334,11 @@ export async function updateOrderStatus(
   }
 ): Promise<OrderRecord | null> {
   const allOrders = readLocalOrders();
-  const existing = allOrders.find((o) => o.id === orderId || o.orderId === orderId);
+  // The local store only holds orders created on this machine; fall back to the
+  // primary store so production updates keep the real customer, items and history.
+  const existing =
+    allOrders.find((o) => o.id === orderId || o.orderId === orderId) ||
+    (await getOrderById(orderId));
 
   const timestamp = new Date().toISOString();
   let eventTitle = `Order Status: ${update.status.toUpperCase()}`;
@@ -478,4 +503,68 @@ export async function updateOrderStatus(
   }
 
   return updatedOrder;
+}
+
+/**
+ * Derives the order payment status from the processed refund total.
+ * Mirrors the `sync_order_refund_totals` trigger in migration 0026.
+ */
+export function paymentStatusAfterRefunds(
+  current: PaymentStatus,
+  totalAmount: number,
+  refundedAmount: number
+): PaymentStatus {
+  if (refundedAmount <= 0) return current;
+  if (refundedAmount + 0.005 >= totalAmount) return "refunded";
+  return "partially_refunded";
+}
+
+/**
+ * Records the processed refund total on an order (Supabase + local store).
+ * The database trigger performs the same roll-up; writing it here as well keeps
+ * the local fallback store consistent.
+ */
+export async function applyOrderRefundTotals(
+  orderId: string,
+  refundedAmount: number
+): Promise<OrderRecord | null> {
+  const order = await getOrderById(orderId);
+  if (!order) return null;
+
+  const rounded = Math.round(refundedAmount * 100) / 100;
+  const paymentStatus = paymentStatusAfterRefunds(
+    order.paymentStatus,
+    order.totalAmount,
+    rounded
+  );
+  const updatedAt = new Date().toISOString();
+
+  try {
+    const supabase = createAdminClient();
+    const { error } = await supabase
+      .from("orders")
+      .update({
+        refunded_amount: rounded,
+        payment_status: paymentStatus,
+        updated_at: updatedAt,
+      })
+      .eq("id", orderId);
+    if (error) {
+      console.warn("[OrdersService] Refund totals update notice:", error.message);
+    }
+  } catch (err) {
+    console.warn("[OrdersService] Refund totals update fallback notice:", err);
+  }
+
+  const updated: OrderRecord = {
+    ...order,
+    refundedAmount: rounded,
+    paymentStatus,
+    updatedAt,
+  };
+  const local = readLocalOrders();
+  if (local.some((o) => o.id === orderId)) {
+    writeLocalOrders(local.map((o) => (o.id === orderId ? updated : o)));
+  }
+  return updated;
 }

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { AdminProductEditClient } from "./admin-product-edit-client";
 import type { SellerOption } from "@genz/ui/shared-features";
 
@@ -9,7 +9,7 @@ export default async function AdminProductDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("products:write");
   const { id } = await params;
   const supabase = createAdminClient();
 
@@ -32,12 +32,21 @@ export default async function AdminProductDetailPage({
     business_name: s.business_name,
   }));
 
+  const { data: catRows } = await supabase
+    .from("products")
+    .select("category");
+
+  const categories = Array.from(
+    new Set((catRows ?? []).map((p) => p.category?.trim()).filter(Boolean))
+  ).sort() as string[];
+
   return (
     <div className="mx-auto max-w-5xl py-6 sm:py-8">
       <AdminProductEditClient
         product={product}
         adminUserId={session.userId}
         sellers={sellers}
+        categories={categories}
       />
     </div>
   );

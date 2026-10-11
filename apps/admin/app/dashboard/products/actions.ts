@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { productSchema } from "@genz/validation";
 import { validateFileContentServer } from "@/lib/file-validation";
 import { withRateLimit } from "@/lib/rate-limiter";
@@ -18,34 +18,14 @@ export interface VariantFormState {
   error?: string;
 }
 
+import { ProductsService } from "@genz/services/products";
+
 export async function adminSetProductStatus(
   productId: string,
   status: "published" | "draft"
 ) {
-  await requireRole("admin");
-
-  let supabase;
-  try {
-    supabase = createAdminClient();
-  } catch (err: unknown) {
-    console.error(
-      "[CONFIG_ERROR] [adminSetProductStatus] Failed to initialize admin client:",
-      err
-    );
-    throw new Error(
-      "Server misconfiguration: admin credentials are not set up. Contact an engineer."
-    );
-  }
-
-  const { error } = await supabase
-    .from("products")
-    .update({ status })
-    .eq("id", productId);
-
-  if (error) {
-    console.error("Admin set product status error:", error);
-    throw new Error("Failed to update product status");
-  }
+  await requirePermission("products:write");
+  await ProductsService.setProductStatus(productId, status as ProductStatus);
 
   revalidatePath("/admin/dashboard/products");
   revalidatePath(`/products/${productId}`);
@@ -61,25 +41,15 @@ export async function adminUpdateProduct(
     description?: string | null;
   }
 ) {
-  await requireRole("admin");
-  const supabase = createAdminClient();
+  await requirePermission("products:write");
 
-  const { error } = await supabase
-    .from("products")
-    .update({
-      name: data.name,
-      category: data.category ?? undefined,
-      price_inr: data.price_inr,
-      status: (data.status as ProductStatus) ?? undefined,
-      description: data.description,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", productId);
-
-  if (error) {
-    console.error("Admin update product error:", error);
-    throw new Error(error.message || "Failed to update product");
-  }
+  await ProductsService.updateProduct(productId, {
+    name: data.name,
+    category: data.category ?? undefined,
+    price_inr: data.price_inr,
+    status: (data.status as ProductStatus) ?? undefined,
+    description: data.description ?? undefined,
+  });
 
   revalidatePath("/admin/dashboard/products");
   revalidatePath(`/products/${productId}`);
@@ -90,7 +60,7 @@ export async function adminUpdateProductFormAction(
   _prevState: ProductFormState,
   formData: FormData
 ): Promise<ProductFormState> {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("products:write");
 
   const name = String(formData.get("name") ?? "").trim();
   const category = String(formData.get("category") ?? "toys").trim() || "toys";
@@ -167,7 +137,7 @@ export async function adminUpdateProductFormAction(
 }
 
 export async function adminDeleteProduct(productId: string) {
-  await requireRole("admin");
+  await requirePermission("products:delete");
 
   let supabase;
   try {
@@ -196,7 +166,7 @@ export async function createProduct(
   _prevState: ProductFormState,
   formData: FormData
 ): Promise<ProductFormState> {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("products:write");
 
   const name = String(formData.get("name") ?? "").trim();
   const category = String(formData.get("category") ?? "toys").trim() || "toys";
@@ -207,9 +177,9 @@ export async function createProduct(
   const rawMat = String(formData.get("materials") ?? "");
   const materials = rawMat
     ? rawMat
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
     : [];
 
   const validation = productSchema.safeParse({
@@ -287,7 +257,7 @@ export async function uploadProductCoverAction(
   productId: string,
   formData: FormData
 ): Promise<{ success?: boolean; error?: string }> {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("products:write");
   const file = formData.get("cover_image") as File | null;
 
   if (!file || file.size === 0) {
@@ -346,7 +316,7 @@ export async function uploadProductImagesAction(
   productId: string,
   formData: FormData
 ): Promise<{ success?: boolean; error?: string }> {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("products:write");
   const files = formData.getAll("gallery_images") as File[];
 
   if (files.length === 0) {
@@ -422,7 +392,7 @@ export async function addVariant(
   _prevState: VariantFormState,
   formData: FormData
 ): Promise<VariantFormState> {
-  await requireRole("admin");
+  await requirePermission("products:write");
   const variant_name = String(formData.get("variant_name") ?? "").trim();
   const variant_value = String(formData.get("variant_value") ?? "").trim();
   const priceRaw = String(formData.get("price_inr") ?? "").trim();
@@ -453,7 +423,7 @@ export async function addVariant(
 }
 
 export async function deleteVariant(productId: string, variantId: string) {
-  await requireRole("admin");
+  await requirePermission("products:delete");
   const supabase = createAdminClient();
   await supabase.from("product_variants").delete().eq("id", variantId);
   revalidatePath(`/admin/dashboard/products/${productId}`);

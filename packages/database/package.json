@@ -10,13 +10,15 @@
     "./server": "./src/server.ts",
     "./admin": "./src/admin.ts",
     "./orders": "./src/orders.ts",
+    "./refunds": "./src/refunds.ts",
     "./auth": "./src/auth.ts",
     "./authorization": "./src/authorization.ts",
     "./crm": "./src/crm.ts",
     "./employees": "./src/employees.ts",
     "./roles": "./src/roles.ts",
     "./tasks": "./src/tasks.ts",
-    "./accounting": "./src/accounting.ts"
+    "./accounting": "./src/accounting.ts",
+    "./categories": "./src/categories.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { withRateLimit } from "@/lib/rate-limiter";
 import { adminRejectSchema } from "@genz/validation";
 import { SITE_URL } from "@genz/utils/config";
@@ -19,18 +19,17 @@ export interface ReviewState {
   };
 }
 
+import { AuthService } from "@genz/services/auth";
+
 /**
  * Generate a secure random password.
  */
 export async function generatePasswordAction(): Promise<string> {
-  return generatePassword(14);
+  return AuthService.generateSecurePassword(14);
 }
 
 function generatePassword(length = 14): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
-  const array = new Uint8Array(length);
-  crypto.getRandomValues(array);
-  return Array.from(array, (byte) => chars[byte % chars.length]).join("");
+  return AuthService.generateSecurePassword(length);
 }
 
 /**
@@ -43,6 +42,9 @@ async function getOrCreateAuthUser(
   metadata: Record<string, unknown>
 ): Promise<{ id: string; email: string }> {
   const normalizedEmail = email.trim().toLowerCase();
+  // Roles live in service-role-only app_metadata; user_metadata is user-writable
+  // and is no longer trusted for authorization (see migration 0024).
+  const appMetadata = metadata.role ? { role: metadata.role } : undefined;
   let existingId: string | null = null;
   let existingMeta: Record<string, unknown> = {};
 
@@ -81,6 +83,7 @@ async function getOrCreateAuthUser(
           ...existingMeta,
           ...metadata,
         },
+        app_metadata: appMetadata,
       });
 
     if (updateError || !updatedData?.user) {
@@ -110,6 +113,7 @@ async function getOrCreateAuthUser(
         password,
         email_confirm: true,
         user_metadata: metadata,
+        app_metadata: appMetadata,
       });
 
     if (createError) {
@@ -125,7 +129,7 @@ async function getOrCreateAuthUser(
       if (retryUser) {
         const { data: updatedData } = await adminClient.auth.admin.updateUserById(
           retryUser.id,
-          { password, user_metadata: metadata }
+          { password, user_metadata: metadata, app_metadata: appMetadata }
         );
         if (updatedData?.user) {
           return {
@@ -167,6 +171,7 @@ async function getOrCreateAuthUser(
         await adminClient.auth.admin.updateUserById(retryUser.id, {
           password,
           user_metadata: metadata,
+          app_metadata: appMetadata,
         });
       if (!updateErr && updatedData?.user) {
         return {
@@ -192,7 +197,10 @@ export async function approveSeller(
   _prevState: ReviewState,
   formData: FormData
 ): Promise<ReviewState> {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("verifications:write");
+  if (!session) {
+    return { error: "Unauthorized: Admin session required." };
+  }
 
   return withRateLimit(
     {
@@ -332,6 +340,7 @@ export async function approveSeller(
             full_name: application.full_name,
             business_name: application.business_name,
           },
+          app_metadata: { role: "seller" },
         });
       }
 
@@ -432,7 +441,10 @@ export async function rejectSeller(
   _prevState: ReviewState,
   formData: FormData
 ): Promise<ReviewState> {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("verifications:write");
+  if (!session) {
+    return { error: "Unauthorized: Admin session required." };
+  }
 
   return withRateLimit(
     {
@@ -512,7 +524,10 @@ export async function updateApplicationStatusDirectly(
   applicationId: string,
   newStatus: "pending" | "approved" | "rejected"
 ): Promise<{ success?: boolean; error?: string }> {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("verifications:write");
+  if (!session) {
+    return { error: "Unauthorized: Admin session required." };
+  }
 
   let adminClient;
   try {

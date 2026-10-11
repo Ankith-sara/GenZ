@@ -1,5 +1,5 @@
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { getEmployeeForSession } from "@genz/database/authorization";
 import { AdminLayoutShell } from "@/features/admin/components/admin-layout-shell";
 
 export default async function AdminDashboardLayout({
@@ -7,7 +7,12 @@ export default async function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await requireRole("admin");
+  // Admits admins and active employees; carries the employee's permissions.
+  const { session, employee } = await getEmployeeForSession();
+  const access = {
+    isAdmin: session.profile?.role === "admin" || employee.role_level === "admin",
+    permissions: employee.permissions ?? [],
+  };
 
   let supabase;
   try {
@@ -164,8 +169,9 @@ export default async function AdminDashboardLayout({
     <AdminLayoutShell
       adminUser={{
         full_name: session.profile?.full_name,
-        email: "admin@genz.in",
+        email: session.email ?? null,
       }}
+      access={access}
       counts={counts}
       firstName={firstName}
       dateRangeFormatted={dateRangeFormatted}

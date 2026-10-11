@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireRole } from "@genz/database/authorization";
+import { requirePermission } from "@genz/database/authorization";
 import {
   getContactsList,
   createCRMContact,
@@ -36,7 +36,7 @@ function revalidateCRMRoutes() {
 }
 
 export async function createContactAction(formData: FormData) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const name = (formData.get("name") as string)?.trim();
   const businessName =
     (
@@ -86,7 +86,7 @@ export async function convertContactToLeadAction(
   contactId: string,
   craftCategory?: string
 ) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const contacts = await getContactsList();
   const contact = contacts.find((c) => c.id === contactId);
   if (!contact) {
@@ -116,7 +116,7 @@ export async function convertContactToLeadAction(
 }
 
 export async function updateLeadStageAction(leadId: string, stage: CRMLeadStage) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const lead = await updateLeadStage(leadId, stage);
   revalidateCRMRoutes();
   return { success: true, lead };
@@ -128,7 +128,7 @@ export async function convertLeadToDealAction(
   expectedSkuCount = 10,
   commissionRate = 12.5
 ) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const leads = await getLeadsList();
   const lead = leads.find((l) => l.id === leadId);
   if (!lead) {
@@ -157,14 +157,14 @@ export async function convertLeadToDealAction(
 }
 
 export async function updateDealStageAction(dealId: string, stage: CRMDealStage) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const deal = await updateDealStage(dealId, stage);
   revalidateCRMRoutes();
   return { success: true, deal };
 }
 
 export async function moveDealToOnboardingAction(dealId: string) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const deals = await getDealsList();
   const deal = deals.find((d) => d.id === dealId);
   if (!deal) return { error: "Deal not found" };
@@ -204,14 +204,14 @@ export async function updateContactAction(
   contactId: string,
   updates: Partial<CRMContact>
 ) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const contact = await updateCRMContact(contactId, updates);
   revalidateCRMRoutes();
   return { success: true, contact };
 }
 
 export async function createLeadAction(formData: FormData) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const businessName = formData.get("businessName") as string;
   const contactPerson = formData.get("contactPerson") as string;
   const phone = formData.get("phone") as string;
@@ -253,14 +253,14 @@ export async function createLeadAction(formData: FormData) {
 }
 
 export async function updateLeadAction(leadId: string, updates: Partial<CRMLead>) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const lead = await updateCRMLead(leadId, updates);
   revalidateCRMRoutes();
   return { success: true, lead };
 }
 
 export async function createDealAction(formData: FormData) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const dealName = formData.get("dealName") as string;
   const leadId = (formData.get("leadId") as string) || null;
   const expectedSkuCount =
@@ -296,7 +296,7 @@ export async function createDealAction(formData: FormData) {
 }
 
 export async function updateDealAction(dealId: string, updates: Partial<CRMDeal>) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const deal = await updateCRMDeal(dealId, updates);
   revalidateCRMRoutes();
   return { success: true, deal };
@@ -306,7 +306,7 @@ export async function updateOnboardingAction(
   id: string,
   updates: Partial<SellerOnboardingTracker>
 ) {
-  await requireRole("admin");
+  await requirePermission("crm:write");
   const updated = await updateOnboardingStage(id, updates);
   revalidateCRMRoutes();
   return { success: true, updated };

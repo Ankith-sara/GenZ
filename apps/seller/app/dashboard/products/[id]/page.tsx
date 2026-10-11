@@ -59,6 +59,14 @@ export default async function SellerProductDetailPage({
     }
   }
 
+  const { data: catRows } = await supabase
+    .from("products")
+    .select("category");
+
+  const categories = Array.from(
+    new Set((catRows ?? []).map((p) => p.category?.trim()).filter(Boolean))
+  ).sort() as string[];
+
   return (
     <div className="w-full">
       <SellerProductEditClient
@@ -68,6 +76,7 @@ export default async function SellerProductDetailPage({
         reelCount={reelCount ?? 0}
         sellerId={session.userId}
         sellerBusinessName={businessName ?? undefined}
+        categories={categories}
       />
     </div>
   );

@@ -2,26 +2,55 @@
 
 ## System shape
 
-GenZ is a pnpm/Turborepo monorepo with three applications and shared packages.
+GenZ is a pnpm/Turborepo monorepo structured around frontends, background services, and shared domain packages.
 
 ```
 GenZ/
+│
 ├── apps/
 │   ├── web/       # Buyer-facing marketplace
 │   ├── seller/    # Seller portal
 │   └── admin/     # Internal administration portal
-├── packages/
+│
+├── services/      # Modular Domain Services Layer (@genz/services)
+│   ├── auth/      # Auth provisioning & session validation
+│   ├── products/  # Product catalog, publishing & search
+│   ├── orders/    # Orders lifecycle & state transitions
+│   ├── shipping/  # Logistics & tracking
+│   ├── stock/     # Inventory management
+│   ├── payments/  # Payment processing (Razorpay, UPI)
+│   ├── pricing/   # Pricing, GST slabs & discounts
+│   ├── cart/      # Shopping cart
+│   ├── checkout/  # Checkout flow
+│   ├── customers/ # Customer profiles & history
+│   ├── sellers/   # Artisan verification & profiles
+│   ├── notifications/ # Transactional emails & alerts
+│   ├── search/    # Multi-field catalog search
+│   └── analytics/ # Telemetry & reporting
+│
+├── packages/      # Reusable monorepo libraries and domain primitives
 │   ├── database/  # Supabase clients + repositories/domain persistence
-│   ├── ui/        # Shared UI system
+│   ├── ui/        # Shared UI design system
 │   ├── types/     # Shared TypeScript domain types
 │   ├── utils/     # Shared infrastructure utilities
-│   ├── validation/# Shared Zod schemas
-│   └── config/    # Shared configuration
-└── supabase/
-    └── migrations/
+│   ├── validation/# Shared Zod validation schemas
+│   └── config/    # Shared TypeScript & toolchain configs
+│
+├── supabase/      # Database migrations, seed data, and schema definitions
+│   └── migrations/
+│
+├── docs/          # Product, architecture, security, and engineering documentation
+│
+└── .github/       # CI/CD workflows, automation, and issue templates
+    └── workflows/
 ```
 
 ## Boundary rules
+
+### services/
+
+Houses background workers and asynchronous microservices that operate out-of-band from standard HTTP web request cycles (e.g. background job dispatching, bulk search indexing, async notification delivery). Services consume shared domain packages (`@genz/types`, `@genz/database`, `@genz/utils`) without depending on frontend frameworks.
+
 
 ### apps/web
 

@@ -1,4 +1,4 @@
-import { createClient } from "@genz/database";
+import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@/features/auth/lib/require-role";
 import Link from "next/link";
 import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
@@ -19,7 +19,9 @@ import {
 
 export default async function AdminDashboardOverviewPage() {
   await requireRole("admin");
-  const supabase = await createClient();
+  // Access is checked above; the service-role client lets admins and permitted
+  // staff (role emp) read past RLS policies that only admit profiles.role = admin.
+  const supabase = createAdminClient();
 
   const [
     { count: pendingCount },

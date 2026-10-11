@@ -70,15 +70,21 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .maybeSingle();
 
-    const userRole = user.user_metadata?.role || profile?.role;
+    // Never trust user_metadata.role: users can write it from the browser.
+    // Staff come from the protected profile row or service-role app_metadata;
+    // requireRole() re-checks against the employees table on every request.
+    const appRole = user.app_metadata?.role;
     const isStaff =
-      userRole === "admin" ||
-      userRole === "emp" ||
       profile?.role === "admin" ||
-      profile?.role === "emp";
+      profile?.role === "emp" ||
+      appRole === "admin" ||
+      appRole === "emp";
 
     if (isAuthOnly) {
-      if (isStaff) {
+      // When the server-side guard has already rejected this user (an "error"
+      // param, e.g. a deactivated employee), stay on /login instead of bouncing
+      // back to /dashboard in a loop.
+      if (isStaff && !request.nextUrl.searchParams.has("error")) {
         const url = request.nextUrl.clone();
         url.pathname = "/dashboard";
         if (url.pathname !== path) {

@@ -41,9 +41,16 @@ export default async function DiscoverPage({
   if (filters.min_price) query = query.gte("price_inr", Number(filters.min_price));
   if (filters.max_price) query = query.lte("price_inr", Number(filters.max_price));
 
-  const { data: products, count } = await query
-    .order("created_at", { ascending: false })
-    .range(0, PAGE_SIZE - 1);
+  const [productsRes, catRes] = await Promise.all([
+    query.order("created_at", { ascending: false }).range(0, PAGE_SIZE - 1),
+    supabase.from("products").select("category").eq("status", "published"),
+  ]);
+
+  const products = productsRes.data;
+  const count = productsRes.count;
+  const categories = Array.from(
+    new Set((catRes.data ?? []).map((p) => p.category?.trim()).filter(Boolean))
+  ).sort() as string[];
 
   const hasMore = count !== null ? (products?.length ?? 0) < count : false;
 
@@ -69,7 +76,7 @@ export default async function DiscoverPage({
       <div className="mx-auto max-w-[1280px] px-6 py-12 sm:px-12">
         {/* Filters & Search Block */}
         <div className="mb-10">
-          <DiscoverFilters filters={filters} />
+          <DiscoverFilters filters={filters} categories={categories} />
         </div>
 
         {/* Product Feed */}

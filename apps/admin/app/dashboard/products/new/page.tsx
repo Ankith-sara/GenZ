@@ -1,9 +1,9 @@
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { AdminProductForm, type SellerOption } from "./admin-product-form";
 
 export default async function AdminNewProductPage() {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("products:write");
 
   let supabase;
   try {
@@ -43,9 +43,21 @@ export default async function AdminNewProductPage() {
     full_name: profilesMap[s.id] || null,
   }));
 
+  const { data: catRows } = await supabase
+    .from("products")
+    .select("category");
+
+  const categories = Array.from(
+    new Set((catRows ?? []).map((p) => p.category?.trim()).filter(Boolean))
+  ).sort() as string[];
+
   return (
     <div className="mx-auto max-w-[1440px] pb-16">
-      <AdminProductForm sellers={sellersList} adminUserId={session.userId} />
+      <AdminProductForm
+        sellers={sellersList}
+        adminUserId={session.userId}
+        categories={categories}
+      />
     </div>
   );
 }

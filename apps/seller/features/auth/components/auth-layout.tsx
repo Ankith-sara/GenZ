@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SITE_URL } from "@genz/utils";
+import { COMPANY } from "@genz/utils/company";
 import { LoginForm } from "./login-form";
 import { AuthHero } from "./auth-hero";
 import {
@@ -52,7 +53,7 @@ function SupportLink() {
   return (
     <div className="flex items-center text-xs">
       <a
-        href="mailto:sellers@genz.in?subject=Seller%20Desk%20Support"
+        href={`mailto:${COMPANY.supportEmail}?subject=Seller%20Desk%20Support`}
         className="border-border bg-card text-muted-foreground hover:border-foreground/30 hover:bg-muted/40 hover:text-foreground inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium shadow-2xs transition-all active:scale-95"
       >
         <HelpCircle className="text-muted-foreground h-3.5 w-3.5" />
@@ -62,6 +63,13 @@ function SupportLink() {
   );
 }
 
+// Policy pages live on the web storefront (SITE_URL = NEXT_PUBLIC_WEB_URL).
+const SELLER_LEGAL_LINKS = [
+  { label: "Terms", path: "/terms" },
+  { label: "Refund Policy", path: "/refund-policy" },
+  { label: "Grievance Officer", path: "/grievance" },
+];
+
 function FooterLinks() {
   return (
     <footer className="border-border/80 text-muted-foreground flex flex-col gap-2 border-t pt-6 text-[11px] sm:flex-row sm:items-center sm:justify-between">
@@ -69,13 +77,24 @@ function FooterLinks() {
         <Building2 className="text-muted-foreground h-3.5 w-3.5" />
         <span>GenZ Partner Network · Seller Desk</span>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <span className="text-muted-foreground inline-flex items-center gap-1 text-[11px]">
           <ShieldCheck className="h-3.5 w-3.5 text-[#52524E]" />
           <span>256-bit SSL Secure</span>
         </span>
+        {SELLER_LEGAL_LINKS.map((link) => (
+          <a
+            key={link.path}
+            href={`${SITE_URL}${link.path}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-foreground transition-colors hover:underline"
+          >
+            {link.label}
+          </a>
+        ))}
         <a
-          href="mailto:sellers@genz.in"
+          href={`mailto:${COMPANY.supportEmail}`}
           className="text-muted-foreground hover:text-foreground transition-colors hover:underline"
         >
           Compliance & Support

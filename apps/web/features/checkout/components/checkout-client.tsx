@@ -26,6 +26,8 @@ import {
 } from "lucide-react";
 
 import Link from "next/link";
+import { PricingService } from "@genz/services/pricing";
+import type { PlaceOrderInput } from "@genz/validation";
 import { placeOrderAction } from "@/app/(main)/cart/actions";
 import { createRazorpayOrderAction } from "../actions/razorpay";
 
@@ -112,11 +114,14 @@ interface Address {
 
 interface CheckoutClientProps {
   userAddresses: Address[];
+  /** Email of the signed-in buyer (order updates go here); null for guests. */
+  accountEmail: string | null;
 }
 
 const emptySubscribe = () => () => {};
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
+export function CheckoutClient({ userAddresses, accountEmail }: CheckoutClientProps) {
   const router = useRouter();
   const isMounted = useSyncExternalStore(
     emptySubscribe,
@@ -138,6 +143,7 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
   const [city, setCity] = useState("");
   const [stateVal, setStateVal] = useState("Karnataka");
   const [pincode, setPincode] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Payment inputs
@@ -177,9 +183,19 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
     return () => clearTimeout(timer);
   }, [userAddresses, router]);
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = cartItems.length > 0 ? 200 : 0;
-  const total = subtotal + shipping;
+  // Same pricing rules the server applies when saving the order and creating
+  // the Razorpay order, so the amount shown is the amount charged.
+  const totals =
+    cartItems.length > 0
+      ? PricingService.calculateOrderTotals(
+          cartItems.map((item) => ({ unitPrice: item.price, quantity: item.quantity }))
+        )
+      : { subtotal: 0, tax: 0, shippingFee: 0, total: 0 };
+  const subtotal = totals.subtotal;
+  const tax = totals.tax;
+  const shipping = totals.shippingFee;
+  const total = totals.total;
+  const contactEmail = accountEmail || guestEmail.trim().toLowerCase();
 
   function copyUpiId() {
     navigator.clipboard.writeText(upiIdDisplay);
@@ -196,11 +212,7 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
       state: string;
       pincode: string;
     },
-    paymentDetails: {
-      paymentMethod: string;
-      paymentStatus: "pending" | "paid";
-      notes: string;
-    }
+    payment: PlaceOrderInput["payment"]
   ) {
     const orderItems = cartItems.map((item) => ({
       id: item.id,
@@ -217,42 +229,34 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
       variantValue: item.variantValue,
     }));
 
+    // The server derives the customer email (session or guest field), payment
+    // status and totals itself; nothing here is trusted beyond validation.
     const res = await placeOrderAction({
-      customerName: finalAddress.recipientName,
-      customerEmail: "customer@genzonline.in",
-      customerPhone: finalAddress.phone,
       shippingAddress: finalAddress,
-      paymentMethod: paymentDetails.paymentMethod,
-      paymentStatus: paymentDetails.paymentStatus,
-      notes: paymentDetails.notes,
       items: orderItems,
-      subtotal,
-      tax: 0,
-      shippingFee: shipping,
-      totalAmount: total,
+      guestEmail: accountEmail ? undefined : contactEmail,
+      payment,
     });
 
     if (!res.success || !res.order) {
       throw new Error(res.error || "Failed to place order. Please try again.");
     }
 
-    // Client-side cache for instant display
-    const storedOrders = localStorage.getItem("genz-orders");
-    let ordersList = [];
-    if (storedOrders) {
-      try {
-        ordersList = JSON.parse(storedOrders);
-      } catch {}
-    }
-    ordersList.unshift(res.order);
-    localStorage.setItem("genz-orders", JSON.stringify(ordersList));
+    // Orders are always read from the server for the signed-in account; drop
+    // the legacy browser copy so no order details linger on shared devices.
+    localStorage.removeItem("genz-orders");
 
     // Clear cart
     localStorage.setItem("genz-cart", JSON.stringify([]));
     window.dispatchEvent(new Event("cart-updated"));
 
     setIsCheckingOut(false);
-    router.push("/orders");
+    // Guests have no order history page; their confirmation arrives by email.
+    router.push(
+      accountEmail
+        ? "/orders"
+        : `/checkout/success?order=${encodeURIComponent(res.order.id)}`
+    );
   }
 
   async function handlePlaceOrder(e: React.FormEvent) {
@@ -260,6 +264,11 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
     setErrorMessage(null);
     if (cartItems.length === 0) {
       router.push("/cart");
+      return;
+    }
+
+    if (!accountEmail && !EMAIL_PATTERN.test(contactEmail)) {
+      setErrorMessage("Enter a valid email address so we can send your order updates.");
       return;
     }
 
@@ -316,7 +325,7 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
         }
 
         const rzpOrder = await createRazorpayOrderAction({
-          amount: total,
+          items: cartItems.map((item) => ({ price: item.price, quantity: item.quantity })),
           receipt: `rcpt_${Date.now()}`,
           notes: {
             customer_name: finalAddress.recipientName,
@@ -341,10 +350,12 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
           order_id: rzpOrder.orderId,
           handler: async function (response: RazorpaySuccessResponse) {
             try {
+              // The server verifies the signature before treating this as paid.
               await executeFinalizeOrder(finalAddress, {
-                paymentMethod: "razorpay",
-                paymentStatus: "paid",
-                notes: `Razorpay Payment ID: ${response.razorpay_payment_id}${response.razorpay_order_id ? ` | Gateway Order: ${response.razorpay_order_id}` : ""}`,
+                method: "razorpay",
+                razorpayOrderId: response.razorpay_order_id || rzpOrder.orderId || "",
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature || "",
               });
             } catch (err: unknown) {
               const msg =
@@ -355,7 +366,7 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
           },
           prefill: {
             name: finalAddress.recipientName,
-            email: "customer@genzonline.in",
+            email: contactEmail || undefined,
             contact: finalAddress.phone,
           },
           theme: {
@@ -397,9 +408,9 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
 
     try {
       await executeFinalizeOrder(finalAddress, {
-        paymentMethod: "upi_qr",
-        paymentStatus: "pending",
-        notes: `PhonePe UPI QR | UTR: ${cleanUtr}${payerAccount.trim() ? ` | Payer: ${payerAccount.trim()}` : ""}`,
+        method: "upi_qr",
+        utr: cleanUtr,
+        payerAccount: payerAccount.trim() || undefined,
       });
     } catch (err: unknown) {
       setIsCheckingOut(false);
@@ -567,6 +578,39 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
                       />
                     </div>
                   </div>
+                </div>
+              )}
+
+              {accountEmail ? (
+                <p className="text-[11px] text-[#73736E]">
+                  Order confirmation and updates will be sent to{" "}
+                  <strong className="text-[#1A1A18]">{accountEmail}</strong>.
+                </p>
+              ) : (
+                <div>
+                  <Label
+                    htmlFor="checkout-guest-email"
+                    className="text-[11px] font-semibold text-[#73736E] uppercase"
+                  >
+                    Email for order updates *
+                  </Label>
+                  <Input
+                    id="checkout-guest-email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    className="mt-1 h-10 rounded-xl bg-white text-xs"
+                  />
+                  <p className="mt-1 text-[10px] text-[#73736E]">
+                    We email your confirmation and delivery updates here.{" "}
+                    <Link href="/login?redirectTo=/checkout" className="text-[#D97706] underline">
+                      Sign in
+                    </Link>{" "}
+                    to track, cancel or return orders online.
+                  </p>
                 </div>
               )}
             </div>
@@ -948,14 +992,25 @@ export function CheckoutClient({ userAddresses }: CheckoutClientProps) {
                 </dd>
               </div>
 
+              {tax > 0 && (
+                <div className="flex justify-between">
+                  <dt className="text-[#73736E]">GST</dt>
+                  <dd className="font-mono font-medium text-[#1A1A18]">
+                    ₹{tax.toLocaleString("en-IN")}
+                  </dd>
+                </div>
+              )}
+
               <div className="flex justify-between">
                 <div>
                   <dt className="text-[#73736E]">Shipping Fee</dt>
                   <span className="block text-[10px] text-[#73736E]">
-                    Flat Pan-India Delivery
+                    Free on orders of ₹{PricingService.FREE_SHIPPING_THRESHOLD} and above
                   </span>
                 </div>
-                <dd className="font-mono font-medium text-[#1A1A18]">₹{shipping}</dd>
+                <dd className="font-mono font-medium text-[#1A1A18]">
+                  {shipping === 0 ? "Free" : `₹${shipping}`}
+                </dd>
               </div>
 
               <div className="flex items-baseline justify-between border-t border-[#E5E5E0] pt-3">

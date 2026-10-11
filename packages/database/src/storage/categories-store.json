@@ -1,0 +1,16 @@
+[
+  {
+    "id": "etikoppaka-wooden-toys",
+    "name": "Etikoppaka Wooden Toys",
+    "slug": "etikoppaka-wooden-toys",
+    "is_active": true,
+    "productCount": 11
+  },
+  {
+    "id": "kondapalli-toys",
+    "name": "Kondapalli Toys",
+    "slug": "kondapalli-toys",
+    "is_active": true,
+    "productCount": 9
+  }
+]

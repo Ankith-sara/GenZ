@@ -16,12 +16,14 @@ interface AdminProductEditClientProps {
   product: Product;
   adminUserId: string;
   sellers: SellerOption[];
+  categories?: string[];
 }
 
 export function AdminProductEditClient({
   product,
   adminUserId,
   sellers,
+  categories,
 }: AdminProductEditClientProps) {
   const updateProductWithId = adminUpdateProductFormAction.bind(null, product.id);
   const [state, formAction, isPending] = useActionState<ProductFormState, FormData>(
@@ -52,10 +54,11 @@ export function AdminProductEditClient({
       isPending={isPending}
       cancelHref="/admin/dashboard/products"
       submitLabel="Save Changes"
+      categories={categories}
       initialValues={{
         name: product.name,
         priceInr: product.price_inr !== null ? String(product.price_inr) : "",
-        category: product.category || "Wooden Toys & Crafts",
+        category: product.category || "",
         description: product.description || "",
         materials: Array.isArray(product.materials) ? product.materials.join(", ") : "",
         status: (product.status as "published" | "draft") || "published",

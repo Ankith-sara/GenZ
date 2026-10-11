@@ -134,6 +134,16 @@ export type NewsletterSubscriber = {
   created_at: string;
 };
 
+export type ProductCategoryRow = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Reel = {
   id: string;
   product_id: string;
@@ -191,6 +201,67 @@ export type SellerPublicProfile = {
 export type OrderStatus =
   "placed" | "processing" | "shipped" | "delivered" | "cancelled";
 
+/** Mirrors the `orders_payment_status_check` constraint (migration 0026). */
+export type PaymentStatus =
+  | "pending"
+  | "paid"
+  | "failed"
+  | "refunded"
+  | "partially_refunded";
+
+// --- Refunds (migration 0026) ---
+export type RefundType = "cancellation" | "return" | "admin";
+export type RefundStatus =
+  | "requested"
+  | "approved"
+  | "processing"
+  | "processed"
+  | "rejected"
+  | "failed";
+export type RefundMethod = "razorpay" | "manual";
+
+export interface RefundRecord {
+  id: string;
+  orderId: string;
+  amount: number;
+  currency: string;
+  reason: string | null;
+  type: RefundType;
+  status: RefundStatus;
+  method: RefundMethod;
+  gatewayPaymentId: string | null;
+  gatewayRefundId: string | null;
+  manualReference: string | null;
+  failureReason: string | null;
+  requestedBy: string | null;
+  reviewedBy: string | null;
+  adminNote: string | null;
+  processedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type RefundDbRow = {
+  id: string;
+  order_id: string;
+  amount: number;
+  currency: string;
+  reason: string | null;
+  type: RefundType;
+  status: RefundStatus;
+  method: RefundMethod;
+  gateway_payment_id: string | null;
+  gateway_refund_id: string | null;
+  manual_reference: string | null;
+  failure_reason: string | null;
+  requested_by: string | null;
+  reviewed_by: string | null;
+  admin_note: string | null;
+  processed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export interface ShippingAddress {
   recipientName: string;
   phone: string;
@@ -238,7 +309,11 @@ export interface OrderRecord {
   customerPhone?: string;
   shippingAddress: ShippingAddress;
   paymentMethod: "cod" | "online" | string;
-  paymentStatus: "pending" | "paid" | "failed";
+  paymentStatus: PaymentStatus;
+  /** Gateway payment id (e.g. Razorpay `pay_...`), set once the payment is verified. */
+  paymentGatewayId?: string | null;
+  /** Sum of refunds in status `processed` (INR). */
+  refundedAmount?: number;
   status: OrderStatus;
   subtotal: number;
   tax: number;
@@ -263,7 +338,9 @@ export type OrderDbRow = {
   customer_phone: string | null;
   shipping_address: ShippingAddress | Record<string, unknown>;
   payment_method: string;
-  payment_status: string;
+  payment_status: PaymentStatus | string;
+  payment_gateway_id: string | null;
+  refunded_amount: number;
   status: OrderStatus;
   subtotal: number;
   tax: number;
@@ -314,6 +391,12 @@ export type Database = {
         Row: Product;
         Insert: Partial<Product> & { seller_id: string; name: string };
         Update: Partial<Product>;
+        Relationships: [];
+      };
+      product_categories: {
+        Row: ProductCategoryRow;
+        Insert: Partial<ProductCategoryRow> & { name: string; slug: string };
+        Update: Partial<ProductCategoryRow>;
         Relationships: [];
       };
       reels: {
@@ -379,6 +462,17 @@ export type Database = {
           customer_email: string;
         };
         Update: Partial<OrderDbRow>;
+        Relationships: [];
+      };
+      refunds: {
+        Row: RefundDbRow;
+        Insert: Partial<RefundDbRow> & {
+          order_id: string;
+          amount: number;
+          type: RefundType;
+          method: RefundMethod;
+        };
+        Update: Partial<RefundDbRow>;
         Relationships: [];
       };
       employees: {

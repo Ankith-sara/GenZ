@@ -1,20 +1,12 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MapPin,
-  Calendar,
-  BadgeCheck,
-  Globe,
-  ExternalLink,
-  Save,
-  CheckCircle2,
-  AlertCircle,
-  BookOpen,
-  Film,
-  ArrowRight,
+  MapPin, Calendar, BadgeCheck, Globe,
+  ExternalLink, Save, CheckCircle2, AlertCircle,
+  BookOpen, Film, ArrowRight,
 } from "lucide-react";
 import { Button, Input, Label, Textarea } from "@genz/ui";
 import { AvatarUploader } from "@/features/user/components/avatar-uploader";
@@ -56,9 +48,8 @@ interface ProfileStudioProps {
   } | null;
   productCount: number;
   reelCount: number;
+  craftCategories?: string[];
 }
-
-const CRAFT_CATEGORIES = ["Etikoppaka Wooden Toys", "Kondapalli Toys"];
 
 export function SellerProfileStudio({
   userId,
@@ -67,6 +58,7 @@ export function SellerProfileStudio({
   sellerProfile,
   productCount,
   reelCount,
+  craftCategories = [],
 }: ProfileStudioProps) {
   // Parse existing JSON metadata if present
   let parsedMeta: SellerMetadata = {};
@@ -96,7 +88,7 @@ export function SellerProfileStudio({
         : "etikoppaka_crafts")
   );
   const [craftCategory, setCraftCategory] = useState(
-    parsedMeta.craft_category || CRAFT_CATEGORIES[0]
+    parsedMeta.craft_category 
   );
   const [craftTitle, setCraftTitle] = useState(
     parsedMeta.craft_title || "Master Woodturner & GI Certified Artisan"
@@ -317,7 +309,7 @@ export function SellerProfileStudio({
                     onChange={(e) => setCraftCategory(e.target.value)}
                     className="border-outline-variant/60 bg-surface-container-lowest text-on-surface h-10 w-full rounded-xl border px-3 text-xs font-medium"
                   >
-                    {CRAFT_CATEGORIES.map((c) => (
+                    {Array.from(new Set([...(craftCategories || []), craftCategory].filter(Boolean))).sort().map((c) => (
                       <option key={c} value={c}>
                         {c}
                       </option>

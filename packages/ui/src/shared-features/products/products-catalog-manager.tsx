@@ -32,7 +32,6 @@ import { Button } from "../../components/button";
 import { SlideOverDrawer } from "../../components/slide-over-drawer";
 import { ActionDropdown, type ActionItem } from "../../components/action-dropdown";
 import { Select } from "../../components/select";
-import { DEFAULT_PRODUCT_CATEGORIES } from "./form/components/product-info-cards";
 
 export interface SharedProductRecord {
   id: string;
@@ -431,7 +430,7 @@ export function ProductsCatalogManager({
   // Category options for Quick Edit drawer
   const editingCategory = editingProduct?.category?.trim();
   const quickEditCategoryOptions = useMemo(() => {
-    const categoriesSet = new Set<string>(DEFAULT_PRODUCT_CATEGORIES);
+    const categoriesSet = new Set<string>();
     if (editingCategory) {
       categoriesSet.add(editingCategory);
     }

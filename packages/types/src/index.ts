@@ -11,6 +11,9 @@ export interface Category {
   slug: string;
   description?: string;
   imageUrl?: string;
+  productCount?: number;
+  is_active?: boolean;
+  created_at?: string;
 }
 
 export interface User {
@@ -21,9 +24,4 @@ export interface User {
   avatar_url?: string | null;
 }
 
-export const DEFAULT_PRODUCT_CATEGORIES = [
-  "Etikoppaka Wooden Toys",
-  "Kondapalli Toys",
-] as const;
-
-export type ProductCategory = (typeof DEFAULT_PRODUCT_CATEGORIES)[number];
+export type ProductCategory = string;

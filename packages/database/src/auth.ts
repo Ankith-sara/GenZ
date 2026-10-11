@@ -10,6 +10,51 @@ function authDebug(...args: unknown[]) {
   if (IS_DEV) console.log("[auth]", ...args);
 }
 
+/**
+ * Ensures the signed-in user has a profile row, for auth callback/confirm routes.
+ * Creates a buyer profile when missing and never changes an existing one.
+ * Seller and admin roles are granted only by an admin (see migration 0024).
+ */
+export async function ensureProfileForCurrentUser(
+  supabase: Awaited<ReturnType<typeof createClient>>
+): Promise<void> {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data: existing } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (existing) return;
+
+    const meta = user.user_metadata ?? {};
+    // profiles has no end-user INSERT policy; the role is fixed to "buyer",
+    // so the service-role client is safe here.
+    let writer;
+    try {
+      writer = createAdminClient();
+    } catch {
+      writer = supabase;
+    }
+    const { error } = await writer.from("profiles").insert({
+      id: user.id,
+      role: "buyer",
+      full_name: meta.full_name || meta.fullName || meta.name || null,
+      phone: meta.phone || null,
+      city: meta.city || null,
+      state: meta.state || null,
+      pincode: meta.pincode || null,
+    });
+    if (error) authDebug(`Profile insert failed for user ${user.id}: ${error.message}`);
+  } catch (err) {
+    console.error("[auth] ensureProfileForCurrentUser failed:", err);
+  }
+}
+
 export async function getUserAndProfile(): Promise<{
   userId: string;
   email: string | undefined;
@@ -21,17 +66,11 @@ export async function getUserAndProfile(): Promise<{
   let supabase;
   try {
     supabase = await createClient();
-    const { data } = await supabase.auth.getUser();
-    if (data?.user) {
-      user = data.user;
-    } else {
-      // Fallback to getSession if getUser token validation returns session missing
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (sessionData?.session?.user) {
-        user = sessionData.session.user;
-      }
-    }
-    if (!user) return null;
+    // getUser() validates the JWT with Supabase Auth. Never fall back to
+    // getSession(): it trusts the cookie contents without verification.
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) return null;
+    user = data.user;
   } catch (err) {
     console.error("[auth] Failed to fetch authenticated user:", err);
     return null;
@@ -49,7 +88,10 @@ export async function getUserAndProfile(): Promise<{
 
   let resolvedProfile = profile;
   if (!resolvedProfile) {
-    const metaRole = (user.user_metadata?.role as Role) ?? "buyer";
+    // Only service-role-controlled app_metadata may seed a role; user_metadata is user-writable.
+    const appRole = user.app_metadata?.role;
+    const metaRole: Role =
+      appRole === "admin" || appRole === "seller" || appRole === "emp" ? appRole : "buyer";
     const fullName = user.user_metadata?.full_name || user.user_metadata?.name || null;
 
     authDebug(`No profile row for user ${user.id}. Creating with role="${metaRole}".`);

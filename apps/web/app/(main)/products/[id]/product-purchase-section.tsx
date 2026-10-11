@@ -81,12 +81,10 @@ export function ProductPurchaseSection({
         category: product.category,
         price: currentPrice,
         quantity,
-        image:
-          product.coverUrl ||
-          "https://images.unsplash.com/photo-1515488042361-404e9250afef?w=400&q=80",
+        image: product.coverUrl || undefined,
         sellerId: product.seller_id,
         seller_id: product.seller_id,
-        sellerBusinessName: seller?.business_name || "Verified Indian Maker",
+        sellerBusinessName: seller?.business_name || undefined,
         variantName: activeVariant?.variant_name,
         variantValue: activeVariant?.variant_value,
       });

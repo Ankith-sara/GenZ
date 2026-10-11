@@ -6,14 +6,22 @@ export default async function NewProductPage() {
   const session = await requireRole("seller");
 
   let businessName = "Verified Workshop";
+  let categories: string[] = [];
+
   try {
     const supabase = createAdminClient();
-    const { data: profile } = await supabase
-      .from("seller_profiles")
-      .select("business_name, description")
-      .eq("id", session.userId)
-      .maybeSingle();
+    const [profileRes, catRes] = await Promise.all([
+      supabase
+        .from("seller_profiles")
+        .select("business_name, description")
+        .eq("id", session.userId)
+        .maybeSingle(),
+      supabase
+        .from("products")
+        .select("category"),
+    ]);
 
+    const profile = profileRes.data;
     if (profile) {
       businessName = profile.business_name || businessName;
       if (
@@ -27,13 +35,21 @@ export default async function NewProductPage() {
         } catch {}
       }
     }
+
+    categories = Array.from(
+      new Set((catRes.data ?? []).map((p) => p.category?.trim()).filter(Boolean))
+    ).sort() as string[];
   } catch (e) {
-    console.warn("Could not fetch seller profile for product creation:", e);
+    console.warn("Could not fetch seller profile or categories for product creation:", e);
   }
 
   return (
     <div className="w-full">
-      <SellerProductForm sellerId={session.userId} sellerBusinessName={businessName} />
+      <SellerProductForm
+        sellerId={session.userId}
+        sellerBusinessName={businessName}
+        categories={categories}
+      />
     </div>
   );
 }

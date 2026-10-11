@@ -82,11 +82,13 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .maybeSingle();
 
+    // Never trust user_metadata.role: users can write it from the browser.
+    const appRole = user.app_metadata?.role;
     const isAuthorized =
       profile?.role === "seller" ||
       profile?.role === "admin" ||
-      user.user_metadata?.role === "seller" ||
-      user.user_metadata?.role === "admin";
+      appRole === "seller" ||
+      appRole === "admin";
 
     if (isAuthOnly) {
       if (isAuthorized) {

@@ -117,6 +117,9 @@ const CURATED_ARTISANS: Record<string, SellerProfileData> = {
   },
 };
 
+// Workshop footage recorded with the artisan (served from /public/reels).
+// Used only when the reels table has no rows for this seller. No view counts
+// are shown because none are tracked for this local asset.
 const ETIKOPPAKA_CURATED_REELS: SellerReel[] = [
   {
     id: "reel-lathe-turning-nageswara-rao",
@@ -127,28 +130,6 @@ const ETIKOPPAKA_CURATED_REELS: SellerReel[] = [
     thumbnail_url: "/polumuri_nageswara_rao.jpg",
     caption:
       "Master Artisan Polumuri Nageswara Rao demonstrating authentic Etikoppaka lathe-turning and natural lacquer application.",
-    views_count: 24500,
-    duration: "0:30",
-  },
-  {
-    id: "reel-lacquer-color",
-    video_url:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
-    thumbnail_path: "/etikoppaka_toys.png",
-    caption:
-      "Natural friction lacquering: applying lead-free vegetable dyes extracted from seeds & roots.",
-    views_count: 9800,
-    duration: "0:45",
-  },
-  {
-    id: "reel-master-inspection",
-    video_url:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-    thumbnail_path: "/cat_toys.png",
-    caption:
-      "Master craftsman final quality check: smooth non-toxic finish safe for all generations.",
-    views_count: 18500,
-    duration: "0:25",
   },
 ];
 
@@ -268,7 +249,7 @@ export default async function SellerPublicProfilePage({
       const craftTitle =
         meta.craft_title ||
         meta.craft_category ||
-        "Verified Indian Manufacturer & Artisan";
+        (dbSeller.status === "verified" ? "Verified seller on GenZ" : "Seller on GenZ");
       const locationCity = dbSeller.city || "India";
       const locationState = dbSeller.state || "";
 
@@ -281,10 +262,11 @@ export default async function SellerPublicProfilePage({
         state: locationState,
         description:
           plainBio ||
-          `${dbSeller.business_name} is an authentic Indian manufacturing and craft studio operating out of ${locationCity}, producing high-quality verified goods with direct provenance.`,
+          `${dbSeller.business_name} sells on GenZ from ${[dbSeller.city, dbSeller.state].filter(Boolean).join(", ") || "India"}.`,
+        // Only show a founding year the seller actually provided.
         established_year:
           dbSeller.established_year ||
-          (meta.established_year ? Number(meta.established_year) : 2018),
+          (meta.established_year ? Number(meta.established_year) : null),
         avatar_url:
           userProfile?.avatar_url ||
           meta.avatar_url ||
@@ -292,20 +274,13 @@ export default async function SellerPublicProfilePage({
             ? "/indian_craftsman.png"
             : null),
         cover_url: meta.cover_url || "/machine_work.png",
+        // Story fields come only from what the seller wrote in Profile Studio;
+        // empty sections are hidden rather than filled with invented copy.
         story: {
-          how_it_started:
-            meta.how_it_started ||
-            `Our journey began with a clear mission: to build dependable, authentic Indian products directly from the workshop floor. Over the years, we have refined our manufacturing process, combining regional craft traditions with modern quality standards.`,
-          generations_heritage:
-            meta.generations_heritage ||
-            meta.materials_and_technique ||
-            `Operating from ${locationCity}, our team is dedicated to ethical manufacturing, sourcing regional materials responsibly, and delivering uncompromised quality without middleman markups.`,
-          materials_and_technique:
-            meta.materials_and_technique ||
-            `Every item is crafted with rigorous quality checks, utilizing sustainable materials and verified Indian supply chains.`,
-          vision:
-            meta.vision ||
-            `To make Indian manufacturing a globally respected benchmark of reliability, craft pride, and direct-to-consumer value.`,
+          how_it_started: meta.how_it_started || undefined,
+          generations_heritage: meta.generations_heritage || undefined,
+          materials_and_technique: meta.materials_and_technique || undefined,
+          vision: meta.vision || undefined,
           milestones:
             meta.milestones &&
             Array.isArray(meta.milestones) &&
@@ -351,7 +326,7 @@ export default async function SellerPublicProfilePage({
               : null,
           caption: r.caption,
           views_count: r.views_count ?? undefined,
-          duration: r.duration || "0:30",
+          duration: r.duration || undefined,
         })) as SellerReel[];
       }
     }
@@ -405,7 +380,7 @@ export default async function SellerPublicProfilePage({
               : null,
           caption: r.caption,
           views_count: r.views_count ?? undefined,
-          duration: r.duration || "0:30",
+          duration: r.duration || undefined,
         })) as SellerReel[];
       }
     } catch {

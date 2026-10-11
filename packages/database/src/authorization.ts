@@ -2,6 +2,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 import type { Role, PermissionKey } from "@genz/types";
 import { getUserAndProfile } from "./auth";
+import { resolveTrustedRole, canAccessRole } from "./role-resolution";
 
 /**
  * Requires an authenticated user session.
@@ -21,7 +22,7 @@ export async function requireUser() {
  */
 export async function requireSeller() {
   const session = await requireUser();
-  const role = session.profile?.role ?? session.user.user_metadata?.role;
+  const role = session.profile?.role;
   if (role !== "seller" && role !== "admin") {
     throw new Error("Forbidden: Seller authorization required");
   }
@@ -34,7 +35,7 @@ export async function requireSeller() {
  */
 export async function requireAdmin() {
   const session = await requireUser();
-  const role = session.profile?.role ?? session.user.user_metadata?.role;
+  const role = session.profile?.role;
   if (role !== "admin") {
     throw new Error("Forbidden: Admin authorization required");
   }
@@ -46,7 +47,7 @@ export async function requireAdmin() {
  */
 export async function requireSellerOwnership(resourceSellerId: string) {
   const session = await requireSeller();
-  const role = session.profile?.role ?? session.user.user_metadata?.role;
+  const role = session.profile?.role;
   if (role === "admin") return session;
   if (session.userId !== resourceSellerId) {
     throw new Error(
@@ -67,51 +68,33 @@ export async function requireSellerOwnership(resourceSellerId: string) {
  * - seller: access to 'seller' and 'buyer'
  * - buyer: access to 'buyer'
  */
+export type AuthenticatedSession = NonNullable<Awaited<ReturnType<typeof getUserAndProfile>>>;
+
 export async function requireRole(
   allowed: Role,
   options?: { redirectOnUnauthenticated?: string; redirectOnForbidden?: string }
-) {
+): Promise<AuthenticatedSession> {
   const session = await getUserAndProfile();
   if (!session) {
     redirect(options?.redirectOnUnauthenticated ?? "/login");
+    throw new Error("Unauthorized: Authentication required");
   }
 
   const user = session.user;
-  const metaRole = user?.user_metadata?.role as Role | undefined;
-  const profileRole = session.profile?.role as Role | undefined;
+  const { findActiveEmployeeForAuth } = await import("./employees");
+  const employee = await findActiveEmployeeForAuth(session.userId, user?.email);
 
-  let role: Role =
-    metaRole === "admin" || metaRole === "emp"
-      ? metaRole
-      : profileRole === "admin" || profileRole === "emp"
-        ? profileRole
-        : (profileRole ?? metaRole ?? "buyer");
-
-  if (role !== "admin" && role !== "emp" && user?.email) {
-    try {
-      const { getEmployeesList } = await import("./employees");
-      const employees = await getEmployeesList();
-      const userEmail = user.email.toLowerCase();
-      const matched = employees.find(
-        (e) => e.email.toLowerCase() === userEmail && e.status === "active"
-      );
-      if (matched) {
-        role = matched.role_level === "admin" ? "admin" : "emp";
-      }
-    } catch {
-      // ignore fallback error
-    }
-  }
+  const role: Role = resolveTrustedRole({
+    profileRole: session.profile?.role,
+    appMetadataRole: user?.app_metadata?.role,
+    employee,
+  });
 
   if (session.profile) {
     session.profile.role = role;
   }
 
-  const isAllowed =
-    role === "admin" ||
-    (role === "emp" && allowed === "admin") ||
-    (role === "seller" && (allowed === "seller" || allowed === "buyer")) ||
-    (role === "buyer" && allowed === "buyer");
+  const isAllowed = canAccessRole(role, allowed);
 
   if (!isAllowed) {
     if (options?.redirectOnForbidden) {
@@ -137,19 +120,41 @@ export async function requireRole(
  */
 export async function getEmployeeForSession() {
   const session = await requireRole("admin");
-  const { getEmployeesList } = await import("./employees");
-  const employees = await getEmployeesList();
+  const { findActiveEmployeeForAuth } = await import("./employees");
 
   const userEmail = session.user?.email?.toLowerCase();
   const userId = session.userId;
 
-  const matched = employees.find(
-    (e) => e.id === userId || (userEmail && e.email.toLowerCase() === userEmail)
-  );
+  const matched = await findActiveEmployeeForAuth(userId, userEmail);
+  if (matched) {
+    return { session, employee: matched };
+  }
+
+  // Staff without an employee record get no module permissions. Only a real
+  // admin (resolved from trusted sources by requireRole) gets the full set.
+  if (session.profile?.role !== "admin") {
+    return {
+      session,
+      employee: {
+        id: userId,
+        employee_code: "GZ-EMP-UNLINKED",
+        full_name: session.profile?.full_name || "Staff User",
+        email: userEmail || "",
+        department: "admin" as const,
+        designation: "Unlinked staff account",
+        role: "Staff",
+        status: "active" as const,
+        role_level: "staff" as const,
+        permissions: [] as PermissionKey[],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    };
+  }
 
   return {
     session,
-    employee: matched || {
+    employee: {
       id: userId,
       employee_code: "GZ-ADM-001",
       full_name: session.profile?.full_name || "Admin User",
@@ -200,7 +205,7 @@ export async function requirePermission(
 ) {
   const { session, employee } = await getEmployeeForSession();
   const user = session.user;
-  const role = (session.profile?.role ?? user?.user_metadata?.role) as Role;
+  const role = session.profile?.role as Role;
 
   if (role === "admin" || employee.role_level === "admin") {
     return { session, employee };
@@ -225,4 +230,50 @@ export function hasPermission(
 ): boolean {
   if (employee.role_level === "admin") return true;
   return Boolean(employee.permissions && employee.permissions.includes(permission));
+}
+
+/**
+ * Decides whether a freshly signed-in user may use the admin portal, using the
+ * same trusted sources as requireRole(): the protected profile row,
+ * service-role app_metadata and the employees table. Keeps the staff markers in
+ * sync so the edge middleware (which cannot read employees) agrees with it:
+ * active employees get app_metadata.role = "emp"; a stale marker is cleared.
+ */
+export async function resolveStaffAccessForUser(user: {
+  id: string;
+  email?: string | null;
+  app_metadata?: Record<string, unknown>;
+}): Promise<{ allowed: boolean; role: Role }> {
+  const { createAdminClient } = await import("./admin");
+  const { findActiveEmployeeForAuth } = await import("./employees");
+  const supabase = createAdminClient();
+
+  const [{ data: profile }, employee] = await Promise.all([
+    supabase.from("profiles").select("role").eq("id", user.id).maybeSingle(),
+    findActiveEmployeeForAuth(user.id, user.email),
+  ]);
+
+  const appRole = user.app_metadata?.role;
+  const role = resolveTrustedRole({
+    profileRole: profile?.role,
+    appMetadataRole: appRole,
+    employee,
+  });
+  const allowed = role === "admin" || role === "emp";
+
+  try {
+    if (employee && appRole !== "emp" && appRole !== "admin") {
+      await supabase.auth.admin.updateUserById(user.id, {
+        app_metadata: { ...user.app_metadata, role: "emp" },
+      });
+    } else if (!employee && appRole === "emp") {
+      await supabase.auth.admin.updateUserById(user.id, {
+        app_metadata: { ...user.app_metadata, role: null },
+      });
+    }
+  } catch (err) {
+    console.error("[authorization] Staff marker sync failed:", err);
+  }
+
+  return { allowed, role };
 }

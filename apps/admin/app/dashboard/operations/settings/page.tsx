@@ -1,4 +1,4 @@
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { OperationsSettingsClient } from "./operations-settings-client";
 
 export const metadata = {
@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default async function OperationsSettingsPage() {
-  await requireRole("admin");
+  await requirePermission("system:write");
 
   return <OperationsSettingsClient />;
 }

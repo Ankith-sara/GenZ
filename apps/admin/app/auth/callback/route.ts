@@ -1,41 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@genz/database";
-import type { Role } from "@genz/types";
-
-async function ensureProfileCreated(
-  supabase: Awaited<ReturnType<typeof createClient>>
-) {
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      const { data: existingProfile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      const meta = user.user_metadata ?? {};
-      const fullName = meta.full_name || meta.fullName || null;
-      const role: Role = existingProfile?.role || (meta.role as Role) || "admin";
-
-      await supabase.from("profiles").upsert({
-        id: user.id,
-        role,
-        full_name: fullName,
-        phone: meta.phone || null,
-        city: meta.city || null,
-        state: meta.state || null,
-        pincode: meta.pincode || null,
-      });
-    }
-  } catch (err) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Error creating profile in callback:", err);
-    }
-  }
-}
+import { ensureProfileForCurrentUser } from "@genz/database/auth";
+import { resolveStaffAccessForUser } from "@genz/database/authorization";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -58,16 +24,10 @@ export async function GET(request: Request) {
   }
 
   if (user) {
-    await ensureProfileCreated(supabase);
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
+    await ensureProfileForCurrentUser(supabase);
+    const { allowed } = await resolveStaffAccessForUser(user);
 
-    const currentRole = profile?.role ?? user.user_metadata?.role ?? "buyer";
-
-    if (currentRole === "admin" || currentRole === "emp") {
+    if (allowed) {
       next = "/dashboard";
     } else {
       next = "/login?error=forbidden_admin_only";

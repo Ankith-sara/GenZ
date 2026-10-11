@@ -338,17 +338,17 @@ export function ReportsViewClient({ initialModule, data }: ReportsViewClientProp
             <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-2xs">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium tracking-wider text-neutral-500 uppercase">
-                  System Health
+                  Pending Verifications
                 </span>
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                 </span>
               </div>
               <div className="mt-3 text-2xl font-bold tracking-tight text-neutral-900">
-                99.98%
+                {data.pendingVerificationsCount}
               </div>
               <p className="mt-1 text-xs text-neutral-500">
-                All 3 platform modules nominal
+                Seller applications awaiting review
               </p>
             </div>
           </div>

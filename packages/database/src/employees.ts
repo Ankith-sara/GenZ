@@ -168,6 +168,41 @@ function writeLocalDepartments(departments: Department[]) {
   }
 }
 
+/**
+ * Looks up the active employee record for an authenticated user, for
+ * authorization only. Reads the `employees` table exclusively — the local JSON
+ * fallback is deliberately skipped so a file on disk can never grant access.
+ */
+export async function findActiveEmployeeForAuth(
+  userId: string,
+  email: string | null | undefined
+): Promise<Employee | null> {
+  try {
+    const supabase = createAdminClient();
+    const { data: byId } = await supabase
+      .from("employees")
+      .select("*")
+      .eq("id", userId)
+      .eq("status", "active")
+      .maybeSingle();
+    if (byId) return byId as Employee;
+
+    if (!email) return null;
+    // Escape LIKE wildcards: "%" and "_" are legal in email addresses.
+    const exactPattern = email.replace(/[\\%_]/g, (ch) => `\\${ch}`);
+    const { data: byEmail } = await supabase
+      .from("employees")
+      .select("*")
+      .ilike("email", exactPattern)
+      .eq("status", "active")
+      .maybeSingle();
+    return (byEmail as Employee | null) ?? null;
+  } catch (err) {
+    console.error("[EmployeesRepo] Auth lookup failed:", err);
+    return null;
+  }
+}
+
 export async function getEmployeesList(filters?: {
   department?: EmployeeDepartment;
   status?: EmployeeStatus;
@@ -205,6 +240,72 @@ export async function getEmployeesList(filters?: {
   return list;
 }
 
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
+/**
+ * employees.id is a foreign key to profiles.id, so every employee needs a real
+ * auth account. Finds the account for this email or creates one (no password;
+ * the admin sends a reset), marked as staff in service-role app_metadata.
+ */
+async function resolveEmployeeAccountId(
+  supabase: ReturnType<typeof createAdminClient>,
+  email: string,
+  fullName: string
+): Promise<string> {
+  const normalized = email.trim().toLowerCase();
+  for (let page = 1; page <= 20; page++) {
+    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    if (error) throw new Error(`Could not look up auth users: ${error.message}`);
+    const found = data.users.find((u) => u.email?.toLowerCase() === normalized);
+    if (found) {
+      await supabase.auth.admin.updateUserById(found.id, {
+        app_metadata: { ...found.app_metadata, role: "emp" },
+      });
+      return found.id;
+    }
+    if (data.users.length < 1000) break;
+  }
+
+  const { data: created, error: createError } = await supabase.auth.admin.createUser({
+    email: normalized,
+    email_confirm: true,
+    user_metadata: { full_name: fullName },
+    app_metadata: { role: "emp" },
+  });
+  if (createError || !created?.user) {
+    throw new Error(`Could not create the employee's login: ${createError?.message ?? "unknown error"}`);
+  }
+  return created.user.id;
+}
+
+/**
+ * Mirrors employment on profiles.role so staff are visible in the database.
+ * Only buyer <-> emp is changed; admins and sellers keep their role.
+ * Authorization still requires an active employees row (see role-resolution.ts).
+ */
+async function syncEmployeeProfileRole(
+  supabase: ReturnType<typeof createAdminClient>,
+  id: string,
+  isActiveEmployee: boolean
+) {
+  const { error } = await supabase
+    .from("profiles")
+    .update({ role: isActiveEmployee ? "emp" : "buyer" })
+    .eq("id", id)
+    .in("role", isActiveEmployee ? ["buyer"] : ["emp"]);
+  if (error) console.error("[EmployeesRepo] Profile role sync failed:", error.message);
+
+  // Keep the middleware's service-role staff marker in step as well.
+  const { data: authUser } = await supabase.auth.admin.getUserById(id);
+  const appMeta = authUser?.user?.app_metadata ?? {};
+  if (isActiveEmployee ? appMeta.role !== "emp" && appMeta.role !== "admin" : appMeta.role === "emp") {
+    const { error: metaError } = await supabase.auth.admin.updateUserById(id, {
+      app_metadata: { ...appMeta, role: isActiveEmployee ? "emp" : null },
+    });
+    if (metaError) console.error("[EmployeesRepo] Staff marker sync failed:", metaError.message);
+  }
+}
+
 export async function upsertEmployee(
   employee: Partial<Employee> & { email?: string; full_name?: string }
 ): Promise<Employee> {
@@ -216,7 +317,25 @@ export async function upsertEmployee(
       (employee.email && e.email === employee.email)
   );
 
-  const id = employee.id || existing?.id || crypto.randomUUID();
+  let id = employee.id || existing?.id || "";
+  const accountEmail = employee.email || existing?.email || "";
+  let supabase: ReturnType<typeof createAdminClient> | null = null;
+  try {
+    supabase = createAdminClient();
+  } catch (err) {
+    if (IS_PRODUCTION) throw err;
+  }
+  const storedInDb =
+    Boolean(id && supabase) &&
+    Boolean((await supabase!.from("employees").select("id").eq("id", id).maybeSingle()).data);
+  if (supabase && accountEmail && !storedInDb) {
+    id = await resolveEmployeeAccountId(
+      supabase,
+      accountEmail,
+      employee.full_name || existing?.full_name || "Team Member"
+    );
+  }
+  if (!id) id = crypto.randomUUID();
   const roleName =
     employee.role ||
     employee.designation ||
@@ -252,13 +371,16 @@ export async function upsertEmployee(
     updated_at: now,
   };
 
-  try {
-    const supabase = createAdminClient();
+  if (supabase) {
     const { error } = await supabase.from("employees").upsert(fullEmployee);
     if (!error) {
+      await syncEmployeeProfileRole(supabase, fullEmployee.id, fullEmployee.status === "active");
       return fullEmployee;
     }
-  } catch {}
+    // A local JSON file does not persist on serverless hosting; never pretend it saved.
+    if (IS_PRODUCTION) throw new Error(`Could not save employee: ${error.message}`);
+    console.error("[EmployeesRepo] DB upsert failed, using local dev store:", error.message);
+  }
 
   const idx = list.findIndex(
     (e) => e.id === fullEmployee.id || e.email === fullEmployee.email
@@ -275,8 +397,13 @@ export async function upsertEmployee(
 export async function deleteEmployee(id: string): Promise<boolean> {
   try {
     const supabase = createAdminClient();
-    await supabase.from("employees").delete().eq("id", id);
-  } catch {}
+    const { error } = await supabase.from("employees").delete().eq("id", id);
+    if (error) throw new Error(error.message);
+    await syncEmployeeProfileRole(supabase, id, false);
+  } catch (err) {
+    if (IS_PRODUCTION) throw err;
+    console.error("[EmployeesRepo] DB delete failed, using local dev store:", err);
+  }
 
   const list = readLocalEmployees();
   const filtered = list.filter((e) => e.id !== id);
@@ -285,8 +412,7 @@ export async function deleteEmployee(id: string): Promise<boolean> {
 }
 
 export async function toggleEmployeeStatus(id: string): Promise<Employee | null> {
-  const list = readLocalEmployees();
-  const emp = list.find((e) => e.id === id);
+  const emp = (await getEmployeesList()).find((e) => e.id === id);
   if (!emp) return null;
 
   const nextStatus: EmployeeStatus = emp.status === "active" ? "inactive" : "active";

@@ -1,10 +1,10 @@
 "use server";
 
-import { createClient } from "@genz/database";
-import { createAdminClient } from "@genz/database/admin";
-import { createOrderRecord, type CreateOrderInput } from "@genz/database/orders";
-
-import { sendSellerOrderNotificationEmail } from "@genz/utils/resend";
+import { getUserAndProfile } from "@genz/database/auth";
+import { withRateLimit } from "@genz/utils/rate-limiter";
+import { CheckoutService } from "@genz/services/checkout";
+import { PaymentsService } from "@genz/services/payments";
+import { placeOrderSchema, type PlaceOrderInput } from "@genz/validation";
 import type { OrderRecord } from "@genz/types";
 
 export interface PlaceOrderResult {
@@ -13,94 +13,100 @@ export interface PlaceOrderResult {
   error?: string;
 }
 
-export async function placeOrderAction(
-  input: CreateOrderInput
-): Promise<PlaceOrderResult> {
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+/**
+ * Places an order. Guest checkout is supported, so a session is optional here
+ * (requireRole would force sign-in): signed-in buyers are rate limited per
+ * user, guests per IP.
+ *
+ * Trust boundaries:
+ * - The customer email comes from the verified session for signed-in users;
+ *   guests must supply one (validated). The client never sets it otherwise.
+ * - Payment status is never taken from the client: a Razorpay payment is
+ *   "paid" only after its signature is verified here, and only then is the
+ *   gateway payment id stored on the order.
+ */
+export async function placeOrderAction(input: PlaceOrderInput): Promise<PlaceOrderResult> {
+  const session = await getUserAndProfile();
 
-    const order = await createOrderRecord({
-      ...input,
-      customerId: user?.id || null,
-      paymentMethod: input.paymentMethod || "upi_qr",
-      notes: input.notes,
-    });
-
-    // Group items by seller to dispatch notification emails
-    const sellerGroups: Record<string, typeof input.items> = {};
-    input.items.forEach((item) => {
-      const sId = item.sellerId || item.seller_id;
-      if (sId) {
-        if (!sellerGroups[sId]) sellerGroups[sId] = [];
-        sellerGroups[sId].push(item);
+  const result = await withRateLimit(
+    {
+      endpointType: session ? "user" : "public",
+      actionName: "place_order",
+      identifier: session?.userId,
+    },
+    async (): Promise<PlaceOrderResult> => {
+      const parsed = placeOrderSchema.safeParse(input);
+      if (!parsed.success) {
+        return {
+          success: false,
+          error: parsed.error.issues[0]?.message || "Please check your order details.",
+        };
       }
-    });
+      const data = parsed.data;
 
-    // Dispatch seller notification emails asynchronously
-    const adminClient = createAdminClient();
+      const customerEmail = session ? session.email : data.guestEmail;
+      if (!customerEmail) {
+        return {
+          success: false,
+          error: session
+            ? "Your account has no email address. Add one to your profile to place orders."
+            : "Enter your email address so we can send your order updates.",
+        };
+      }
 
-    for (const [sellerId, sellerItems] of Object.entries(sellerGroups)) {
-      try {
-        // Try getting seller email from seller_applications or profiles
-        let sellerEmail = "";
-        let sellerName = sellerItems[0]?.sellerBusinessName || "Maker";
+      let paymentStatus: "pending" | "paid" = "pending";
+      let paymentGatewayId: string | null = null;
+      let notes: string;
 
-        const { data: appData } = await adminClient
-          .from("seller_applications")
-          .select("email, full_name, business_name")
-          .eq("id", sellerId)
-          .maybeSingle();
-
-        if (appData?.email) {
-          sellerEmail = appData.email;
-          sellerName = appData.business_name || appData.full_name || sellerName;
-        } else {
-          // Check auth users list
-          const { data: userData } = await adminClient.auth.admin.getUserById(sellerId);
-          if (userData?.user?.email) {
-            sellerEmail = userData.user.email;
-          }
-        }
-
-        if (sellerEmail) {
-          const sellerTotal = sellerItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
+      if (data.payment.method === "razorpay") {
+        const verification = PaymentsService.verifyRazorpaySignature({
+          orderId: data.payment.razorpayOrderId,
+          paymentId: data.payment.razorpayPaymentId,
+          signature: data.payment.razorpaySignature,
+        });
+        if (!verification.verified) {
+          console.error(
+            "[PlaceOrder] Razorpay signature verification failed:",
+            verification.reason
           );
-
-          await sendSellerOrderNotificationEmail({
-            to: sellerEmail,
-            sellerName,
-            orderId: order.id,
-            items: sellerItems.map((i) => ({
-              name: i.name || i.product_name || "Handcrafted Product",
-              quantity: i.quantity,
-              price: i.price,
-            })),
-            totalAmount: sellerTotal,
-            customerName: input.customerName,
-            customerPhone: input.customerPhone,
-            shippingAddress: input.shippingAddress,
-            paymentMethod: input.notes
-              ? `UPI QR Payment (UTR: ${input.notes})`
-              : "UPI QR Code Payment",
-          });
+          return {
+            success: false,
+            error:
+              "We could not verify your payment. If money was debited, contact support with your Razorpay payment id.",
+          };
         }
-      } catch (emailErr) {
-        console.warn(
-          `[PlaceOrder] Email dispatch notice for seller ${sellerId}:`,
-          emailErr
-        );
+        paymentStatus = "paid";
+        paymentGatewayId = data.payment.razorpayPaymentId;
+        notes = `Razorpay Payment ID: ${data.payment.razorpayPaymentId} | Gateway Order: ${data.payment.razorpayOrderId}`;
+      } else {
+        notes = `PhonePe UPI QR | UTR: ${data.payment.utr}${
+          data.payment.payerAccount ? ` | Payer: ${data.payment.payerAccount}` : ""
+        }`;
+      }
+
+      try {
+        return await CheckoutService.processCheckout({
+          customerId: session?.userId ?? null,
+          customerName: data.shippingAddress.recipientName,
+          customerEmail,
+          customerPhone: data.shippingAddress.phone,
+          shippingAddress: data.shippingAddress,
+          paymentMethod: data.payment.method,
+          paymentStatus,
+          paymentGatewayId,
+          items: data.items,
+          notes,
+        });
+      } catch (err: unknown) {
+        console.error("[PlaceOrder] Error:", err);
+        return {
+          success: false,
+          error: err instanceof Error ? err.message : "Failed to place order",
+        };
       }
     }
+  );
 
-    return { success: true, order };
-  } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : "Failed to place order";
-    console.error("[PlaceOrder] Error:", err);
-    return { success: false, error: errorMsg };
-  }
+  if ("success" in result) return result;
+  return { success: false, error: result.error };
 }

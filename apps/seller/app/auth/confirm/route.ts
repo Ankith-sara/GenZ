@@ -1,57 +1,7 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest, NextResponse } from "next/server";
 import { createClient } from "@genz/database";
-
-async function ensureProfileCreated(
-  supabase: Awaited<ReturnType<typeof createClient>>
-) {
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      const meta = user.user_metadata ?? {};
-      const rawRole = meta.role || "buyer";
-      const role = rawRole === "admin" ? "buyer" : (rawRole as "buyer" | "seller");
-      const fullName = meta.full_name || meta.fullName || null;
-
-      const { error: profileErr } = await supabase.from("profiles").upsert({
-        id: user.id,
-        role,
-        full_name: fullName,
-        phone: meta.phone || null,
-        city: meta.city || null,
-        state: meta.state || null,
-        pincode: meta.pincode || null,
-      });
-
-      if (profileErr) {
-        console.error("Profile upsert error in confirm route:", profileErr.message);
-      }
-
-      if (role === "seller") {
-        const { error: mfgErr } = await supabase.from("seller_profiles").upsert({
-          id: user.id,
-          business_name: meta.business_name || meta.full_name || "Unnamed Business",
-          gst_number: meta.gst_number || "PENDING",
-          factory_address: meta.factory_address || null,
-          state: meta.state || null,
-          pincode: meta.pincode || null,
-          status: "pending",
-        });
-
-        if (mfgErr) {
-          console.error(
-            "Seller profile upsert error in confirm route:",
-            mfgErr.message
-          );
-        }
-      }
-    }
-  } catch (err) {
-    console.error("Error creating profile upon email verification:", err);
-  }
-}
+import { ensureProfileForCurrentUser } from "@genz/database/auth";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -66,7 +16,7 @@ export async function GET(request: NextRequest) {
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      await ensureProfileCreated(supabase);
+      await ensureProfileForCurrentUser(supabase);
       return NextResponse.redirect(new URL(next, request.url));
     }
   }
@@ -75,7 +25,7 @@ export async function GET(request: NextRequest) {
   if (token_hash) {
     const { error } = await supabase.auth.verifyOtp({ type, token_hash });
     if (!error) {
-      await ensureProfileCreated(supabase);
+      await ensureProfileForCurrentUser(supabase);
       return NextResponse.redirect(new URL(next, request.url));
     }
   }
@@ -90,7 +40,7 @@ export async function GET(request: NextRequest) {
       type,
     });
     if (!error) {
-      await ensureProfileCreated(supabase);
+      await ensureProfileForCurrentUser(supabase);
       return NextResponse.redirect(new URL(next, request.url));
     }
   }

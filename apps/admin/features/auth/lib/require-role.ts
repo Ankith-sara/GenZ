@@ -4,4 +4,5 @@ export {
   requirePermission,
   getEmployeeForSession,
   hasPermission,
+  type AuthenticatedSession,
 } from "@genz/database/authorization";

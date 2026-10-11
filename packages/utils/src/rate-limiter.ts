@@ -1,50 +1,32 @@
+import "server-only";
 import { headers } from "next/headers";
-import { createClient } from "@genz/database/server";
+import { createAdminClient } from "@genz/database/admin";
+
+/**
+ * Database-backed rate limiter for server actions and route handlers.
+ *
+ * - Reads and writes `rate_limit_logs` with the service-role client. The table
+ *   has no end-user INSERT policy (migration 0019), so the user-scoped client
+ *   silently failed every write and every check counted zero.
+ * - Fails CLOSED for `auth` endpoints (login, OTP, password reset) when the
+ *   limiter cannot reach the database, and fails open with a loud error for
+ *   `public` / `user` endpoints so an outage does not take the site down.
+ */
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-export async function getClientIp(): Promise<string> {
-  try {
-    const headerList = await headers();
+export type EndpointType = "auth" | "public" | "user";
 
-    const cfIp = headerList.get("cf-connecting-ip");
-    if (cfIp) return cfIp.trim();
-
-    const vercelIp = headerList.get("x-vercel-forwarded-for");
-    if (vercelIp) return vercelIp.split(",")[0].trim();
-
-    const realIp = headerList.get("x-real-ip");
-    if (realIp) return realIp.trim();
-
-    const forwarded = headerList.get("x-forwarded-for");
-    if (forwarded) {
-      const ips = forwarded
-        .split(",")
-        .map((ip) => ip.trim())
-        .filter(Boolean);
-      // Rightmost IP is appended by the nearest proxy (Vercel / Cloudflare / Nginx)
-      if (ips.length > 0) {
-        return ips[ips.length - 1];
-      }
-    }
-  } catch (e) {
-    console.error("Failed to read headers for IP:", e);
-  }
-  return "127.0.0.1";
+export interface RateLimitCheckResult {
+  blocked: boolean;
+  error?: string;
+  retryAfterSeconds?: number;
 }
 
-function handleDbError(
-  err: { code?: string; message?: string } | null | undefined,
-  label: string
-) {
-  if (err?.code === "PGRST205" || err?.message?.includes("rate_limit_logs")) {
-    return;
-  }
-  if (IS_PRODUCTION) {
-    console.error(`[RATE_LIMIT_DEGRADED] ${label}:`, err?.message ?? err);
-  } else {
-    console.error(`${label}:`, err);
-  }
+export interface RateLimitOptions {
+  endpointType: EndpointType;
+  actionName: string;
+  identifier?: string;
 }
 
 const AUTH_IP_MAX = Number(process.env.RATE_LIMIT_AUTH_IP_MAX || "30");
@@ -60,86 +42,164 @@ const PUBLIC_IP_WINDOW = Number(process.env.RATE_LIMIT_PUBLIC_IP_WINDOW || "60")
 const USER_MAX = Number(process.env.RATE_LIMIT_USER_MAX || "200");
 const USER_WINDOW = Number(process.env.RATE_LIMIT_USER_WINDOW || "60");
 
-export interface RateLimitCheckResult {
-  blocked: boolean;
-  error?: string;
-  retryAfterSeconds?: number;
+const UNAVAILABLE_ERROR =
+  "We couldn't verify this request right now. Please try again in a moment.";
+
+/**
+ * Resolves the client IP from headers set by the platform in front of the app.
+ * Client-supplied headers are only honoured when a proxy is configured to set
+ * them, via RATE_LIMIT_TRUSTED_PROXY = "vercel" | "cloudflare" | "none".
+ * Defaults to "vercel" when running on Vercel, otherwise "none".
+ */
+export function resolveClientIp(
+  get: (name: string) => string | null,
+  trustedProxy = process.env.RATE_LIMIT_TRUSTED_PROXY || (process.env.VERCEL ? "vercel" : "none")
+): string {
+  if (trustedProxy === "cloudflare") {
+    const cfIp = get("cf-connecting-ip");
+    if (cfIp) return cfIp.trim();
+  }
+
+  if (trustedProxy === "vercel") {
+    const vercelIp = get("x-vercel-forwarded-for") || get("x-real-ip");
+    if (vercelIp) return vercelIp.split(",")[0].trim();
+  }
+
+  // The rightmost entry is appended by the nearest proxy; leftmost entries are
+  // client-controlled and must not be used for limiting.
+  const forwarded = get("x-forwarded-for");
+  if (forwarded) {
+    const ips = forwarded
+      .split(",")
+      .map((ip) => ip.trim())
+      .filter(Boolean);
+    if (ips.length > 0) return ips[ips.length - 1];
+  }
+
+  return "127.0.0.1";
 }
 
-export async function checkRateLimit(options: {
-  endpointType: "auth" | "public" | "user";
-  actionName: string;
-  identifier?: string;
-}): Promise<RateLimitCheckResult> {
+export async function getClientIp(): Promise<string> {
+  try {
+    const headerList = await headers();
+    return resolveClientIp((name) => headerList.get(name));
+  } catch (e) {
+    console.error("[RATE_LIMIT] Failed to read headers for IP:", e);
+    return "127.0.0.1";
+  }
+}
+
+function reportDbError(err: { message?: string } | null | undefined, label: string) {
+  console.error(
+    IS_PRODUCTION ? `[RATE_LIMIT_DEGRADED] ${label}: ${err?.message ?? err}` : `${label}:`,
+    IS_PRODUCTION ? "" : err
+  );
+}
+
+/** Exponential backoff after consecutive failures, newest log first. */
+export function computeBackoff(
+  logs: { is_failed: boolean; created_at: string }[],
+  nowMs: number,
+  base = AUTH_BACKOFF_BASE,
+  max = AUTH_BACKOFF_MAX
+): number {
+  let consecutiveFailures = 0;
+  for (const log of logs) {
+    if (!log.is_failed) break;
+    consecutiveFailures++;
+  }
+  if (consecutiveFailures === 0) return 0;
+
+  const delaySeconds = Math.min(base * Math.pow(2, consecutiveFailures - 1), max);
+  const nextAllowed = new Date(logs[0].created_at).getTime() + delaySeconds * 1000;
+  const remainingMs = nextAllowed - nowMs;
+  return remainingMs > 0 ? Math.ceil(remainingMs / 1000) : 0;
+}
+
+type AdminClient = ReturnType<typeof createAdminClient>;
+
+async function countSince(
+  supabase: AdminClient,
+  filters: Record<string, string>,
+  windowSeconds: number,
+  nowMs: number
+) {
+  let query = supabase
+    .from("rate_limit_logs")
+    .select("id", { count: "exact", head: true })
+    .gte("created_at", new Date(nowMs - windowSeconds * 1000).toISOString());
+  for (const [column, value] of Object.entries(filters)) {
+    query = query.eq(column, value);
+  }
+  return query;
+}
+
+export async function checkRateLimit(options: RateLimitOptions): Promise<RateLimitCheckResult> {
+  const failClosed = options.endpointType === "auth";
+  const unavailable: RateLimitCheckResult = failClosed
+    ? { blocked: true, error: UNAVAILABLE_ERROR, retryAfterSeconds: 30 }
+    : { blocked: false };
+
+  let supabase: AdminClient;
+  try {
+    supabase = createAdminClient();
+  } catch (err) {
+    reportDbError(err as Error, "Rate limiter has no service-role client");
+    return unavailable;
+  }
+
   const ip = await getClientIp();
-  const supabase = await createClient();
-  const now = new Date();
+  const nowMs = Date.now();
 
   if (options.endpointType === "user") {
-    const userId = options.identifier;
-    if (!userId) {
-      return { blocked: false };
-    }
-    const windowStart = new Date(now.getTime() - USER_WINDOW * 1000).toISOString();
-
-    const { count, error } = await supabase
-      .from("rate_limit_logs")
-      .select("id", { count: "exact", head: true })
-      .eq("endpoint_type", "user")
-      .eq("identifier", userId)
-      .gte("created_at", windowStart);
-
+    if (!options.identifier) return { blocked: false };
+    const { count, error } = await countSince(
+      supabase,
+      { endpoint_type: "user", identifier: options.identifier },
+      USER_WINDOW,
+      nowMs
+    );
     if (error) {
-      handleDbError(error, "Rate limiter user check db error");
-      return { blocked: false };
+      reportDbError(error, "Rate limiter user check failed");
+      return unavailable;
     }
-
-    if (count !== null && count >= USER_MAX) {
-      return {
-        blocked: true,
-        error: "Too many actions. Please slow down.",
-        retryAfterSeconds: USER_WINDOW,
-      };
-    }
-    return { blocked: false };
+    return (count ?? 0) >= USER_MAX
+      ? { blocked: true, error: "Too many actions. Please slow down.", retryAfterSeconds: USER_WINDOW }
+      : { blocked: false };
   }
 
   if (options.endpointType === "public") {
-    const windowStart = new Date(now.getTime() - PUBLIC_IP_WINDOW * 1000).toISOString();
-
-    const { count, error } = await supabase
-      .from("rate_limit_logs")
-      .select("id", { count: "exact", head: true })
-      .eq("endpoint_type", "public")
-      .eq("ip_address", ip)
-      .gte("created_at", windowStart);
-
+    const { count, error } = await countSince(
+      supabase,
+      { endpoint_type: "public", ip_address: ip },
+      PUBLIC_IP_WINDOW,
+      nowMs
+    );
     if (error) {
-      handleDbError(error, "Rate limiter public check db error");
-      return { blocked: false };
+      reportDbError(error, "Rate limiter public check failed");
+      return unavailable;
     }
-
-    if (count !== null && count >= PUBLIC_IP_MAX) {
-      return {
-        blocked: true,
-        error: "Too many requests. Please try again in a minute.",
-        retryAfterSeconds: PUBLIC_IP_WINDOW,
-      };
-    }
-    return { blocked: false };
+    return (count ?? 0) >= PUBLIC_IP_MAX
+      ? {
+          blocked: true,
+          error: "Too many requests. Please try again in a minute.",
+          retryAfterSeconds: PUBLIC_IP_WINDOW,
+        }
+      : { blocked: false };
   }
 
-  const ipWindowStart = new Date(now.getTime() - AUTH_IP_WINDOW * 1000).toISOString();
-  const { count: ipCount, error: ipErr } = await supabase
-    .from("rate_limit_logs")
-    .select("id", { count: "exact", head: true })
-    .eq("endpoint_type", "auth")
-    .eq("ip_address", ip)
-    .gte("created_at", ipWindowStart);
-
-  if (ipErr) {
-    handleDbError(ipErr, "Rate limiter IP check db error");
-  } else if (ipCount !== null && ipCount >= AUTH_IP_MAX) {
+  // --- auth: per-IP cap, per-account cap, then exponential backoff ---
+  const ipCheck = await countSince(
+    supabase,
+    { endpoint_type: "auth", ip_address: ip },
+    AUTH_IP_WINDOW,
+    nowMs
+  );
+  if (ipCheck.error) {
+    reportDbError(ipCheck.error, "Rate limiter auth IP check failed");
+    return unavailable;
+  }
+  if ((ipCheck.count ?? 0) >= AUTH_IP_MAX) {
     return {
       blocked: true,
       error: "Too many login attempts from this IP address. Please try again later.",
@@ -148,19 +208,17 @@ export async function checkRateLimit(options: {
   }
 
   if (options.identifier) {
-    const accountWindowStart = new Date(
-      now.getTime() - AUTH_ACCOUNT_WINDOW * 1000
-    ).toISOString();
-    const { count: accountCount, error: accountErr } = await supabase
-      .from("rate_limit_logs")
-      .select("id", { count: "exact", head: true })
-      .eq("endpoint_type", "auth")
-      .eq("identifier", options.identifier)
-      .gte("created_at", accountWindowStart);
-
-    if (accountErr) {
-      handleDbError(accountErr, "Rate limiter account check db error");
-    } else if (accountCount !== null && accountCount >= AUTH_ACCOUNT_MAX) {
+    const accountCheck = await countSince(
+      supabase,
+      { endpoint_type: "auth", identifier: options.identifier },
+      AUTH_ACCOUNT_WINDOW,
+      nowMs
+    );
+    if (accountCheck.error) {
+      reportDbError(accountCheck.error, "Rate limiter auth account check failed");
+      return unavailable;
+    }
+    if ((accountCheck.count ?? 0) >= AUTH_ACCOUNT_MAX) {
       return {
         blocked: true,
         error: "Too many attempts for this account. Please try again later.",
@@ -169,70 +227,49 @@ export async function checkRateLimit(options: {
     }
   }
 
-  let query = supabase
-    .from("rate_limit_logs")
-    .select("is_failed, created_at")
-    .eq("endpoint_type", "auth")
-    .eq("action_name", options.actionName);
+  // Two parameterised queries instead of an interpolated `.or()` filter, which
+  // let commas or parentheses in an email inject extra PostgREST conditions.
+  const recentFor = (column: "ip_address" | "identifier", value: string) =>
+    supabase
+      .from("rate_limit_logs")
+      .select("is_failed, created_at")
+      .eq("endpoint_type", "auth")
+      .eq("action_name", options.actionName)
+      .eq(column, value)
+      .order("created_at", { ascending: false })
+      .limit(10);
 
-  if (options.identifier) {
-    query = query.or(`ip_address.eq.${ip},identifier.eq.${options.identifier}`);
-  } else {
-    query = query.eq("ip_address", ip);
+  const results = await Promise.all([
+    recentFor("ip_address", ip),
+    options.identifier ? recentFor("identifier", options.identifier) : null,
+  ]);
+  const failed = results.find((r) => r?.error);
+  if (failed?.error) {
+    reportDbError(failed.error, "Rate limiter backoff lookup failed");
+    return unavailable;
   }
 
-  const { data: logs, error: logsErr } = await query
-    .order("created_at", { ascending: false })
-    .limit(10);
+  const logs = results
+    .flatMap((r) => r?.data ?? [])
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, 10);
 
-  if (logsErr) {
-    handleDbError(logsErr, "Rate limiter backoff logs db error");
-    return { blocked: false };
-  }
-
-  if (logs && logs.length > 0) {
-    let consecutiveFailures = 0;
-    for (const log of logs) {
-      if (log.is_failed) {
-        consecutiveFailures++;
-      } else {
-        break;
-      }
-    }
-
-    if (consecutiveFailures > 0) {
-      const delaySeconds = Math.min(
-        AUTH_BACKOFF_BASE * Math.pow(2, consecutiveFailures - 1),
-        AUTH_BACKOFF_MAX
-      );
-
-      const lastFailureTime = new Date(logs[0].created_at).getTime();
-      const nextAllowedTime = lastFailureTime + delaySeconds * 1000;
-      const remainingMs = nextAllowedTime - now.getTime();
-
-      if (remainingMs > 0) {
-        const remainingSeconds = Math.ceil(remainingMs / 1000);
-        return {
-          blocked: true,
-          error: `Too many failed attempts. Please wait ${remainingSeconds} second(s) before trying again.`,
-          retryAfterSeconds: remainingSeconds,
-        };
-      }
-    }
+  const waitSeconds = computeBackoff(logs, nowMs);
+  if (waitSeconds > 0) {
+    return {
+      blocked: true,
+      error: `Too many failed attempts. Please wait ${waitSeconds} second(s) before trying again.`,
+      retryAfterSeconds: waitSeconds,
+    };
   }
 
   return { blocked: false };
 }
 
-export async function logRateLimitAttempt(options: {
-  endpointType: "auth" | "public" | "user";
-  actionName: string;
-  identifier?: string;
-  isFailed?: boolean;
-}) {
+export async function logRateLimitAttempt(options: RateLimitOptions & { isFailed?: boolean }) {
   try {
     const ip = await getClientIp();
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { error } = await supabase.from("rate_limit_logs").insert({
       ip_address: ip,
       identifier: options.identifier || null,
@@ -240,18 +277,10 @@ export async function logRateLimitAttempt(options: {
       action_name: options.actionName,
       is_failed: options.isFailed ?? false,
     });
-    if (error) {
-      handleDbError(error, "Failed to log rate limit attempt");
-    }
-  } catch {
-    // Fail silent
+    if (error) reportDbError(error, "Failed to log rate limit attempt");
+  } catch (err) {
+    reportDbError(err as Error, "Failed to log rate limit attempt");
   }
-}
-
-export interface RateLimitOptions {
-  endpointType: "auth" | "public" | "user";
-  actionName: string;
-  identifier?: string;
 }
 
 function isNextRedirectError(err: unknown): boolean {
@@ -261,10 +290,7 @@ function isNextRedirectError(err: unknown): boolean {
       return true;
     }
   }
-  if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
-    return true;
-  }
-  return false;
+  return err instanceof Error && err.message.includes("NEXT_REDIRECT");
 }
 
 export async function withRateLimit<T>(
@@ -288,18 +314,10 @@ export async function withRateLimit<T>(
       "error" in result &&
       Boolean((result as { error?: unknown }).error);
 
-    await logRateLimitAttempt({
-      ...resolvedOptions,
-      isFailed,
-    });
-
+    await logRateLimitAttempt({ ...resolvedOptions, isFailed });
     return result;
   } catch (err: unknown) {
-    const isRedirect = isNextRedirectError(err);
-    await logRateLimitAttempt({
-      ...resolvedOptions,
-      isFailed: !isRedirect,
-    });
+    await logRateLimitAttempt({ ...resolvedOptions, isFailed: !isNextRedirectError(err) });
     throw err;
   }
 }

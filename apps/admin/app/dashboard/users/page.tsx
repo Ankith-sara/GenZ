@@ -1,9 +1,9 @@
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { UsersTableClient, type ProfileRecord } from "./users-table-client";
 
 export default async function AdminUsersPage() {
-  await requireRole("admin");
+  await requirePermission("system:read");
   const supabase = createAdminClient();
 
   const [profilesRes, authRes] = await Promise.all([
@@ -50,7 +50,7 @@ export default async function AdminUsersPage() {
         id: u.id,
         full_name:
           (u.user_metadata?.full_name as string) || u.email?.split("@")[0] || "User",
-        role: (u.user_metadata?.role as string) || "buyer",
+        role: (u.app_metadata?.role as string) || "buyer",
         city: null,
         state: null,
         created_at: u.created_at,

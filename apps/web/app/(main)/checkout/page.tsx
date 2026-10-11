@@ -32,7 +32,10 @@ export default async function CheckoutPage() {
 
       {/* Checkout Container */}
       <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10 md:px-12">
-        <CheckoutClient userAddresses={initialAddresses} />
+        <CheckoutClient
+          userAddresses={initialAddresses}
+          accountEmail={user?.email ?? null}
+        />
       </div>
     </main>
   );

@@ -1,0 +1,46 @@
+{
+  "name": "@genz/services",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./auth": "./auth/index.ts",
+    "./products": "./products/index.ts",
+    "./orders": "./orders/index.ts",
+    "./shipping": "./shipping/index.ts",
+    "./payments": "./payments/index.ts",
+    "./cart": "./cart/index.ts",
+    "./checkout": "./checkout/index.ts",
+    "./sellers": "./sellers/index.ts",
+    "./customers": "./customers/index.ts",
+    "./search": "./search/index.ts",
+    "./pricing": "./pricing/index.ts",
+    "./notifications": "./notifications/index.ts",
+    "./stock": "./stock/index.ts",
+    "./analytics": "./analytics/index.ts",
+    "./refunds": "./refunds/index.ts",
+    "./catalog": "./products/index.ts",
+    "./order": "./orders/index.ts",
+    "./fulfillment": "./shipping/index.ts",
+    "./payment": "./payments/index.ts",
+    "./seller": "./sellers/index.ts",
+    "./identity": "./auth/index.ts",
+    "./customer": "./customers/index.ts",
+    "./notification": "./notifications/index.ts",
+    "./inventory": "./stock/index.ts"
+  },
+  "dependencies": {
+    "@genz/database": "workspace:*",
+    "@genz/types": "workspace:*",
+    "@genz/utils": "workspace:*",
+    "@genz/validation": "workspace:*",
+    "server-only": "^0.0.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@genz/config": "workspace:*",
+    "typescript": "^5"
+  }
+}

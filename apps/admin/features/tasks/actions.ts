@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireRole } from "@genz/database/authorization";
+import { requirePermission } from "@genz/database/authorization";
 import { createInternalTask, updateInternalTaskStatus } from "@genz/database/tasks";
 import type {
   EmployeeDepartment,
@@ -11,7 +11,7 @@ import type {
 } from "@genz/types";
 
 export async function createTaskAction(formData: FormData) {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("tasks:write");
   const title = formData.get("title") as string;
   const description = (formData.get("description") as string) || null;
   const department = (formData.get("department") as EmployeeDepartment) || "tech";
@@ -45,7 +45,7 @@ export async function createTaskAction(formData: FormData) {
 }
 
 export async function updateTaskStatusAction(taskId: string, status: TaskStatus) {
-  await requireRole("admin");
+  await requirePermission("tasks:write");
   const task = await updateInternalTaskStatus(taskId, status);
   revalidatePath("/dashboard/tasks");
   return { success: true, task };

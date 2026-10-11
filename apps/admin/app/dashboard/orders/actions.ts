@@ -1,8 +1,8 @@
 "use server";
 
 import { requireRole } from "@/features/auth/lib/require-role";
-import { updateOrderStatus } from "@genz/database/orders";
-
+import { OrdersService } from "@genz/services/orders";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 import type { OrderStatus } from "@genz/types";
 import { revalidatePath } from "next/cache";
 
@@ -13,21 +13,39 @@ export async function updateOrderStatusAction(
   trackingNumber?: string,
   note?: string
 ) {
-  await requireRole("admin");
+  const session = await requireRole("admin");
 
-  try {
-    const updated = await updateOrderStatus(orderId, {
-      status,
-      carrier,
-      trackingNumber,
-      note,
-    });
+  const result = await withRateLimit(
+    {
+      endpointType: "user",
+      actionName: "admin_update_order_status",
+      identifier: session.userId,
+    },
+    async () => {
+      // Customer status emails and cancellation refunds are triggered inside
+      // OrdersService.transitionStatus.
+      const res = await OrdersService.transitionStatus({
+        orderId,
+        newStatus: status,
+        actorUserId: session.userId,
+        actorRole: "admin",
+        carrier,
+        trackingNumber,
+        note,
+      });
 
-    revalidatePath("/dashboard/orders");
-    revalidatePath("/dashboard");
-    return { success: true, order: updated };
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Failed to update order status";
-    return { success: false, error: msg };
+      if (res.success) {
+        revalidatePath("/dashboard/orders");
+        revalidatePath("/dashboard/refunds");
+        revalidatePath("/dashboard");
+      }
+
+      return res;
+    }
+  );
+
+  if (!("success" in result)) {
+    return { success: false, error: result.error };
   }
+  return result;
 }

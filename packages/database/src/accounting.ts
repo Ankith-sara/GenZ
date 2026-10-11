@@ -910,3 +910,152 @@ export async function getFinancialOverview(): Promise<FinancialOverviewSummary> 
     tdsDeducted,
   };
 }
+
+// -------------------------------------------------------------
+// 6. Refund Journals (migration 0026)
+// -------------------------------------------------------------
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+/**
+ * Builds a balanced `refund_processed` journal.
+ *
+ * - Before delivery the customer's money still sits in 2020 Customer Advances,
+ *   so the refund simply returns it: Dr 2020 / Cr cash.
+ * - After delivery (returns) the `order_delivered` journal already split the
+ *   advance into seller payable, commission, GST on commission, TCS and TDS.
+ *   The refund reverses that split pro rata, using the same rates.
+ *
+ * Cash leaves 1020 Razorpay Gateway Clearing for gateway refunds and 1010 Bank
+ * Main Account for manual (UPI/bank transfer) refunds.
+ */
+export function buildRefundJournalLines(params: {
+  amount: number;
+  method: "razorpay" | "manual";
+  afterDelivery: boolean;
+}): JournalLineItem[] {
+  const amount = round2(params.amount);
+  if (!(amount > 0)) {
+    throw new Error("Refund journal amount must be greater than zero.");
+  }
+
+  const cashLine: JournalLineItem =
+    params.method === "razorpay"
+      ? {
+          accountId: "1020",
+          accountCode: "1020",
+          accountName: "Razorpay Gateway Clearing Account",
+          debit: 0,
+          credit: amount,
+        }
+      : {
+          accountId: "1010",
+          accountCode: "1010",
+          accountName: "Bank Main Account",
+          debit: 0,
+          credit: amount,
+        };
+
+  if (!params.afterDelivery) {
+    return [
+      {
+        accountId: "2020",
+        accountCode: "2020",
+        accountName: "Customer Advances Account",
+        debit: amount,
+        credit: 0,
+      },
+      cashLine,
+    ];
+  }
+
+  // Same rates as the delivery recognition hook in orders.ts.
+  const comm = round2((amount * 10) / 100);
+  const commGst = round2((comm * 18) / 100);
+  const tcs = round2((amount * 1) / 100);
+  const tds = round2((amount * 0.1) / 100);
+  const sellerNet = round2(amount - comm - commGst - tcs - tds);
+
+  return [
+    {
+      accountId: "2010",
+      accountCode: "2010",
+      accountName: "Seller Payables Clearing Account",
+      debit: sellerNet,
+      credit: 0,
+    },
+    {
+      accountId: "4010",
+      accountCode: "4010",
+      accountName: "Marketplace Commission Income",
+      debit: comm,
+      credit: 0,
+    },
+    {
+      accountId: "2050",
+      accountCode: "2050",
+      accountName: "Output GST on Commission Payable",
+      debit: commGst,
+      credit: 0,
+    },
+    {
+      accountId: "2030",
+      accountCode: "2030",
+      accountName: "Statutory GST-TCS Payable",
+      debit: tcs,
+      credit: 0,
+    },
+    {
+      accountId: "2040",
+      accountCode: "2040",
+      accountName: "Section 194-O TDS Payable",
+      debit: tds,
+      credit: 0,
+    },
+    cashLine,
+  ];
+}
+
+export async function recordRefundJournal(params: {
+  refundId: string;
+  orderId: string;
+  amount: number;
+  method: "razorpay" | "manual";
+  afterDelivery: boolean;
+  postedBy?: string;
+}): Promise<AccountingJournal> {
+  return postJournalEntry({
+    referenceId: params.orderId,
+    eventType: "refund_processed",
+    narration: `Refund ${params.refundId} of ₹${round2(params.amount).toFixed(2)} for Order ${params.orderId} via ${params.method === "razorpay" ? "Razorpay" : "manual transfer"}`,
+    lines: buildRefundJournalLines(params),
+    postedBy: params.postedBy,
+  });
+}
+
+/**
+ * Marks accrued commissions of a fully refunded order as reversed so they are
+ * not picked up by a later settlement batch.
+ */
+export async function reverseOrderCommissions(orderId: string): Promise<void> {
+  try {
+    const supabase = createAdminClient();
+    await supabase
+      .from("seller_commissions")
+      .update({ status: "reversed" })
+      .eq("order_id", orderId)
+      .eq("status", "accrued");
+  } catch {}
+
+  const local = readLocalStore<CommissionRecord[]>("seller-commissions.json", []);
+  if (local.some((c) => c.orderId === orderId && c.status === "accrued")) {
+    writeLocalStore(
+      "seller-commissions.json",
+      local.map((c) =>
+        c.orderId === orderId && c.status === "accrued"
+          ? { ...c, status: "reversed" as const }
+          : c
+      )
+    );
+  }
+}

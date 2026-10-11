@@ -74,6 +74,12 @@ export interface SellerProfileViewProps {
   fullProfileHref?: string;
 }
 
+function formatViews(count: number): string {
+  return count < 1000
+    ? `${count} ${count === 1 ? "view" : "views"}`
+    : `${(count / 1000).toFixed(1)}k views`;
+}
+
 export function SellerProfileView({
   seller,
   products = [],
@@ -95,13 +101,28 @@ export function SellerProfileView({
   const isPolumuri =
     seller.id === "fab03143-9d65-47cf-bdc0-53db548b1005" ||
     seller.id === "etikoppaka-lacquer-crafts" ||
+    seller.id === "polumuri-nageswara-rao" ||
     seller.business_name?.toLowerCase().includes("etikoppaka");
+  // GI / Etikoppaka heritage claims below are documented for the curated
+  // Etikoppaka master artisan only. Other sellers see only what they provided.
   const avatarSrc = seller.avatar_url || (isPolumuri ? "/indian_craftsman.png" : null);
   const coverSrc = seller.cover_url || "/machine_work.png";
   const craftTitle =
-    seller.craft_title || "Second-Generation Master Artisan & GI Craft Custodian";
-  const established = seller.established_year || 1984;
+    seller.craft_title ||
+    (isPolumuri ? "Second-Generation Master Artisan & GI Craft Custodian" : null);
+  const established = seller.established_year || (isPolumuri ? 1984 : null);
   const yearsActive = established ? new Date().getFullYear() - established : null;
+  const storyStarted =
+    seller.story?.how_it_started ||
+    seller.description ||
+    (isPolumuri
+      ? "Along the banks of the Varaha River in Andhra Pradesh lies the village of Etikoppaka, where turned-wood lacquer craft has flourished across families for more than 400 years. Born into a household of generational carvers, our workshop upholds traditional woodturning methods, ensuring every artifact carries authentic cultural roots."
+      : null);
+  const storyMaterials =
+    seller.story?.materials_and_technique ||
+    (isPolumuri
+      ? "Turned exclusively from indigenous Ankudi Karra wood on traditional woodturning lathes. Pure botanical lac is applied while the wood spins, using natural friction heat to fuse non-toxic, lead-free colors extracted from seeds, bark, roots, and leaves—making every toy safe for infants and collectors alike."
+      : null);
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -147,7 +168,7 @@ export function SellerProfileView({
       }
       return r.thumbnail_path;
     }
-    return "/etikoppaka_toys.png";
+    return isPolumuri ? "/etikoppaka_toys.png" : coverSrc;
   };
 
   const togglePlayPause = () => {
@@ -185,10 +206,12 @@ export function SellerProfileView({
         {/* Top Badges & Actions */}
         <div className="absolute inset-x-4 top-4 z-10 flex items-center justify-between sm:inset-x-8">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-black/60 px-3 py-1 text-[11px] font-semibold text-amber-200 backdrop-blur-md">
-              <Award className="h-3.5 w-3.5 text-amber-400" />
-              <span>GI Craft Custodian • Govt of India Reg.</span>
-            </span>
+            {isPolumuri && (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-black/60 px-3 py-1 text-[11px] font-semibold text-amber-200 backdrop-blur-md">
+                <Award className="h-3.5 w-3.5 text-amber-400" />
+                <span>GI Craft Custodian • Govt of India Reg.</span>
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -259,28 +282,34 @@ export function SellerProfileView({
       <div className="border-b border-[#F0EFEA] px-6 pt-18 pb-6 sm:px-10 sm:pt-20">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="rounded-md bg-amber-100/80 px-2 py-0.5 font-mono text-[11px] font-bold tracking-wider text-amber-900 uppercase">
-                Direct Master Workshop
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100/80 px-2 py-0.5 text-[11px] font-bold text-emerald-900">
-                <CheckCircle2 className="h-3 w-3 text-emerald-700" />
-                <span>GI-Certified Provenance</span>
-              </span>
-            </div>
+            {isPolumuri && (
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="rounded-md bg-amber-100/80 px-2 py-0.5 font-mono text-[11px] font-bold tracking-wider text-amber-900 uppercase">
+                  Direct Master Workshop
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100/80 px-2 py-0.5 text-[11px] font-bold text-emerald-900">
+                  <CheckCircle2 className="h-3 w-3 text-emerald-700" />
+                  <span>GI-Certified Provenance</span>
+                </span>
+              </div>
+            )}
 
             <h1 className="font-serif text-2xl font-normal tracking-tight text-[#1A1A18] sm:text-3xl lg:text-4xl">
               {seller.business_name}
             </h1>
 
-            <p className="font-serif text-sm font-medium text-amber-900 italic sm:text-base">
-              {craftTitle}
-            </p>
+            {craftTitle && (
+              <p className="font-serif text-sm font-medium text-amber-900 italic sm:text-base">
+                {craftTitle}
+              </p>
+            )}
 
             <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-[#52524E]">
               {seller.maker_name && (
                 <div className="flex items-center gap-1.5 font-medium">
-                  <span className="text-[#8C8C85]">Master Craftsman:</span>
+                  <span className="text-[#8C8C85]">
+                    {isPolumuri ? "Master Craftsman:" : "Maker:"}
+                  </span>
                   <span className="font-semibold text-[#1A1A18]">
                     {seller.maker_name}
                   </span>
@@ -290,7 +319,9 @@ export function SellerProfileView({
               {location && (
                 <div className="flex items-center gap-1 text-[#52524E]">
                   <MapPin className="h-3.5 w-3.5 text-amber-700" />
-                  <span>{location}, India • Along the Varaha River</span>
+                  <span>
+                    {location}, India{isPolumuri ? " • Along the Varaha River" : ""}
+                  </span>
                 </div>
               )}
 
@@ -298,7 +329,8 @@ export function SellerProfileView({
                 <div className="flex items-center gap-1 text-[#52524E]">
                   <Calendar className="h-3.5 w-3.5 text-amber-700" />
                   <span>
-                    Est. {established} ({yearsActive}+ Years Heritage)
+                    Est. {established}
+                    {isPolumuri ? ` (${yearsActive}+ Years Heritage)` : ""}
                   </span>
                 </div>
               )}
@@ -312,7 +344,7 @@ export function SellerProfileView({
           </div>
         </div>
 
-        {/* Prestige Heritage Credentials Grid */}
+        {/* Credentials Grid — only facts we hold for this seller */}
         <div className="mt-6 grid grid-cols-2 gap-3 border-t border-[#F0EFEA] pt-5 sm:grid-cols-4">
           <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
             <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
@@ -326,39 +358,43 @@ export function SellerProfileView({
             </span>
           </div>
 
-          <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
-            <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
-              Craft Heritage
-            </span>
-            <span className="mt-0.5 block font-serif text-base font-bold text-amber-900 sm:text-lg">
-              {yearsActive ? `${yearsActive}+ Yrs` : "Ancestral"}
-            </span>
-            <span className="mt-0.5 block text-[11px] text-[#73736E]">
-              2nd-Gen Living Tradition
-            </span>
-          </div>
+          {yearsActive != null && yearsActive > 0 && (
+            <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
+              <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
+                {isPolumuri ? "Craft Heritage" : "In Business"}
+              </span>
+              <span className="mt-0.5 block font-serif text-base font-bold text-amber-900 sm:text-lg">
+                {`${yearsActive}+ Yrs`}
+              </span>
+              <span className="mt-0.5 block text-[11px] text-[#73736E]">
+                {isPolumuri ? "2nd-Gen Living Tradition" : `Since ${established}`}
+              </span>
+            </div>
+          )}
+
+          {isPolumuri && (
+            <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
+              <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
+                Sourcing Integrity
+              </span>
+              <span className="mt-0.5 block font-serif text-base font-bold text-emerald-800 sm:text-lg">
+                Organic Lac
+              </span>
+              <span className="mt-0.5 block text-[11px] text-[#73736E]">
+                Natural vegetable dyes
+              </span>
+            </div>
+          )}
 
           <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
             <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
-              Sourcing Integrity
-            </span>
-            <span className="mt-0.5 block font-serif text-base font-bold text-emerald-800 sm:text-lg">
-              Organic Lac
-            </span>
-            <span className="mt-0.5 block text-[11px] text-[#73736E]">
-              Natural vegetable dyes
-            </span>
-          </div>
-
-          <div className="rounded-xl border border-[#EBEAE5] bg-[#FAF9F5] p-3.5">
-            <span className="block font-mono text-[10px] font-bold tracking-wider text-[#8C8C85] uppercase">
-              Verified Catalog
+              Catalog
             </span>
             <span className="mt-0.5 block font-serif text-base font-bold text-[#1A1A18] sm:text-lg">
-              {products.length} Products
+              {products.length} {products.length === 1 ? "Product" : "Products"}
             </span>
             <span className="mt-0.5 block text-[11px] text-[#73736E]">
-              Hand-turned on lathe
+              {isPolumuri ? "Hand-turned on lathe" : "Listed on GenZ"}
             </span>
           </div>
         </div>
@@ -419,59 +455,76 @@ export function SellerProfileView({
         {/* TAB 1: EDITORIAL STORY & HERITAGE */}
         {activeTab === "story" && (
           <div className="space-y-8">
-            {/* Master's Voice Quote Callout */}
-            <div className="relative overflow-hidden rounded-2xl border border-amber-200/80 bg-gradient-to-br from-[#FFFDF9] via-[#FAF7F0] to-[#F5EFE1] p-6 shadow-xs sm:p-8">
-              <div className="pointer-events-none absolute top-2 right-4 font-serif text-7xl font-bold text-amber-200/50 select-none">
-                “
-              </div>
-              <div className="relative z-10 max-w-3xl space-y-3">
-                <span className="font-mono text-[10px] font-bold tracking-widest text-amber-800 uppercase">
-                  MASTER CRAFTSMAN&apos;S VOICE
-                </span>
-                <blockquote className="font-serif text-lg leading-relaxed text-[#1A1A18] italic sm:text-xl">
-                  &ldquo;Along the Varaha River, turning wood is not merely an
-                  occupation—it is a four-century cultural inheritance. Each lacquer
-                  layer applied by hand on the turning lathe seals living organic
-                  history safe for children across generations.&rdquo;
-                </blockquote>
-                <div className="flex items-center gap-2 pt-1">
-                  <span className="text-xs font-bold text-[#1A1A18]">
-                    {seller.maker_name || seller.business_name}
+            {/* Master's Voice Quote Callout (curated Etikoppaka profile only) */}
+            {isPolumuri && (
+              <div className="relative overflow-hidden rounded-2xl border border-amber-200/80 bg-gradient-to-br from-[#FFFDF9] via-[#FAF7F0] to-[#F5EFE1] p-6 shadow-xs sm:p-8">
+                <div className="pointer-events-none absolute top-2 right-4 font-serif text-7xl font-bold text-amber-200/50 select-none">
+                  “
+                </div>
+                <div className="relative z-10 max-w-3xl space-y-3">
+                  <span className="font-mono text-[10px] font-bold tracking-widest text-amber-800 uppercase">
+                    MASTER CRAFTSMAN&apos;S VOICE
                   </span>
-                  <span className="text-xs text-[#8C8C85]">• Master GI Artisan</span>
+                  <blockquote className="font-serif text-lg leading-relaxed text-[#1A1A18] italic sm:text-xl">
+                    &ldquo;Along the Varaha River, turning wood is not merely an
+                    occupation—it is a four-century cultural inheritance. Each lacquer
+                    layer applied by hand on the turning lathe seals living organic
+                    history safe for children across generations.&rdquo;
+                  </blockquote>
+                  <div className="flex items-center gap-2 pt-1">
+                    <span className="text-xs font-bold text-[#1A1A18]">
+                      {seller.maker_name || seller.business_name}
+                    </span>
+                    <span className="text-xs text-[#8C8C85]">• Master GI Artisan</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Narrative Sections Grid */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="space-y-3 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs">
-                <div className="flex items-center gap-2 text-amber-900">
-                  <BookOpen className="h-4 w-4" />
-                  <h3 className="font-serif text-base font-bold text-[#1A1A18]">
-                    Ancestral Roots & Varaha River Origins
-                  </h3>
-                </div>
-                <p className="text-xs leading-relaxed text-[#52524E] sm:text-sm">
-                  {seller.story?.how_it_started ||
-                    seller.description ||
-                    "Along the banks of the Varaha River in Andhra Pradesh lies the village of Etikoppaka, where turned-wood lacquer craft has flourished across families for more than 400 years. Born into a household of generational carvers, our workshop upholds traditional woodturning methods, ensuring every artifact carries authentic cultural roots."}
-                </p>
-              </div>
+            {/* Narrative Sections Grid — only sections the seller has written */}
+            {(storyStarted || storyMaterials) && (
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {storyStarted && (
+                  <div className="space-y-3 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs">
+                    <div className="flex items-center gap-2 text-amber-900">
+                      <BookOpen className="h-4 w-4" />
+                      <h3 className="font-serif text-base font-bold text-[#1A1A18]">
+                        {isPolumuri
+                          ? "Ancestral Roots & Varaha River Origins"
+                          : "How It Started"}
+                      </h3>
+                    </div>
+                    <p className="text-xs leading-relaxed text-[#52524E] sm:text-sm">
+                      {storyStarted}
+                    </p>
+                  </div>
+                )}
 
-              <div className="space-y-3 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs">
-                <div className="flex items-center gap-2 text-amber-900">
-                  <Sparkles className="h-4 w-4" />
-                  <h3 className="font-serif text-base font-bold text-[#1A1A18]">
-                    Materials & Natural Lathe Technique
-                  </h3>
-                </div>
-                <p className="text-xs leading-relaxed text-[#52524E] sm:text-sm">
-                  {seller.story?.materials_and_technique ||
-                    "Turned exclusively from indigenous Ankudi Karra wood on traditional woodturning lathes. Pure botanical lac is applied while the wood spins, using natural friction heat to fuse non-toxic, lead-free colors extracted from seeds, bark, roots, and leaves—making every toy safe for infants and collectors alike."}
-                </p>
+                {storyMaterials && (
+                  <div className="space-y-3 rounded-2xl border border-[#E5E5E0] bg-white p-6 shadow-xs">
+                    <div className="flex items-center gap-2 text-amber-900">
+                      <Sparkles className="h-4 w-4" />
+                      <h3 className="font-serif text-base font-bold text-[#1A1A18]">
+                        {isPolumuri
+                          ? "Materials & Natural Lathe Technique"
+                          : "Materials & Technique"}
+                      </h3>
+                    </div>
+                    <p className="text-xs leading-relaxed text-[#52524E] sm:text-sm">
+                      {storyMaterials}
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
+
+            {!storyStarted &&
+              !storyMaterials &&
+              !(seller.story?.milestones && seller.story.milestones.length > 0) && (
+                <div className="rounded-2xl border border-dashed border-[#E5E5E0] bg-[#FAF9F5] p-10 text-center text-xs text-[#73736E]">
+                  This seller hasn&apos;t added their story yet.
+                </div>
+              )}
 
             {/* Living Milestones Timeline */}
             {seller.story?.milestones && seller.story.milestones.length > 0 && (
@@ -518,11 +571,10 @@ export function SellerProfileView({
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E5E5E0] bg-[#FAF9F5] p-10 py-16 text-center text-[#73736E]">
                 <ShoppingBag className="mb-3 h-10 w-10 text-[#A3A3A3]" />
                 <h4 className="font-serif text-base font-semibold text-[#1A1A18]">
-                  Handmade Inventory in Preparation
+                  No products listed yet
                 </h4>
                 <p className="mt-1 max-w-sm text-xs text-[#73736E]">
-                  This artisan workshop is currently finishing their hand-lathe batch.
-                  Check back shortly for new catalog releases.
+                  This seller hasn&apos;t published any products on GenZ yet.
                 </p>
               </div>
             ) : (
@@ -534,7 +586,8 @@ export function SellerProfileView({
                     p.name?.toLowerCase().includes("etikoppaka") ||
                     p.category?.toLowerCase().includes("kondapalli") ||
                     p.name?.toLowerCase().includes("kondapalli") ||
-                    p.category?.toLowerCase().includes("gi");
+                    // Match "GI" as a word only (not "gift", "origin", ...).
+                    /\bgi\b/i.test(p.category ?? "");
 
                   return (
                     <Link
@@ -607,11 +660,10 @@ export function SellerProfileView({
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E5E5E0] bg-[#FAF9F5] p-10 py-16 text-center text-[#73736E]">
                 <Film className="mb-3 h-10 w-10 text-[#A3A3A3]" />
                 <h4 className="font-serif text-base font-semibold text-[#1A1A18]">
-                  Workshop Videos in Production
+                  No workshop videos yet
                 </h4>
                 <p className="mt-1 max-w-sm text-xs text-[#73736E]">
-                  Raw hand-lathe footage and organic lacquer demonstrations will be
-                  available here soon.
+                  This seller hasn&apos;t posted any workshop videos yet.
                 </p>
               </div>
             ) : (
@@ -675,13 +727,13 @@ export function SellerProfileView({
                       <div className="pointer-events-none absolute right-3.5 bottom-3.5 left-3.5 text-white">
                         <p className="line-clamp-2 text-xs leading-snug font-semibold drop-shadow-md">
                           {reel.caption ||
-                            "Traditional Turned-Wood Craft Lathe Demonstration"}
+                            (isPolumuri
+                              ? "Traditional Turned-Wood Craft Lathe Demonstration"
+                              : "Workshop reel")}
                         </p>
                         <div className="mt-1 flex items-center justify-between font-mono text-[10px] text-white/80">
                           <span>
-                            {reel.views_count
-                              ? `${(reel.views_count / 1000).toFixed(1)}k views`
-                              : "Verified Craft"}
+                            {reel.views_count ? formatViews(reel.views_count) : ""}
                           </span>
                           <span className="font-semibold text-amber-300">
                             Tap to play
@@ -811,18 +863,20 @@ export function SellerProfileView({
             <div className="relative z-20 space-y-3 p-5">
               <p className="text-xs leading-relaxed text-white/95 drop-shadow-md">
                 {activeReel.caption ||
-                  "Master artisan turning Ankudi Karra wood on the lathe and applying non-toxic natural lacquer."}
+                  (isPolumuri
+                    ? "Master artisan turning Ankudi Karra wood on the lathe and applying non-toxic natural lacquer."
+                    : "")}
               </p>
 
               <div className="flex items-center justify-between pt-1">
                 <div className="flex items-center gap-2 font-mono text-xs text-white/80">
-                  <span>{activeReel.duration || "0:30"}</span>
-                  <span>•</span>
-                  <span>
-                    {activeReel.views_count
-                      ? `${(activeReel.views_count / 1000).toFixed(1)}k views`
-                      : "GI Certified Showcase"}
-                  </span>
+                  {activeReel.duration && <span>{activeReel.duration}</span>}
+                  {activeReel.duration && activeReel.views_count ? (
+                    <span>•</span>
+                  ) : null}
+                  {activeReel.views_count ? (
+                    <span>{formatViews(activeReel.views_count)}</span>
+                  ) : null}
                 </div>
 
                 <Button

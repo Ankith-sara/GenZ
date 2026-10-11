@@ -9,9 +9,14 @@ export type { SellerOption };
 interface AdminProductFormProps {
   sellers: SellerOption[];
   adminUserId: string;
+  categories?: string[];
 }
 
-export function AdminProductForm({ sellers, adminUserId }: AdminProductFormProps) {
+export function AdminProductForm({
+  sellers,
+  adminUserId,
+  categories,
+}: AdminProductFormProps) {
   const [state, formAction, isPending] = useActionState<ProductFormState, FormData>(
     createProduct,
     {}
@@ -22,6 +27,7 @@ export function AdminProductForm({ sellers, adminUserId }: AdminProductFormProps
       role="admin"
       sellers={sellers}
       adminUserId={adminUserId}
+      categories={categories}
       action={formAction}
       state={state}
       isPending={isPending}

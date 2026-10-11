@@ -8,6 +8,7 @@ import { createBrowserClient } from "@genz/database";
 interface SellerProductFormProps {
   sellerId: string;
   sellerBusinessName?: string;
+  categories?: string[];
 }
 
 /**
@@ -39,6 +40,7 @@ async function uploadImageToStorage(
 export function SellerProductForm({
   sellerId,
   sellerBusinessName,
+  categories,
 }: SellerProductFormProps) {
   const [state, formAction, isPending] = useActionState<ProductFormState, FormData>(
     createProduct,
@@ -59,6 +61,7 @@ export function SellerProductForm({
       isPending={isPending}
       cancelHref="/dashboard/products"
       onUploadImage={handleUploadImage}
+      categories={categories}
     />
   );
 }

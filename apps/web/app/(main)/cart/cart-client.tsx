@@ -14,6 +14,8 @@ import {
   CreditCard,
 } from "lucide-react";
 import Link from "next/link";
+import { PricingService } from "@genz/services/pricing";
+import { POLICY } from "@genz/utils/company";
 
 interface CartItem {
   id: string;
@@ -29,18 +31,23 @@ interface CartItem {
   variantValue?: string;
 }
 
-const DEFAULT_CART_ITEMS: CartItem[] = [
-  {
-    id: "prod-1",
-    name: "Handcrafted Channapatna Wooden Stacker",
-    category: "Wooden Toys",
-    price: 899,
-    quantity: 1,
-    image: "https://images.unsplash.com/photo-1515488042361-404e9250afef?w=400&q=80",
-    sellerId: "c85d85fe-ae31-419b-a3d5-e3b97b09335f",
-    sellerBusinessName: "Channapatna Craft Collective",
-  },
-];
+// A demo item that earlier builds pre-loaded into every new visitor's cart.
+// It is not a real listing, so strip it from carts persisted in localStorage.
+const LEGACY_DEMO_CART_ITEM_ID = "prod-1";
+
+function readStoredCart(): CartItem[] {
+  try {
+    const stored = localStorage.getItem("genz-cart");
+    if (!stored) return [];
+    const parsed: unknown = JSON.parse(stored);
+    if (!Array.isArray(parsed)) return [];
+    return (parsed as CartItem[]).filter(
+      (item) => item && item.id !== LEGACY_DEMO_CART_ITEM_ID
+    );
+  } catch {
+    return [];
+  }
+}
 
 export function CartClient() {
   const router = useRouter();
@@ -48,19 +55,14 @@ export function CartClient() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    const items = readStoredCart();
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
-    const stored = localStorage.getItem("genz-cart");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setCartItems(Array.isArray(parsed) ? parsed : DEFAULT_CART_ITEMS);
-      } catch {
-        setCartItems(DEFAULT_CART_ITEMS);
-      }
-    } else {
-      setCartItems(DEFAULT_CART_ITEMS);
-      localStorage.setItem("genz-cart", JSON.stringify(DEFAULT_CART_ITEMS));
+    setCartItems(items);
+    try {
+      localStorage.setItem("genz-cart", JSON.stringify(items));
+    } catch {
+      // Storage unavailable (private mode etc.) — cart still renders from state.
     }
   }, []);
 
@@ -87,7 +89,11 @@ export function CartClient() {
   }
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = cartItems.length > 0 ? 200 : 0;
+  // Mirrors the server-side rule in PricingService (used by CheckoutService).
+  const shipping =
+    subtotal === 0 || subtotal >= PricingService.FREE_SHIPPING_THRESHOLD
+      ? 0
+      : PricingService.DEFAULT_SHIPPING_FEE;
   const total = subtotal + shipping;
 
   if (!isMounted) return null;
@@ -136,15 +142,19 @@ export function CartClient() {
               className="flex flex-row items-start gap-3 p-3.5 transition-colors hover:bg-[#FAF8F4]/50 sm:gap-4 sm:p-5"
             >
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#E5E5E0] bg-[#FAF7F0] sm:h-20 sm:w-20">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={
-                    item.image ||
-                    "https://images.unsplash.com/photo-1515488042361-404e9250afef?w=400&q=80"
-                  }
-                  alt={item.name}
-                  className="h-full w-full object-cover"
-                />
+                {item.image &&
+                !item.image.startsWith("https://images.unsplash.com/") ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-[#A3A3A3]">
+                    <ShoppingBag className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                )}
               </div>
               <div className="flex min-w-0 flex-1 flex-col justify-between">
                 <div>
@@ -215,13 +225,20 @@ export function CartClient() {
           <div className="flex items-center gap-2">
             <Truck className="h-4 w-4 shrink-0 text-[#D97706]" />
             <span>
-              <strong>Safe Indian Dispatch:</strong> Direct from verified makers.
+              <strong>Shipped by the maker:</strong> dispatched directly by the seller.{" "}
+              <Link href="/shipping-policy" className="underline underline-offset-2">
+                Shipping policy
+              </Link>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>
-              <strong>100% Verified Quality:</strong> Tested and certified products.
+              <strong>Damaged or wrong item?</strong> Report it within{" "}
+              {POLICY.returnWindowDays} days of delivery.{" "}
+              <Link href="/refund-policy" className="underline underline-offset-2">
+                Refund policy
+              </Link>
             </span>
           </div>
         </div>
@@ -242,13 +259,17 @@ export function CartClient() {
           </div>
           <div className="flex justify-between">
             <dt className="text-[#73736E]">Shipping Fee</dt>
-            <dd className="font-mono font-medium text-[#1A1A18]">₹{shipping}</dd>
+            <dd className="font-mono font-medium text-[#1A1A18]">
+              {shipping === 0 ? "Free" : `₹${shipping}`}
+            </dd>
           </div>
           <p className="text-[11px] text-[#73736E] italic">
-            * Flat pan-India artisan packaging &amp; courier fee (₹200).
+            * ₹{PricingService.DEFAULT_SHIPPING_FEE} shipping; free on orders of ₹
+            {PricingService.FREE_SHIPPING_THRESHOLD.toLocaleString("en-IN")} and above.
+            Applicable taxes are calculated at checkout.
           </p>
           <div className="flex justify-between border-t border-[#E5E5E0] pt-3 text-base font-semibold">
-            <dt className="text-[#1A1A18]">Estimated Total</dt>
+            <dt className="text-[#1A1A18]">Estimated Total (before tax)</dt>
             <dd className="font-mono text-[#D97706]">
               ₹{total.toLocaleString("en-IN")}
             </dd>

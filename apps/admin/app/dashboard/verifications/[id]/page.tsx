@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { createClient } from "@genz/database/server";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { createAdminClient } from "@genz/database/admin";
+import { requirePermission } from "@genz/database/authorization";
 import { ReviewActions } from "./review-actions";
 
 export default async function AdminVerificationDetailPage({
@@ -10,9 +10,11 @@ export default async function AdminVerificationDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireRole("admin");
+  await requirePermission("verifications:read");
   const { id } = await params;
-  const supabase = await createClient();
+  // Access is checked above; the service-role client lets admins and permitted
+  // staff (role emp) read past RLS policies that only admit profiles.role = admin.
+  const supabase = createAdminClient();
 
   const { data: application } = await supabase
     .from("seller_applications")

@@ -3,7 +3,6 @@ import {
   parseMaterials,
   formatInr,
   PRODUCT_STATUS_LABEL,
-  TOY_CATEGORIES,
   DISCOVER_PAGE_SIZE,
   productMediaUrl,
 } from "./products";
@@ -43,13 +42,7 @@ describe("Products Domain Logic Specs", () => {
     });
   });
 
-  describe("TOY_CATEGORIES", () => {
-    it("contains curated category list including Etikoppaka Wooden Toys and Kondapalli Toys", () => {
-      expect(TOY_CATEGORIES).toContain("Etikoppaka Wooden Toys");
-      expect(TOY_CATEGORIES).toContain("Kondapalli Toys");
-      expect(TOY_CATEGORIES).toHaveLength(2);
-    });
-
+  describe("DISCOVER_PAGE_SIZE", () => {
     it("defines default discover page size", () => {
       expect(DISCOVER_PAGE_SIZE).toBe(12);
     });

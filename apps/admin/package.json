@@ -13,6 +13,7 @@
     "@genz/validation": "workspace:*",
     "@genz/utils": "workspace:*",
     "@genz/database": "workspace:*",
+    "@genz/services": "workspace:*",
     "@genz/ui": "workspace:*",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.0",

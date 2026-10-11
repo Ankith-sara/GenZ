@@ -1,4 +1,4 @@
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { CRMSettingsClient } from "./crm-settings-client";
 
 export const metadata = {
@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default async function CRMSettingsPage() {
-  await requireRole("admin");
+  await requirePermission("crm:admin");
 
   return <CRMSettingsClient />;
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { resolveStaffAccessForUser } from "@genz/database/authorization";
 import { createClient } from "@genz/database/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Role } from "@genz/types";
@@ -103,40 +104,7 @@ export async function directPasswordLogin(email: string, password: string) {
       }
 
       if (authData?.user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", authData.user.id)
-          .single();
-
-        const role = profile?.role || authData.user.user_metadata?.role || "buyer";
-        let isAuthorized = role === "admin" || role === "emp";
-
-        if (!isAuthorized && authData.user.email) {
-          const { getEmployeesList } = await import("@genz/database/employees");
-          const employees = await getEmployeesList();
-          const userEmail = authData.user.email.toLowerCase();
-          const matchedEmp = employees.find(
-            (e) => e.email.toLowerCase() === userEmail && e.status === "active"
-          );
-          if (matchedEmp) {
-            isAuthorized = true;
-            try {
-              const { createAdminClient } = await import("@genz/database/admin");
-              const supabaseAdmin = createAdminClient();
-              const staffRole = matchedEmp.role_level === "admin" ? "admin" : "emp";
-              await supabaseAdmin.auth.admin.updateUserById(authData.user.id, {
-                user_metadata: {
-                  ...authData.user.user_metadata,
-                  role: staffRole,
-                  full_name: matchedEmp.full_name,
-                },
-              });
-            } catch (syncErr) {
-              console.warn("[directPasswordLogin] metadata sync notice:", syncErr);
-            }
-          }
-        }
+        const { allowed: isAuthorized } = await resolveStaffAccessForUser(authData.user);
 
         if (!isAuthorized) {
           await supabase.auth.signOut();
@@ -201,40 +169,7 @@ export async function verifyOtpLogin(email: string, token: string) {
       }
 
       if (authData?.user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", authData.user.id)
-          .single();
-
-        const role = profile?.role || authData.user.user_metadata?.role || "buyer";
-        let isAuthorized = role === "admin" || role === "emp";
-
-        if (!isAuthorized && authData.user.email) {
-          const { getEmployeesList } = await import("@genz/database/employees");
-          const employees = await getEmployeesList();
-          const userEmail = authData.user.email.toLowerCase();
-          const matchedEmp = employees.find(
-            (e) => e.email.toLowerCase() === userEmail && e.status === "active"
-          );
-          if (matchedEmp) {
-            isAuthorized = true;
-            try {
-              const { createAdminClient } = await import("@genz/database/admin");
-              const supabaseAdmin = createAdminClient();
-              const staffRole = matchedEmp.role_level === "admin" ? "admin" : "emp";
-              await supabaseAdmin.auth.admin.updateUserById(authData.user.id, {
-                user_metadata: {
-                  ...authData.user.user_metadata,
-                  role: staffRole,
-                  full_name: matchedEmp.full_name,
-                },
-              });
-            } catch (syncErr) {
-              console.warn("[verifyOtpLogin] metadata sync notice:", syncErr);
-            }
-          }
-        }
+        const { allowed: isAuthorized } = await resolveStaffAccessForUser(authData.user);
 
         if (!isAuthorized) {
           await supabase.auth.signOut();

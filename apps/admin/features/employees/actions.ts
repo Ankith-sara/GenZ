@@ -156,7 +156,7 @@ export async function resetEmployeePasswordAction(email: string, newPassword?: s
             email,
             password: tempPass,
             email_confirm: true,
-            user_metadata: { role: "emp" },
+            app_metadata: { role: "emp" },
           });
         }
 

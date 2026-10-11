@@ -1,6 +1,6 @@
 "use server";
 
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { withRateLimit } from "@/lib/rate-limiter";
 import {
   approveSettlementBatch,
@@ -12,7 +12,7 @@ import {
 import { revalidatePath } from "next/cache";
 
 export async function approveSettlementAction(batchId: string) {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("system:write");
   const adminId = session.user?.id || session.profile?.id;
 
   const result = await withRateLimit(
@@ -41,7 +41,7 @@ export async function approveSettlementAction(batchId: string) {
 }
 
 export async function disburseSettlementAction(batchId: string, bankUtr: string) {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("system:write");
   const adminId = session.user?.id || session.profile?.id;
 
   if (!bankUtr || bankUtr.trim().length < 6) {
@@ -77,7 +77,7 @@ export async function disburseSettlementAction(batchId: string, bankUtr: string)
 }
 
 export async function runReconciliationAction() {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("system:write");
   const adminId = session.user?.id || session.profile?.id;
 
   const result = await withRateLimit(
@@ -105,7 +105,7 @@ export async function runReconciliationAction() {
 }
 
 export async function resolveExceptionAction(exceptionId: string, notes?: string) {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("system:write");
   const adminId = session.user?.id || session.profile?.id;
 
   const result = await withRateLimit(
@@ -147,7 +147,7 @@ export async function generateSettlementAction(params: {
     commissionRate?: number;
   }[];
 }) {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("system:write");
   const adminId = session.user?.id || session.profile?.id;
 
   const result = await withRateLimit(

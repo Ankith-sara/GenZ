@@ -6,16 +6,6 @@ export const PRODUCT_STATUS_LABEL: Record<ProductStatus, string> = {
   archived: "Archived",
 };
 
-// Toys-first, per the platform's category roadmap — kept as a curated list
-// (rather than freeform text) so discovery filters have a fixed, sane set
-// of values to facet on.
-export const DEFAULT_PRODUCT_CATEGORIES = [
-  "Etikoppaka Wooden Toys",
-  "Kondapalli Toys",
-] as const;
-
-export const TOY_CATEGORIES = DEFAULT_PRODUCT_CATEGORIES;
-
 export const DISCOVER_PAGE_SIZE = 12;
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";

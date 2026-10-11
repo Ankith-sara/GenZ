@@ -1,6 +1,6 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { getUserAndProfile } from "@/features/auth/lib/auth";
+import { getUserAndProfile } from "@genz/database/auth";
 import { signOut } from "@/app/login/actions";
 
 export default async function StorefrontLayout({

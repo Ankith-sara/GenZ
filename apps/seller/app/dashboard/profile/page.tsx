@@ -36,10 +36,11 @@ export default async function SellerProfilePage() {
   let sellerProfile: SellerProfile | null = null;
   let productCount = 0;
   let reelCount = 0;
+  let craftCategories: string[] = [];
 
   try {
     const adminSupabase = createAdminClient();
-    const [pRes, sRes, prodRes, reelRes] = await Promise.all([
+    const [pRes, sRes, prodRes, reelRes, catRes] = await Promise.all([
       adminSupabase
         .from("profiles")
         .select("full_name, avatar_url")
@@ -58,13 +59,19 @@ export default async function SellerProfilePage() {
         .from("reels")
         .select("*", { count: "exact", head: true })
         .eq("seller_id", session.userId),
+      adminSupabase
+        .from("products")
+        .select("category"),
     ]);
     userProfile = pRes.data;
     sellerProfile = sRes.data;
     productCount = prodRes.count ?? 0;
     reelCount = reelRes.count ?? 0;
+    craftCategories = Array.from(
+      new Set((catRes.data ?? []).map((p) => p.category?.trim()).filter(Boolean))
+    ).sort() as string[];
   } catch {
-    const [pRes, sRes, prodRes, reelRes] = await Promise.all([
+    const [pRes, sRes, prodRes, reelRes, catRes] = await Promise.all([
       supabase
         .from("profiles")
         .select("full_name, avatar_url")
@@ -83,11 +90,17 @@ export default async function SellerProfilePage() {
         .from("reels")
         .select("*", { count: "exact", head: true })
         .eq("seller_id", session.userId),
+      supabase
+        .from("products")
+        .select("category"),
     ]);
     userProfile = pRes.data;
     sellerProfile = sRes.data;
     productCount = prodRes.count ?? 0;
     reelCount = reelRes.count ?? 0;
+    craftCategories = Array.from(
+      new Set((catRes.data ?? []).map((p) => p.category?.trim()).filter(Boolean))
+    ).sort() as string[];
   }
 
   // Fetch signup details from seller_applications to pre-populate missing profile fields
@@ -215,6 +228,7 @@ export default async function SellerProfilePage() {
       sellerProfile={effectiveSellerProfile}
       productCount={productCount ?? 0}
       reelCount={reelCount ?? 0}
+      craftCategories={craftCategories}
     />
   );
 }

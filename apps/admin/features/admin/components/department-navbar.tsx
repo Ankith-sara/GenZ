@@ -71,6 +71,7 @@ export function DepartmentNavbar({ counts }: DepartmentNavbarProps) {
   const isCrmActive = Boolean(pathname?.startsWith("/dashboard/crm"));
   const isOpsActive = Boolean(
     pathname?.startsWith("/dashboard/orders") ||
+    pathname?.startsWith("/dashboard/refunds") ||
     pathname?.startsWith("/dashboard/products") ||
     pathname?.startsWith("/dashboard/tasks") ||
     pathname?.startsWith("/dashboard/verifications")

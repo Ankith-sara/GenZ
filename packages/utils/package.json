@@ -10,8 +10,11 @@
     "./storage": "./src/storage.ts",
     "./verification": "./src/verification.ts",
     "./resend": "./src/resend.ts",
+    "./html": "./src/html.ts",
+    "./order-emails": "./src/order-emails.ts",
     "./rate-limiter": "./src/rate-limiter.ts",
     "./config": "./src/config.ts",
+    "./company": "./src/company.ts",
     "./vercel-analytics": "./src/vercel-analytics.ts",
     "./server": "./src/server.ts"
   },

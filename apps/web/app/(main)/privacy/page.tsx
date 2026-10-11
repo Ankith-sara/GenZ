@@ -1,109 +1,188 @@
 import { Lock } from "lucide-react";
 import Link from "next/link";
+import { COMPANY, formatAddress } from "@genz/utils/company";
+import { LegalPage, type LegalSection } from "@/components/legal-page";
 
 export const metadata = {
   title: "Privacy Policy — GenZ Platform",
-  description: "How GenZ collects, uses, and protects your data under DPDP standards.",
+  description:
+    "How GenZ collects, uses, and protects your personal data under the Digital Personal Data Protection Act, 2023.",
 };
 
-const SECTIONS = [
+const officer = COMPANY.grievanceOfficer;
+
+const SECTIONS: LegalSection[] = [
   {
-    title: "1. Information We Collect",
-    body: `We collect information you provide directly to us — such as your name, official email address, phone number, shipping address, and (for registered sellers) business entity details, GSTIN, and factory verification documents. When you sign in using third-party services like Google OAuth, we receive basic authentication profile data (your name, email address, and profile photo URL) provided by Google.`,
+    title: "1. Who Is Responsible for Your Data",
+    body: (
+      <p>
+        {COMPANY.brandName} is operated by {COMPANY.legalEntityName} (registered office:{" "}
+        {formatAddress(COMPANY.registeredOffice)}), which is the Data Fiduciary for
+        personal data collected through the platform under the Digital Personal Data
+        Protection Act, 2023 (&ldquo;DPDP Act&rdquo;).
+      </p>
+    ),
   },
   {
-    title: "2. How We Use Your Information",
-    body: `We use your information to operate your account, process and route buyer-seller orders, conduct seller verification, send transactional notifications, and ensure platform security. Google OAuth data is strictly used for account authentication and user identity management. We do not sell your personal data or Google user data to third parties.`,
+    title: "2. Information We Collect",
+    body: `We collect information you provide directly to us — such as your name, email address, phone number, shipping address, and (for registered sellers) business entity details, GSTIN, and verification documents. When you sign in using third-party services like Google OAuth, we receive basic authentication profile data (your name, email address, and profile photo URL) provided by Google. When you place an order we keep a record of the order, the items, the amounts paid and the payment reference returned by our payment processor.`,
   },
   {
-    title: "3. Information Sharing with Buyers & Sellers",
-    body: `To facilitate transactions, necessary contact and fulfillment details are shared between the buyer and the verified seller involved in that specific order. Sellers only receive the information required to manufacture and deliver your order. We do not share your account credentials or full profile data with unrelated sellers.`,
+    title: "3. How We Use Your Information",
+    body: `We use your information to operate your account, process and route buyer-seller orders, handle cancellations, returns and refunds, conduct seller verification, send transactional emails about your account and orders, respond to support requests and complaints, meet legal and tax obligations, and keep the platform secure. Google OAuth data is used only for account authentication and identity management. We do not sell your personal data or Google user data to anyone.`,
   },
   {
-    title: "4. Infrastructure & Third-Party Providers",
-    body: `GenZ relies on secure enterprise cloud infrastructure — including Supabase for encrypted database and authentication management, cloud media storage for product reels, and Google Cloud services for OAuth identity. These providers process data strictly on our behalf under mandatory confidentiality and security agreements.`,
+    title: "4. Information Sharing with Buyers & Sellers",
+    body: `To fulfil an order, the buyer's name, phone number and shipping address are shared with the seller of that specific order. Sellers receive only the information required to make and deliver your order. We do not share your account credentials or full profile data with unrelated sellers.`,
   },
   {
-    title: "5. Cookies & Session Storage",
-    body: `We use essential session tokens and cookies to maintain your authenticated session and preserve your user preferences across visits. Essential authentication cookies cannot be disabled as they are required for security and core functionality.`,
+    title: "5. Service Providers (Data Processors)",
+    body: (
+      <>
+        <p>
+          We use the following service providers, who process data on our behalf and
+          only for the purposes described:
+        </p>
+        <ul>
+          <li>
+            <strong>Supabase</strong> — database, file storage (product media and
+            workshop reels) and account authentication.
+          </li>
+          <li>
+            <strong>Razorpay</strong> — payment processing. Your card, UPI or bank
+            details are entered with and handled by Razorpay; we do not store them. We
+            receive the payment status and reference for your order.
+          </li>
+          <li>
+            <strong>Resend</strong> — sending transactional emails such as order updates
+            and seller account notifications.
+          </li>
+          <li>
+            <strong>Vercel</strong> — website hosting and Vercel Web Analytics, which
+            measures aggregate page visits without using cookies.
+          </li>
+          <li>
+            <strong>Google</strong> — &ldquo;Sign in with Google&rdquo; (OAuth), if you
+            choose to use it.
+          </li>
+        </ul>
+        <p>
+          Some of these providers may process data on servers outside India. We share
+          only what each provider needs to perform its service.
+        </p>
+      </>
+    ),
   },
   {
-    title: "6. Data Security & Encryption",
-    body: `We implement robust technical and organizational security measures — including HTTPS/TLS encryption in transit, encrypted storage at rest via Supabase, and strict role-based access control — to safeguard your personal information against unauthorized access, disclosure, or alteration.`,
+    title: "6. Cookies & Local Storage",
+    body: (
+      <>
+        <p>
+          We use only <strong>essential cookies</strong> needed to keep you signed in
+          and protect your session. These cannot be switched off because the site cannot
+          work securely without them. We do not use advertising or cross-site tracking
+          cookies.
+        </p>
+        <p>
+          Vercel Web Analytics is cookieless: it counts page views in aggregate and does
+          not set cookies or build a profile of you. Your cart, wishlist and recent
+          searches are saved in your own browser&apos;s local storage so they are kept
+          between visits; you can clear them at any time by clearing your browser&apos;s
+          site data.
+        </p>
+      </>
+    ),
   },
   {
-    title: "7. Data Retention & Account Deletion",
-    body: `We retain personal and business information for as long as your account remains active or as needed to provide platform services. You have the right to request full account and data deletion at any time by contacting us. Certain transaction and GST verification records may be retained for statutory periods as required by Indian law.`,
+    title: "7. Data Security",
+    body: `We use technical and organisational safeguards — including HTTPS/TLS encryption in transit, encrypted storage at rest via our infrastructure providers, and role-based access controls — to protect your personal data against unauthorised access, disclosure or alteration.`,
   },
   {
-    title: "8. Children's Privacy",
-    body: `GenZ is an e-commerce and B2C manufacturing platform intended for users aged 18 and older. We do not knowingly collect or solicit personal information from children under 18. If we learn that a minor has provided us with personal data, we will immediately delete it.`,
+    title: "8. Data Retention",
+    body: `We keep personal data for as long as your account is active or as needed to provide our services. When you ask us to delete your account, we erase your personal data unless we must keep it to meet a legal obligation — for example, order, invoice and GST records that Indian tax law requires us to retain for a statutory period.`,
   },
   {
-    title: "9. Policy Updates",
-    body: `We may update this Privacy Policy periodically to reflect platform enhancements or legal requirements. Updated policies will be posted on this page with a revised "Last updated" date.`,
+    title: "9. Your Rights",
+    body: (
+      <>
+        <p>Under the DPDP Act, you have the right to:</p>
+        <ul>
+          <li>
+            <strong>Access</strong> — get a summary of the personal data we hold about
+            you and how it is used.
+          </li>
+          <li>
+            <strong>Correction &amp; completion</strong> — have inaccurate or incomplete
+            data corrected or updated.
+          </li>
+          <li>
+            <strong>Erasure</strong> — ask us to delete your personal data, subject to
+            legal retention requirements.
+          </li>
+          <li>
+            <strong>Withdraw consent</strong> — where we rely on your consent, you can
+            withdraw it at any time (this does not affect processing already done).
+          </li>
+          <li>
+            <strong>Grievance redressal</strong> — raise a complaint about how we handle
+            your data.
+          </li>
+          <li>
+            <strong>Nominate</strong> — nominate another person to exercise these rights
+            on your behalf in the event of your death or incapacity.
+          </li>
+        </ul>
+      </>
+    ),
   },
   {
-    title: "10. Contact Us & Data Requests",
-    body: `If you have questions, feedback, or data privacy requests regarding this Privacy Policy or your personal information, please reach out to our team at genz.official.hq@gmail.com.`,
+    title: "10. How to Exercise Your Rights",
+    body: (
+      <>
+        <p>
+          Email <a href={`mailto:${COMPANY.supportEmail}`}>{COMPANY.supportEmail}</a>{" "}
+          from the email address linked to your account, saying which right you want to
+          exercise. We may ask you to confirm your identity before acting on the
+          request.
+        </p>
+        <p>
+          If you are not satisfied with our response, contact our Grievance Officer:{" "}
+          {officer.name}, {officer.designation} —{" "}
+          <a href={`mailto:${officer.email}`}>{officer.email}</a>, {officer.phone} (
+          {officer.workingHours}). Full details are on our{" "}
+          <Link href="/grievance">Grievance Redressal</Link> page. You may also approach
+          the Data Protection Board of India.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "11. Children's Privacy",
+    body: `GenZ is intended for users aged 18 and older. We do not knowingly collect personal data from children under 18. If we learn that a child has provided us with personal data, we will delete it.`,
+  },
+  {
+    title: "12. Policy Updates",
+    body: `We may update this Privacy Policy to reflect changes to our services or legal requirements. Updated policies will be posted on this page with a revised "Last updated" date.`,
   },
 ];
 
 export default async function PrivacyPage() {
   return (
-    <main className="bg-cream-paper text-ink-black min-h-screen flex-1 font-sans antialiased">
-      {/* Hero Section (CREAM BG) */}
-      <section className="border-ash border-b bg-[#FAF7F0] px-6 py-16 sm:px-12 sm:py-24">
-        <div className="mx-auto max-w-4xl text-left">
-          <div className="tag border-ash mb-4 inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 shadow-xs">
-            <Lock className="text-brand-yellow-dark h-3.5 w-3.5" />
-            <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-              Legal &amp; Compliance
-            </span>
-          </div>
-          <h1 className="font-nantes text-ink-black mb-4 text-4xl leading-[1.08] font-normal tracking-tight sm:text-6xl">
-            Privacy Policy
-          </h1>
-          <p className="font-graphik text-smoke text-sm">
-            Last updated: July 2026 &bull; Compliant with Indian DPDP Act &amp; Google
-            OAuth Security Standards
-          </p>
-        </div>
-      </section>
-
-      {/* Content Section (WHITE BG) */}
-      <section className="border-ash border-b bg-white px-6 py-12 sm:px-12 sm:py-20">
-        <div className="border-ash mx-auto flex max-w-4xl flex-col gap-10 rounded-2xl border bg-[#FAF7F0] p-8 shadow-xs sm:p-12">
-          {SECTIONS.map((s) => (
-            <div
-              key={s.title}
-              className="border-ash/60 border-b pb-8 last:border-b-0 last:pb-0"
-            >
-              <h2 className="font-nantes text-ink-black mb-3 text-xl font-normal tracking-tight sm:text-2xl">
-                {s.title}
-              </h2>
-              <p className="font-graphik text-smoke text-sm leading-relaxed sm:text-base">
-                {s.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Support CTA (CREAM BG) */}
-      <section className="bg-[#FAF7F0] px-6 py-16 sm:px-12">
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="font-graphik text-smoke text-sm">
-            Need to request data deletion or have privacy inquiries?{" "}
-            <Link
-              href="/contact"
-              className="decoration-brand-yellow-dark hover:text-brand-yellow-dark font-semibold text-black underline underline-offset-4"
-            >
-              Contact Data Protection Team
-            </Link>
-          </p>
-        </div>
-      </section>
-    </main>
+    <LegalPage
+      icon={Lock}
+      eyebrow="Legal & Compliance"
+      title="Privacy Policy"
+      subtitle={
+        <>
+          Last updated: October 2026 &bull; Digital Personal Data Protection Act, 2023
+        </>
+      }
+      sections={SECTIONS}
+      cta={{
+        text: "Want to access, correct or delete your data?",
+        linkLabel: "Contact the Grievance Officer",
+        href: "/grievance",
+      }}
+    />
   );
 }

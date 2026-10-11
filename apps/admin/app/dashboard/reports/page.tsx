@@ -1,4 +1,4 @@
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { getOrders } from "@genz/database/orders";
 import { getTasksList } from "@genz/database/tasks";
 import {
@@ -34,7 +34,7 @@ interface ReportsPageProps {
 }
 
 export default async function ReportsPage({ searchParams }: ReportsPageProps) {
-  await requireRole("admin");
+  await requirePermission("system:read");
   const resolvedParams = await searchParams;
   const initialModule = resolvedParams.module || "admin";
 

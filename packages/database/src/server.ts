@@ -39,3 +39,4 @@ export async function createClient(customCookieName?: string) {
 export * from "./admin";
 export * from "./auth";
 export * from "./authorization";
+export * from "./categories";

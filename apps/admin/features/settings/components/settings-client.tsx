@@ -18,7 +18,10 @@ import {
   Check,
   Loader2,
   AlertTriangle,
+  Tag,
 } from "lucide-react";
+import type { Category } from "@genz/types";
+import { CategoriesSettingsPanel } from "./categories-settings-panel";
 
 interface AdminUser {
   id: string;
@@ -27,6 +30,7 @@ interface AdminUser {
 }
 interface SettingsClientProps {
   adminUser: AdminUser;
+  initialCategories?: Category[];
 }
 
 /* ─── Default settings ─── */
@@ -124,6 +128,7 @@ type Item = FieldItem | ToggleItem | StatusItem;
 type Section = { title: string; layout: "fields" | "toggles"; items: Item[] };
 type TabId =
   | "general"
+  | "categories"
   | "sellers"
   | "orders"
   | "inventory"
@@ -211,6 +216,13 @@ const TABS: {
         ],
       },
     ],
+  },
+  {
+    id: "categories",
+    label: "Categories",
+    icon: Tag,
+    description: "Marketplace and platform product categories (add or subtract from database).",
+    sections: [],
   },
   {
     id: "sellers",
@@ -317,7 +329,7 @@ const TABS: {
           tg(
             "enableRefunds",
             "Automatic refunds",
-            "Refund approved returns without manual steps."
+            "Not active yet: every refund is reviewed in Operations > Refunds & Returns."
           ),
         ],
       },
@@ -739,7 +751,10 @@ function Switch({
 }
 
 /* ═══════════════ MAIN ═══════════════ */
-export function SettingsClient({ adminUser }: SettingsClientProps) {
+export function SettingsClient({
+  adminUser,
+  initialCategories = [],
+}: SettingsClientProps) {
   const [tab, setTab] = useState<TabId>("general");
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [saved, setSaved] = useState<Settings>(DEFAULT_SETTINGS);
@@ -985,29 +1000,31 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
             Manage platform configuration, policies, security and integrations.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setResetOpen(true)}
-            className="border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl border px-5 text-sm font-medium"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Reset
-          </button>
-          <button
-            type="button"
-            onClick={save}
-            disabled={saving || dirtyCount === 0}
-            className="bg-primary text-on-primary hover:shadow-elevation-2 inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl px-5 text-sm font-semibold tracking-wide uppercase transition-shadow disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {saving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
-            Save changes
-          </button>
-        </div>
+        {tab !== "categories" && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setResetOpen(true)}
+              className="border-outline-variant text-on-surface hover:bg-surface-container-low inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl border px-5 text-sm font-medium"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={save}
+              disabled={saving || dirtyCount === 0}
+              className="bg-primary text-on-primary hover:shadow-elevation-2 inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl px-5 text-sm font-semibold tracking-wide uppercase transition-shadow disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {saving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              Save changes
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ─── Overview ─── */}
@@ -1142,7 +1159,14 @@ export function SettingsClient({ adminUser }: SettingsClientProps) {
 
         {/* Content */}
         <div className="space-y-8 px-6 pt-6 pb-8" role="tabpanel">
-          {!q && active.sections.map((s) => renderSection(s, s.items))}
+          {!q && tab === "categories" && (
+            <CategoriesSettingsPanel
+              initialCategories={initialCategories}
+              onNotify={(msg) => setSnack(msg)}
+            />
+          )}
+
+          {!q && tab !== "categories" && active.sections.map((s) => renderSection(s, s.items))}
 
           {q && results.length === 0 && (
             <div className="flex flex-col items-center py-12 text-center">

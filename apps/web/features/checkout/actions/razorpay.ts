@@ -1,6 +1,10 @@
 "use server";
 
-import crypto from "crypto";
+import { getUserAndProfile } from "@genz/database/auth";
+import { withRateLimit } from "@genz/utils/rate-limiter";
+import { PaymentsService } from "@genz/services/payments";
+import { PricingService } from "@genz/services/pricing";
+import { razorpayOrderRequestSchema } from "@genz/validation";
 
 export interface CreateRazorpayOrderResult {
   success: boolean;
@@ -11,82 +15,63 @@ export interface CreateRazorpayOrderResult {
   error?: string;
 }
 
+/**
+ * Creates a Razorpay order for the basket. The amount is computed on the
+ * server with the same pricing rules the order is saved with, so the amount
+ * charged always equals the order total (and therefore the refundable total).
+ * Guest checkout is supported, so a session is optional (rate limited by IP).
+ */
 export async function createRazorpayOrderAction(params: {
-  amount: number; // in INR
+  items: { price: number; quantity: number }[];
   receipt?: string;
   notes?: Record<string, string>;
 }): Promise<CreateRazorpayOrderResult> {
-  const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_51aBCDeFGhIJkL";
-  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  const session = await getUserAndProfile();
 
-  const amountInPaise = Math.round(params.amount * 100);
-
-  // If live credentials are provided, create official Razorpay order
-  if (keySecret && !keyId.includes("51aBCDeFGhIJkL")) {
-    try {
-      const authHeader = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
-      const res = await fetch("https://api.razorpay.com/v1/orders", {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${authHeader}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: amountInPaise,
-          currency: "INR",
-          receipt: params.receipt || `rcpt_${Date.now()}`,
-          notes: params.notes,
-        }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.warn("[Razorpay] API order creation warning:", errorData);
-      } else {
-        const data = await res.json();
+  const result = await withRateLimit(
+    {
+      endpointType: session ? "user" : "public",
+      actionName: "create_razorpay_order",
+      identifier: session?.userId,
+    },
+    async (): Promise<CreateRazorpayOrderResult> => {
+      const parsed = razorpayOrderRequestSchema.safeParse({ items: params.items });
+      if (!parsed.success) {
         return {
-          success: true,
-          keyId,
-          orderId: data.id,
-          amount: amountInPaise,
+          success: false,
+          keyId: "",
+          amount: 0,
           currency: "INR",
+          error: "Your basket is invalid. Please refresh and try again.",
         };
       }
-    } catch (err) {
-      console.warn("[Razorpay] API call exception:", err);
+
+      const totals = PricingService.calculateOrderTotals(
+        parsed.data.items.map((i) => ({ unitPrice: i.price, quantity: i.quantity }))
+      );
+
+      const notes = Object.fromEntries(
+        Object.entries(params.notes ?? {})
+          .slice(0, 10)
+          .map(([k, v]) => [String(k).slice(0, 40), String(v).slice(0, 200)])
+      );
+
+      const order = await PaymentsService.createRazorpayOrder({
+        amountInInr: totals.total,
+        receipt: (params.receipt || `rcpt_${Date.now()}`).slice(0, 40),
+        notes,
+      });
+
+      return {
+        success: order.success,
+        keyId: order.keyId,
+        orderId: order.orderId,
+        amount: order.amountInPaise,
+        currency: order.currency,
+      };
     }
-  }
+  );
 
-  // Standard/Sandbox fallback order
-  const simulatedOrderId = `order_${Date.now().toString(36)}${Math.random().toString(36).substring(2, 6)}`;
-  return {
-    success: true,
-    keyId,
-    orderId: simulatedOrderId,
-    amount: amountInPaise,
-    currency: "INR",
-  };
-}
-
-export async function verifyRazorpaySignatureAction(params: {
-  orderId: string;
-  paymentId: string;
-  signature: string;
-}): Promise<{ verified: boolean }> {
-  const keySecret = process.env.RAZORPAY_KEY_SECRET;
-  if (!keySecret) {
-    // If running in development/sandbox mode without secret
-    return { verified: true };
-  }
-
-  try {
-    const generated = crypto
-      .createHmac("sha256", keySecret)
-      .update(`${params.orderId}|${params.paymentId}`)
-      .digest("hex");
-
-    return { verified: generated === params.signature };
-  } catch {
-    return { verified: false };
-  }
+  if ("success" in result) return result;
+  return { success: false, keyId: "", amount: 0, currency: "INR", error: result.error };
 }

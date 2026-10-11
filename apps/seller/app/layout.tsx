@@ -11,14 +11,12 @@ const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
-  display: "swap",
 });
 
 const fontRoboto = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
-  weight: ["300", "400", "500", "700"],
-  display: "swap",
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {

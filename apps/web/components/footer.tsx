@@ -5,6 +5,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { NewsletterForm } from "@/features/home/components/newsletter-form";
 import { Mail, Phone } from "lucide-react";
+import { COMPANY, formatAddress } from "@genz/utils/company";
 
 function InstagramIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
@@ -43,13 +44,13 @@ interface FooterSocialLink {
 
 const defaultSections: FooterSection[] = [
   {
-    title: "Product",
+    title: "Shop",
     links: [
       { name: "Overview", href: "/" },
       { name: "Discover Catalog", href: "/discover" },
-      { name: "Import Gap Finder", href: "/discover?import_gap=true" },
-      { name: "Made in India", href: "/discover?origin=india" },
-      { name: "Innovations", href: "/discover?innovations=true" },
+      { name: "Wishlist", href: "/wishlist" },
+      { name: "Cart", href: "/cart" },
+      { name: "Track Orders", href: "/orders" },
     ],
   },
   {
@@ -59,25 +60,25 @@ const defaultSections: FooterSection[] = [
       { name: "Vision 2030", href: "/about#vision" },
       { name: "Founder Story", href: "/about#story" },
       { name: "Contact Us", href: "/contact" },
-      { name: "For Sellers", href: "/seller/signup" },
+      { name: "Sell on GenZ", href: "/seller/signup" },
     ],
   },
   {
     title: "Support",
     links: [
-      { name: "Help Center", href: "/faqs" },
-      { name: "FAQs", href: "/faqs" },
-      { name: "System Status", href: "/status" },
-      { name: "Community", href: "/#community" },
+      { name: "Help Center & FAQs", href: "/faqs" },
+      { name: "Contact Support", href: "/contact" },
+      { name: "Grievance Officer", href: "/grievance" },
     ],
   },
   {
-    title: "Resources",
+    title: "Policies",
     links: [
-      { name: "Seller Guide", href: "/seller/signup" },
-      { name: "Verification", href: "/seller/signup" },
-      { name: "Track Orders", href: "/orders" },
-      { name: "Partnerships", href: "/contact" },
+      { name: "Terms & Conditions", href: "/terms" },
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Cancellation & Refund Policy", href: "/refund-policy" },
+      { name: "Shipping Policy", href: "/shipping-policy" },
+      { name: "Grievance Redressal", href: "/grievance" },
     ],
   },
 ];
@@ -85,31 +86,33 @@ const defaultSections: FooterSection[] = [
 const defaultSocialLinks: FooterSocialLink[] = [
   {
     icon: <InstagramIcon className="h-5 w-5" />,
-    href: "https://www.instagram.com/genzonline4u?stkn=MTNvaDM4cHJuOXV3dw%3D%3D#",
+    href: COMPANY.instagramUrl,
     label: "Instagram",
   },
   {
     icon: <Mail className="h-5 w-5" />,
-    href: "mailto:genz.official.hq@gmail.com",
+    href: `mailto:${COMPANY.supportEmail}`,
     label: "Email",
   },
   {
     icon: <Phone className="h-5 w-5" />,
-    href: "tel:+917794893768",
+    href: `tel:${COMPANY.supportPhoneHref}`,
     label: "Phone",
   },
 ];
 
 const defaultLegalLinks: FooterLink[] = [
-  { name: "Terms and Conditions", href: "/terms" },
-  { name: "Privacy Policy", href: "/privacy" },
-  { name: "Help Center", href: "/faqs" },
+  { name: "Terms", href: "/terms" },
+  { name: "Privacy", href: "/privacy" },
+  { name: "Refunds", href: "/refund-policy" },
+  { name: "Shipping", href: "/shipping-policy" },
+  { name: "Grievance Officer", href: "/grievance" },
 ];
 
 export function Footer({ className }: { className?: string }) {
   const description =
     "India's premier trust commerce & direct manufacturing platform connecting verified makers directly with buyers.";
-  const copyright = `© ${new Date().getFullYear()} GenZ Trust Commerce. All rights reserved.`;
+  const copyright = `© ${new Date().getFullYear()} ${COMPANY.brandName}. All rights reserved.`;
 
   return (
     <footer
@@ -183,8 +186,8 @@ export function Footer({ className }: { className?: string }) {
           </div>
 
           {/* Right Columns: Links Grid */}
-          <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-3 lg:w-2/3 lg:gap-12">
-            {defaultSections.slice(0, 3).map((section, sectionIdx) => (
+          <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-4 lg:w-2/3 lg:gap-12">
+            {defaultSections.map((section, sectionIdx) => (
               <div key={sectionIdx}>
                 <h3 className="font-nantes mb-4 text-sm font-semibold tracking-wider text-white uppercase">
                   {section.title}
@@ -206,7 +209,13 @@ export function Footer({ className }: { className?: string }) {
 
         {/* Bottom Legal & Copyright Bar */}
         <div className="font-graphik mt-12 flex flex-col justify-between gap-4 border-t border-neutral-800 pt-8 text-xs font-medium text-neutral-500 md:flex-row md:items-center md:text-left">
-          <p className="order-2 md:order-1">{copyright}</p>
+          <div className="order-2 space-y-1 md:order-1">
+            <p>{copyright}</p>
+            <p className="text-[11px] leading-relaxed font-normal text-neutral-600">
+              {COMPANY.brandName} is operated by {COMPANY.legalEntityName}. Registered
+              office: {formatAddress(COMPANY.registeredOffice)}.
+            </p>
+          </div>
           <ul className="order-1 flex flex-wrap gap-4 md:order-2">
             {defaultLegalLinks.map((link, idx) => (
               <li key={idx} className="transition-colors hover:text-white">

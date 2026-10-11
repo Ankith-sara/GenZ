@@ -831,7 +831,7 @@ export function AboutClient() {
               size="lg"
               className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik h-12 rounded-full border-none px-8 text-xs font-semibold tracking-wider text-black uppercase shadow-xs transition-all"
             >
-              <Link href="/#waitlist">Join the Waitlist</Link>
+              <Link href="/signup">Create an Account</Link>
             </Button>
             <Button
               asChild

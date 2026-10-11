@@ -26,8 +26,6 @@ import {
 } from "lucide-react";
 import { Select } from "../../../../components/select";
 
-export const DEFAULT_PRODUCT_CATEGORIES = ["Etikoppaka Wooden Toys", "Kondapalli Toys"];
-
 /* M3 Switch Component */
 
 export function M3Switch({
@@ -91,7 +89,7 @@ export function BasicInfoCard({
   onChangeDescription,
   materials,
   onChangeMaterials,
-  categories = DEFAULT_PRODUCT_CATEGORIES,
+  categories = [],
 }: BasicInfoCardProps) {
   const [tagInput, setTagInput] = useState("");
 

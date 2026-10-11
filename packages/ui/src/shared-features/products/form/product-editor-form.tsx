@@ -116,7 +116,7 @@ export function ProductEditorForm({
     initialValues?.comparePrice || initialValues?.comparePriceInr || ""
   );
   const [category, setCategory] = useState(
-    initialValues?.category || (categories && categories[0]) || "Etikoppaka Wooden Toys"
+    initialValues?.category || (categories && categories[0]) || ""
   );
 
   const [materials, setMaterials] = useState<string[]>(() => {

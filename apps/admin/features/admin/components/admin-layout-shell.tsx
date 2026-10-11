@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AdminSidebar } from "./admin-sidebar";
 import { ModuleNavbar } from "./module-navbar";
 import { CommandMenu } from "@genz/ui";
+import type { StaffAccess } from "../lib/route-permissions";
 import {
   Menu,
   Search,
@@ -20,6 +21,7 @@ interface AdminLayoutShellProps {
     full_name?: string | null;
     email?: string | null;
   };
+  access: StaffAccess;
   counts: {
     users: number;
     pendingVerifications: number;
@@ -42,6 +44,7 @@ interface AdminLayoutShellProps {
 
 export function AdminLayoutShell({
   adminUser,
+  access,
   counts,
   firstName,
   dateRangeFormatted,
@@ -113,6 +116,7 @@ export function AdminLayoutShell({
       {/* 1. SIDEBAR */}
       <AdminSidebar
         adminUser={adminUser}
+        access={access}
         counts={counts}
         isOpen={mobileSidebarOpen}
         onClose={() => setMobileSidebarOpen(false)}
@@ -147,7 +151,7 @@ export function AdminLayoutShell({
 
           {/* Center Modular Switcher Navbar: Admin | Operations | CRM */}
           <div className="flex items-center justify-center">
-            <ModuleNavbar counts={counts} />
+            <ModuleNavbar access={access} counts={counts} />
           </div>
 
           {/* Right Header Toolbar */}

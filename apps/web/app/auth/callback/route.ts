@@ -1,49 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@genz/database";
-import type { Role } from "@genz/types";
-
-async function ensureProfileCreated(
-  supabase: Awaited<ReturnType<typeof createClient>>
-) {
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      const meta = user.user_metadata ?? {};
-      const rawRole = (meta.role as Role) || "buyer";
-      // Never allow "admin" role from raw metadata
-      const role: Role = rawRole === "admin" ? "buyer" : rawRole;
-      const fullName = meta.full_name || meta.fullName || null;
-
-      await supabase.from("profiles").upsert({
-        id: user.id,
-        role,
-        full_name: fullName,
-        phone: meta.phone || null,
-        city: meta.city || null,
-        state: meta.state || null,
-        pincode: meta.pincode || null,
-      });
-
-      if (role === "seller") {
-        await supabase.from("seller_profiles").upsert({
-          id: user.id,
-          business_name: meta.business_name || meta.full_name || "Unnamed Business",
-          gst_number: meta.gst_number || "PENDING",
-          factory_address: meta.factory_address || null,
-          state: meta.state || null,
-          pincode: meta.pincode || null,
-          status: "pending",
-        });
-      }
-    }
-  } catch (err) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Error creating profile in callback:", err);
-    }
-  }
-}
+import { ensureProfileForCurrentUser } from "@genz/database/auth";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -69,7 +26,7 @@ export async function GET(request: Request) {
 
   // 3. Ensure profile rows exist after successful authentication
   if (user) {
-    await ensureProfileCreated(supabase);
+    await ensureProfileForCurrentUser(supabase);
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")

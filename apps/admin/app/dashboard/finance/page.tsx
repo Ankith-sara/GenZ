@@ -1,4 +1,4 @@
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import {
   getAccountsList,
   getJournalsList,
@@ -18,7 +18,7 @@ export const metadata = {
 };
 
 export default async function FinancePage() {
-  await requireRole("admin");
+  await requirePermission("system:read");
 
   const [
     accounts,

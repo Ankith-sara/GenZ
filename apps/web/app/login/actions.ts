@@ -262,8 +262,6 @@ export async function verifyOtpSignup(email: string, token: string) {
 
       if (data?.user) {
         const user = data.user;
-        const role =
-          (user.user_metadata?.role as "buyer" | "seller" | "admin") || "buyer";
         const fullName = user.user_metadata?.full_name || null;
 
         const { data: existingProfile } = await supabase
@@ -273,23 +271,13 @@ export async function verifyOtpSignup(email: string, token: string) {
           .maybeSingle();
 
         if (!existingProfile) {
+          // Self-signup is always a buyer. Seller and admin roles are granted
+          // only by an admin through the protected profile row.
           await supabase.from("profiles").insert({
             id: user.id,
-            role,
+            role: "buyer",
             full_name: fullName,
           });
-
-          if (role === "seller") {
-            await supabase.from("seller_profiles").insert({
-              id: user.id,
-              business_name: user.user_metadata?.business_name || "Unnamed Business",
-              gst_number: user.user_metadata?.gst_number || "PENDING",
-              factory_address: user.user_metadata?.factory_address || null,
-              state: user.user_metadata?.state || null,
-              pincode: user.user_metadata?.pincode || null,
-              status: "pending",
-            });
-          }
         }
       }
 

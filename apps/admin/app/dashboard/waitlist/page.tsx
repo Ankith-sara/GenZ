@@ -1,13 +1,15 @@
-import { createClient } from "@genz/database";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { createAdminClient } from "@genz/database/admin";
+import { requirePermission } from "@genz/database/authorization";
 import { PageHeader } from "@genz/ui";
 import { StatusBadge } from "@genz/ui";
 import { EmptyState } from "@genz/ui";
 import { UserCheck } from "lucide-react";
 
 export default async function AdminWaitlistPage() {
-  await requireRole("admin");
-  const supabase = await createClient();
+  await requirePermission("crm:read");
+  // Access is checked above; the service-role client lets admins and permitted
+  // staff (role emp) read past RLS policies that only admit profiles.role = admin.
+  const supabase = createAdminClient();
 
   const { data: waitlist } = await supabase
     .from("waitlist")
