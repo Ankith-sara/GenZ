@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@genz/database/admin";
 import { requirePermission } from "@genz/database/authorization";
-import { withRateLimit } from "@/lib/rate-limiter";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 import { adminRejectSchema } from "@genz/validation";
 import { SITE_URL } from "@genz/utils/config";
 import { sendSellerApprovalEmail } from "@genz/utils/resend";

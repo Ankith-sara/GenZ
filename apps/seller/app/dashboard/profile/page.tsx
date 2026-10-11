@@ -1,6 +1,6 @@
 import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import type { SellerProfile, SellerApplication, VerificationStatus } from "@genz/types";
 import { SellerProfileStudio } from "@/features/profile";
 
@@ -59,9 +59,7 @@ export default async function SellerProfilePage() {
         .from("reels")
         .select("*", { count: "exact", head: true })
         .eq("seller_id", session.userId),
-      adminSupabase
-        .from("products")
-        .select("category"),
+      adminSupabase.from("products").select("category"),
     ]);
     userProfile = pRes.data;
     sellerProfile = sRes.data;
@@ -90,9 +88,7 @@ export default async function SellerProfilePage() {
         .from("reels")
         .select("*", { count: "exact", head: true })
         .eq("seller_id", session.userId),
-      supabase
-        .from("products")
-        .select("category"),
+      supabase.from("products").select("category"),
     ]);
     userProfile = pRes.data;
     sellerProfile = sRes.data;

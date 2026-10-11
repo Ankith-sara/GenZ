@@ -1,4 +1,4 @@
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { getOrders } from "@genz/database/orders";
 
 import type { OrderRecord } from "@genz/types";

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { requirePermission } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { getDepartmentById, getEmployeesList } from "@genz/database/employees";
 import { DepartmentEditorForm } from "../../department-editor-form";
 

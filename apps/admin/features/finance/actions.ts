@@ -1,7 +1,7 @@
 "use server";
 
 import { requirePermission } from "@genz/database/authorization";
-import { withRateLimit } from "@/lib/rate-limiter";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 import {
   approveSettlementBatch,
   disburseSettlementBatch,

@@ -21,7 +21,7 @@ import {
   generatePasswordAction,
   type ReviewState,
 } from "../actions";
-import type { VerificationStatus, ApplicationStatus } from "@/types/database";
+import type { VerificationStatus, ApplicationStatus } from "@genz/types";
 
 export function ReviewActions({
   sellerId,

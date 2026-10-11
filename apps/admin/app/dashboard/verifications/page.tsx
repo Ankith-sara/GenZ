@@ -1,5 +1,5 @@
 import { createAdminClient } from "@genz/database/admin";
-import { requirePermission } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import {
   VerificationsSplitClient,
   type SellerAppRecord,

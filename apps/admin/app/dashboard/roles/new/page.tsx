@@ -1,4 +1,4 @@
-import { requirePermission } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { RoleEditorForm } from "../role-editor-form";
 
 export const metadata = {

@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@genz/ui";
 import { setProductStatus, deleteProduct } from "../actions";
-import type { ProductStatus } from "@/types/database";
+import type { ProductStatus } from "@genz/types";
 import { toast } from "sonner";
 import {
   Globe,

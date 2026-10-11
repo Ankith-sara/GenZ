@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/config";
+import { SITE_URL } from "@genz/utils";
 
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = SITE_URL;

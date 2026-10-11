@@ -1,4 +1,4 @@
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { createClient } from "@genz/database";
 import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { signOut } from "@/app/login/actions";

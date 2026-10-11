@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requirePermission, requireRole } from "@/features/auth/lib/require-role";
-import { withRateLimit } from "@/lib/rate-limiter";
+import { requirePermission, requireRole } from "@genz/database/authorization";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 import {
   upsertEmployee,
   deleteEmployee,

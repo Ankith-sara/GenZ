@@ -1,5 +1,5 @@
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import Link from "next/link";
 import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
 import { getAnalyticsData } from "@/features/admin/lib/vercel-analytics";

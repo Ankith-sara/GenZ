@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn } from "@genz/utils";
 import { NewsletterForm } from "@/features/home/components/newsletter-form";
 import { Mail, Phone } from "lucide-react";
 import { COMPANY, formatAddress } from "@genz/utils/company";

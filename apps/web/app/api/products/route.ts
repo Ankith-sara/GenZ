@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@genz/database";
 import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/features/products/lib/products";
-import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
 import { z } from "zod";
 
 const querySchema = z.object({

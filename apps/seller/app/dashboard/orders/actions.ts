@@ -1,8 +1,8 @@
 "use server";
 
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { OrdersService } from "@genz/services/orders";
-import { withRateLimit } from "@/lib/rate-limiter";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 import type { OrderStatus, OrderRecord } from "@genz/types";
 import { revalidatePath } from "next/cache";
 

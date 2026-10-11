@@ -2,9 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@genz/database/admin";
-import { validateFileContentServer } from "@/lib/file-validation";
-import { requireRole } from "@/features/auth/lib/require-role";
-import { withRateLimit } from "@/lib/rate-limiter";
+import { validateFileContentServer } from "@genz/validation";
+import { requireRole } from "@genz/database/authorization";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 
 export interface ReelUploadResult {
   success?: boolean;

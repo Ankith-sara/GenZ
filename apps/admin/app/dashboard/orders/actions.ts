@@ -1,6 +1,6 @@
 "use server";
 
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { OrdersService } from "@genz/services/orders";
 import { withRateLimit } from "@genz/utils/rate-limiter";
 import type { OrderStatus } from "@genz/types";
@@ -13,7 +13,7 @@ export async function updateOrderStatusAction(
   trackingNumber?: string,
   note?: string
 ) {
-  const session = await requireRole("admin");
+  const { session } = await requirePermission("orders:write");
 
   const result = await withRateLimit(
     {

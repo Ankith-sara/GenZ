@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
 import { SearchService } from "@genz/services/search";
 import { z } from "zod";
 
@@ -34,7 +34,10 @@ export async function GET(request: NextRequest) {
   const cleanQ = validation.data.q.trim();
 
   try {
-    const searchResult = await SearchService.searchProducts({ query: cleanQ, limit: 8 });
+    const searchResult = await SearchService.searchProducts({
+      query: cleanQ,
+      limit: 8,
+    });
 
     await logRateLimitAttempt({
       endpointType: "public",

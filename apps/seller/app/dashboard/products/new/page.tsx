@@ -1,5 +1,5 @@
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { SellerProductForm } from "./seller-product-form";
 
 export default async function NewProductPage() {
@@ -16,9 +16,7 @@ export default async function NewProductPage() {
         .select("business_name, description")
         .eq("id", session.userId)
         .maybeSingle(),
-      supabase
-        .from("products")
-        .select("category"),
+      supabase.from("products").select("category"),
     ]);
 
     const profile = profileRes.data;
@@ -40,7 +38,10 @@ export default async function NewProductPage() {
       new Set((catRes.data ?? []).map((p) => p.category?.trim()).filter(Boolean))
     ).sort() as string[];
   } catch (e) {
-    console.warn("Could not fetch seller profile or categories for product creation:", e);
+    console.warn(
+      "Could not fetch seller profile or categories for product creation:",
+      e
+    );
   }
 
   return (

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@genz/ui";
 import { Label } from "@genz/ui";
 import { createClient } from "@genz/database";
-import { validateFileContent } from "@/lib/file-validation";
+import { validateFileContent } from "@genz/validation";
 import { DOC_TYPE_LABEL, DOC_TYPES } from "@/features/documents/lib/verification";
 import type { DocType } from "@genz/types";
 

@@ -13,7 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { validateFileContent } from "@/lib/file-validation";
+import { validateFileContent } from "@genz/validation";
 import { uploadAvatarAction, removeAvatarAction } from "@/features/user/actions";
 
 interface AvatarUploaderProps {

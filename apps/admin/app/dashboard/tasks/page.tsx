@@ -1,4 +1,4 @@
-import { requirePermission } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { getTasksList } from "@genz/database/tasks";
 import { getEmployeesList } from "@genz/database/employees";
 import { TasksViewClient } from "@/features/tasks";

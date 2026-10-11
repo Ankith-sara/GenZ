@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@genz/database";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { SellerProductEditClient } from "./seller-product-edit-client";
 
 export default async function SellerProductDetailPage({
@@ -59,9 +59,7 @@ export default async function SellerProductDetailPage({
     }
   }
 
-  const { data: catRows } = await supabase
-    .from("products")
-    .select("category");
+  const { data: catRows } = await supabase.from("products").select("category");
 
   const categories = Array.from(
     new Set((catRows ?? []).map((p) => p.category?.trim()).filter(Boolean))

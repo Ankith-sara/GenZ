@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Trash2, Check, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@genz/ui";
-import { validateFileContent } from "@/lib/file-validation";
+import { validateFileContent } from "@genz/validation";
 import type { DocType, SellerDocument, VerificationStatus } from "@genz/types";
 import { STATUS_LABEL } from "@/features/documents/lib/verification";
 import {

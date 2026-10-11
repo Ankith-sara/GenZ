@@ -1,5 +1,5 @@
 import { createClient } from "@genz/database";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { DocumentUploadWizard } from "@/features/documents/components/document-upload-wizard";
 import { DocumentUploader } from "@/features/documents/components/document-uploader";
 import { DocumentList } from "@/features/documents/components/document-list";

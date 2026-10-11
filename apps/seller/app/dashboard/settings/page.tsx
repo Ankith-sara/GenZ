@@ -1,4 +1,4 @@
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { SellerSettingsClient } from "./settings-client";
 
 export default async function SellerSettingsDashboardPage() {

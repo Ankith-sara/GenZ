@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@genz/ui";
 import { UserAvatar } from "@genz/ui";
-import { validateFileContent } from "@/lib/file-validation";
+import { validateFileContent } from "@genz/validation";
 import { uploadAvatarAction } from "@/features/user/actions";
 
 export function AvatarUploader({

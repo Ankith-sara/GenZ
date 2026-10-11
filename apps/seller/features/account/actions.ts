@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
-import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { requireRole } from "@genz/database/authorization";
+import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
 import { sellerProfileSchema } from "@genz/validation";
 
 export interface ProfileFormState {

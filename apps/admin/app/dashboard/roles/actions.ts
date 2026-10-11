@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requirePermission } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { upsertRole, deleteRole } from "@genz/database/roles";
 import type { RoleLevel, PermissionKey } from "@genz/types";
 

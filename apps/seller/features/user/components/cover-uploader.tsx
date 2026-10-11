@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@genz/ui";
 import { Upload, Image as ImageIcon, CheckCircle2, AlertCircle } from "lucide-react";
-import { validateFileContent } from "@/lib/file-validation";
+import { validateFileContent } from "@genz/validation";
 import { uploadCoverAction } from "@/features/user/actions";
 
 export function CoverUploader({

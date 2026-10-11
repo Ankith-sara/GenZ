@@ -1,5 +1,5 @@
 import { createClient } from "@genz/database";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { SellerProductsClient } from "./seller-products-client";
 
 export default async function SellerProductsPage() {

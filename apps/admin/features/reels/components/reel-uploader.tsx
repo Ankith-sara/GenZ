@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@genz/ui";
 import { Label } from "@genz/ui";
 import { Input } from "@genz/ui";
-import { validateFileContent } from "@/lib/file-validation";
+import { validateFileContent } from "@genz/validation";
 import { uploadReelAction } from "@/features/reels/actions";
 
 export function ReelUploader({ productId }: { productId: string; sellerId?: string }) {

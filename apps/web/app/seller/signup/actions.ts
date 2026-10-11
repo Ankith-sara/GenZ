@@ -1,7 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@genz/database/admin";
-import { checkRateLimit, logRateLimitAttempt } from "@/lib/rate-limiter";
+import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
 import { sellerSignupSchema } from "@genz/validation";
 
 export interface SellerSignupState {

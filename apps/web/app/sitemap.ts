@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@genz/database";
-import { SITE_URL } from "@/lib/config";
+import { SITE_URL } from "@genz/utils";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;

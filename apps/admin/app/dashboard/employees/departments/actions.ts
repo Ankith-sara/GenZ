@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import type { PermissionKey } from "@genz/types";
-import { requirePermission } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { upsertDepartment, deleteDepartment } from "@genz/database/employees";
 
 export async function addDepartmentAction(formData: FormData) {

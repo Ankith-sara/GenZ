@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requirePermission } from "@genz/database/authorization";
-import { withRateLimit } from "@/lib/rate-limiter";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 import {
   getPlatformCategories,
   addPlatformCategory,

@@ -4,10 +4,14 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import { parseMaterials } from "@/features/products/lib/products";
 import type { Product, ProductStatus, Role } from "@genz/types";
-import { checkRateLimit, logRateLimitAttempt, withRateLimit } from "@/lib/rate-limiter";
+import {
+  checkRateLimit,
+  logRateLimitAttempt,
+  withRateLimit,
+} from "@genz/utils/rate-limiter";
 import {
   productSchema,
   variantSchema,

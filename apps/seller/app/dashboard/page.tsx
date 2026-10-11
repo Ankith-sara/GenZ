@@ -1,6 +1,6 @@
 import React from "react";
 import { createClient } from "@genz/database";
-import { requireRole } from "@/features/auth/lib/require-role";
+import { requireRole } from "@genz/database/authorization";
 import Link from "next/link";
 import {
   Package,

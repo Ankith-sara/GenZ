@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 import { createAdminClient } from "@genz/database/admin";
 import { requirePermission } from "@genz/database/authorization";
 import { productSchema } from "@genz/validation";
-import { validateFileContentServer } from "@/lib/file-validation";
-import { withRateLimit } from "@/lib/rate-limiter";
+import { validateFileContentServer } from "@genz/validation";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 import type { Product, ProductStatus } from "@genz/types";
 
 export interface ProductFormState {
@@ -177,9 +177,9 @@ export async function createProduct(
   const rawMat = String(formData.get("materials") ?? "");
   const materials = rawMat
     ? rawMat
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
 
   const validation = productSchema.safeParse({

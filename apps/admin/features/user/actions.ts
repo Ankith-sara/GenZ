@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
-import { validateFileContentServer } from "@/lib/file-validation";
-import { withRateLimit } from "@/lib/rate-limiter";
+import { validateFileContentServer } from "@genz/validation";
+import { withRateLimit } from "@genz/utils/rate-limiter";
 
 export interface UploadActionResult {
   success?: boolean;

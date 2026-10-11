@@ -1,4 +1,4 @@
-import { requirePermission } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { getEmployeesList, getDepartmentsList } from "@genz/database/employees";
 import { EmployeesViewClient } from "@/features/employees";
 

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { requirePermission } from "@/features/auth/lib/require-role";
+import { requirePermission } from "@genz/database/authorization";
 import { getRoleById } from "@genz/database/roles";
 import { RoleEditorForm } from "../../role-editor-form";
 
