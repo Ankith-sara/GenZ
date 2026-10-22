@@ -206,17 +206,17 @@ export function OrdersManager({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col justify-between gap-4 border-b border-zinc-200 pb-5 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-4 border-b border-border pb-5 sm:flex-row sm:items-center">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-xl font-bold tracking-tight text-zinc-900 sm:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
               {mode === "admin" ? "Platform Orders" : "Orders & Fulfillment"}
             </h1>
-            <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-semibold text-zinc-700">
+            <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-foreground">
               {mode === "admin" ? "Master View" : "Store Desk"}
             </span>
           </div>
-          <p className="mt-1 text-xs text-zinc-500 sm:text-sm">
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
             {mode === "admin"
               ? "Inspect and track customer orders across all marketplace sellers."
               : "Manage customer orders placed for your products. Track progress from workshop to delivery."}
@@ -338,8 +338,8 @@ export function OrdersManager({
         {filteredOrders.length === 0 ? (
           <div className="p-12 text-center">
             <Package className="mx-auto mb-3 h-10 w-10 text-zinc-300" />
-            <h3 className="text-base font-semibold text-zinc-900">No orders found</h3>
-            <p className="mt-1 text-xs text-zinc-500">
+            <h3 className="text-base font-semibold text-foreground">No orders found</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
               {orders.length === 0
                 ? "When customers purchase your products, orders will appear here."
                 : "No orders match your search query or status filter."}
@@ -350,7 +350,7 @@ export function OrdersManager({
             {/* Desktop Table View */}
             <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">
+                <thead className="border-b border-border bg-muted\/40/70 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
                   <tr>
                     <th className="px-4 py-3">Order ID &amp; Date</th>
                     <th className="px-4 py-3">Customer &amp; City</th>
@@ -363,7 +363,7 @@ export function OrdersManager({
                     <th className="px-4 py-3 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-100">
+                <tbody className="divide-y divide-border\/70">
                   {filteredOrders.map((order) => {
                     const items = order.items || [];
                     const displayedItems =
@@ -374,17 +374,17 @@ export function OrdersManager({
                     const status = (order.status || "placed").toLowerCase();
                     const badgeClass =
                       statusBadges[status] ||
-                      "bg-zinc-100 text-zinc-700 border-zinc-200";
+                      "bg-muted text-foreground border-border";
 
                     return (
                       <tr
                         key={order.id}
                         onClick={() => handleOpenOrder(order)}
-                        className="cursor-pointer transition-colors hover:bg-zinc-50/60"
+                        className="cursor-pointer transition-colors hover:bg-muted\/40/60"
                       >
-                        <td className="px-4 py-3.5 font-mono font-semibold text-zinc-900">
+                        <td className="px-4 py-3.5 font-mono font-semibold text-foreground">
                           <div>{order.id}</div>
-                          <div className="mt-0.5 font-sans text-[11px] font-normal text-zinc-500">
+                          <div className="mt-0.5 font-sans text-[11px] font-normal text-muted-foreground">
                             {new Date(order.createdAt).toLocaleDateString("en-IN", {
                               day: "numeric",
                               month: "short",
@@ -394,11 +394,11 @@ export function OrdersManager({
                         </td>
 
                         <td className="px-4 py-3.5">
-                          <div className="font-semibold text-zinc-900">
+                          <div className="font-semibold text-foreground">
                             {order.customerName}
                           </div>
-                          <div className="mt-0.5 flex items-center gap-1 text-[11px] text-zinc-500">
-                            <MapPin className="h-3 w-3 text-zinc-400" />
+                          <div className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
+                            <MapPin className="h-3 w-3 text-muted-foreground" />
                             <span>{order.shippingAddress?.city || "India"}</span>
                           </div>
                         </td>
@@ -410,17 +410,17 @@ export function OrdersManager({
                               <img
                                 src={displayedItems[0].image}
                                 alt="thumb"
-                                className="h-8 w-8 rounded-lg border border-zinc-200 object-cover"
+                                className="h-8 w-8 rounded-lg border border-border object-cover"
                               />
                             )}
                             <div className="max-w-[160px] truncate">
-                              <span className="block truncate font-medium text-zinc-900">
+                              <span className="block truncate font-medium text-foreground">
                                 {displayedItems[0]?.name ||
                                   displayedItems[0]?.product_name ||
                                   "Item"}
                               </span>
                               {displayedItems.length > 1 && (
-                                <span className="text-[10px] text-zinc-500">
+                                <span className="text-[10px] text-muted-foreground">
                                   +{displayedItems.length - 1} more items
                                 </span>
                               )}
@@ -430,8 +430,8 @@ export function OrdersManager({
 
                         {mode === "admin" && (
                           <td className="px-4 py-3.5">
-                            <span className="inline-flex items-center gap-1 rounded-md border border-zinc-200 bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-800">
-                              <Building2 className="h-3 w-3 text-zinc-500" />
+                            <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-0.5 text-[11px] font-medium text-foreground">
+                              <Building2 className="h-3 w-3 text-muted-foreground" />
                               {displayedItems[0]?.sellerBusinessName ||
                                 "Artisan Workshop"}
                             </span>
@@ -439,10 +439,10 @@ export function OrdersManager({
                         )}
 
                         <td className="px-4 py-3.5">
-                          <span className="font-semibold text-zinc-900">
+                          <span className="font-semibold text-foreground">
                             ₹{(order.totalAmount || 0).toLocaleString("en-IN")}
                           </span>
-                          <div className="text-[10px] font-medium text-zinc-500 uppercase">
+                          <div className="text-[10px] font-medium text-muted-foreground uppercase">
                             {order.paymentMethod || "COD"}
                           </div>
                         </td>
@@ -454,7 +454,7 @@ export function OrdersManager({
                             {order.status}
                           </span>
                           {order.trackingNumber && (
-                            <div className="mt-0.5 font-mono text-[10px] text-zinc-500">
+                            <div className="mt-0.5 font-mono text-[10px] text-muted-foreground">
                               AWB: {order.trackingNumber}
                             </div>
                           )}
@@ -463,7 +463,7 @@ export function OrdersManager({
                         <td className="px-4 py-3.5 text-right">
                           <button
                             type="button"
-                            className="inline-flex items-center gap-1 text-xs font-semibold text-zinc-900 hover:text-zinc-700"
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-foreground hover:text-foreground"
                           >
                             <span>Manage</span>
                             <ChevronRight className="h-3.5 w-3.5" />
@@ -477,7 +477,7 @@ export function OrdersManager({
             </div>
 
             {/* Mobile Card View (<640px) */}
-            <div className="divide-y divide-zinc-100 sm:hidden">
+            <div className="divide-y divide-border\/70 sm:hidden">
               {filteredOrders.map((order) => {
                 const items = order.items || [];
                 const displayedItems =
@@ -487,16 +487,16 @@ export function OrdersManager({
 
                 const status = (order.status || "placed").toLowerCase();
                 const badgeClass =
-                  statusBadges[status] || "bg-zinc-100 text-zinc-700 border-zinc-200";
+                  statusBadges[status] || "bg-muted text-foreground border-border";
 
                 return (
                   <div
                     key={order.id}
                     onClick={() => handleOpenOrder(order)}
-                    className="space-y-2.5 p-4 transition-colors active:bg-zinc-50"
+                    className="space-y-2.5 p-4 transition-colors active:bg-muted\/40"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-zinc-900">
+                      <span className="font-mono text-xs font-bold text-foreground">
                         {order.id}
                       </span>
                       <span
@@ -508,30 +508,30 @@ export function OrdersManager({
 
                     <div className="flex items-center justify-between text-xs">
                       <div>
-                        <span className="block font-semibold text-zinc-900">
+                        <span className="block font-semibold text-foreground">
                           {order.customerName}
                         </span>
-                        <span className="flex items-center gap-1 text-[11px] text-zinc-500">
-                          <MapPin className="h-3 w-3 text-zinc-400" />
+                        <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                          <MapPin className="h-3 w-3 text-muted-foreground" />
                           {order.shippingAddress?.city || "India"}
                         </span>
                       </div>
                       <div className="text-right">
-                        <span className="block font-bold text-zinc-900">
+                        <span className="block font-bold text-foreground">
                           ₹{(order.totalAmount || 0).toLocaleString("en-IN")}
                         </span>
-                        <span className="text-[10px] text-zinc-500 uppercase">
+                        <span className="text-[10px] text-muted-foreground uppercase">
                           {order.paymentMethod || "COD"}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-zinc-100 pt-1 text-[11px] text-zinc-500">
+                    <div className="flex items-center justify-between border-t border-border\/70 pt-1 text-[11px] text-muted-foreground">
                       <span>
                         {displayedItems.length} item
                         {displayedItems.length !== 1 ? "s" : ""}
                       </span>
-                      <span className="flex items-center gap-1 font-semibold text-zinc-900">
+                      <span className="flex items-center gap-1 font-semibold text-foreground">
                         Manage <ChevronRight className="h-3.5 w-3.5" />
                       </span>
                     </div>
@@ -554,15 +554,15 @@ export function OrdersManager({
         {selectedOrder && (
           <div className="space-y-6 pb-8">
             {/* Status & Payment Banner */}
-            <div className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+            <div className="flex items-center justify-between rounded-2xl border border-border bg-muted\/40 p-4">
               <div>
-                <span className="block text-[10px] font-bold tracking-wider text-zinc-500 uppercase">
+                <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
                   Current Status
                 </span>
                 <span
                   className={`mt-1 inline-block rounded-full border px-3 py-0.5 text-xs font-bold tracking-wider uppercase ${
                     statusBadges[(selectedOrder.status || "placed").toLowerCase()] ||
-                    "bg-zinc-100 text-zinc-800"
+                    "bg-muted text-foreground"
                   }`}
                 >
                   {selectedOrder.status}
@@ -570,10 +570,10 @@ export function OrdersManager({
               </div>
 
               <div className="text-right">
-                <span className="block text-[10px] font-bold tracking-wider text-zinc-500 uppercase">
+                <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
                   Payment Method
                 </span>
-                <span className="mt-0.5 block text-sm font-bold text-zinc-900">
+                <span className="mt-0.5 block text-sm font-bold text-foreground">
                   {selectedOrder.paymentMethod === "online"
                     ? "Online Payment"
                     : "Cash on Delivery"}{" "}
@@ -597,8 +597,8 @@ export function OrdersManager({
             )}
 
             {/* ORDER LIFECYCLE ACTION CONTROLS */}
-            <div className="space-y-3 rounded-2xl border border-zinc-200 bg-white p-4">
-              <span className="block text-xs font-bold tracking-wider text-zinc-900 uppercase">
+            <div className="space-y-3 rounded-2xl border border-border bg-white p-4">
+              <span className="block text-xs font-bold tracking-wider text-foreground uppercase">
                 Update Order Lifecycle
               </span>
 
@@ -660,19 +660,19 @@ export function OrdersManager({
 
               {/* Courier Input Dialog when Dispatching */}
               {showShipModal && (
-                <div className="mt-3 space-y-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
-                  <span className="block text-xs font-semibold text-zinc-900">
+                <div className="mt-3 space-y-3 rounded-2xl border border-border bg-muted\/40 p-4">
+                  <span className="block text-xs font-semibold text-foreground">
                     Shipment Carrier &amp; Tracking Information:
                   </span>
                   <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                     <div>
-                      <Label className="text-[10px] font-semibold text-zinc-500 uppercase">
+                      <Label className="text-[10px] font-semibold text-muted-foreground uppercase">
                         Courier Partner
                       </Label>
                       <select
                         value={carrierInput}
                         onChange={(e) => setCarrierInput(e.target.value)}
-                        className="mt-1 h-9 w-full rounded-xl border border-zinc-200 bg-white px-2.5 text-xs text-zinc-900"
+                        className="mt-1 h-9 w-full rounded-xl border border-border bg-white px-2.5 text-xs text-foreground"
                       >
                         <option value="Delhivery">Delhivery</option>
                         <option value="BlueDart">BlueDart Express</option>
@@ -685,7 +685,7 @@ export function OrdersManager({
                     </div>
 
                     <div>
-                      <Label className="text-[10px] font-semibold text-zinc-500 uppercase">
+                      <Label className="text-[10px] font-semibold text-muted-foreground uppercase">
                         Tracking Number (AWB) *
                       </Label>
                       <input
@@ -693,13 +693,13 @@ export function OrdersManager({
                         placeholder="e.g. DL123456789IN"
                         value={trackingNumberInput}
                         onChange={(e) => setTrackingNumberInput(e.target.value)}
-                        className="mt-1 h-9 w-full rounded-xl border border-zinc-200 bg-white px-2.5 font-mono text-xs text-zinc-900 placeholder-zinc-400"
+                        className="mt-1 h-9 w-full rounded-xl border border-border bg-white px-2.5 font-mono text-xs text-foreground placeholder-zinc-400"
                         required
                       />
                     </div>
 
                     <div className="sm:col-span-2">
-                      <Label className="text-[10px] font-semibold text-zinc-500 uppercase">
+                      <Label className="text-[10px] font-semibold text-muted-foreground uppercase">
                         Dispatch Notes (Optional)
                       </Label>
                       <input
@@ -707,12 +707,12 @@ export function OrdersManager({
                         placeholder="e.g. Handed over to courier hub"
                         value={customNote}
                         onChange={(e) => setCustomNote(e.target.value)}
-                        className="mt-1 h-9 w-full rounded-xl border border-zinc-200 bg-white px-2.5 text-xs text-zinc-900 placeholder-zinc-400"
+                        className="mt-1 h-9 w-full rounded-xl border border-border bg-white px-2.5 text-xs text-foreground placeholder-zinc-400"
                       />
                     </div>
                   </div>
 
-                  <div className="flex justify-end gap-2 border-t border-zinc-200 pt-2">
+                  <div className="flex justify-end gap-2 border-t border-border pt-2">
                     <Button
                       type="button"
                       variant="outline"
