@@ -1,16 +1,84 @@
-import { describe, it, expect, beforeEach, afterAll, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { CreateOrderInput } from "./orders";
 
-// Mock Supabase admin client to isolate logic & fallback storage tests
+let mockDbOrders: any[] = [];
+
+// Mock Supabase admin client to isolate logic with an in-memory repository
 vi.mock("./admin", () => ({
   createAdminClient: vi.fn(() => ({
-    from: vi.fn(() => ({
-      insert: vi.fn().mockResolvedValue({ error: null }),
-      select: vi.fn().mockReturnThis(),
-      order: vi.fn().mockResolvedValue({ data: [], error: null }),
-      update: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockResolvedValue({ error: null }),
-    })),
+    from: vi.fn((table: string) => {
+      if (table !== "orders") {
+        return {
+          insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+          select: vi.fn().mockReturnThis(),
+          update: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockResolvedValue({ error: null }),
+        };
+      }
+      return {
+        insert: vi.fn((row: any) => {
+          const inserted = Array.isArray(row) ? row : [row];
+          inserted.forEach((r) => {
+            const copy = { ...r };
+            if (!copy.order_number) {
+              copy.order_number = `GZ-${100000 + mockDbOrders.length + 1}`;
+            }
+            mockDbOrders.push(copy);
+          });
+          return {
+            select: vi.fn().mockReturnValue({
+              maybeSingle: vi
+                .fn()
+                .mockResolvedValue({ data: inserted[0], error: null }),
+              single: vi.fn().mockResolvedValue({ data: inserted[0], error: null }),
+            }),
+            then: (resolve: any) => resolve({ data: inserted[0], error: null }),
+          };
+        }),
+        select: vi.fn((_columns = "*") => {
+          let currentList = [...mockDbOrders];
+          const queryBuilder: any = {
+            order: vi.fn(
+              (_field: string, _opts?: { ascending: boolean }) => queryBuilder
+            ),
+            eq: vi.fn((field: string, val: any) => {
+              currentList = currentList.filter((r) => r[field] === val);
+              return queryBuilder;
+            }),
+            contains: vi.fn((field: string, vals: any[]) => {
+              currentList = currentList.filter((r) => {
+                const arr = Array.isArray(r[field]) ? r[field] : [];
+                return vals.every((v) => arr.includes(v));
+              });
+              return queryBuilder;
+            }),
+            range: vi.fn((from: number, to: number) => {
+              currentList = currentList.slice(from, to + 1);
+              return queryBuilder;
+            }),
+            maybeSingle: vi.fn().mockImplementation(async () => ({
+              data: currentList[0] || null,
+              error: null,
+            })),
+            single: vi.fn().mockImplementation(async () => ({
+              data: currentList[0] || null,
+              error: currentList[0] ? null : { message: "Not found" },
+            })),
+            then: (resolve: any) => resolve({ data: currentList, error: null }),
+          };
+          return queryBuilder;
+        }),
+        update: vi.fn((patch: any) => ({
+          eq: vi.fn(async (field: string, val: any) => {
+            const target = mockDbOrders.find((r) => r[field] === val);
+            if (target) {
+              Object.assign(target, patch);
+            }
+            return { data: target || null, error: null };
+          }),
+        })),
+      };
+    }),
   })),
 }));
 
@@ -18,12 +86,13 @@ describe("Orders Domain Service Specs", () => {
   let ordersService: typeof import("./orders");
 
   beforeEach(async () => {
+    mockDbOrders = [];
     vi.clearAllMocks();
     ordersService = await import("./orders");
   });
 
   const mockOrderInput: CreateOrderInput = {
-    customerId: "cust-123",
+    customerId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
     customerName: "Ankith Sharma",
     customerEmail: "ankith@example.com",
     customerPhone: "+91 9876543210",
@@ -196,7 +265,7 @@ describe("Orders Domain Service Specs", () => {
     });
 
     it("filters orders by customerId correctly", async () => {
-      const uniqueCust = `cust-filter-test-${Date.now()}`;
+      const uniqueCust = "b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22";
       const custInput: CreateOrderInput = {
         ...mockOrderInput,
         customerId: uniqueCust,
@@ -208,16 +277,5 @@ describe("Orders Domain Service Specs", () => {
       expect(customerOrders.length).toBeGreaterThanOrEqual(1);
       expect(customerOrders.some((o) => o.id === order.id)).toBe(true);
     });
-  });
-
-  afterAll(() => {
-    const fs = require("fs");
-    const path = require("path");
-    const p = path.resolve(__dirname, "storage", "test-orders-store.json");
-    if (fs.existsSync(p)) {
-      try {
-        fs.unlinkSync(p);
-      } catch {}
-    }
   });
 });

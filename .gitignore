@@ -47,6 +47,10 @@ yarn-error.log*
 # turbo
 .turbo
 
+# database local fallback storage & supabase temp
+packages/database/src/storage/
+supabase/.temp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

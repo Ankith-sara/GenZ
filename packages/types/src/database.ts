@@ -203,21 +203,12 @@ export type OrderStatus =
 
 /** Mirrors the `orders_payment_status_check` constraint (migration 0026). */
 export type PaymentStatus =
-  | "pending"
-  | "paid"
-  | "failed"
-  | "refunded"
-  | "partially_refunded";
+  "pending" | "paid" | "failed" | "refunded" | "partially_refunded";
 
 // --- Refunds (migration 0026) ---
 export type RefundType = "cancellation" | "return" | "admin";
 export type RefundStatus =
-  | "requested"
-  | "approved"
-  | "processing"
-  | "processed"
-  | "rejected"
-  | "failed";
+  "requested" | "approved" | "processing" | "processed" | "rejected" | "failed";
 export type RefundMethod = "razorpay" | "manual";
 
 export interface RefundRecord {
@@ -301,6 +292,7 @@ export interface OrderItem {
 export interface OrderRecord {
   id: string; // e.g. GZ-ORD-2026-10492
   orderId?: string;
+  orderNumber?: string;
   createdAt: string;
   updatedAt: string;
   customerId?: string | null;
@@ -332,6 +324,7 @@ export type Order = OrderRecord;
 
 export type OrderDbRow = {
   id: string;
+  order_number?: string | null;
   customer_id: string | null;
   customer_name: string;
   customer_email: string;
