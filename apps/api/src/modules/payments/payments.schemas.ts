@@ -11,7 +11,7 @@ export const createRazorpayOrderSchema = z.object({
     )
     .min(1, "Items array must not be empty"),
   receipt: z.string().max(40).optional(),
-  notes: z.record(z.string()).optional(),
+  notes: z.record(z.string(), z.string()).optional(),
 });
 
 export type CreateRazorpayOrderInput = z.infer<typeof createRazorpayOrderSchema>;
@@ -23,4 +23,3 @@ export const verifyRazorpayPaymentSchema = z.object({
 });
 
 export type VerifyRazorpayPaymentInput = z.infer<typeof verifyRazorpayPaymentSchema>;
-
