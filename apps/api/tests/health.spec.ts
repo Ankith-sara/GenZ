@@ -50,5 +50,34 @@ describe("Health & Readiness API", () => {
     expect(json.success).toBe(false);
     expect(json.error).toBeDefined();
   });
-});
 
+  it("GET /v1/docs serves interactive documentation", async () => {
+    const res = await app.inject({
+      method: "GET",
+      url: "/v1/docs",
+    });
+
+    // Fastify Swagger UI either redirects /v1/docs to /v1/docs/ or returns 200 HTML
+    expect([200, 301, 302]).toContain(res.statusCode);
+  });
+
+  it("GET /v1/docs/json returns valid OpenAPI 3 spec and exports apps/api/openapi.json", async () => {
+    const res = await app.inject({
+      method: "GET",
+      url: "/v1/docs/json",
+    });
+
+    expect(res.statusCode).toBe(200);
+    const spec = res.json();
+    expect(spec.openapi).toMatch(/^3\./);
+    expect(spec.info.title).toBe("GenZ Artisan Marketplace API");
+    expect(spec.paths).toBeDefined();
+
+    // Export to apps/api/openapi.json
+    const fs = await import("fs");
+    const path = await import("path");
+    const filePath = path.resolve(__dirname, "../openapi.json");
+    fs.writeFileSync(filePath, JSON.stringify(spec, null, 2), "utf8");
+    expect(fs.existsSync(filePath)).toBe(true);
+  });
+});

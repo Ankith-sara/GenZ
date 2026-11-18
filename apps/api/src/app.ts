@@ -2,9 +2,12 @@ import Fastify, { FastifyInstance, FastifyServerOptions } from "fastify";
 import fastifySensible from "@fastify/sensible";
 import fastifyMultipart from "@fastify/multipart";
 import fastifyRawBody from "fastify-raw-body";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
 import {
   serializerCompiler,
   validatorCompiler,
+  jsonSchemaTransform,
 } from "fastify-type-provider-zod";
 
 import corsPlugin from "./plugins/cors.plugin";
@@ -30,8 +33,7 @@ import { ordersRoutes } from "./modules/orders/orders.routes";
 import { shippingRoutes } from "./modules/shipping/shipping.routes";
 
 // One definition of "dev" for both the logger and the request log
-const isDevEnv = () =>
-  process.env.NODE_ENV === "development" || !process.env.NODE_ENV;
+const isDevEnv = () => process.env.NODE_ENV === "development" || !process.env.NODE_ENV;
 
 function getLoggerConfig() {
   if (process.env.NODE_ENV === "test") {
@@ -77,6 +79,7 @@ export async function buildApp(
   const app = Fastify({
     logger: getLoggerConfig(),
     disableRequestLogging: isDev,
+    trustProxy: true,
     ...opts,
   });
 
@@ -129,10 +132,49 @@ export async function buildApp(
   // 5. Rate limiting
   await app.register(rateLimitPlugin);
 
-  // 6. Centralized Error Handler
+  // 6. OpenAPI 3.0 Documentation & Swagger UI
+  await app.register(fastifySwagger, {
+    openapi: {
+      openapi: "3.0.3",
+      info: {
+        title: "GenZ Artisan Marketplace API",
+        description:
+          "Single, authoritative, mobile-ready Fastify REST API for the GenZ Indian Handicrafts monorepo.",
+        version: "1.0.0",
+      },
+      servers: [
+        {
+          url: "http://localhost:4000",
+          description: "Local Development Server",
+        },
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+            description: "Supabase JWT Access Token",
+          },
+        },
+      },
+    },
+    transform: jsonSchemaTransform,
+  });
+
+  await app.register(fastifySwaggerUi, {
+    routePrefix: "/v1/docs",
+    uiConfig: {
+      docExpansion: "list",
+      deepLinking: true,
+    },
+    staticCSP: true,
+  });
+
+  // 7. Centralized Error Handler
   await app.register(errorHandlerPlugin);
 
-  // 7. Supabase Authentication Decorator
+  // 8. Supabase Authentication Decorator
   await app.register(authPlugin);
 
   // Health and Readiness Checks

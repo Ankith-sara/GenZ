@@ -17,14 +17,11 @@ const rateLimitPlugin: FastifyPluginAsync = async (fastify) => {
     max: 120, // 120 requests per minute per IP as standard baseline
     timeWindow: "1 minute",
     keyGenerator: (request) => {
-      // Rate limit authenticated users by their userId; fallback to IP address
+      // Key rate limiting by authenticated user ID, fallback to trustProxy IP
       if (request.user?.id) {
         return `user:${request.user.id}`;
       }
-      return (
-        request.headers["x-forwarded-for"]?.toString().split(",")[0].trim() ||
-        request.ip
-      );
+      return request.ip;
     },
   });
 };
@@ -32,4 +29,3 @@ const rateLimitPlugin: FastifyPluginAsync = async (fastify) => {
 export default fp(rateLimitPlugin, {
   name: "rate-limit-plugin",
 });
-
