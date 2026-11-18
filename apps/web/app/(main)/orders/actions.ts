@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@genz/database/authorization";
 import { withRateLimit } from "@genz/utils/rate-limiter";
-import { RefundsService } from "@genz/services/refunds";
 import { cancelOrderSchema, requestReturnSchema } from "@genz/validation";
 import { getAuthenticatedApiClient } from "@/lib/api-server-client";
 
@@ -23,10 +22,16 @@ export async function cancelOrderAction(
   _prev: OrderActionState,
   formData: FormData
 ): Promise<OrderActionState> {
-  const session = await requireRole("buyer", { redirectOnUnauthenticated: "/login?redirectTo=/orders" });
+  const session = await requireRole("buyer", {
+    redirectOnUnauthenticated: "/login?redirectTo=/orders",
+  });
 
   return withRateLimit(
-    { endpointType: "user", actionName: "customer_cancel_order", identifier: session.userId },
+    {
+      endpointType: "user",
+      actionName: "customer_cancel_order",
+      identifier: session.userId,
+    },
     async (): Promise<OrderActionState> => {
       const parsed = cancelOrderSchema.safeParse({
         orderId: readField(formData, "orderId"),
@@ -36,7 +41,6 @@ export async function cancelOrderAction(
         return { error: parsed.error.issues[0]?.message || "Invalid request." };
       }
 
-      // 1. Try centralized Fastify API first
       try {
         const client = await getAuthenticatedApiClient();
         const res = await client.orders.cancel(parsed.data.orderId, parsed.data.reason);
@@ -46,25 +50,14 @@ export async function cancelOrderAction(
           message: res.message,
         };
       } catch (apiErr: unknown) {
-        console.warn("[CancelOrderAction] Fastify API notice, using local service fallback:", apiErr);
+        console.error("[CancelOrderAction] Fastify API error:", apiErr);
+        return {
+          error:
+            apiErr instanceof Error
+              ? apiErr.message
+              : "Could not cancel the order via backend API.",
+        };
       }
-
-      // 2. Resilient local fallback
-      // Ownership (order.customerId === session.userId) is enforced in the service.
-      const res = await RefundsService.cancelOrderByCustomer({
-        orderId: parsed.data.orderId,
-        userId: session.userId,
-        reason: parsed.data.reason || null,
-      });
-      if (!res.success) return { error: res.error || "Could not cancel the order." };
-
-      revalidatePath("/orders");
-      return {
-        success: true,
-        message: res.refund
-          ? "Order cancelled. Your refund request has been created and we will email you when it is initiated."
-          : "Order cancelled.",
-      };
     }
   );
 }
@@ -74,10 +67,16 @@ export async function requestReturnAction(
   _prev: OrderActionState,
   formData: FormData
 ): Promise<OrderActionState> {
-  const session = await requireRole("buyer", { redirectOnUnauthenticated: "/login?redirectTo=/orders" });
+  const session = await requireRole("buyer", {
+    redirectOnUnauthenticated: "/login?redirectTo=/orders",
+  });
 
   return withRateLimit(
-    { endpointType: "user", actionName: "customer_request_return", identifier: session.userId },
+    {
+      endpointType: "user",
+      actionName: "customer_request_return",
+      identifier: session.userId,
+    },
     async (): Promise<OrderActionState> => {
       const parsed = requestReturnSchema.safeParse({
         orderId: readField(formData, "orderId"),
@@ -87,32 +86,26 @@ export async function requestReturnAction(
         return { error: parsed.error.issues[0]?.message || "Invalid request." };
       }
 
-      // 1. Try centralized Fastify API first
       try {
         const client = await getAuthenticatedApiClient();
-        const res = await client.orders.requestReturn(parsed.data.orderId, parsed.data.reason);
+        const res = await client.orders.requestReturn(
+          parsed.data.orderId,
+          parsed.data.reason
+        );
         revalidatePath("/orders");
         return {
           success: true,
           message: res.message,
         };
       } catch (apiErr: unknown) {
-        console.warn("[RequestReturnAction] Fastify API notice, using local service fallback:", apiErr);
+        console.error("[RequestReturnAction] Fastify API error:", apiErr);
+        return {
+          error:
+            apiErr instanceof Error
+              ? apiErr.message
+              : "Could not request the return via backend API.",
+        };
       }
-
-      // 2. Resilient local fallback
-      const res = await RefundsService.requestReturn({
-        orderId: parsed.data.orderId,
-        userId: session.userId,
-        reason: parsed.data.reason,
-      });
-      if (!res.success) return { error: res.error || "Could not request the return." };
-
-      revalidatePath("/orders");
-      return {
-        success: true,
-        message: "Return requested. Our team will contact you to arrange the pickup.",
-      };
     }
   );
 }

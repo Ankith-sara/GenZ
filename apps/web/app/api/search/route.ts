@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
-import { SearchService } from "@genz/services/search";
 import { apiClient } from "@genz/api-client";
 import { z } from "zod";
 
@@ -47,23 +46,16 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json(searchResult);
-  } catch {
-    // Fallback to domain search service if API server is offline
-    try {
-      const searchResult = await SearchService.searchProducts({
-        query: cleanQ,
-        limit: 8,
-      });
-
-      await logRateLimitAttempt({
-        endpointType: "public",
-        actionName: "api_search_products",
-      });
-
-      return NextResponse.json(searchResult);
-    } catch (error) {
-      console.error("GET /api/search error:", error);
-      return NextResponse.json({ error: "Search query failed." }, { status: 500 });
-    }
+  } catch (apiErr: unknown) {
+    console.error("GET /api/search backend API error:", apiErr);
+    return NextResponse.json(
+      {
+        error:
+          apiErr instanceof Error
+            ? apiErr.message
+            : "Search query failed via backend API.",
+      },
+      { status: 502 }
+    );
   }
 }

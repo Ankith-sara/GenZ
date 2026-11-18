@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@genz/database";
 import { apiClient } from "@genz/api-client";
 
 export async function POST(req: NextRequest) {
@@ -18,15 +17,12 @@ export async function POST(req: NextRequest) {
         user_agent: user_agent || undefined,
       });
       return NextResponse.json({ ok: true });
-    } catch {
-      // Fallback to local DB insertion
-      const supabase = await createClient();
-      await supabase.from("page_views").insert({
-        path,
-        referrer: referrer || null,
-        user_agent: user_agent || null,
-      });
-      return NextResponse.json({ ok: true });
+    } catch (apiErr: unknown) {
+      console.error("[trackPageView] Backend API error:", apiErr);
+      return NextResponse.json(
+        { error: apiErr instanceof Error ? apiErr.message : "Tracking failed" },
+        { status: 502 }
+      );
     }
   } catch {
     return NextResponse.json({ error: "failed" }, { status: 500 });

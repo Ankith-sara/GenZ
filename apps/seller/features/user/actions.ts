@@ -69,53 +69,19 @@ export async function uploadAvatarAction(
       const publicUrl = supabase.storage.from("avatars").getPublicUrl(path)
         .data.publicUrl;
 
-      // 3. Database Update: profiles via API or direct fallback
+      // 3. Database Update: profiles via API
       try {
         const client = await getAuthenticatedSellerApiClient();
         await client.sellers.updateAvatar(publicUrl);
-      } catch {
-        const { error: updateError } = await supabase
-          .from("profiles")
-          .update({ avatar_url: publicUrl })
-          .eq("id", userId);
-
-        if (updateError) {
-          console.error("[uploadAvatarAction] DB update error:", updateError);
-          // Rollback storage upload on DB failure
-          await supabase.storage.from("avatars").remove([path]);
-          return { error: "Failed to update profile avatar URL." };
-        }
-
-        // Also sync to seller_profiles description metadata
-        try {
-          const { data: currentSellerProf } = await supabase
-            .from("seller_profiles")
-            .select("description")
-            .eq("id", userId)
-            .maybeSingle();
-
-          if (currentSellerProf) {
-            let meta: Record<string, unknown> = {};
-            if (currentSellerProf.description) {
-              try {
-                if (currentSellerProf.description.startsWith("{")) {
-                  meta = JSON.parse(currentSellerProf.description);
-                } else {
-                  meta = { short_bio: currentSellerProf.description };
-                }
-              } catch {
-                meta = { short_bio: currentSellerProf.description };
-              }
-            }
-            meta.avatar_url = publicUrl;
-            await supabase
-              .from("seller_profiles")
-              .update({ description: JSON.stringify(meta) })
-              .eq("id", userId);
-          }
-        } catch (syncErr) {
-          console.warn("[uploadAvatarAction] Seller metadata sync notice:", syncErr);
-        }
+      } catch (err: unknown) {
+        console.error("[uploadAvatarAction] API error:", err);
+        await supabase.storage.from("avatars").remove([path]);
+        return {
+          error:
+            err instanceof Error
+              ? err.message
+              : "Failed to update profile avatar URL via backend API.",
+        };
       }
 
       revalidatePath("/dashboard/account");
@@ -142,53 +108,14 @@ export async function removeAvatarAction(): Promise<UploadActionResult> {
       try {
         const client = await getAuthenticatedSellerApiClient();
         await client.sellers.removeAvatar();
-      } catch {
-        let supabase;
-        try {
-          supabase = createAdminClient();
-        } catch (err: unknown) {
-          console.error("[removeAvatarAction] Admin client init failed:", err);
-          return { error: "Admin credentials not configured." };
-        }
-
-        const { error: updateError } = await supabase
-          .from("profiles")
-          .update({ avatar_url: null })
-          .eq("id", userId);
-
-        if (updateError) {
-          return { error: "Failed to reset avatar." };
-        }
-
-        try {
-          const { data: currentSellerProf } = await supabase
-            .from("seller_profiles")
-            .select("description")
-            .eq("id", userId)
-            .maybeSingle();
-
-          if (currentSellerProf) {
-            let meta: Record<string, unknown> = {};
-            if (currentSellerProf.description) {
-              try {
-                if (currentSellerProf.description.startsWith("{")) {
-                  meta = JSON.parse(currentSellerProf.description);
-                } else {
-                  meta = { short_bio: currentSellerProf.description };
-                }
-              } catch {
-                meta = { short_bio: currentSellerProf.description };
-              }
-            }
-            delete meta.avatar_url;
-            await supabase
-              .from("seller_profiles")
-              .update({ description: JSON.stringify(meta) })
-              .eq("id", userId);
-          }
-        } catch (syncErr) {
-          console.warn("[removeAvatarAction] Seller metadata sync notice:", syncErr);
-        }
+      } catch (err: unknown) {
+        console.error("[removeAvatarAction] API error:", err);
+        return {
+          error:
+            err instanceof Error
+              ? err.message
+              : "Failed to reset avatar via backend API.",
+        };
       }
 
       revalidatePath("/dashboard/account");
@@ -262,41 +189,18 @@ export async function uploadCoverAction(
       const publicUrl = supabase.storage.from("avatars").getPublicUrl(path)
         .data.publicUrl;
 
-      // 3. Database Update: store cover_url inside seller_profiles.description JSON metadata via API or fallback
+      // 3. Database Update: store cover_url inside seller_profiles via API
       try {
         const client = await getAuthenticatedSellerApiClient();
         await client.sellers.updateCover(publicUrl);
-      } catch {
-        const { data: currentProfile } = await supabase
-          .from("seller_profiles")
-          .select("description")
-          .eq("id", user.id)
-          .maybeSingle();
-
-        let meta: Record<string, unknown> = {};
-        if (currentProfile?.description) {
-          try {
-            if (currentProfile.description.startsWith("{")) {
-              meta = JSON.parse(currentProfile.description);
-            } else {
-              meta = { short_bio: currentProfile.description };
-            }
-          } catch {
-            meta = { short_bio: currentProfile.description };
-          }
-        }
-
-        meta.cover_url = publicUrl;
-
-        const { error: updateError } = await supabase
-          .from("seller_profiles")
-          .update({ description: JSON.stringify(meta) })
-          .eq("id", user.id);
-
-        if (updateError) {
-          console.error("[uploadCoverAction] DB update error:", updateError);
-          return { error: "Failed to update profile cover URL." };
-        }
+      } catch (err: unknown) {
+        console.error("[uploadCoverAction] API error:", err);
+        return {
+          error:
+            err instanceof Error
+              ? err.message
+              : "Failed to update profile cover URL via backend API.",
+        };
       }
 
       revalidatePath("/dashboard/profile");

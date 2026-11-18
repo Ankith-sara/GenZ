@@ -124,40 +124,14 @@ export async function updateSellerProfileStudio(
         materials_and_technique,
         vision,
       });
-    } catch {
-      // 1. Update or upsert seller_profiles
-      const { error: profileError } = await adminSupabase.from("seller_profiles").upsert({
-        id: userId,
-        business_name,
-        gst_number: gst_number || "PENDING",
-        factory_address: factory_address || null,
-        city: city || null,
-        state: state || null,
-        pincode: pincode || null,
-        description,
-        established_year: established_year || null,
-        updated_at: new Date().toISOString(),
-      });
-
-      if (profileError) {
-        console.error(
-          "[updateSellerProfileStudio] Error updating seller_profiles:",
-          profileError
-        );
-        return { error: profileError.message || "Failed to save seller profile." };
-      }
-
-      // 2. Also update display name and avatar in profiles table
-      const profileUpdates: { full_name?: string; avatar_url?: string } = {};
-      if (maker_name || business_name) {
-        profileUpdates.full_name = maker_name || business_name;
-      }
-      if (effectiveAvatarUrl) {
-        profileUpdates.avatar_url = effectiveAvatarUrl;
-      }
-      if (Object.keys(profileUpdates).length > 0) {
-        await adminSupabase.from("profiles").update(profileUpdates).eq("id", userId);
-      }
+    } catch (err: unknown) {
+      console.error("[updateSellerProfileStudio] API error:", err);
+      return {
+        error:
+          err instanceof Error
+            ? err.message
+            : "Failed to update seller profile studio via backend API.",
+      };
     }
 
     revalidatePath("/dashboard");
