@@ -17,12 +17,13 @@ export class PaymentsService {
   static async createRazorpayOrder(
     input: CreatePaymentOrderInput
   ): Promise<CreatePaymentOrderResult> {
-    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_51aBCDeFGhIJkL";
+    const keyId =
+      process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "";
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
     const amountInPaise = PricingService.inrToPaise(input.amountInInr);
 
     // If live credentials are provided, call official Razorpay API
-    if (keySecret && !keyId.includes("51aBCDeFGhIJkL")) {
+    if (keySecret && keyId && !keyId.includes("51aBCDeFGhIJkL")) {
       try {
         const authHeader = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
         const res = await fetch("https://api.razorpay.com/v1/orders", {
@@ -54,6 +55,20 @@ export class PaymentsService {
       } catch (err) {
         console.warn("[PaymentsService] Razorpay API call exception:", err);
       }
+    }
+
+    // In production, never return a simulated order; return an error instead
+    if (process.env.NODE_ENV === "production") {
+      return {
+        success: false,
+        gateway: "razorpay",
+        keyId,
+        orderId: "",
+        amountInPaise,
+        currency: "INR",
+        isSimulated: false,
+        error: "Live payment gateway is not properly configured.",
+      };
     }
 
     // Standard/Sandbox fallback order for dev & testing environments
@@ -116,7 +131,8 @@ export class PaymentsService {
 
   /** Server-side Razorpay API credentials, or null when not configured. */
   static getRazorpayCredentials(): { keyId: string; keySecret: string } | null {
-    const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const keyId =
+      process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
     if (!keyId || !keySecret || keyId.includes("51aBCDeFGhIJkL")) return null;
     return { keyId, keySecret };
@@ -142,7 +158,10 @@ export class PaymentsService {
       return { success: false, error: "Invalid Razorpay payment id on this order." };
     }
     if (!Number.isInteger(input.amountInPaise) || input.amountInPaise <= 0) {
-      return { success: false, error: "Refund amount must be a positive number of paise." };
+      return {
+        success: false,
+        error: "Refund amount must be a positive number of paise.",
+      };
     }
 
     try {
@@ -220,7 +239,10 @@ export class PaymentsService {
     if (!signature) {
       return { verified: false, reason: "Missing X-Razorpay-Signature header" };
     }
-    const expected = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
+    const expected = crypto
+      .createHmac("sha256", secret)
+      .update(rawBody, "utf8")
+      .digest("hex");
     const verified = timingSafeEqualHex(expected, signature.trim());
     return verified ? { verified } : { verified, reason: "Signature mismatch" };
   }
@@ -228,7 +250,8 @@ export class PaymentsService {
 
 /** Constant-time comparison of two hex digests. */
 function timingSafeEqualHex(expectedHex: string, receivedHex: string): boolean {
-  if (typeof receivedHex !== "string" || !/^[0-9a-fA-F]+$/.test(receivedHex)) return false;
+  if (typeof receivedHex !== "string" || !/^[0-9a-fA-F]+$/.test(receivedHex))
+    return false;
   const a = Buffer.from(expectedHex, "hex");
   const b = Buffer.from(receivedHex, "hex");
   if (a.length !== b.length || a.length === 0) return false;

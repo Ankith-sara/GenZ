@@ -11,7 +11,9 @@ export class PaymentsModuleService {
     // 1. Recalculate financial total using authoritative database prices
     const cart = await CartService.validateAndCalculate({ items: input.items });
     if (!cart.valid || cart.pricing.total <= 0) {
-      throw new ValidationError("Cannot create payment order for an invalid or zero-sum cart.");
+      throw new ValidationError(
+        "Cannot create payment order for an invalid or zero-sum cart."
+      );
     }
 
     const notes = Object.fromEntries(
@@ -25,6 +27,12 @@ export class PaymentsModuleService {
       receipt: (input.receipt || `rcpt_${Date.now()}`).slice(0, 40),
       notes,
     });
+
+    if (!order.success || !order.orderId) {
+      throw new ValidationError(
+        order.error || "Failed to create payment order with gateway."
+      );
+    }
 
     return {
       success: order.success,
@@ -49,4 +57,3 @@ export class PaymentsModuleService {
     };
   }
 }
-
