@@ -1,4 +1,5 @@
 import { PaymentsService as DomainPaymentsService } from "@genz/services/payments";
+import { getSupabaseAdminClient } from "../../integrations/supabase";
 import { CartService } from "../cart/cart.service";
 import type {
   CreateRazorpayOrderInput,
@@ -31,6 +32,21 @@ export class PaymentsModuleService {
     if (!order.success || !order.orderId) {
       throw new ValidationError(
         order.error || "Failed to create payment order with gateway."
+      );
+    }
+
+    // Persist pending payment row in database
+    const admin = getSupabaseAdminClient();
+    const { error: insertError } = await admin.from("payments").insert({
+      gateway_order_id: order.orderId,
+      amount_paise: order.amountInPaise,
+      status: "created",
+    });
+
+    if (insertError) {
+      console.error(
+        "[PaymentsModuleService] Failed to persist payment row:",
+        insertError.message
       );
     }
 

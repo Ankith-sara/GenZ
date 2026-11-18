@@ -38,9 +38,10 @@ export const createCheckoutOrderSchema = z.object({
     .min(1, "Items array must not be empty"),
   shippingAddress: checkoutAddressSchema,
   guestEmail: z.string().email().optional(),
+  expectedTotalInr: z.number().positive().optional(),
+  clientCalculatedTotal: z.number().positive().optional(),
   payment: checkoutPaymentSchema,
   notes: z.string().max(500).optional(),
 });
 
 export type CreateCheckoutOrderInput = z.infer<typeof createCheckoutOrderSchema>;
-
