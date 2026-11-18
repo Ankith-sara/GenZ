@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@genz/database";
 import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
 import { profileSchema, addressesSchema } from "@genz/validation";
+import { getAuthenticatedApiClient } from "@/lib/api-server-client";
 
 export async function updateProfile(formData: {
   fullName: string;
@@ -32,7 +33,21 @@ export async function updateProfile(formData: {
     return { error: validation.error.issues[0].message };
   }
 
-  // 3. Database operation
+  // 3. Try centralized Fastify API first
+  try {
+    const client = await getAuthenticatedApiClient();
+    await client.customers.updateProfile({
+      fullName: validation.data.fullName,
+      phone: validation.data.phone,
+      city: validation.data.city,
+    });
+    revalidatePath("/profile");
+    return { success: true };
+  } catch (apiErr: unknown) {
+    console.warn("[UpdateProfile] Fastify API notice, using local database fallback:", apiErr);
+  }
+
+  // 4. Local fallback
   const { error } = await supabase
     .from("profiles")
     .update({
@@ -91,7 +106,7 @@ export async function saveAddresses(addresses: Address[]) {
     return { error: validation.error.issues[0].message };
   }
 
-  // 3. Auth metadata operation
+  // 3. Auth metadata operation via Supabase Auth
   const { error } = await supabase.auth.updateUser({
     data: { addresses: validation.data },
   });
@@ -105,9 +120,10 @@ export async function saveAddresses(addresses: Address[]) {
 
   if (error) {
     console.error("Save addresses auth error:", error);
-    return { error: "Failed to save address details. Please try again." };
+    return { error: "Failed to save address. Please try again." };
   }
 
   revalidatePath("/profile");
+  revalidatePath("/checkout");
   return { success: true };
 }

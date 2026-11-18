@@ -39,11 +39,9 @@ genz-app/
 │   ├── database/                # Supabase SSR clients (client, server, admin), orders repository, auth
 │   │   └── src/storage/         # Resilient JSON fallback store for real-time monorepo sync (orders-store.json)
 │   ├── ui/                      # Shared Atomic Design system (@genz/ui)
-│   │   ├── atoms/               # Button, Input, Badge, Label, Textarea, Card, StatusBadge, UserAvatar
-│   │   ├── molecules/           # ActionDropdown, LocationSelectGroup, PhoneInput, CookieConsent
-│   │   ├── organisms/           # Header, Footer, PageHeader, MetricCard, CommandMenu, SlideOverDrawer
-│   │   ├── orders/              # Shared OrdersManager & tracking UI
-│   │   └── product-form/        # Shared MediaCard, VariantsCard
+│   │   ├── primitives/          # Button, Input, Badge, Label, Textarea, Card, StatusBadge, UserAvatar, Select, EmptyState
+│   │   ├── composites/          # ActionDropdown, LocationSelectGroup, PhoneInput, CookieConsent, PageHeader, MetricCard, CommandMenu, SlideOverDrawer
+│   │   └── features/            # Shared Domain Desks: products/ (ProductEditorForm, CatalogManager), orders/ (OrdersManager), seller-profile/, security/
 │   ├── types/                   # Shared TypeScript models (database, orders, products, sellers, users)
 │   ├── utils/                   # Rate limiting (withRateLimit), Resend API, site config
 │   ├── validation/              # Zod schemas (GSTIN regex, seller signup, auth, product forms)

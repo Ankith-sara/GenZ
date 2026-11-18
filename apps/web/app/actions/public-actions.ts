@@ -3,6 +3,7 @@
 import { createClient } from "@genz/database/server";
 import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
 import { waitlistSchema, contactSchema, newsletterSchema } from "@genz/validation";
+import { apiClient } from "@genz/api-client";
 
 export async function submitWaitlist(formData: {
   name: string;
@@ -26,6 +27,27 @@ export async function submitWaitlist(formData: {
 
   const { name, email, city, phone, role } = validation.data;
 
+  // 1. Try centralized Fastify API
+  try {
+    await apiClient.support.waitlist({
+      name,
+      email,
+      role,
+      city: city || undefined,
+      phone: phone || undefined,
+    });
+
+    await logRateLimitAttempt({
+      endpointType: "public",
+      actionName: "submit_waitlist",
+    });
+
+    return { success: true };
+  } catch (apiErr: unknown) {
+    console.warn("[SubmitWaitlist] Fastify API notice, using local DB fallback:", apiErr);
+  }
+
+  // 2. Resilient local DB fallback
   const supabase = await createClient();
   const { error } = await supabase.from("waitlist").insert({
     name,
@@ -69,6 +91,26 @@ export async function submitContactMessage(formData: {
 
   const { name, email, reason, message } = validation.data;
 
+  // 1. Try centralized Fastify API
+  try {
+    await apiClient.support.contact({
+      name,
+      email,
+      reason,
+      message,
+    });
+
+    await logRateLimitAttempt({
+      endpointType: "public",
+      actionName: "submit_contact",
+    });
+
+    return { success: true };
+  } catch (apiErr: unknown) {
+    console.warn("[SubmitContactMessage] Fastify API notice, using local DB fallback:", apiErr);
+  }
+
+  // 2. Resilient local DB fallback
   const supabase = await createClient();
   const { error } = await supabase.from("contact_messages").insert({
     name,
@@ -106,6 +148,21 @@ export async function subscribeNewsletter(email: string) {
 
   const trimmedEmail = validation.data.email;
 
+  // 1. Try centralized Fastify API
+  try {
+    await apiClient.support.newsletter(trimmedEmail);
+
+    await logRateLimitAttempt({
+      endpointType: "public",
+      actionName: "subscribe_newsletter",
+    });
+
+    return { success: true };
+  } catch (apiErr: unknown) {
+    console.warn("[SubscribeNewsletter] Fastify API notice, using local DB fallback:", apiErr);
+  }
+
+  // 2. Resilient local DB fallback
   const supabase = await createClient();
 
   let { error } = await supabase.from("newsletter_subscribers").insert({

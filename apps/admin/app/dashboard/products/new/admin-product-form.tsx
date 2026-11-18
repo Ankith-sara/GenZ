@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useActionState } from "react";
-import { ProductEditorForm, type SellerOption } from "@genz/ui/shared-features";
+import { ProductEditorForm, type SellerOption } from "@genz/ui";
 import { createProduct, type ProductFormState } from "@/app/dashboard/products/actions";
 
 export type { SellerOption };

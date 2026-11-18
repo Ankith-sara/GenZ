@@ -5,7 +5,8 @@ import { ensureProfileForCurrentUser } from "@genz/database/auth";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  let next = searchParams.get("next");
+  const requestedNext = searchParams.get("next");
+  let next = requestedNext || "/dashboard";
 
   const supabase = await createClient();
 
@@ -31,9 +32,12 @@ export async function GET(request: Request) {
       .single();
 
     const currentRole = profile?.role ?? "buyer";
+    const isSupport =
+      searchParams.get("support_session") === "true" ||
+      requestedNext?.includes("support_session=true");
 
     if (currentRole === "seller" || currentRole === "admin") {
-      next = "/dashboard";
+      next = requestedNext && requestedNext.startsWith("/dashboard") ? requestedNext : "/dashboard";
     } else {
       next = "/login?error=forbidden_seller_only";
     }
@@ -42,13 +46,25 @@ export async function GET(request: Request) {
     const forwardedHost = request.headers.get("x-forwarded-host");
     const isLocalEnv = process.env.NODE_ENV === "development";
 
+    let targetUrl: string;
     if (isLocalEnv) {
-      return NextResponse.redirect(`${origin}${redirectPath}`);
+      targetUrl = `${origin}${redirectPath}`;
     } else if (forwardedHost) {
-      return NextResponse.redirect(`https://${forwardedHost}${redirectPath}`);
+      targetUrl = `https://${forwardedHost}${redirectPath}`;
     } else {
-      return NextResponse.redirect(`${origin}${redirectPath}`);
+      targetUrl = `${origin}${redirectPath}`;
     }
+
+    const response = NextResponse.redirect(targetUrl);
+    if (isSupport) {
+      response.cookies.set("support_session", "true", {
+        path: "/",
+        maxAge: 3600 * 2,
+        httpOnly: false,
+        sameSite: "lax",
+      });
+    }
+    return response;
   }
 
   const authErrorParam =

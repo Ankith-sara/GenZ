@@ -27,6 +27,11 @@ export const loginSchema = z.object({
   password: passwordSchema,
 });
 
+export const sellerLoginSchema = z.object({
+  identifier: z.string().min(2, "Company name or email is required").max(255).trim(),
+  password: passwordSchema,
+});
+
 export const otpLoginSchema = z.object({
   email: emailSchema,
   token: tokenSchema,

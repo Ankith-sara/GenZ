@@ -5,6 +5,7 @@ import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { validateFileContentServer } from "@genz/validation";
 import { withRateLimit } from "@genz/utils/rate-limiter";
+import { getAuthenticatedApiClient } from "@/lib/api-server-client";
 
 export interface UploadActionResult {
   success?: boolean;
@@ -42,6 +43,18 @@ export async function uploadAvatarAction(
         return { error: validation.error || "Invalid image file." };
       }
 
+      // 2. Try centralized Fastify API first
+      try {
+        const client = await getAuthenticatedApiClient();
+        const apiRes = await client.customers.uploadAvatar(formData);
+        revalidatePath("/profile");
+        revalidatePath("/seller/dashboard");
+        return { success: true, url: apiRes.avatarUrl };
+      } catch (apiErr: unknown) {
+        console.warn("[UploadAvatarAction] Fastify API notice, using local storage fallback:", apiErr);
+      }
+
+      // 3. Resilient storage fallback
       let supabase;
       try {
         supabase = createAdminClient();
@@ -59,7 +72,6 @@ export async function uploadAvatarAction(
       const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
       const path = `${user.id}/avatar-${Date.now()}-${safeName}`;
 
-      // 2. Storage Upload
       const buffer = Buffer.from(await file.arrayBuffer());
       const { error: uploadError } = await supabase.storage
         .from("avatars")
@@ -73,7 +85,6 @@ export async function uploadAvatarAction(
       const publicUrl = supabase.storage.from("avatars").getPublicUrl(path)
         .data.publicUrl;
 
-      // 3. Database Update
       const { error: updateError } = await supabase
         .from("profiles")
         .update({ avatar_url: publicUrl })
@@ -81,7 +92,6 @@ export async function uploadAvatarAction(
 
       if (updateError) {
         console.error("[uploadAvatarAction] DB update error:", updateError);
-        // Rollback storage upload on DB failure
         await supabase.storage.from("avatars").remove([path]);
         return { error: "Failed to update profile avatar URL." };
       }

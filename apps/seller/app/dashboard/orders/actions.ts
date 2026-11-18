@@ -5,6 +5,7 @@ import { OrdersService } from "@genz/services/orders";
 import { withRateLimit } from "@genz/utils/rate-limiter";
 import type { OrderStatus, OrderRecord } from "@genz/types";
 import { revalidatePath } from "next/cache";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export async function updateOrderStatusAction(
   orderId: string,
@@ -22,22 +23,38 @@ export async function updateOrderStatusAction(
       identifier: session.userId,
     },
     async () => {
-      const res = await OrdersService.transitionStatus({
-        orderId,
-        newStatus: status,
-        actorUserId: session.userId,
-        actorRole: "seller",
-        carrier,
-        trackingNumber,
-        note,
-      });
+      try {
+        const client = await getAuthenticatedSellerApiClient();
+        const res = await client.sellers.updateOrderStatus(orderId, {
+          status,
+          carrier,
+          trackingNumber,
+          note,
+        });
+        if (res.success) {
+          revalidatePath("/dashboard/orders");
+          revalidatePath("/dashboard");
+        }
+        return res;
+      } catch {
+        // Robust fallback to domain service
+        const res = await OrdersService.transitionStatus({
+          orderId,
+          newStatus: status,
+          actorUserId: session.userId,
+          actorRole: "seller",
+          carrier,
+          trackingNumber,
+          note,
+        });
 
-      if (res.success) {
-        revalidatePath("/dashboard/orders");
-        revalidatePath("/dashboard");
+        if (res.success) {
+          revalidatePath("/dashboard/orders");
+          revalidatePath("/dashboard");
+        }
+
+        return res;
       }
-
-      return res;
     }
   );
 

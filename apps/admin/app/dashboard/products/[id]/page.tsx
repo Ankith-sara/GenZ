@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@genz/database/admin";
 import { requirePermission } from "@genz/database/authorization";
 import { AdminProductEditClient } from "./admin-product-edit-client";
-import type { SellerOption } from "@genz/ui/shared-features";
+import type { SellerOption } from "@genz/ui";
 
 export default async function AdminProductDetailPage({
   params,

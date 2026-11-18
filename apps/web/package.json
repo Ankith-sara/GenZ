@@ -9,12 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@genz/types": "workspace:*",
-    "@genz/validation": "workspace:*",
-    "@genz/utils": "workspace:*",
+    "@genz/api-client": "workspace:*",
     "@genz/database": "workspace:*",
     "@genz/services": "workspace:*",
+    "@genz/types": "workspace:*",
     "@genz/ui": "workspace:*",
+    "@genz/utils": "workspace:*",
+    "@genz/validation": "workspace:*",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.0",
     "clsx": "^2.1.1",
@@ -22,6 +23,7 @@
     "next": "^15.5.19",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-icons": "^5.7.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "zod": "^3.25.76"

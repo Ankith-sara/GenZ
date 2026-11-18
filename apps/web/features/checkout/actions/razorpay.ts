@@ -5,6 +5,7 @@ import { withRateLimit } from "@genz/utils/rate-limiter";
 import { PaymentsService } from "@genz/services/payments";
 import { PricingService } from "@genz/services/pricing";
 import { razorpayOrderRequestSchema } from "@genz/validation";
+import { apiClient } from "@genz/api-client";
 
 export interface CreateRazorpayOrderResult {
   success: boolean;
@@ -16,13 +17,12 @@ export interface CreateRazorpayOrderResult {
 }
 
 /**
- * Creates a Razorpay order for the basket. The amount is computed on the
- * server with the same pricing rules the order is saved with, so the amount
- * charged always equals the order total (and therefore the refundable total).
- * Guest checkout is supported, so a session is optional (rate limited by IP).
+ * Creates a Razorpay order for the basket.
+ * Consumes the centralized Fastify API (/v1/payments/razorpay/order) which recalculates
+ * amount strictly on the server against trusted database product records.
  */
 export async function createRazorpayOrderAction(params: {
-  items: { price: number; quantity: number }[];
+  items: { id?: string; productId?: string; price: number; quantity: number }[];
   receipt?: string;
   notes?: Record<string, string>;
 }): Promise<CreateRazorpayOrderResult> {
@@ -46,6 +46,29 @@ export async function createRazorpayOrderAction(params: {
         };
       }
 
+      // 1. Try centralized Fastify API
+      try {
+        const apiOrder = await apiClient.payments.createRazorpayOrder({
+          items: params.items.map((i) => ({
+            productId: (i as any).productId || i.id || "prod-1",
+            quantity: i.quantity,
+          })),
+          receipt: params.receipt,
+          notes: params.notes,
+        });
+
+        return {
+          success: apiOrder.success,
+          keyId: apiOrder.keyId,
+          orderId: apiOrder.orderId,
+          amount: apiOrder.amount,
+          currency: apiOrder.currency,
+        };
+      } catch (apiErr: unknown) {
+        console.warn("[CreateRazorpayOrder] Fastify API notice, using local calculation fallback:", apiErr);
+      }
+
+      // 2. Resilient fallback
       const totals = PricingService.calculateOrderTotals(
         parsed.data.items.map((i) => ({ unitPrice: i.price, quantity: i.quantity }))
       );

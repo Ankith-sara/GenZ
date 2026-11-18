@@ -1,7 +1,28 @@
 import { describe, it, expect } from "vitest";
-import { validateLoginEmail, validateLoginPassword } from "./lib/login-validation";
+import {
+  validateLoginEmail,
+  validateLoginPassword,
+  validateLoginIdentifier,
+  validateLoginCompanyName,
+} from "./lib/login-validation";
 
 describe("Seller Auth Login Form Logic Specs", () => {
+  describe("validateLoginCompanyName", () => {
+    it("rejects empty or whitespace company name", () => {
+      expect(validateLoginCompanyName("")).toBe("Company name is required.");
+      expect(validateLoginCompanyName("   ")).toBe("Company name is required.");
+    });
+
+    it("rejects short company names < 2 chars", () => {
+      expect(validateLoginCompanyName("A")).toBe("Company name must be at least 2 characters.");
+    });
+
+    it("accepts valid registered company name", () => {
+      expect(validateLoginCompanyName("Kondapalli Toys & Crafts")).toBeNull();
+      expect(validateLoginCompanyName("Polumuri Handlooms")).toBeNull();
+      expect(validateLoginCompanyName("Artisan Works Ltd")).toBeNull();
+    });
+  });
   describe("validateLoginEmail", () => {
     it("rejects empty or whitespace email", () => {
       expect(validateLoginEmail("")).toBe("Email address is required.");
@@ -23,6 +44,25 @@ describe("Seller Auth Login Form Logic Specs", () => {
     it("accepts valid corporate and factory email addresses", () => {
       expect(validateLoginEmail("factory@company.com")).toBeNull();
       expect(validateLoginEmail("artisan.seller@genz.in")).toBeNull();
+    });
+  });
+
+  describe("validateLoginIdentifier (Email or Company Name)", () => {
+    it("accepts valid registered company name", () => {
+      expect(validateLoginIdentifier("Kondapalli Toys & Crafts")).toBeNull();
+      expect(validateLoginIdentifier("Polumuri Handlooms")).toBeNull();
+    });
+
+    it("accepts valid email address", () => {
+      expect(validateLoginIdentifier("factory@company.com")).toBeNull();
+    });
+
+    it("rejects short company names < 2 chars", () => {
+      expect(validateLoginIdentifier("A")).toBe("Company name must be at least 2 characters.");
+    });
+
+    it("rejects empty identifier", () => {
+      expect(validateLoginIdentifier("")).toBe("Company name or email is required.");
     });
   });
 

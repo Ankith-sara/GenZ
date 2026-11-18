@@ -20,81 +20,110 @@ import {
   Sparkles,
 } from "lucide-react";
 import { getOrders } from "@genz/database/orders";
-import { PRODUCT_STATUS_LABEL, formatInr } from "@/features/products/lib/products";
-import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
-import { getSellerAnalyticsData } from "@/features/admin/lib/vercel-analytics";
+import { PRODUCT_STATUS_LABEL, formatInr } from "@genz/utils/products";
+import { VercelAnalyticsChart, DashboardPageHeader, DashboardStat } from "@genz/ui";
+import { getSellerAnalyticsData } from "@genz/utils/vercel-analytics";
 import { SITE_URL } from "@genz/utils";
-import { DashboardPageHeader, DashboardStat } from "@genz/ui";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export default async function SellerDashboardPage() {
   const session = await requireRole("seller");
   const supabase = await createClient();
 
-  const [
-    { count: productCount },
-    sellerOrdersRaw,
-    { count: documentCount },
-    { data: sellerProfile },
-    { data: recentProducts },
-    analytics,
-  ] = await Promise.all([
-    supabase
-      .from("products")
-      .select("*", { count: "exact", head: true })
-      .eq("seller_id", session.userId),
-    getOrders({ sellerId: session.userId }).catch(() => []),
-    supabase
-      .from("seller_documents")
-      .select("*", { count: "exact", head: true })
-      .eq("seller_id", session.userId),
-    supabase.from("seller_profiles").select("*").eq("id", session.userId).maybeSingle(),
-    supabase
-      .from("products")
-      .select("*")
-      .eq("seller_id", session.userId)
-      .order("updated_at", { ascending: false })
-      .limit(5),
-    getSellerAnalyticsData(session.userId),
-  ]);
+  let productCount = 0;
+  let documentCount = 0;
+  let sellerProfile: any = null;
+  let recentProducts: any[] = [];
+  let scopedOrders: any[] = [];
+  let storeName = "Seller Store";
+  let analytics: any = null;
+  let isVerified = false;
 
-  // Intelligent fallback for store business name
-  let storeName = sellerProfile?.business_name;
-  if (!storeName || storeName === "Factory Seller") {
-    const email = session.email?.toLowerCase().trim();
-    if (email) {
-      try {
-        const { data: appRow } = await supabase
-          .from("seller_applications")
-          .select("business_name, full_name, form_data")
-          .ilike("email", email)
-          .limit(1)
-          .maybeSingle();
-        if (appRow) {
-          const fd = (appRow.form_data || {}) as Record<string, unknown>;
-          storeName =
-            appRow.business_name || (fd.business_name as string) || appRow.full_name;
-        }
-      } catch {}
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    const overview = await client.sellers.getOverview();
+    productCount = overview.productCount;
+    documentCount = overview.documentCount;
+    sellerProfile = overview.sellerProfile;
+    recentProducts = overview.recentProducts;
+    scopedOrders = overview.recentOrders;
+    storeName = overview.storeName;
+    isVerified = overview.isVerified;
+    analytics = await getSellerAnalyticsData(session.userId).catch(() => null);
+  } catch {
+    const [
+      { count: pCount },
+      sellerOrdersRaw,
+      { count: dCount },
+      { data: sProfile },
+      { data: rProducts },
+      analyticsData,
+    ] = await Promise.all([
+      supabase
+        .from("products")
+        .select("*", { count: "exact", head: true })
+        .eq("seller_id", session.userId),
+      getOrders({ sellerId: session.userId }).catch(() => []),
+      supabase
+        .from("seller_documents")
+        .select("*", { count: "exact", head: true })
+        .eq("seller_id", session.userId),
+      supabase.from("seller_profiles").select("*").eq("id", session.userId).maybeSingle(),
+      supabase
+        .from("products")
+        .select("*")
+        .eq("seller_id", session.userId)
+        .order("updated_at", { ascending: false })
+        .limit(5),
+      getSellerAnalyticsData(session.userId),
+    ]);
+
+    productCount = pCount ?? 0;
+    documentCount = dCount ?? 0;
+    sellerProfile = sProfile;
+    recentProducts = rProducts ?? [];
+    analytics = analyticsData;
+    isVerified = sellerProfile?.status === "verified";
+
+    // Intelligent fallback for store business name
+    storeName = sellerProfile?.business_name;
+    if (!storeName || storeName === "Factory Seller") {
+      const email = session.email?.toLowerCase().trim();
+      if (email) {
+        try {
+          const { data: appRow } = await supabase
+            .from("seller_applications")
+            .select("business_name, full_name, form_data")
+            .ilike("email", email)
+            .limit(1)
+            .maybeSingle();
+          if (appRow) {
+            const fd = (appRow.form_data || {}) as Record<string, unknown>;
+            storeName =
+              appRow.business_name || (fd.business_name as string) || appRow.full_name;
+          }
+        } catch {}
+      }
     }
-  }
-  storeName = storeName || session.profile?.full_name || "Seller Store";
+    storeName = storeName || session.profile?.full_name || "Seller Store";
 
-  // Scope orders to authenticated seller and calculate genuine financials
-  const rawList = Array.isArray(sellerOrdersRaw) ? sellerOrdersRaw : [];
-  const scopedOrders = rawList.map((order) => {
-    const sellerItems = (order.items || []).filter(
-      (item) => (item.sellerId || item.seller_id) === session.userId
-    );
-    const sellerSubtotal = sellerItems.reduce(
-      (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
-      0
-    );
-    return {
-      ...order,
-      items: sellerItems.length > 0 ? sellerItems : order.items,
-      totalAmount: sellerItems.length > 0 ? sellerSubtotal : order.totalAmount,
-    };
-  });
+    // Scope orders to authenticated seller and calculate genuine financials
+    const rawList = Array.isArray(sellerOrdersRaw) ? sellerOrdersRaw : [];
+    scopedOrders = rawList.map((order) => {
+      const sellerItems = (order.items || []).filter(
+        (item) => (item.sellerId || item.seller_id) === session.userId
+      );
+      const sellerSubtotal = sellerItems.reduce(
+        (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+        0
+      );
+      return {
+        ...order,
+        items: sellerItems.length > 0 ? sellerItems : order.items,
+        totalAmount: sellerItems.length > 0 ? sellerSubtotal : order.totalAmount,
+      };
+    });
+  }
 
   const totalOrdersCount = scopedOrders.length;
   const pendingOrders = scopedOrders.filter(
@@ -107,7 +136,7 @@ export default async function SellerDashboardPage() {
     0
   );
 
-  const isVerified = sellerProfile?.status === "verified";
+  isVerified = isVerified || sellerProfile?.status === "verified";
   const hasProfileDetails =
     Boolean(sellerProfile?.business_name) &&
     Boolean(sellerProfile?.gst_number && sellerProfile?.gst_number !== "PENDING");
@@ -480,7 +509,7 @@ export default async function SellerDashboardPage() {
               </div>
               <div className="mt-2.5 space-y-2">
                 {analytics.topPages.length > 0 ? (
-                  analytics.topPages.slice(0, 5).map((page, idx) => (
+                  analytics.topPages.slice(0, 5).map((page: any, idx: number) => (
                     <div
                       key={idx}
                       className="flex items-center justify-between text-xs"
@@ -508,7 +537,7 @@ export default async function SellerDashboardPage() {
               </div>
               <div className="mt-2.5 space-y-2">
                 {analytics.topReferrers.length > 0 ? (
-                  analytics.topReferrers.slice(0, 5).map((ref, idx) => (
+                  analytics.topReferrers.slice(0, 5).map((ref: any, idx: number) => (
                     <div
                       key={idx}
                       className="flex items-center justify-between text-xs"
@@ -784,7 +813,7 @@ export default async function SellerDashboardPage() {
                         : "bg-surface-container-high text-on-surface-variant border-outline-variant border"
                     }`}
                   >
-                    {PRODUCT_STATUS_LABEL[product.status] || product.status}
+                    {PRODUCT_STATUS_LABEL[product.status as keyof typeof PRODUCT_STATUS_LABEL] || product.status}
                   </span>
                   <Link
                     href={`/dashboard/products/${product.id}`}

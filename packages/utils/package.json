@@ -15,6 +15,7 @@
     "./rate-limiter": "./src/rate-limiter.ts",
     "./config": "./src/config.ts",
     "./company": "./src/company.ts",
+    "./products": "./src/products.ts",
     "./vercel-analytics": "./src/vercel-analytics.ts",
     "./server": "./src/server.ts"
   },

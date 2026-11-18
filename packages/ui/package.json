@@ -6,7 +6,10 @@
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./shared-features": "./src/shared-features/index.ts"
+    "./primitives": "./src/primitives/index.ts",
+    "./composites": "./src/composites/index.ts",
+    "./features": "./src/features/index.ts",
+    "./shared-features": "./src/features/index.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.18",

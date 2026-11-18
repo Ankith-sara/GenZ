@@ -3,6 +3,7 @@ import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@genz/database/authorization";
 import type { SellerProfile, SellerApplication, VerificationStatus } from "@genz/types";
 import { SellerProfileStudio } from "@/features/profile";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export const metadata = {
   title: "Maker Profile & Storefront Studio — GenZ Seller Portal",
@@ -39,36 +40,45 @@ export default async function SellerProfilePage() {
   let craftCategories: string[] = [];
 
   try {
-    const adminSupabase = createAdminClient();
-    const [pRes, sRes, prodRes, reelRes, catRes] = await Promise.all([
-      adminSupabase
-        .from("profiles")
-        .select("full_name, avatar_url")
-        .eq("id", session.userId)
-        .maybeSingle(),
-      adminSupabase
-        .from("seller_profiles")
-        .select("*")
-        .eq("id", session.userId)
-        .maybeSingle(),
-      adminSupabase
-        .from("products")
-        .select("*", { count: "exact", head: true })
-        .eq("seller_id", session.userId),
-      adminSupabase
-        .from("reels")
-        .select("*", { count: "exact", head: true })
-        .eq("seller_id", session.userId),
-      adminSupabase.from("products").select("category"),
-    ]);
-    userProfile = pRes.data;
-    sellerProfile = sRes.data;
-    productCount = prodRes.count ?? 0;
-    reelCount = reelRes.count ?? 0;
-    craftCategories = Array.from(
-      new Set((catRes.data ?? []).map((p) => p.category?.trim()).filter(Boolean))
-    ).sort() as string[];
+    const client = await getAuthenticatedSellerApiClient();
+    const overview = await client.sellers.getOverview();
+    const profRes = await client.sellers.getProfile();
+    sellerProfile = (profRes.profile || overview.sellerProfile) as SellerProfile;
+    userProfile = profRes.user;
+    productCount = overview.productCount;
+    reelCount = 0;
   } catch {
+    try {
+      const adminSupabase = createAdminClient();
+      const [pRes, sRes, prodRes, reelRes, catRes] = await Promise.all([
+        adminSupabase
+          .from("profiles")
+          .select("full_name, avatar_url")
+          .eq("id", session.userId)
+          .maybeSingle(),
+        adminSupabase
+          .from("seller_profiles")
+          .select("*")
+          .eq("id", session.userId)
+          .maybeSingle(),
+        adminSupabase
+          .from("products")
+          .select("*", { count: "exact", head: true })
+          .eq("seller_id", session.userId),
+        adminSupabase
+          .from("reels")
+          .select("*", { count: "exact", head: true })
+          .eq("seller_id", session.userId),
+        adminSupabase.from("products").select("category"),
+      ]);
+      userProfile = pRes.data;
+      sellerProfile = sRes.data;
+      productCount = prodRes.count ?? 0;
+      reelCount = reelRes.count ?? 0;
+      craftCategories = Array.from(
+        new Set((catRes.data ?? []).map((p) => p.category?.trim()).filter(Boolean))
+      ).sort() as string[];
+    } catch {
     const [pRes, sRes, prodRes, reelRes, catRes] = await Promise.all([
       supabase
         .from("profiles")
@@ -97,6 +107,7 @@ export default async function SellerProfilePage() {
     craftCategories = Array.from(
       new Set((catRes.data ?? []).map((p) => p.category?.trim()).filter(Boolean))
     ).sort() as string[];
+    }
   }
 
   // Fetch signup details from seller_applications to pre-populate missing profile fields

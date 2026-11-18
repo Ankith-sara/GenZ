@@ -15,7 +15,7 @@ import {
   SuggestedSellers,
   type SuggestedSeller,
 } from "@/features/home/components/suggested-sellers";
-import { productMediaUrl } from "@/features/products/lib/products";
+import { productMediaUrl } from "@genz/utils/products";
 import type { Product } from "@genz/types";
 
 interface DbSeller {

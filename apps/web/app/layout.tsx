@@ -98,7 +98,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${plusJakarta.variable} ${grenette.variable} flex min-h-screen flex-col antialiased`}
+        className={`${plusJakarta.variable} ${grenette.variable} no-scrollbar flex min-h-screen flex-col antialiased`}
         suppressHydrationWarning
       >
         {children}

@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { createClient } from "@genz/database/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Role } from "@genz/types";
@@ -29,12 +30,95 @@ function getTempClient() {
 }
 
 export async function signOut() {
+  try {
+    const cookieStore = await cookies();
+    cookieStore.delete("support_session");
+  } catch {
+    // ignore cookie deletion failures if any
+  }
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/login");
 }
 
-export async function verifyPasswordAndSendOtp(email: string, password: string) {
+export async function exitSupportSession() {
+  try {
+    const cookieStore = await cookies();
+    cookieStore.delete("support_session");
+  } catch {
+    // ignore
+  }
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3003";
+  redirect(`${adminUrl}/dashboard/users`);
+}
+
+async function resolveSellerEmail(
+  identifier: string
+): Promise<{ email?: string; error?: string }> {
+  const trimmed = identifier.trim();
+  if (!trimmed) {
+    return { error: "Please enter your company name or email address." };
+  }
+
+  // Direct email entered
+  if (trimmed.includes("@")) {
+    return { email: trimmed.toLowerCase() };
+  }
+
+  // Company Name entered -> Look up registered seller by company/business name
+  try {
+    const { createAdminClient } = await import("@genz/database/admin");
+    const adminClient = createAdminClient();
+
+    // 1. Look up by business_name in seller_profiles
+    const { data: profile } = await adminClient
+      .from("seller_profiles")
+      .select("id")
+      .ilike("business_name", trimmed)
+      .maybeSingle();
+
+    if (profile?.id) {
+      const { data: authUser } = await adminClient.auth.admin.getUserById(profile.id);
+      if (authUser?.user?.email) {
+        return { email: authUser.user.email };
+      }
+    }
+
+    // 2. Fallback: look up in seller_applications
+    const { data: appData } = await adminClient
+      .from("seller_applications")
+      .select("email")
+      .ilike("business_name", trimmed)
+      .maybeSingle();
+
+    if (appData?.email) {
+      return { email: appData.email };
+    }
+
+    return {
+      error: `No registered seller account found for company "${trimmed}". Please check your company name spelling or sign in with your registered email.`,
+    };
+  } catch (err) {
+    console.error("[resolveSellerEmail] Lookup error:", err);
+    return {
+      error: "Unable to verify company name at this moment. Please use your registered email address.",
+    };
+  }
+}
+
+export async function verifyPasswordAndSendOtp(
+  identifier: string,
+  password: string,
+  companyName?: string
+) {
+  const resolved = await resolveSellerEmail(identifier);
+  if (resolved.error || !resolved.email) {
+    return { error: resolved.error || "Invalid company name or email." };
+  }
+  const email = resolved.email;
+
   return withRateLimit(
     {
       endpointType: "auth",
@@ -49,14 +133,54 @@ export async function verifyPasswordAndSendOtp(email: string, password: string) 
 
       const tempSupabase = getTempClient();
 
-      const { error: signInError } = await tempSupabase.auth.signInWithPassword({
-        email: validation.data.email,
-        password: validation.data.password,
-      });
+      const { data: authData, error: signInError } =
+        await tempSupabase.auth.signInWithPassword({
+          email: validation.data.email,
+          password: validation.data.password,
+        });
 
       if (signInError) {
         console.error("Password verification failed:", signInError);
         return { error: "Invalid email or password." };
+      }
+
+      // If companyName was specified, verify that the authenticated seller belongs to that company
+      if (companyName && companyName.trim() && authData?.user) {
+        const trimmedCompany = companyName.trim().toLowerCase();
+        try {
+          const { createAdminClient } = await import("@genz/database/admin");
+          const adminClient = createAdminClient();
+
+          const { data: sProfile } = await adminClient
+            .from("seller_profiles")
+            .select("business_name")
+            .eq("id", authData.user.id)
+            .maybeSingle();
+
+          let regName = (sProfile?.business_name || "").trim().toLowerCase();
+          if (!regName || regName === "pending" || regName === "factory seller") {
+            const { data: appData } = await adminClient
+              .from("seller_applications")
+              .select("business_name")
+              .ilike("email", validation.data.email)
+              .maybeSingle();
+            regName = (appData?.business_name || "").trim().toLowerCase();
+          }
+
+          if (
+            regName &&
+            regName !== "pending" &&
+            regName !== "factory seller" &&
+            !regName.includes(trimmedCompany) &&
+            !trimmedCompany.includes(regName)
+          ) {
+            return {
+              error: `The entered company name "${companyName}" does not match the registered business name for this account.`,
+            };
+          }
+        } catch (compErr) {
+          console.warn("[verifyPasswordAndSendOtp] Company verification notice:", compErr);
+        }
       }
 
       const { error: otpError } = await tempSupabase.auth.signInWithOtp({
@@ -76,7 +200,17 @@ export async function verifyPasswordAndSendOtp(email: string, password: string) 
   );
 }
 
-export async function directPasswordLogin(email: string, password: string) {
+export async function directPasswordLogin(
+  identifier: string,
+  password: string,
+  companyName?: string
+) {
+  const resolved = await resolveSellerEmail(identifier);
+  if (resolved.error || !resolved.email) {
+    return { error: resolved.error || "Invalid company name or email." };
+  }
+  const email = resolved.email;
+
   return withRateLimit(
     {
       endpointType: "auth",
@@ -100,10 +234,52 @@ export async function directPasswordLogin(email: string, password: string) {
 
       if (error) {
         console.error("Direct password login failed:", error);
-        return { error: "Invalid email or password." };
+        return {
+          error:
+            "Invalid credentials. Please verify your company name, email address, and password.",
+        };
       }
 
       if (authData?.user) {
+        // If companyName was specified, verify that the authenticated seller belongs to that company
+        if (companyName && companyName.trim()) {
+          const trimmedCompany = companyName.trim().toLowerCase();
+
+          try {
+            const { data: sProfile } = await supabase
+              .from("seller_profiles")
+              .select("business_name")
+              .eq("id", authData.user.id)
+              .maybeSingle();
+
+            let regName = (sProfile?.business_name || "").trim().toLowerCase();
+
+            if (!regName || regName === "pending" || regName === "factory seller") {
+              const { data: appData } = await supabase
+                .from("seller_applications")
+                .select("business_name")
+                .ilike("email", validation.data.email)
+                .maybeSingle();
+              regName = (appData?.business_name || "").trim().toLowerCase();
+            }
+
+            if (
+              regName &&
+              regName !== "pending" &&
+              regName !== "factory seller" &&
+              !regName.includes(trimmedCompany) &&
+              !trimmedCompany.includes(regName)
+            ) {
+              await supabase.auth.signOut();
+              return {
+                error: `The entered company name "${companyName}" does not match the registered business name for this account.`,
+              };
+            }
+          } catch (compErr) {
+            console.warn("[directPasswordLogin] Company verification notice:", compErr);
+          }
+        }
+
         const { data: profile } = await supabase
           .from("profiles")
           .select("role")

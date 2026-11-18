@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@genz/ui";
 import { createClient } from "@genz/database";
-import { DOC_TYPE_LABEL } from "@/features/documents/lib/verification";
+import { DOC_TYPE_LABEL } from "@genz/utils/verification";
 import type { SellerDocument } from "@genz/types";
 
 export function DocumentList({

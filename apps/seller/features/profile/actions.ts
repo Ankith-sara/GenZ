@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@genz/database/authorization";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export interface ProfileUpdateState {
   error?: string;
@@ -103,38 +104,60 @@ export async function updateSellerProfileStudio(
 
     const description = JSON.stringify(profileMetadata);
 
-    // 1. Update or upsert seller_profiles
-    const { error: profileError } = await adminSupabase.from("seller_profiles").upsert({
-      id: userId,
-      business_name,
-      gst_number: gst_number || "PENDING",
-      factory_address: factory_address || null,
-      city: city || null,
-      state: state || null,
-      pincode: pincode || null,
-      description,
-      established_year: established_year || null,
-      updated_at: new Date().toISOString(),
-    });
+    try {
+      const client = await getAuthenticatedSellerApiClient();
+      await client.sellers.updateProfile({
+        business_name,
+        gst_number: gst_number || "PENDING",
+        factory_address: factory_address || null,
+        city: city || null,
+        state: state || null,
+        pincode: pincode || null,
+        established_year: established_year || null,
+        description,
+      });
+      await client.sellers.updateStudio({
+        maker_name: maker_name || business_name,
+        craft_title: craft_title || "Master Artisan & Manufacturer",
+        bio: short_bio || `Authentic Indian craft studio based in ${city || "India"}.`,
+        how_it_started,
+        materials_and_technique,
+        vision,
+      });
+    } catch {
+      // 1. Update or upsert seller_profiles
+      const { error: profileError } = await adminSupabase.from("seller_profiles").upsert({
+        id: userId,
+        business_name,
+        gst_number: gst_number || "PENDING",
+        factory_address: factory_address || null,
+        city: city || null,
+        state: state || null,
+        pincode: pincode || null,
+        description,
+        established_year: established_year || null,
+        updated_at: new Date().toISOString(),
+      });
 
-    if (profileError) {
-      console.error(
-        "[updateSellerProfileStudio] Error updating seller_profiles:",
-        profileError
-      );
-      return { error: profileError.message || "Failed to save seller profile." };
-    }
+      if (profileError) {
+        console.error(
+          "[updateSellerProfileStudio] Error updating seller_profiles:",
+          profileError
+        );
+        return { error: profileError.message || "Failed to save seller profile." };
+      }
 
-    // 2. Also update display name and avatar in profiles table
-    const profileUpdates: { full_name?: string; avatar_url?: string } = {};
-    if (maker_name || business_name) {
-      profileUpdates.full_name = maker_name || business_name;
-    }
-    if (effectiveAvatarUrl) {
-      profileUpdates.avatar_url = effectiveAvatarUrl;
-    }
-    if (Object.keys(profileUpdates).length > 0) {
-      await adminSupabase.from("profiles").update(profileUpdates).eq("id", userId);
+      // 2. Also update display name and avatar in profiles table
+      const profileUpdates: { full_name?: string; avatar_url?: string } = {};
+      if (maker_name || business_name) {
+        profileUpdates.full_name = maker_name || business_name;
+      }
+      if (effectiveAvatarUrl) {
+        profileUpdates.avatar_url = effectiveAvatarUrl;
+      }
+      if (Object.keys(profileUpdates).length > 0) {
+        await adminSupabase.from("profiles").update(profileUpdates).eq("id", userId);
+      }
     }
 
     revalidatePath("/dashboard");

@@ -5,6 +5,7 @@ import { createClient } from "@genz/database/server";
 import { requireRole } from "@genz/database/authorization";
 import { ReelUploader } from "@/features/reels/components/reel-uploader";
 import { ReelManageList } from "@/features/reels/components/reel-manage-list";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export default async function SellerProductReelsPage({
   params,
@@ -24,11 +25,18 @@ export default async function SellerProductReelsPage({
 
   if (!product) notFound();
 
-  const { data: reels } = await supabase
-    .from("reels")
-    .select("*")
-    .eq("product_id", id)
-    .order("created_at", { ascending: false });
+  let reels: any[] = [];
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    reels = await client.sellers.listReels(id);
+  } catch {
+    const { data } = await supabase
+      .from("reels")
+      .select("*")
+      .eq("product_id", id)
+      .order("created_at", { ascending: false });
+    reels = data ?? [];
+  }
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pb-16">

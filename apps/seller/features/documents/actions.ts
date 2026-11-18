@@ -6,6 +6,7 @@ import { validateFileContentServer } from "@genz/validation";
 import { requireRole } from "@genz/database/authorization";
 import { withRateLimit } from "@genz/utils/rate-limiter";
 import type { DocType } from "@genz/types";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export interface DocumentUploadResult {
   success?: boolean;
@@ -66,26 +67,40 @@ export async function uploadDocumentAction(
         return { error: uploadError.message || "Failed to upload document." };
       }
 
-      const { data, error: insertError } = await supabase
-        .from("seller_documents")
-        .insert({
-          seller_id: session.userId,
-          doc_type: docType,
-          file_path: path,
-          file_name: file.name,
-        })
-        .select("id")
-        .single();
+      let documentId: string | undefined;
 
-      if (insertError) {
-        console.error("[uploadDocumentAction] DB insert error:", insertError);
-        await supabase.storage.from("seller-documents").remove([path]);
-        return { error: "Failed to record seller document in database." };
+      try {
+        const client = await getAuthenticatedSellerApiClient();
+        const docRes = await client.sellers.uploadDocument({
+          document_type: docType,
+          file_url: path,
+          file_name: file.name,
+          file_size: file.size,
+        });
+        documentId = (docRes as any)?.id;
+      } catch {
+        const { data, error: insertError } = await supabase
+          .from("seller_documents")
+          .insert({
+            seller_id: session.userId,
+            doc_type: docType,
+            file_path: path,
+            file_name: file.name,
+          })
+          .select("id")
+          .single();
+
+        if (insertError) {
+          console.error("[uploadDocumentAction] DB insert error:", insertError);
+          await supabase.storage.from("seller-documents").remove([path]);
+          return { error: "Failed to record seller document in database." };
+        }
+        documentId = data.id;
       }
 
       revalidatePath("/seller/dashboard/documents");
       revalidatePath("/seller/dashboard/onboarding");
-      return { success: true, documentId: data.id };
+      return { success: true, documentId };
     }
   );
 }
@@ -118,14 +133,20 @@ export async function deleteDocumentAction(
       }
 
       await supabase.storage.from("seller-documents").remove([filePath]);
-      const { error: deleteError } = await supabase
-        .from("seller_documents")
-        .delete()
-        .eq("id", docId)
-        .eq("seller_id", session.userId);
 
-      if (deleteError) {
-        return { error: "Failed to delete document from database." };
+      try {
+        const client = await getAuthenticatedSellerApiClient();
+        await client.sellers.deleteDocument(docId);
+      } catch {
+        const { error: deleteError } = await supabase
+          .from("seller_documents")
+          .delete()
+          .eq("id", docId)
+          .eq("seller_id", session.userId);
+
+        if (deleteError) {
+          return { error: "Failed to delete document from database." };
+        }
       }
 
       revalidatePath("/seller/dashboard/documents");
@@ -137,18 +158,23 @@ export async function deleteDocumentAction(
 
 export async function submitForVerification() {
   const session = await requireRole("seller");
-  let supabase;
   try {
-    supabase = createAdminClient();
-  } catch (err: unknown) {
-    console.error("[submitForVerification] Admin client init error:", err);
-    return { error: "Server misconfiguration." };
-  }
+    const client = await getAuthenticatedSellerApiClient();
+    await client.sellers.submitForVerification();
+  } catch {
+    let supabase;
+    try {
+      supabase = createAdminClient();
+    } catch (err: unknown) {
+      console.error("[submitForVerification] Admin client init error:", err);
+      return { error: "Server misconfiguration." };
+    }
 
-  await supabase
-    .from("seller_profiles")
-    .update({ status: "pending" })
-    .eq("id", session.userId);
+    await supabase
+      .from("seller_profiles")
+      .update({ status: "pending" })
+      .eq("id", session.userId);
+  }
 
   revalidatePath("/seller/dashboard/onboarding");
   return { success: true };

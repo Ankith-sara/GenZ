@@ -1,28 +1,41 @@
 import { createClient } from "@genz/database";
 import { requireRole } from "@genz/database/authorization";
+import type { VerificationStatus } from "@genz/types";
 import { DocumentUploadWizard } from "@/features/documents/components/document-upload-wizard";
 import { DocumentUploader } from "@/features/documents/components/document-uploader";
 import { DocumentList } from "@/features/documents/components/document-list";
 import { PageHeader } from "@genz/ui";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export default async function SellerDocumentsPage() {
   const session = await requireRole("seller");
-  const supabase = await createClient();
+  let documents: any[] = [];
+  let sellerStatus = "not_submitted";
 
-  const [{ data: documents }, { data: seller }] = await Promise.all([
-    supabase
-      .from("seller_documents")
-      .select("*")
-      .eq("seller_id", session.userId)
-      .order("uploaded_at", { ascending: false }),
-    supabase
-      .from("seller_profiles")
-      .select("status")
-      .eq("id", session.userId)
-      .maybeSingle(),
-  ]);
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    documents = await client.sellers.listDocuments();
+    const prof = await client.sellers.getProfile();
+    sellerStatus = (prof.profile as any)?.status ?? "not_submitted";
+  } catch {
+    const supabase = await createClient();
+    const [{ data: docs }, { data: seller }] = await Promise.all([
+      supabase
+        .from("seller_documents")
+        .select("*")
+        .eq("seller_id", session.userId)
+        .order("uploaded_at", { ascending: false }),
+      supabase
+        .from("seller_profiles")
+        .select("status")
+        .eq("id", session.userId)
+        .maybeSingle(),
+    ]);
+    documents = docs ?? [];
+    sellerStatus = seller?.status ?? "not_submitted";
+  }
 
-  const otherDocuments = (documents ?? []).filter((d) => d.doc_type === "other");
+  const otherDocuments = documents.filter((d) => d.doc_type === "other");
 
   return (
     <div className="space-y-6">
@@ -39,8 +52,8 @@ export default async function SellerDocumentsPage() {
       <div className="border-outline-variant/60 bg-surface-container-lowest shadow-elevation-1 rounded-2xl border p-5 sm:p-6">
         <DocumentUploadWizard
           sellerId={session.userId}
-          initialDocuments={documents ?? []}
-          verificationStatus={seller?.status ?? "not_submitted"}
+          initialDocuments={documents}
+          verificationStatus={sellerStatus as VerificationStatus}
         />
       </div>
 

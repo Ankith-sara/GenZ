@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@genz/database/server";
-import { productMediaUrl, formatInr } from "@/features/products/lib/products";
+import { productMediaUrl, formatInr } from "@genz/utils/products";
 import { VerifiedBadge } from "@genz/ui";
 import { ProductWishlistButton } from "@/features/products/components/product-wishlist-button";
 import { ProductPurchaseSection } from "./product-purchase-section";

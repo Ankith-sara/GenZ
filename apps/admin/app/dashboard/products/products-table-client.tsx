@@ -4,7 +4,7 @@ import React from "react";
 import {
   ProductsCatalogManager,
   type SharedProductRecord,
-} from "@genz/ui/shared-features";
+} from "@genz/ui";
 import {
   adminSetProductStatus,
   adminDeleteProduct,

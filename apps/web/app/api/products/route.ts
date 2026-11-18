@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@genz/database";
-import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/features/products/lib/products";
+import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@genz/utils/products";
 import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
+import { apiClient } from "@genz/api-client";
 import { z } from "zod";
 
 const querySchema = z.object({
@@ -54,45 +55,73 @@ export async function GET(request: NextRequest) {
 
   const { q, category, min_price, max_price, page } = validation.data;
 
-  const supabase = await createClient();
+  // 3. Consume Centralized Fastify API
+  try {
+    const catalogResult = await apiClient.catalog.listProducts({
+      q,
+      category,
+      minPrice: min_price,
+      maxPrice: max_price,
+      page,
+      limit: PAGE_SIZE,
+    });
 
-  let query = supabase
-    .from("products")
-    .select("*", { count: "exact" })
-    .eq("status", "published");
+    await logRateLimitAttempt({
+      endpointType: "public",
+      actionName: "api_get_products",
+    });
 
-  if (q) {
-    const cleanTerm = q.trim().replace(/[%_]/g, "");
-    if (cleanTerm) {
-      query = query.or(
-        `name.ilike.%${cleanTerm}%,category.ilike.%${cleanTerm}%,description.ilike.%${cleanTerm}%`
-      );
+    return NextResponse.json({
+      products: catalogResult.products,
+      count: catalogResult.totalCount,
+      hasMore: catalogResult.hasMore,
+    });
+  } catch (apiErr: unknown) {
+    // Graceful fallback to direct DB if API service is unreachable
+    try {
+      const supabase = await createClient();
+
+      let query = supabase
+        .from("products")
+        .select("*", { count: "exact" })
+        .eq("status", "published");
+
+      if (q) {
+        const cleanTerm = q.trim().replace(/[%_]/g, "");
+        if (cleanTerm) {
+          query = query.or(
+            `name.ilike.%${cleanTerm}%,category.ilike.%${cleanTerm}%,description.ilike.%${cleanTerm}%`
+          );
+        }
+      }
+      if (category) query = query.eq("category", category);
+      if (min_price !== undefined) query = query.gte("price_inr", min_price);
+      if (max_price !== undefined) query = query.lte("price_inr", max_price);
+
+      const from = page * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+
+      const { data, count, error } = await query
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
+      await logRateLimitAttempt({
+        endpointType: "public",
+        actionName: "api_get_products",
+      });
+
+      if (error) {
+        console.error("GET /api/products database fallback error:", error);
+        return NextResponse.json({ error: "Search failed." }, { status: 500 });
+      }
+
+      const products = data ?? [];
+      const hasMore =
+        count !== null ? from + products.length < count : products.length === PAGE_SIZE;
+
+      return NextResponse.json({ products, count: count ?? products.length, hasMore });
+    } catch {
+      return NextResponse.json({ error: "Search failed." }, { status: 500 });
     }
   }
-  if (category) query = query.eq("category", category);
-  if (min_price !== undefined) query = query.gte("price_inr", min_price);
-  if (max_price !== undefined) query = query.lte("price_inr", max_price);
-
-  const from = page * PAGE_SIZE;
-  const to = from + PAGE_SIZE - 1;
-
-  const { data, count, error } = await query
-    .order("created_at", { ascending: false })
-    .range(from, to);
-
-  await logRateLimitAttempt({
-    endpointType: "public",
-    actionName: "api_get_products",
-  });
-
-  if (error) {
-    console.error("GET /api/products database search error:", error);
-    return NextResponse.json({ error: "Search failed." }, { status: 500 });
-  }
-
-  const products = data ?? [];
-  const hasMore =
-    count !== null ? from + products.length < count : products.length === PAGE_SIZE;
-
-  return NextResponse.json({ products, count: count ?? products.length, hasMore });
 }

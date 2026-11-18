@@ -3,6 +3,7 @@ import {
   emailSchema,
   passwordSchema,
   loginSchema,
+  sellerLoginSchema,
   gstSchema,
   validateGstOrTradeId,
   sellerSignupSchema,
@@ -31,6 +32,33 @@ describe("Business & Input Validation Specs", () => {
 
     it("rejects short passwords < 8 chars", () => {
       expect(() => passwordSchema.parse("12347")).toThrow();
+    });
+  });
+
+  describe("sellerLoginSchema", () => {
+    it("accepts valid email and password", () => {
+      const valid = sellerLoginSchema.parse({
+        identifier: "artisan@genz.in",
+        password: "securepassword123",
+      });
+      expect(valid.identifier).toBe("artisan@genz.in");
+    });
+
+    it("accepts company name and password", () => {
+      const valid = sellerLoginSchema.parse({
+        identifier: "Kondapalli Wooden Toys & Crafts",
+        password: "securepassword123",
+      });
+      expect(valid.identifier).toBe("Kondapalli Wooden Toys & Crafts");
+    });
+
+    it("rejects empty identifier", () => {
+      expect(() =>
+        sellerLoginSchema.parse({
+          identifier: "A",
+          password: "securepassword123",
+        })
+      ).toThrow();
     });
   });
 

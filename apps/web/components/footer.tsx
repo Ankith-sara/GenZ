@@ -1,30 +1,9 @@
-"use client";
-
-import React from "react";
 import Link from "next/link";
+import { Mail, Phone } from "lucide-react";
+import { LuInstagram } from "react-icons/lu";
 import { cn } from "@genz/utils";
 import { NewsletterForm } from "@/features/home/components/newsletter-form";
-import { Mail, Phone } from "lucide-react";
 import { COMPANY, formatAddress } from "@genz/utils/company";
-
-function InstagramIcon({ className = "h-5 w-5" }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-    </svg>
-  );
-}
 
 interface FooterLink {
   name: string;
@@ -37,108 +16,83 @@ interface FooterSection {
 }
 
 interface FooterSocialLink {
-  icon: React.ReactNode;
+  icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
   href: string;
   label: string;
 }
 
-const defaultSections: FooterSection[] = [
+// Every page appears once. The old footer linked the grievance page three times
+// and repeated the policy links in a second row.
+const SECTIONS: FooterSection[] = [
   {
     title: "Shop",
     links: [
       { name: "Overview", href: "/" },
-      { name: "Discover Catalog", href: "/discover" },
+      { name: "Discover catalog", href: "/discover" },
       { name: "Wishlist", href: "/wishlist" },
       { name: "Cart", href: "/cart" },
-      { name: "Track Orders", href: "/orders" },
+      { name: "Track orders", href: "/orders" },
     ],
   },
   {
     title: "Company",
     links: [
-      { name: "About Us", href: "/about" },
+      { name: "About us", href: "/about" },
       { name: "Vision 2030", href: "/about#vision" },
-      { name: "Founder Story", href: "/about#story" },
-      { name: "Contact Us", href: "/contact" },
+      { name: "Founder story", href: "/about#story" },
       { name: "Sell on GenZ", href: "/seller/signup" },
     ],
   },
   {
     title: "Support",
     links: [
-      { name: "Help Center & FAQs", href: "/faqs" },
-      { name: "Contact Support", href: "/contact" },
-      { name: "Grievance Officer", href: "/grievance" },
+      { name: "Help center and FAQs", href: "/faqs" },
+      { name: "Contact us", href: "/contact" },
+      { name: "Grievance officer", href: "/grievance" },
     ],
   },
   {
     title: "Policies",
     links: [
-      { name: "Terms & Conditions", href: "/terms" },
-      { name: "Privacy Policy", href: "/privacy" },
-      { name: "Cancellation & Refund Policy", href: "/refund-policy" },
-      { name: "Shipping Policy", href: "/shipping-policy" },
-      { name: "Grievance Redressal", href: "/grievance" },
+      { name: "Terms and conditions", href: "/terms" },
+      { name: "Privacy policy", href: "/privacy" },
+      { name: "Cancellation and refund policy", href: "/refund-policy" },
+      { name: "Shipping policy", href: "/shipping-policy" },
     ],
   },
 ];
 
-const defaultSocialLinks: FooterSocialLink[] = [
-  {
-    icon: <InstagramIcon className="h-5 w-5" />,
-    href: COMPANY.instagramUrl,
-    label: "Instagram",
-  },
-  {
-    icon: <Mail className="h-5 w-5" />,
-    href: `mailto:${COMPANY.supportEmail}`,
-    label: "Email",
-  },
-  {
-    icon: <Phone className="h-5 w-5" />,
-    href: `tel:${COMPANY.supportPhoneHref}`,
-    label: "Phone",
-  },
+const SOCIAL_LINKS: FooterSocialLink[] = [
+  { icon: LuInstagram, href: COMPANY.instagramUrl, label: "Instagram" },
+  { icon: Mail, href: `mailto:${COMPANY.supportEmail}`, label: "Email" },
+  { icon: Phone, href: `tel:${COMPANY.supportPhoneHref}`, label: "Phone" },
 ];
 
-const defaultLegalLinks: FooterLink[] = [
-  { name: "Terms", href: "/terms" },
-  { name: "Privacy", href: "/privacy" },
-  { name: "Refunds", href: "/refund-policy" },
-  { name: "Shipping", href: "/shipping-policy" },
-  { name: "Grievance Officer", href: "/grievance" },
-];
+const focusRing =
+  "focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none";
 
 export function Footer({ className }: { className?: string }) {
   const description =
-    "India's premier trust commerce & direct manufacturing platform connecting verified makers directly with buyers.";
+    "India’s premier trust commerce and direct manufacturing platform, connecting verified makers directly with buyers.";
   const copyright = `© ${new Date().getFullYear()} ${COMPANY.brandName}. All rights reserved.`;
 
   return (
     <footer
       className={cn(
-        "relative overflow-hidden border-t border-neutral-800 bg-black py-16 font-sans text-white antialiased sm:py-24",
+        "border-t border-neutral-800 bg-black font-sans text-white antialiased",
         className
       )}
     >
       <div className="mx-auto max-w-7xl px-6 sm:px-12">
-        {/* Dominant Integrated Newsletter Section */}
-        <div className="mb-16 grid grid-cols-1 items-center gap-10 border-b border-neutral-800/80 pb-16 lg:grid-cols-12">
-          <div className="flex flex-col justify-center text-left lg:col-span-7">
-            <div className="tag mb-3 inline-block self-start rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1 shadow-2xs">
-              <span className="font-graphik text-xs font-semibold tracking-[0.2em] text-amber-400 uppercase">
-                Stay Updated
-              </span>
-            </div>
-            <h2 className="font-nantes mb-3 text-3xl leading-[1.15] font-normal tracking-tight text-white sm:text-4xl">
-              Subscribe to the{" "}
-              <span className="text-brand-yellow font-medium italic">
-                GenZ Newsletter
-              </span>
+        {/* Newsletter: the big serif line is the only loud thing in the footer */}
+        <div className="grid grid-cols-1 items-end gap-10 border-b border-neutral-800 py-16 sm:py-20 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <h2 className="font-nantes text-4xl leading-[1.08] font-normal tracking-tight text-balance text-white sm:text-5xl">
+              Subscribe to the GenZ Newsletter
             </h2>
-            <p className="font-graphik max-w-xl text-sm leading-relaxed text-neutral-400 sm:text-base">
-              Receive monthly updates on verified Indian sellers, top import gap
-              analyses, local innovations, and direct factory insights.
+            <p className="font-graphik mt-4 max-w-xl text-base leading-relaxed text-neutral-400">
+              Monthly updates on verified Indian sellers, top import gap analyses,
+              local innovations, and direct factory insights.
             </p>
           </div>
           <div className="w-full lg:col-span-5">
@@ -146,83 +100,71 @@ export function Footer({ className }: { className?: string }) {
           </div>
         </div>
 
-        {/* Footer Navigation & Brand Section */}
-        <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start lg:text-left">
-          {/* Left Column: Brand Logo, Description, Social Links */}
-          <div className="flex w-full flex-col justify-between gap-6 lg:w-1/3 lg:items-start">
-            <div className="flex items-center gap-2">
-              <Link href="/" className="group flex items-baseline gap-0.5">
-                <span className="font-nantes group-hover:text-brand-yellow text-2xl font-medium tracking-tight text-white transition-colors">
-                  Gen
-                </span>
-                <span className="font-nantes text-brand-yellow text-2xl font-normal tracking-tight">
-                  Z
-                </span>
-              </Link>
-            </div>
-            <p className="font-graphik max-w-sm text-xs leading-relaxed text-neutral-400">
+        {/* Brand + navigation */}
+        <div className="grid grid-cols-1 gap-12 py-14 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <Link
+              href="/"
+              aria-label="GenZ home"
+              className={`font-nantes inline-flex items-baseline gap-0.5 rounded-sm text-3xl tracking-tight ${focusRing}`}
+            >
+              <span className="font-medium text-white">Gen</span>
+              <span className="text-brand-yellow font-normal">Z</span>
+            </Link>
+            <p className="font-graphik mt-4 max-w-xs text-sm leading-relaxed text-neutral-400">
               {description}
             </p>
-            <ul className="flex flex-wrap items-center gap-4 text-neutral-400">
-              {defaultSocialLinks.map((social, idx) => (
-                <li
-                  key={idx}
-                  className="hover:text-brand-yellow font-medium transition-colors"
-                >
+            <ul className="mt-6 flex items-center gap-3">
+              {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
+                <li key={label}>
                   <a
-                    href={social.href}
-                    aria-label={social.label}
-                    title={social.label}
-                    target={social.href.startsWith("http") ? "_blank" : undefined}
-                    rel={
-                      social.href.startsWith("http") ? "noopener noreferrer" : undefined
-                    }
+                    href={href}
+                    aria-label={label}
+                    title={label}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className={`hover:text-brand-yellow flex h-10 w-10 items-center justify-center rounded-full border border-neutral-800 text-neutral-400 transition-colors hover:border-neutral-600 ${focusRing}`}
                   >
-                    {social.icon}
+                    <Icon className="h-4 w-4" aria-hidden="true" />
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Right Columns: Links Grid */}
-          <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-4 lg:w-2/3 lg:gap-12">
-            {defaultSections.map((section, sectionIdx) => (
-              <div key={sectionIdx}>
-                <h3 className="font-nantes mb-4 text-sm font-semibold tracking-wider text-white uppercase">
+          <nav
+            aria-label="Footer"
+            className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 lg:col-span-8"
+          >
+            {SECTIONS.map((section) => (
+              <div key={section.title}>
+                <h3 className="font-graphik text-sm font-semibold text-white">
                   {section.title}
                 </h3>
-                <ul className="font-graphik space-y-2.5 text-xs text-neutral-400">
-                  {section.links.map((link, linkIdx) => (
-                    <li
-                      key={linkIdx}
-                      className="font-medium transition-colors hover:text-white"
-                    >
-                      <Link href={link.href}>{link.name}</Link>
+                <ul className="mt-4 space-y-3">
+                  {section.links.map((link) => (
+                    <li key={link.href + link.name}>
+                      <Link
+                        href={link.href}
+                        className={`font-graphik rounded-sm text-sm leading-snug text-neutral-400 transition-colors hover:text-white ${focusRing}`}
+                      >
+                        {link.name}
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
-          </div>
+          </nav>
         </div>
 
-        {/* Bottom Legal & Copyright Bar */}
-        <div className="font-graphik mt-12 flex flex-col justify-between gap-4 border-t border-neutral-800 pt-8 text-xs font-medium text-neutral-500 md:flex-row md:items-center md:text-left">
-          <div className="order-2 space-y-1 md:order-1">
-            <p>{copyright}</p>
-            <p className="text-[11px] leading-relaxed font-normal text-neutral-600">
-              {COMPANY.brandName} is operated by {COMPANY.legalEntityName}. Registered
-              office: {formatAddress(COMPANY.registeredOffice)}.
-            </p>
-          </div>
-          <ul className="order-1 flex flex-wrap gap-4 md:order-2">
-            {defaultLegalLinks.map((link, idx) => (
-              <li key={idx} className="transition-colors hover:text-white">
-                <Link href={link.href}>{link.name}</Link>
-              </li>
-            ))}
-          </ul>
+        {/* Legal */}
+        <div className="font-graphik flex flex-col gap-2 border-t border-neutral-800 py-8 text-xs leading-relaxed text-neutral-500">
+          <p>{copyright}</p>
+          <p className="max-w-3xl">
+            {COMPANY.brandName} is operated by {COMPANY.legalEntityName} (CIN: {COMPANY.cin}). Registered
+            office: {formatAddress(COMPANY.registeredOffice)}.
+          </p>
         </div>
       </div>
     </footer>

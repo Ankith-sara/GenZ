@@ -3,6 +3,7 @@ import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@genz/database/authorization";
 import type { SellerProfile, SellerApplication, VerificationStatus } from "@genz/types";
 import { SellerAccountClient } from "@/features/account";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 interface ApplicationFormData {
   business_name?: string;
@@ -25,14 +26,26 @@ export default async function SellerAccountPage() {
   const session = await requireRole("seller");
   const supabase = await createClient();
 
-  const [{ data: userProfile }, { data: sellerProfile }] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("full_name, avatar_url")
-      .eq("id", session.userId)
-      .maybeSingle(),
-    supabase.from("seller_profiles").select("*").eq("id", session.userId).maybeSingle(),
-  ]);
+  let userProfile: any = null;
+  let sellerProfile: any = null;
+
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    const profRes = await client.sellers.getProfile();
+    sellerProfile = profRes.profile;
+    userProfile = profRes.user;
+  } catch {
+    const [{ data: up }, { data: sp }] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", session.userId)
+        .maybeSingle(),
+      supabase.from("seller_profiles").select("*").eq("id", session.userId).maybeSingle(),
+    ]);
+    userProfile = up;
+    sellerProfile = sp;
+  }
 
   // Fetch signup details from seller_applications to pre-populate missing profile fields
   const email = session.email?.toLowerCase().trim();

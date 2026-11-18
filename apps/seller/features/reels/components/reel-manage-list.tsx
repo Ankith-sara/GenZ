@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@genz/ui";
 import { createClient } from "@genz/database";
-import { productMediaUrl } from "@/features/products/lib/products";
+import { productMediaUrl } from "@genz/utils/products";
 import type { Reel } from "@genz/types";
 
 export function ReelManageList({ reels }: { reels: Reel[] }) {

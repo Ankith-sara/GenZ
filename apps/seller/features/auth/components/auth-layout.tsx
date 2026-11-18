@@ -4,18 +4,16 @@ import { SITE_URL } from "@genz/utils";
 import { COMPANY } from "@genz/utils/company";
 import { LoginForm } from "./login-form";
 import { AuthHero } from "./auth-hero";
-import {
-  AlertCircle,
-  Building2,
-  HelpCircle,
-  ShieldCheck,
-  ArrowUpRight,
-} from "lucide-react";
+import { AlertCircle, ArrowUpRight, HelpCircle } from "lucide-react";
 
 interface AuthLayoutProps {
   redirectTo: string;
   error?: string;
 }
+
+// Same safety-tape motif as the hero, shown on mobile where the hero is hidden
+const HAZARD_TAPE =
+  "bg-[repeating-linear-gradient(135deg,#f59e0b_0_10px,transparent_10px_20px)]";
 
 function AuthLogo() {
   return (
@@ -23,7 +21,7 @@ function AuthLogo() {
       href="/dashboard"
       className="group inline-flex items-center gap-3 transition-opacity hover:opacity-90"
     >
-      <div className="border-border bg-card relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border p-1.5 shadow-2xs">
+      <div className="border-border bg-card relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border p-1.5 shadow-2xs">
         <Image
           src="/logo.png"
           alt="GenZ Logo"
@@ -34,15 +32,15 @@ function AuthLogo() {
       </div>
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <span className="text-foreground text-lg font-bold tracking-tight uppercase">
+          <span className="text-foreground text-lg font-extrabold tracking-tight uppercase">
             Gen<span className="text-amber-500">Z</span>
           </span>
-          <span className="border-border bg-muted/60 text-foreground rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider uppercase">
+          <span className="border-foreground/40 text-foreground rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider uppercase">
             Seller
           </span>
         </div>
-        <span className="text-muted-foreground text-[11px] font-medium">
-          Seller Desk Portal
+        <span className="text-muted-foreground text-xs font-medium">
+          Supplier & Manufacturer Portal
         </span>
       </div>
     </Link>
@@ -51,54 +49,40 @@ function AuthLogo() {
 
 function SupportLink() {
   return (
-    <div className="flex items-center text-xs">
-      <a
-        href={`mailto:${COMPANY.supportEmail}?subject=Seller%20Desk%20Support`}
-        className="border-border bg-card text-muted-foreground hover:border-foreground/30 hover:bg-muted/40 hover:text-foreground inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium shadow-2xs transition-all active:scale-95"
-      >
-        <HelpCircle className="text-muted-foreground h-3.5 w-3.5" />
-        <span>Seller Helpdesk</span>
-      </a>
-    </div>
+    <a
+      href={`mailto:${COMPANY.supportEmail}?subject=Seller%20Desk%20Support`}
+      className="border-foreground/30 text-foreground hover:border-foreground/60 hover:bg-muted/50 inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors focus-visible:ring-4 focus-visible:ring-amber-500/25 focus-visible:outline-none"
+    >
+      <HelpCircle className="h-4 w-4" aria-hidden="true" />
+      <span>
+        <span className="hidden sm:inline">Seller </span>Helpdesk
+      </span>
+    </a>
   );
 }
 
 // Policy pages live on the web storefront (SITE_URL = NEXT_PUBLIC_WEB_URL).
 const SELLER_LEGAL_LINKS = [
   { label: "Terms", path: "/terms" },
-  { label: "Refund Policy", path: "/refund-policy" },
   { label: "Grievance Officer", path: "/grievance" },
 ];
 
 function FooterLinks() {
   return (
-    <footer className="border-border/80 text-muted-foreground flex flex-col gap-2 border-t pt-6 text-[11px] sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-2">
-        <Building2 className="text-muted-foreground h-3.5 w-3.5" />
-        <span>GenZ Partner Network · Seller Desk</span>
-      </div>
+    <footer className="border-border text-muted-foreground flex flex-col gap-2 border-t pt-6 text-xs sm:flex-row sm:items-center sm:justify-between">
+      <span>GenZ Partner Network</span>
       <div className="flex flex-wrap items-center gap-4">
-        <span className="text-muted-foreground inline-flex items-center gap-1 text-[11px]">
-          <ShieldCheck className="h-3.5 w-3.5 text-[#52524E]" />
-          <span>256-bit SSL Secure</span>
-        </span>
         {SELLER_LEGAL_LINKS.map((link) => (
           <a
             key={link.path}
             href={`${SITE_URL}${link.path}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors hover:underline"
+            className="hover:text-foreground transition-colors hover:underline"
           >
             {link.label}
           </a>
         ))}
-        <a
-          href={`mailto:${COMPANY.supportEmail}`}
-          className="text-muted-foreground hover:text-foreground transition-colors hover:underline"
-        >
-          Compliance & Support
-        </a>
       </div>
     </footer>
   );
@@ -106,80 +90,82 @@ function FooterLinks() {
 
 export function AuthLayout({ redirectTo, error }: AuthLayoutProps) {
   return (
-    <main className="bg-background text-foreground grid min-h-screen grid-cols-1 overflow-x-hidden font-sans antialiased lg:grid-cols-2">
-      {/* Left Panel: Scrollable Authentication Form Area */}
-      <div className="flex h-screen [scrollbar-width:none] flex-col justify-between overflow-y-auto p-6 [-ms-overflow-style:none] sm:p-10 lg:p-12 [&::-webkit-scrollbar]:hidden">
-        {/* Top Header Bar */}
-        <header className="mx-auto flex w-full max-w-[460px] items-center justify-between">
-          <AuthLogo />
-          <SupportLink />
-        </header>
+    <main className="bg-background text-foreground min-h-dvh font-sans antialiased">
+      {/* Left: form column. Takes the left half on desktop; the page scrolls under the fixed hero. */}
+      <div className="flex min-h-dvh flex-col lg:w-1/2">
+        <div aria-hidden="true" className={`h-2 lg:hidden ${HAZARD_TAPE}`} />
 
-        {/* Form Container Card Box */}
-        <div className="my-auto py-8">
-          <div className="border-border bg-card mx-auto w-full max-w-[460px] rounded-3xl border p-7 shadow-xs sm:p-9">
-            {/* Title & Description */}
-            <div className="mb-6 text-left">
-              <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-amber-700 uppercase dark:text-amber-400">
-                <span>Supplier & Manufacturer Portal</span>
-              </div>
-              <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
+        <div className="flex flex-1 flex-col p-6 sm:p-10 lg:p-12">
+          <header className="mx-auto flex w-full max-w-[440px] items-center justify-between gap-4">
+            <AuthLogo />
+            <SupportLink />
+          </header>
+
+          <div className="my-auto py-8">
+            <div className="mx-auto w-full max-w-[440px]">
+              <h1 className="text-foreground text-3xl font-extrabold tracking-tight sm:text-4xl">
                 Seller Desk Sign In
-              </h2>
-              <p className="text-muted-foreground mt-1.5 text-xs leading-relaxed sm:text-sm">
-                Access your factory dashboard to manage catalog listings, fulfill buyer
-                orders, and scale production.
+              </h1>
+              <p className="text-muted-foreground mt-3 text-base leading-relaxed">
+                Manage listings, fulfill orders, and scale production.
               </p>
-            </div>
 
-            {/* Error Query Banner */}
-            {error && (
-              <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50/90 p-4 text-xs text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-400">
-                <div className="flex items-start gap-2.5">
-                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-400" />
+              {error && (
+                <div
+                  role="alert"
+                  className="mt-6 flex items-start gap-3 rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-900 dark:text-amber-200"
+                >
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                   <div>
                     <p className="font-semibold">
                       {error === "forbidden_seller_only"
                         ? "Seller Account Required"
                         : "Authentication Notice"}
                     </p>
-                    <p className="mt-1 leading-relaxed text-amber-800 dark:text-amber-300">
-                      {error === "forbidden_seller_only"
-                        ? "This portal is reserved for registered sellers and manufacturing units. If you are looking to purchase or source products as a buyer, please visit the Buyer Storefront."
-                        : error}
+                    <p className="mt-1 leading-relaxed">
+                      {error === "forbidden_seller_only" ? (
+                        <>
+                          This portal is reserved for registered sellers and manufacturing
+                          units. If you are looking to purchase or source products as a
+                          buyer, please visit the{" "}
+                          <a href={SITE_URL} className="font-semibold underline underline-offset-2">
+                            Buyer Storefront
+                          </a>
+                          .
+                        </>
+                      ) : (
+                        error
+                      )}
                     </p>
                   </div>
                 </div>
+              )}
+
+              <div className="mt-8">
+                <LoginForm redirectTo={redirectTo} />
               </div>
-            )}
 
-            {/* Authentication Form */}
-            <LoginForm redirectTo={redirectTo} />
-
-            {/* Seller Registration Notice */}
-            <div className="border-border bg-muted/40 mt-6 rounded-2xl border p-3.5 text-center">
-              <p className="text-muted-foreground text-xs">
+              <p className="border-border text-muted-foreground mt-8 border-t pt-6 text-sm">
                 Want to sell on GenZ?{" "}
                 <a
                   href={`${SITE_URL}/seller/signup`}
-                  className="text-foreground inline-flex items-center gap-0.5 font-semibold hover:underline"
+                  className="text-foreground inline-flex items-center gap-0.5 font-semibold underline decoration-amber-500 decoration-2 underline-offset-4"
                 >
                   <span>Apply on Marketplace</span>
-                  <ArrowUpRight className="h-3.5 w-3.5" />
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Bottom Footer */}
-        <div className="mx-auto w-full max-w-[460px]">
-          <FooterLinks />
+          <div className="mx-auto w-full max-w-[440px]">
+            <FooterLinks />
+          </div>
         </div>
       </div>
 
-      {/* Right Panel: Fixed 100vh Visual Hero */}
-      <div className="sticky top-0 hidden h-screen w-full overflow-hidden lg:block">
+      {/* Right: hero is fixed to the viewport and never scrolls. */}
+      <div className="fixed inset-y-0 right-0 hidden w-1/2 lg:block">
         <AuthHero />
       </div>
     </main>

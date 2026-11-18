@@ -1,9 +1,9 @@
 import { requireRole } from "@genz/database/authorization";
 import { getOrders } from "@genz/database/orders";
-
 import type { OrderRecord } from "@genz/types";
 import { OrdersManager } from "@genz/ui";
 import { updateOrderStatusAction } from "./actions";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export const dynamic = "force-dynamic";
 
@@ -12,24 +12,30 @@ export default async function SellerOrdersPage() {
 
   let sellerOrders: OrderRecord[] = [];
   try {
-    const rawOrders = await getOrders({ sellerId: session.userId });
-    // Scope order items to this seller and adjust totals for multi-seller orders
-    sellerOrders = rawOrders.map((order) => {
-      const sellerItems = (order.items || []).filter(
-        (item) => (item.sellerId || item.seller_id) === session.userId
-      );
-      const sellerSubtotal = sellerItems.reduce(
-        (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
-        0
-      );
-      return {
-        ...order,
-        items: sellerItems.length > 0 ? sellerItems : order.items,
-        totalAmount: sellerItems.length > 0 ? sellerSubtotal : order.totalAmount,
-      };
-    });
-  } catch (err) {
-    console.error("[SellerOrdersPage] Error fetching orders:", err);
+    const client = await getAuthenticatedSellerApiClient();
+    const res = await client.sellers.listOrders({ status: "all", limit: 100 });
+    sellerOrders = res.orders;
+  } catch {
+    try {
+      const rawOrders = await getOrders({ sellerId: session.userId });
+      // Scope order items to this seller and adjust totals for multi-seller orders
+      sellerOrders = rawOrders.map((order) => {
+        const sellerItems = (order.items || []).filter(
+          (item) => (item.sellerId || item.seller_id) === session.userId
+        );
+        const sellerSubtotal = sellerItems.reduce(
+          (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+          0
+        );
+        return {
+          ...order,
+          items: sellerItems.length > 0 ? sellerItems : order.items,
+          totalAmount: sellerItems.length > 0 ? sellerSubtotal : order.totalAmount,
+        };
+      });
+    } catch (err) {
+      console.error("[SellerOrdersPage] Error fetching orders:", err);
+    }
   }
 
   return (

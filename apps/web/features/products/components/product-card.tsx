@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { formatInr, productMediaUrl } from "@/features/products/lib/products";
+import { formatInr, productMediaUrl } from "@genz/utils/products";
 import { ProductWishlistButton } from "@/features/products/components/product-wishlist-button";
 import type { Product } from "@genz/types";
 

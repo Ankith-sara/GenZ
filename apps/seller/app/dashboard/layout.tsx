@@ -1,10 +1,12 @@
 import { requireRole } from "@genz/database/authorization";
 import { createClient } from "@genz/database";
+import { cookies } from "next/headers";
 import { DashboardSidebar } from "@/components/dashboard-sidebar";
-import { signOut } from "@/app/login/actions";
+import { signOut, exitSupportSession } from "@/app/login/actions";
 import { SearchTriggerButton } from "@genz/ui";
 import { SellerHeaderNotifications } from "./header-notifications";
-import { LogOut, CheckCircle2, AlertCircle } from "lucide-react";
+import { LogOut, CheckCircle2, AlertCircle, ShieldAlert, ArrowLeft } from "lucide-react";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export default async function SellerDashboardLayout({
   children,
@@ -13,9 +15,25 @@ export default async function SellerDashboardLayout({
 }) {
   const session = await requireRole("seller");
   const supabase = await createClient();
+  const cookieStore = await cookies();
+  const isSupportSession = cookieStore.get("support_session")?.value === "true";
 
-  const [{ data: sellerProfile }, { count: documentCount }, { count: productCount }] =
-    await Promise.all([
+  let sellerProfile: any = null;
+  let documentCount = 0;
+  let productCount = 0;
+  let businessName = session.profile?.full_name || "Seller Store";
+  let isVerified = false;
+
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    const overview = await client.sellers.getOverview();
+    sellerProfile = overview.sellerProfile;
+    documentCount = overview.documentCount;
+    productCount = overview.productCount;
+    businessName = overview.storeName || businessName;
+    isVerified = overview.isVerified;
+  } catch {
+    const [{ data: sp }, { count: dc }, { count: pc }] = await Promise.all([
       supabase
         .from("seller_profiles")
         .select("status, business_name, gst_number")
@@ -30,10 +48,12 @@ export default async function SellerDashboardLayout({
         .select("*", { count: "exact", head: true })
         .eq("seller_id", session.userId),
     ]);
-
-  const isVerified = sellerProfile?.status === "verified";
-  const businessName =
-    sellerProfile?.business_name || session.profile?.full_name || "Seller Store";
+    sellerProfile = sp;
+    documentCount = dc ?? 0;
+    productCount = pc ?? 0;
+    isVerified = sellerProfile?.status === "verified";
+    businessName = sellerProfile?.business_name || businessName;
+  }
 
   // Calculate data-driven pending steps for notification badge
   const hasProfileDetails =
@@ -83,6 +103,30 @@ export default async function SellerDashboardLayout({
 
       {/* 2. MAIN CONTENT AREA */}
       <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+        {/* Support Impersonation Session Banner */}
+        {isSupportSession && (
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-amber-600 bg-amber-500 px-4 py-2 text-xs font-medium text-amber-950 shadow-xs">
+            <div className="flex items-center gap-2">
+              <ShieldAlert className="h-4 w-4 shrink-0 text-amber-900" />
+              <span>
+                <strong>Support Impersonation Mode:</strong> You are actively inspecting{" "}
+                <span className="font-semibold underline">{businessName}</span>
+                &apos;s seller desk. Actions taken here modify live records.
+              </span>
+            </div>
+            <form action={exitSupportSession}>
+              <button
+                type="submit"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded bg-amber-950 px-3 py-1 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-black"
+                title="End support session and return to Admin portal"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                <span>Exit to Admin Desk</span>
+              </button>
+            </form>
+          </div>
+        )}
+
         {/* Sticky Header Topbar */}
         <header className="border-outline-variant/60 bg-surface-container-lowest/95 shadow-elevation-1 sticky top-0 z-30 flex h-14 items-center justify-between border-b px-3 backdrop-blur-md select-none sm:px-6">
           {/* Workspace Title & Verification Chip */}

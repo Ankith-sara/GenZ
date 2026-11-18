@@ -1,27 +1,12 @@
-export * from "./components/button";
-export * from "./components/input";
-export * from "./components/label";
-export * from "./components/textarea";
-export * from "./components/card";
-export * from "./components/badge";
-export * from "./components/status-badge";
-export * from "./components/verified-badge";
-export * from "./components/user-avatar";
-export * from "./components/action-dropdown";
-export * from "./components/select";
-export * from "./components/location-select";
-export * from "./components/phone-input";
-export * from "./components/search-trigger-button";
-export * from "./components/empty-state";
-export * from "./components/metric-card";
-export * from "./components/dashboard-page-header";
-export * from "./components/dashboard-panel";
-export * from "./components/dashboard-stat";
-export * from "./components/page-header";
-export * from "./components/skeleton-loaders";
-export * from "./components/slide-over-drawer";
-export * from "./components/command-menu";
-export * from "./components/cookie-consent";
-export * from "./components/orders/orders-manager";
-export * from "./components/product-form";
-export * from "./shared-features";
+/**
+ * @genz/ui — Unified Atomic Design System for GenZ Marketplace
+ *
+ * Clean Architecture Layers:
+ * - Primitives: Core, low-level UI elements (button, input, card, badge, select, etc.)
+ * - Composites: Layout containers, drawers, complex input widgets, and navigation
+ * - Features: Domain-specific modules (products publishing studio, orders desk, maker profiles, security)
+ */
+
+export * from "./primitives";
+export * from "./composites";
+export * from "./features";

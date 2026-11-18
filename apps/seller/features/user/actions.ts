@@ -6,6 +6,7 @@ import { createAdminClient } from "@genz/database/admin";
 import { validateFileContentServer } from "@genz/validation";
 import { withRateLimit } from "@genz/utils/rate-limiter";
 import { requireRole } from "@genz/database/authorization";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export interface UploadActionResult {
   success?: boolean;
@@ -68,48 +69,53 @@ export async function uploadAvatarAction(
       const publicUrl = supabase.storage.from("avatars").getPublicUrl(path)
         .data.publicUrl;
 
-      // 3. Database Update: profiles
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ avatar_url: publicUrl })
-        .eq("id", userId);
-
-      if (updateError) {
-        console.error("[uploadAvatarAction] DB update error:", updateError);
-        // Rollback storage upload on DB failure
-        await supabase.storage.from("avatars").remove([path]);
-        return { error: "Failed to update profile avatar URL." };
-      }
-
-      // Also sync to seller_profiles description metadata
+      // 3. Database Update: profiles via API or direct fallback
       try {
-        const { data: currentSellerProf } = await supabase
-          .from("seller_profiles")
-          .select("description")
-          .eq("id", userId)
-          .maybeSingle();
+        const client = await getAuthenticatedSellerApiClient();
+        await client.sellers.updateAvatar(publicUrl);
+      } catch {
+        const { error: updateError } = await supabase
+          .from("profiles")
+          .update({ avatar_url: publicUrl })
+          .eq("id", userId);
 
-        if (currentSellerProf) {
-          let meta: Record<string, unknown> = {};
-          if (currentSellerProf.description) {
-            try {
-              if (currentSellerProf.description.startsWith("{")) {
-                meta = JSON.parse(currentSellerProf.description);
-              } else {
+        if (updateError) {
+          console.error("[uploadAvatarAction] DB update error:", updateError);
+          // Rollback storage upload on DB failure
+          await supabase.storage.from("avatars").remove([path]);
+          return { error: "Failed to update profile avatar URL." };
+        }
+
+        // Also sync to seller_profiles description metadata
+        try {
+          const { data: currentSellerProf } = await supabase
+            .from("seller_profiles")
+            .select("description")
+            .eq("id", userId)
+            .maybeSingle();
+
+          if (currentSellerProf) {
+            let meta: Record<string, unknown> = {};
+            if (currentSellerProf.description) {
+              try {
+                if (currentSellerProf.description.startsWith("{")) {
+                  meta = JSON.parse(currentSellerProf.description);
+                } else {
+                  meta = { short_bio: currentSellerProf.description };
+                }
+              } catch {
                 meta = { short_bio: currentSellerProf.description };
               }
-            } catch {
-              meta = { short_bio: currentSellerProf.description };
             }
+            meta.avatar_url = publicUrl;
+            await supabase
+              .from("seller_profiles")
+              .update({ description: JSON.stringify(meta) })
+              .eq("id", userId);
           }
-          meta.avatar_url = publicUrl;
-          await supabase
-            .from("seller_profiles")
-            .update({ description: JSON.stringify(meta) })
-            .eq("id", userId);
+        } catch (syncErr) {
+          console.warn("[uploadAvatarAction] Seller metadata sync notice:", syncErr);
         }
-      } catch (syncErr) {
-        console.warn("[uploadAvatarAction] Seller metadata sync notice:", syncErr);
       }
 
       revalidatePath("/dashboard/account");
@@ -133,51 +139,56 @@ export async function removeAvatarAction(): Promise<UploadActionResult> {
       identifier: userId,
     },
     async () => {
-      let supabase;
       try {
-        supabase = createAdminClient();
-      } catch (err: unknown) {
-        console.error("[removeAvatarAction] Admin client init failed:", err);
-        return { error: "Admin credentials not configured." };
-      }
+        const client = await getAuthenticatedSellerApiClient();
+        await client.sellers.removeAvatar();
+      } catch {
+        let supabase;
+        try {
+          supabase = createAdminClient();
+        } catch (err: unknown) {
+          console.error("[removeAvatarAction] Admin client init failed:", err);
+          return { error: "Admin credentials not configured." };
+        }
 
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ avatar_url: null })
-        .eq("id", userId);
+        const { error: updateError } = await supabase
+          .from("profiles")
+          .update({ avatar_url: null })
+          .eq("id", userId);
 
-      if (updateError) {
-        return { error: "Failed to reset avatar." };
-      }
+        if (updateError) {
+          return { error: "Failed to reset avatar." };
+        }
 
-      try {
-        const { data: currentSellerProf } = await supabase
-          .from("seller_profiles")
-          .select("description")
-          .eq("id", userId)
-          .maybeSingle();
+        try {
+          const { data: currentSellerProf } = await supabase
+            .from("seller_profiles")
+            .select("description")
+            .eq("id", userId)
+            .maybeSingle();
 
-        if (currentSellerProf) {
-          let meta: Record<string, unknown> = {};
-          if (currentSellerProf.description) {
-            try {
-              if (currentSellerProf.description.startsWith("{")) {
-                meta = JSON.parse(currentSellerProf.description);
-              } else {
+          if (currentSellerProf) {
+            let meta: Record<string, unknown> = {};
+            if (currentSellerProf.description) {
+              try {
+                if (currentSellerProf.description.startsWith("{")) {
+                  meta = JSON.parse(currentSellerProf.description);
+                } else {
+                  meta = { short_bio: currentSellerProf.description };
+                }
+              } catch {
                 meta = { short_bio: currentSellerProf.description };
               }
-            } catch {
-              meta = { short_bio: currentSellerProf.description };
             }
+            delete meta.avatar_url;
+            await supabase
+              .from("seller_profiles")
+              .update({ description: JSON.stringify(meta) })
+              .eq("id", userId);
           }
-          delete meta.avatar_url;
-          await supabase
-            .from("seller_profiles")
-            .update({ description: JSON.stringify(meta) })
-            .eq("id", userId);
+        } catch (syncErr) {
+          console.warn("[removeAvatarAction] Seller metadata sync notice:", syncErr);
         }
-      } catch (syncErr) {
-        console.warn("[removeAvatarAction] Seller metadata sync notice:", syncErr);
       }
 
       revalidatePath("/dashboard/account");
@@ -251,36 +262,41 @@ export async function uploadCoverAction(
       const publicUrl = supabase.storage.from("avatars").getPublicUrl(path)
         .data.publicUrl;
 
-      // 3. Database Update: store cover_url inside seller_profiles.description JSON metadata
-      const { data: currentProfile } = await supabase
-        .from("seller_profiles")
-        .select("description")
-        .eq("id", user.id)
-        .maybeSingle();
+      // 3. Database Update: store cover_url inside seller_profiles.description JSON metadata via API or fallback
+      try {
+        const client = await getAuthenticatedSellerApiClient();
+        await client.sellers.updateCover(publicUrl);
+      } catch {
+        const { data: currentProfile } = await supabase
+          .from("seller_profiles")
+          .select("description")
+          .eq("id", user.id)
+          .maybeSingle();
 
-      let meta: Record<string, unknown> = {};
-      if (currentProfile?.description) {
-        try {
-          if (currentProfile.description.startsWith("{")) {
-            meta = JSON.parse(currentProfile.description);
-          } else {
+        let meta: Record<string, unknown> = {};
+        if (currentProfile?.description) {
+          try {
+            if (currentProfile.description.startsWith("{")) {
+              meta = JSON.parse(currentProfile.description);
+            } else {
+              meta = { short_bio: currentProfile.description };
+            }
+          } catch {
             meta = { short_bio: currentProfile.description };
           }
-        } catch {
-          meta = { short_bio: currentProfile.description };
         }
-      }
 
-      meta.cover_url = publicUrl;
+        meta.cover_url = publicUrl;
 
-      const { error: updateError } = await supabase
-        .from("seller_profiles")
-        .update({ description: JSON.stringify(meta) })
-        .eq("id", user.id);
+        const { error: updateError } = await supabase
+          .from("seller_profiles")
+          .update({ description: JSON.stringify(meta) })
+          .eq("id", user.id);
 
-      if (updateError) {
-        console.error("[uploadCoverAction] DB update error:", updateError);
-        return { error: "Failed to update profile cover URL." };
+        if (updateError) {
+          console.error("[uploadCoverAction] DB update error:", updateError);
+          return { error: "Failed to update profile cover URL." };
+        }
       }
 
       revalidatePath("/dashboard/profile");

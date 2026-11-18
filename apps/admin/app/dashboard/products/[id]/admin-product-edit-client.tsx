@@ -5,7 +5,7 @@ import {
   ProductEditorForm,
   type ProductImageItem,
   type SellerOption,
-} from "@genz/ui/shared-features";
+} from "@genz/ui";
 import {
   adminUpdateProductFormAction,
   type ProductFormState,

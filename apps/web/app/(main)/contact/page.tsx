@@ -1,46 +1,36 @@
-import {
-  Mail,
-  MapPin,
-  Camera,
-  Phone,
-  Clock,
-  Building2,
-  Sparkles,
-  HelpCircle,
-} from "lucide-react";
-import { ContactForm } from "@/features/home/components/contact-form";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowUpRight, Clock, Plus } from "lucide-react";
+import { ContactForm } from "@/features/home/components/contact-form";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Contact — GenZ Platform",
   description:
     "Connect with GenZ — direct seller partnerships, investor relations, buyer sourcing inquiries, or support.",
 };
 
+const EMAIL = "genz.official.hq@gmail.com";
+
 const CHANNELS = [
   {
-    icon: Mail,
-    label: "Official Email",
-    value: "genz.official.hq@gmail.com",
-    href: "mailto:genz.official.hq@gmail.com",
-    desc: "For general inquiries & official correspondence",
+    label: "Email",
+    value: EMAIL,
+    href: `mailto:${EMAIL}`,
+    desc: "For general inquiries and official correspondence",
   },
   {
-    icon: Phone,
-    label: "Direct Support Hotline",
+    label: "Support hotline",
     value: "+91 77948 93768",
     href: "tel:+917794893768",
-    desc: "Mon - Sat, 9:00 AM - 7:00 PM IST",
+    desc: "Mon to Sat, 9:00 AM to 7:00 PM IST",
   },
   {
-    icon: Camera,
-    label: "Official Instagram",
+    label: "Instagram",
     value: "@genzonline4u",
-    href: "https://www.instagram.com/genzonline4u?stkn=MTNvaDM4cHJuOXV3dw%3D%3D#",
-    desc: "Factory reels & ecosystem updates",
+    href: "https://www.instagram.com/genzonline4u",
+    desc: "Factory reels and ecosystem updates",
   },
   {
-    icon: MapPin,
     label: "Headquarters",
     value: "Andhra Pradesh / Telangana Corridor, India",
     href: undefined,
@@ -48,37 +38,33 @@ const CHANNELS = [
   },
 ];
 
-const DIRECT_DEPARTMENTS = [
+const DEPARTMENTS = [
   {
-    title: "Seller Onboarding",
-    desc: "Are you an Indian toy or hardware seller? Get verified & list your factory catalog.",
-    tag: "Factory Direct",
+    title: "Seller onboarding",
+    desc: "Are you an Indian toy or hardware seller? Get verified and list your factory catalog.",
   },
   {
-    title: "B2C Sourcing & Bulk Orders",
-    desc: "Need direct factory quotes with zero broker markups? Our team connects you directly with makers.",
-    tag: "Bulk Sourcing",
+    title: "Bulk orders and sourcing",
+    desc: "Need direct factory quotes with zero broker markups? We connect you directly with makers.",
   },
   {
-    title: "Investor & Ecosystem Partnerships",
-    desc: "Interested in supporting India's MSME manufacturing ecosystem and B2C supply chain?",
-    tag: "Partnerships",
+    title: "Investors and partnerships",
+    desc: "Interested in supporting India’s MSME manufacturing ecosystem and B2C supply chain?",
   },
   {
-    title: "Press & Media Inquiries",
-    desc: "For media interviews, platform statistics, or brand asset requests.",
-    tag: "Press",
+    title: "Press and media",
+    desc: "Media interviews, platform statistics, or brand asset requests.",
   },
 ];
 
 const FAQS = [
   {
     q: "How fast does the GenZ team respond to inquiries?",
-    a: "We review all messages within 24 business hours. For urgent seller verification or active bulk orders, our hotline is active Mon-Sat.",
+    a: "We reply to every message within one business day. For urgent seller verification or active bulk orders, call the hotline, Mon to Sat.",
   },
   {
     q: "How can Indian sellers register on GenZ?",
-    a: "Sellers can fill out the contact form selecting 'Seller partnership'. Our verification team conducts GST and factory unit checks before listing.",
+    a: "Fill out the contact form and select ‘Seller partnership’. Our verification team runs GST and factory unit checks before listing.",
   },
   {
     q: "Are there middleman commission fees for buyers on GenZ?",
@@ -86,209 +72,163 @@ const FAQS = [
   },
   {
     q: "Which manufacturing categories are currently supported?",
-    a: "We specialize in verified Toy Sellers, STEM products, Plastic Molds, Educational Kits, and Precision Craft manufacturing across India.",
+    a: "We specialize in verified toy sellers, STEM products, plastic molds, educational kits, and precision craft manufacturing across India.",
   },
 ];
 
-export default async function ContactPage() {
+const focusRing =
+  "focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 focus-visible:outline-none";
+
+export default function ContactPage() {
   return (
     <main className="bg-cream-paper text-ink-black min-h-screen flex-1 font-sans antialiased">
-      {/* 1. HERO & CONTACT FORM SECTION (CREAM BG) */}
-      <section className="border-ash border-b bg-[#FAF7F0] py-20 sm:py-28">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-14 px-6 sm:grid-cols-2 sm:px-12">
-          <div>
-            <div className="tag border-ash mb-4 inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 shadow-xs">
-              <Sparkles className="text-brand-yellow-dark h-3.5 w-3.5" />
-              <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-                Get in Touch
-              </span>
-            </div>
-            <h1 className="font-nantes text-ink-black text-4xl leading-[1.08] font-normal tracking-tight sm:text-6xl">
-              Let&apos;s talk about building together.
-            </h1>
-            <p className="text-smoke font-graphik mt-6 max-w-md text-base leading-relaxed">
-              Seller partnership, investment, buyer sourcing, press, or just a question
-              — we&apos;d love to connect.
-            </p>
+      {/* Hero: headline, form, and a direct-email index for each team */}
+      <section className="mx-auto grid max-w-7xl grid-cols-1 gap-x-16 gap-y-12 px-6 pt-16 pb-12 sm:px-12 sm:pt-24 lg:grid-cols-12">
+        <div className="lg:col-span-7 lg:col-start-1">
+          <h1 className="font-nantes text-ink-black text-5xl leading-[1.02] font-normal tracking-tight text-balance sm:text-6xl lg:text-7xl">
+            Let’s talk about building together.
+          </h1>
+          <p className="font-graphik text-smoke mt-6 max-w-lg text-base leading-relaxed sm:text-lg">
+            Seller partnership, investment, buyer sourcing, press, or just a question.
+            A real person reads every message.
+          </p>
+          <p className="font-graphik text-ink-black mt-5 inline-flex items-center gap-2 text-sm font-medium">
+            <Clock className="text-brand-yellow-dark h-4 w-4" aria-hidden="true" />
+            We reply within one business day.
+          </p>
+        </div>
 
-            {/* Channels list */}
-            <ul className="mt-10 space-y-6">
-              {CHANNELS.map((c) => {
-                const Icon = c.icon;
-                const content = (
-                  <span className="flex items-start gap-4">
-                    <span className="border-ash text-ink-black flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border bg-white shadow-xs transition-transform hover:scale-105">
-                      <Icon
-                        className="text-brand-yellow-dark h-5 w-5"
-                        aria-hidden="true"
-                      />
+        {/* Form first on mobile; sits beside the headline and team list on desktop */}
+        <div
+          id="message"
+          className="scroll-mt-24 lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1"
+        >
+          <ContactForm />
+        </div>
+
+        <div className="lg:col-span-7 lg:col-start-1">
+          <h2 className="font-graphik text-ink-black text-sm font-semibold">
+            Or email the right team directly
+          </h2>
+          <ul className="border-ash divide-ash mt-4 divide-y border-y">
+            {DEPARTMENTS.map((dept) => (
+              <li key={dept.title}>
+                <a
+                  href={`mailto:${EMAIL}?subject=${encodeURIComponent(dept.title)}`}
+                  aria-label={`Email us about ${dept.title}`}
+                  className={`group flex items-start justify-between gap-6 py-6 ${focusRing}`}
+                >
+                  <span>
+                    <span className="font-nantes text-ink-black block text-2xl font-normal sm:text-3xl">
+                      {dept.title}
                     </span>
-                    <span>
-                      <span className="text-smoke font-graphik block text-xs font-semibold tracking-wider uppercase">
-                        {c.label}
-                      </span>
-                      <span className="font-graphik text-ink-black mt-0.5 block text-sm font-medium">
-                        {c.value}
-                      </span>
-                      {c.desc && (
-                        <span className="text-smoke font-graphik mt-0.5 block text-xs">
-                          {c.desc}
-                        </span>
-                      )}
+                    <span className="font-graphik text-smoke mt-1.5 block max-w-md text-sm leading-relaxed">
+                      {dept.desc}
                     </span>
                   </span>
-                );
-                return (
-                  <li key={c.label}>
-                    {c.href ? (
-                      <a
-                        href={c.href}
-                        target={c.href.startsWith("http") ? "_blank" : undefined}
-                        rel={
-                          c.href.startsWith("http") ? "noopener noreferrer" : undefined
-                        }
-                        className="block w-fit transition-opacity hover:opacity-80"
-                      >
-                        {content}
-                      </a>
-                    ) : (
-                      content
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-
-            {/* Response commitment badge */}
-            <div className="border-ash mt-10 flex max-w-md items-center gap-4 rounded-2xl border bg-white p-5 shadow-xs">
-              <Clock className="text-brand-yellow-dark h-8 w-8 shrink-0" />
-              <div>
-                <span className="font-graphik text-ink-black block text-xs font-semibold tracking-wider uppercase">
-                  24-Hour Response Commitment
-                </span>
-                <span className="font-graphik text-smoke mt-0.5 block text-xs">
-                  Our team reads and responds to every verified inquiry within 1
-                  business day.
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <ContactForm />
-          </div>
-        </div>
-      </section>
-
-      {/* 2. DIRECT DEPARTMENTS GRID (WHITE BG) */}
-      <section className="border-ash border-b bg-white px-6 py-20 sm:px-12 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto mb-16 max-w-2xl text-center">
-            <div className="tag border-ash mb-4 inline-block rounded-full border bg-[#FAF7F0] px-4 py-1 shadow-xs">
-              <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-                Dedicated Channels
-              </span>
-            </div>
-            <h2 className="font-nantes text-ink-black text-3xl font-normal sm:text-5xl">
-              Direct Inquiry Departments
-            </h2>
-            <p className="font-graphik text-smoke mt-4 text-base">
-              Connect directly with the specialized team dedicated to your specific
-              need.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {DIRECT_DEPARTMENTS.map((dept, idx) => (
-              <div
-                key={idx}
-                className="border-ash group flex flex-col justify-between rounded-2xl border bg-[#FAF7F0] p-8 shadow-xs transition-all hover:border-black"
-              >
-                <div>
-                  <div className="mb-4 flex items-center justify-between">
-                    <span className="bg-brand-yellow font-graphik rounded-full px-3 py-1 text-[10px] font-semibold tracking-wider text-black uppercase shadow-xs">
-                      {dept.tag}
-                    </span>
-                    <Building2 className="text-smoke h-5 w-5 transition-colors group-hover:text-black" />
-                  </div>
-                  <h3 className="font-nantes text-ink-black mb-2 text-2xl font-normal">
-                    {dept.title}
-                  </h3>
-                  <p className="font-graphik text-smoke text-sm leading-relaxed">
-                    {dept.desc}
-                  </p>
-                </div>
-              </div>
+                  <span
+                    aria-hidden="true"
+                    className="border-ash text-ink-black group-hover:bg-brand-yellow group-hover:border-ink-black mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-colors"
+                  >
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      {/* 3. FREQUENTLY ASKED QUESTIONS (CREAM BG) */}
-      <section className="border-ash border-b bg-[#FAF7F0] px-6 py-20 sm:px-12 sm:py-28">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-16 text-center">
-            <div className="tag border-ash mb-4 inline-block rounded-full border bg-white px-4 py-1 shadow-xs">
-              <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-                Support FAQs
-              </span>
+      {/* Contact details */}
+      <section className="mx-auto max-w-7xl px-6 pb-20 sm:px-12 sm:pb-28">
+        <h2 className="sr-only">Contact details</h2>
+        <dl className="border-ash grid gap-x-8 gap-y-10 border-t pt-10 sm:grid-cols-2 lg:grid-cols-4">
+          {CHANNELS.map((c) => (
+            <div key={c.label}>
+              <dt className="font-graphik text-smoke text-sm">{c.label}</dt>
+              <dd className="mt-2">
+                {c.href ? (
+                  <a
+                    href={c.href}
+                    target={c.href.startsWith("http") ? "_blank" : undefined}
+                    rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className={`font-nantes text-ink-black decoration-brand-yellow-dark text-xl font-normal [overflow-wrap:anywhere] underline decoration-2 underline-offset-4 ${focusRing}`}
+                  >
+                    {c.value}
+                  </a>
+                ) : (
+                  <span className="font-nantes text-ink-black text-xl font-normal">
+                    {c.value}
+                  </span>
+                )}
+                <p className="font-graphik text-smoke mt-1.5 text-sm leading-relaxed">
+                  {c.desc}
+                </p>
+              </dd>
             </div>
-            <h2 className="font-nantes text-ink-black text-3xl font-normal sm:text-5xl">
-              Before you contact us
+          ))}
+        </dl>
+      </section>
+
+      {/* FAQ: native details elements, no JS needed */}
+      <section className="border-ash border-y bg-white">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-20 sm:px-12 lg:grid-cols-12 lg:py-28">
+          <div className="lg:col-span-4">
+            <h2 className="font-nantes text-ink-black text-3xl font-normal tracking-tight sm:text-4xl">
+              Before you write
             </h2>
-            <p className="font-graphik text-smoke mt-4 text-base">
-              Quick answers to standard questions about GenZ platform partnerships.
+            <p className="font-graphik text-smoke mt-3 max-w-xs text-base leading-relaxed">
+              Quick answers about partnering with GenZ.
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="border-ash divide-ash divide-y border-y lg:col-span-8">
             {FAQS.map((faq, idx) => (
-              <div
-                key={idx}
-                className="border-ash rounded-2xl border bg-white p-6 shadow-xs"
-              >
-                <h3 className="font-nantes text-ink-black mb-2 flex items-center gap-3 text-xl font-normal">
-                  <HelpCircle className="text-brand-yellow-dark h-5 w-5 shrink-0" />
-                  {faq.q}
-                </h3>
-                <p className="font-graphik text-smoke pl-8 text-sm leading-relaxed">
+              <details key={faq.q} open={idx === 0} className="group py-5">
+                <summary
+                  className={`flex cursor-pointer list-none items-start justify-between gap-6 [&::-webkit-details-marker]:hidden ${focusRing}`}
+                >
+                  <span className="font-nantes text-ink-black text-xl font-normal">
+                    {faq.q}
+                  </span>
+                  <Plus
+                    className="text-smoke mt-1 h-5 w-5 shrink-0 transition-transform group-open:rotate-45"
+                    aria-hidden="true"
+                  />
+                </summary>
+                <p className="font-graphik text-smoke mt-3 max-w-2xl text-sm leading-relaxed">
                   {faq.a}
                 </p>
-              </div>
+              </details>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. CTA BANNER (WHITE BG) */}
-      <section className="bg-white py-20 sm:py-28">
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <div className="tag border-ash mb-4 inline-block rounded-full border bg-[#FAF7F0] px-4 py-1 shadow-xs">
-            <span className="font-graphik text-smoke text-xs font-semibold tracking-[0.2em] uppercase">
-              Explore Platform
-            </span>
-          </div>
-          <h2 className="font-nantes text-ink-black text-3xl font-normal sm:text-5xl">
+      {/* Closing */}
+      <section className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-20 sm:px-12 sm:py-24 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-xl">
+          <h2 className="font-nantes text-ink-black text-3xl font-normal tracking-tight text-balance sm:text-5xl">
             Ready to discover verified Indian makers?
           </h2>
-          <p className="font-graphik text-smoke mx-auto mt-4 mb-8 max-w-xl text-base">
+          <p className="font-graphik text-smoke mt-4 text-base leading-relaxed">
             Explore our curated catalog of toys, products, and verified industrial
             sellers.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/discover"
-              className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik inline-flex h-12 items-center justify-center rounded-full px-8 text-xs font-semibold tracking-wider text-black uppercase shadow-xs transition-all"
-            >
-              Explore Discover Page
-            </Link>
-            <Link
-              href="/about"
-              className="text-ink-black border-ash font-graphik inline-flex h-12 items-center justify-center rounded-full border bg-transparent px-8 text-xs font-semibold tracking-wider uppercase shadow-xs transition-all hover:bg-[#FAF7F0]"
-            >
-              Read Our About Story
-            </Link>
-          </div>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/discover"
+            className="bg-brand-yellow hover:bg-brand-yellow-hover font-graphik inline-flex h-12 items-center justify-center rounded-full px-7 text-sm font-semibold text-black transition-colors focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            Explore Discover
+          </Link>
+          <Link
+            href="/about"
+            className="text-ink-black border-ash font-graphik inline-flex h-12 items-center justify-center rounded-full border px-7 text-sm font-semibold transition-colors hover:bg-white focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            Read our story
+          </Link>
         </div>
       </section>
     </main>

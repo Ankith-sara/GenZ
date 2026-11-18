@@ -16,7 +16,7 @@ const SECTIONS: LegalSection[] = [
       <p>
         {COMPANY.brandName} (&ldquo;GenZ&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;,
         &ldquo;the platform&rdquo;) is an online marketplace operated by{" "}
-        {COMPANY.legalEntityName}, with its registered office at{" "}
+        {COMPANY.legalEntityName} (CIN: {COMPANY.cin}), with its registered office at{" "}
         {formatAddress(COMPANY.registeredOffice)}. The platform connects Indian
         consumers with independent Indian sellers, MSMEs, startups, and artisan
         businesses. By creating an account or using any part of the platform, you agree

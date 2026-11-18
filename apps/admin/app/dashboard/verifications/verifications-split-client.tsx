@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react";
 import { StatusBadge } from "@genz/ui";
 import { SlideOverDrawer } from "@genz/ui";
 import { approveSeller, rejectSeller } from "./actions";
+import { generateSupportLoginLinkAction } from "../users/actions";
 import {
   Building2,
   CheckCircle2,
@@ -147,6 +148,7 @@ export function VerificationsSplitClient({
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPassword, setCopiedPassword] = useState(false);
   const [copiedAll, setCopiedAll] = useState(false);
+  const [isSupportLoading, setIsSupportLoading] = useState(false);
 
   const counts = {
     all: appsList.length,
@@ -256,6 +258,27 @@ export function VerificationsSplitClient({
     } else {
       setCopiedAll(true);
       setTimeout(() => setCopiedAll(false), 2000);
+    }
+  };
+
+  const handleSupportLogin = async (app: SellerAppRecord) => {
+    setIsSupportLoading(true);
+    try {
+      const res = await generateSupportLoginLinkAction({
+        userId: app.id,
+        userEmail: app.email,
+        portal: "seller",
+        reason: `Verifications desk support login for ${app.business_name} (${app.email})`,
+      });
+      if (res.error) {
+        alert(res.error);
+      } else if (res.url) {
+        window.open(res.url, "_blank");
+      }
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to initiate support login.");
+    } finally {
+      setIsSupportLoading(false);
     }
   };
 
@@ -531,30 +554,48 @@ export function VerificationsSplitClient({
               </div>
 
               {/* Clearance Action Buttons */}
-              {selectedApp.status === "pending" && (
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    onClick={openApproveModal}
-                    disabled={isPending}
-                    className={`h-8 flex-1 rounded-lg bg-[#166534] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#14532D] disabled:opacity-50 sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
-                  >
-                    <FileCheck
-                      className="mr-1.5 h-3.5 w-3.5"
-                      strokeWidth={ICON_STROKE}
-                    />
-                    <span>Approve</span>
-                  </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => handleSupportLogin(selectedApp)}
+                  disabled={isSupportLoading}
+                  className={`h-8 gap-1.5 rounded-lg border-amber-300 bg-amber-50 px-3 text-xs font-medium text-amber-900 shadow-xs hover:bg-amber-100 disabled:opacity-50 sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
+                  title="Access seller workspace via support impersonation"
+                >
+                  {isSupportLoading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-600" />
+                  ) : (
+                    <ExternalLink className="h-3.5 w-3.5 text-amber-600" strokeWidth={ICON_STROKE} />
+                  )}
+                  <span>{isSupportLoading ? "Connecting..." : "Support Login (Seller Desk)"}</span>
+                </Button>
 
-                  <Button
-                    onClick={() => setShowRejectForm(true)}
-                    disabled={isPending}
-                    className={`h-8 flex-1 rounded-lg border border-[#991B1B] bg-[#991B1B] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#7F1D1D] disabled:opacity-50 sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
-                  >
-                    <XCircle className="mr-1.5 h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
-                    <span>Reject</span>
-                  </Button>
-                </div>
-              )}
+                {selectedApp.status === "pending" && (
+                  <>
+                    <Button
+                      onClick={openApproveModal}
+                      disabled={isPending}
+                      className={`h-8 flex-1 rounded-lg bg-[#166534] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#14532D] disabled:opacity-50 sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
+                    >
+                      <FileCheck
+                        className="mr-1.5 h-3.5 w-3.5"
+                        strokeWidth={ICON_STROKE}
+                      />
+                      <span>Approve</span>
+                    </Button>
+
+                    <Button
+                      onClick={() => setShowRejectForm(true)}
+                      disabled={isPending}
+                      className={`h-8 flex-1 rounded-lg border border-[#991B1B] bg-[#991B1B] px-3.5 text-xs font-medium text-white shadow-xs hover:bg-[#7F1D1D] disabled:opacity-50 sm:flex-initial ${PRESSABLE} ${FOCUS_RING}`}
+                    >
+                      <XCircle className="mr-1.5 h-3.5 w-3.5" strokeWidth={ICON_STROKE} />
+                      <span>Reject</span>
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Rejection Form Box */}

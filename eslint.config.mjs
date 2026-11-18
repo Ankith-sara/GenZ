@@ -7,6 +7,21 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   prettierConfig,
+  // Monorepo Next.js rule overrides
+  {
+    rules: {
+      "@next/next/no-html-link-for-pages": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

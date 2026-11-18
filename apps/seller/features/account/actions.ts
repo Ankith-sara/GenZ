@@ -6,6 +6,7 @@ import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@genz/database/authorization";
 import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
 import { sellerProfileSchema } from "@genz/validation";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export interface ProfileFormState {
   error?: string;
@@ -63,12 +64,9 @@ export async function saveSellerProfile(
   }
 
   try {
-    const adminSupabase = createAdminClient();
-
-    // 3. Upsert seller profile bypassing RLS restriction issues
-    const { error: dbError } = await adminSupabase.from("seller_profiles").upsert(
-      {
-        id: session.userId,
+    try {
+      const client = await getAuthenticatedSellerApiClient();
+      await client.sellers.updateProfile({
         business_name: validation.data.business_name,
         gst_number: validation.data.gst_number || "PENDING",
         factory_address: validation.data.factory_address || null,
@@ -77,10 +75,42 @@ export async function saveSellerProfile(
         pincode: validation.data.pincode || null,
         description: validation.data.description || null,
         established_year: validation.data.established_year ?? null,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "id" }
-    );
+      });
+    } catch {
+      // Direct database fallback
+      const adminSupabase = createAdminClient();
+      const { error: dbError } = await adminSupabase.from("seller_profiles").upsert(
+        {
+          id: session.userId,
+          business_name: validation.data.business_name,
+          gst_number: validation.data.gst_number || "PENDING",
+          factory_address: validation.data.factory_address || null,
+          city: validation.data.city || null,
+          state: validation.data.state || null,
+          pincode: validation.data.pincode || null,
+          description: validation.data.description || null,
+          established_year: validation.data.established_year ?? null,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "id" }
+      );
+
+      if (dbError) {
+        console.error("[saveSellerProfile] Database upsert error:", dbError);
+        return {
+          error: dbError.message || "Could not save your profile. Please try again.",
+        };
+      }
+
+      if (validation.data.business_name) {
+        await adminSupabase
+          .from("profiles")
+          .update({
+            full_name: validation.data.business_name,
+          })
+          .eq("id", session.userId);
+      }
+    }
 
     await logRateLimitAttempt({
       endpointType: "user",
@@ -88,24 +118,7 @@ export async function saveSellerProfile(
       identifier: session.userId,
     });
 
-    if (dbError) {
-      console.error("[saveSellerProfile] Database upsert error:", dbError);
-      return {
-        error: dbError.message || "Could not save your profile. Please try again.",
-      };
-    }
-
-    // 4. Keep profiles table full_name in sync with business_name
-    if (validation.data.business_name) {
-      await adminSupabase
-        .from("profiles")
-        .update({
-          full_name: validation.data.business_name,
-        })
-        .eq("id", session.userId);
-    }
-
-    // 5. Revalidate correct seller dashboard paths
+    // Revalidate correct seller dashboard paths
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/account");
     revalidatePath("/dashboard/profile");
@@ -134,27 +147,31 @@ export async function submitForVerification() {
   });
   if (rateLimit.blocked) return;
 
-  const adminSupabase = createAdminClient();
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    await client.sellers.submitForVerification();
+  } catch {
+    const adminSupabase = createAdminClient();
+    const { error } = await adminSupabase
+      .from("seller_profiles")
+      .update({
+        status: "pending",
+        submitted_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", session.userId);
 
-  const { error } = await adminSupabase
-    .from("seller_profiles")
-    .update({
-      status: "pending",
-      submitted_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", session.userId);
+    if (error) {
+      console.error("Submit for verification DB error:", error);
+      return;
+    }
+  }
 
   await logRateLimitAttempt({
     endpointType: "user",
     actionName: "submit_for_verification",
     identifier: session.userId,
   });
-
-  if (error) {
-    console.error("Submit for verification DB error:", error);
-    return;
-  }
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/account");

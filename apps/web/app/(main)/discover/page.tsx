@@ -1,5 +1,5 @@
 import { createClient } from "@genz/database";
-import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@/features/products/lib/products";
+import { DISCOVER_PAGE_SIZE as PAGE_SIZE } from "@genz/utils/products";
 import { DiscoverFilters } from "./discover-filters";
 import { DiscoverFeed } from "./discover-feed";
 import type { ProductFilters } from "./types";

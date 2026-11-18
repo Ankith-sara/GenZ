@@ -12,7 +12,7 @@ import {
   ShieldCheck,
   Truck,
 } from "lucide-react";
-import { formatInr } from "@/features/products/lib/products";
+import { formatInr } from "@genz/utils/products";
 
 interface VariantItem {
   id: string;

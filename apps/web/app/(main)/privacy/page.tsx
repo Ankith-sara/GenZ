@@ -16,7 +16,7 @@ const SECTIONS: LegalSection[] = [
     title: "1. Who Is Responsible for Your Data",
     body: (
       <p>
-        {COMPANY.brandName} is operated by {COMPANY.legalEntityName} (registered office:{" "}
+        {COMPANY.brandName} is operated by {COMPANY.legalEntityName} (CIN: {COMPANY.cin}, registered office:{" "}
         {formatAddress(COMPANY.registeredOffice)}), which is the Data Fiduciary for
         personal data collected through the platform under the Digital Personal Data
         Protection Act, 2023 (&ldquo;DPDP Act&rdquo;).

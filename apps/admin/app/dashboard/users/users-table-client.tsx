@@ -15,8 +15,10 @@ import {
   MapPin,
   RotateCcw,
   UserCheck,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@genz/ui";
+import { generateSupportLoginLinkAction } from "./actions";
 
 export interface ProfileRecord {
   id: string;
@@ -43,6 +45,29 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedUser, setSelectedUser] = useState<ProfileRecord | null>(null);
+  const [supportLoadingId, setSupportLoadingId] = useState<string | null>(null);
+
+  async function handleSupportLogin(user: ProfileRecord) {
+    setSupportLoadingId(user.id);
+    try {
+      const portal = user.role?.toLowerCase() === "seller" ? "seller" : "web";
+      const res = await generateSupportLoginLinkAction({
+        userId: user.id,
+        userEmail: user.email || undefined,
+        portal,
+        reason: `Support navigation for ${user.full_name || user.email || user.id}`,
+      });
+      if (res.error) {
+        alert(res.error);
+      } else if (res.url) {
+        window.open(res.url, "_blank");
+      }
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to initiate support login.");
+    } finally {
+      setSupportLoadingId(null);
+    }
+  }
 
   const counts = useMemo(() => {
     return {
@@ -308,6 +333,16 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
                         <ActionDropdown
                           actions={[
                             {
+                              label:
+                                supportLoadingId === user.id
+                                  ? "Connecting..."
+                                  : "Support Login (Enter Workspace)",
+                              icon: (
+                                <ExternalLink className="h-3.5 w-3.5 text-amber-600" />
+                              ),
+                              onClick: () => handleSupportLogin(user),
+                            },
+                            {
                               label: "View Profile Drawer",
                               icon: (
                                 <UserCheck className="h-3.5 w-3.5 text-[#737373]" />
@@ -408,7 +443,7 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
 
             {/* Seller Specific Box */}
             {selectedUser.role === "seller" && (
-              <div className="space-y-2 rounded-xl border border-amber-200/80 bg-amber-50/50 p-4">
+              <div className="space-y-3 rounded-xl border border-amber-200/80 bg-amber-50/50 p-4">
                 <div className="flex items-center gap-2">
                   <Building2
                     className="h-4 w-4 text-amber-800"
@@ -422,7 +457,37 @@ export function UsersTableClient({ initialProfiles }: UsersTableClientProps) {
                   This user has a registered factory profile. Clearance and audit
                   documents can be inspected in the Verifications desk.
                 </p>
+                <button
+                  type="button"
+                  onClick={() => handleSupportLogin(selectedUser)}
+                  disabled={supportLoadingId === selectedUser.id}
+                  className="mt-2 inline-flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-amber-600 px-4 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-amber-700 disabled:opacity-50"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  <span>
+                    {supportLoadingId === selectedUser.id
+                      ? "Generating Session..."
+                      : "Support Login to Seller Desk"}
+                  </span>
+                </button>
               </div>
+            )}
+
+            {/* Quick Support Action for Buyers / Other Roles */}
+            {selectedUser.role !== "seller" && (
+              <button
+                type="button"
+                onClick={() => handleSupportLogin(selectedUser)}
+                disabled={supportLoadingId === selectedUser.id}
+                className="inline-flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#E5E5E5] bg-white px-4 text-xs font-semibold text-[#171717] shadow-xs transition-colors hover:bg-[#FAFAF9] disabled:opacity-50"
+              >
+                <ExternalLink className="h-4 w-4 text-[#737373]" />
+                <span>
+                  {supportLoadingId === selectedUser.id
+                    ? "Generating Session..."
+                    : "Support Login as Customer"}
+                </span>
+              </button>
             )}
           </div>
         )}

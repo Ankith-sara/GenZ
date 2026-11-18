@@ -5,7 +5,7 @@ import { ProductEditorForm, type ProductImageItem } from "@genz/ui/shared-featur
 import { updateProduct, type ProductFormState } from "@/app/dashboard/products/actions";
 import { createBrowserClient } from "@genz/database";
 import type { Product, ProductVariant, ProductStatus } from "@genz/types";
-import { productMediaUrl } from "@/features/products/lib/products";
+import { productMediaUrl } from "@genz/utils/products";
 import { PublishControls } from "./publish-controls";
 
 interface SellerProductEditClientProps {

@@ -6,7 +6,7 @@ import { Upload, Trash2, Check, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@genz/ui";
 import { validateFileContent } from "@genz/validation";
 import type { DocType, SellerDocument, VerificationStatus } from "@genz/types";
-import { STATUS_LABEL } from "@/features/documents/lib/verification";
+import { STATUS_LABEL } from "@genz/utils/verification";
 import {
   uploadDocumentAction,
   deleteDocumentAction,

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@genz/database";
 import { requireRole } from "@genz/database/authorization";
 import { SellerProductEditClient } from "./seller-product-edit-client";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export default async function SellerProductDetailPage({
   params,
@@ -12,12 +13,23 @@ export default async function SellerProductDetailPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .eq("seller_id", session.userId)
-    .maybeSingle();
+  let product: any = null;
+  let variants: any[] = [];
+
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    const res = await client.sellers.getProduct(id);
+    product = res;
+    variants = (res as any)?.product_variants || [];
+  } catch {
+    const { data: p } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", id)
+      .eq("seller_id", session.userId)
+      .maybeSingle();
+    product = p;
+  }
 
   if (!product) notFound();
 
@@ -32,11 +44,14 @@ export default async function SellerProductDetailPage({
     .eq("product_id", id)
     .order("position", { ascending: true });
 
-  const { data: variants } = await supabase
-    .from("product_variants")
-    .select("*")
-    .eq("product_id", id)
-    .order("created_at", { ascending: true });
+  if (variants.length === 0) {
+    const { data: varData } = await supabase
+      .from("product_variants")
+      .select("*")
+      .eq("product_id", id)
+      .order("created_at", { ascending: true });
+    variants = varData ?? [];
+  }
 
   // Intelligent fallback for seller business name (Rule 4)
   const { data: sellerProfile } = await supabase

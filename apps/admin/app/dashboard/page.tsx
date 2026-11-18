@@ -1,8 +1,8 @@
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@genz/database/authorization";
 import Link from "next/link";
-import { VercelAnalyticsChart } from "@/features/admin/components/vercel-analytics-chart";
-import { getAnalyticsData } from "@/features/admin/lib/vercel-analytics";
+import { VercelAnalyticsChart } from "@genz/ui";
+import { getAnalyticsData } from "@genz/utils/vercel-analytics";
 import { DashboardPageHeader, DashboardStat, DashboardPanel } from "@genz/ui";
 import { StatusBadge } from "@genz/ui";
 import {

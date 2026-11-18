@@ -1,0 +1,37 @@
+import type { ProductStatus } from "@genz/types";
+
+export const PRODUCT_STATUS_LABEL: Record<ProductStatus, string> = {
+  draft: "Draft",
+  published: "Published",
+  archived: "Archived",
+};
+
+export const DISCOVER_PAGE_SIZE = 12;
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+
+/**
+ * `product-media` is a public bucket, so files can be linked directly by
+ * path without a signed URL. Returns null if no path is set.
+ */
+export function productMediaUrl(path: string | null): string | null {
+  if (!path || !SUPABASE_URL) return null;
+  return `${SUPABASE_URL}/storage/v1/object/public/product-media/${path}`;
+}
+
+/** Parses the comma-separated materials input from the product form into a clean string array. */
+export function parseMaterials(raw: string): string[] {
+  return raw
+    .split(",")
+    .map((m) => m.trim())
+    .filter(Boolean);
+}
+
+export function formatInr(amount: number | null): string {
+  if (amount === null) return "Price not set";
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(amount);
+}

@@ -6,6 +6,7 @@ import { CheckoutService } from "@genz/services/checkout";
 import { PaymentsService } from "@genz/services/payments";
 import { placeOrderSchema, type PlaceOrderInput } from "@genz/validation";
 import type { OrderRecord } from "@genz/types";
+import { getAuthenticatedApiClient } from "@/lib/api-server-client";
 
 export interface PlaceOrderResult {
   success: boolean;
@@ -14,16 +15,11 @@ export interface PlaceOrderResult {
 }
 
 /**
- * Places an order. Guest checkout is supported, so a session is optional here
- * (requireRole would force sign-in): signed-in buyers are rate limited per
- * user, guests per IP.
+ * Places an order. Guest checkout is supported, so a session is optional here:
+ * signed-in buyers are rate limited per user, guests per IP.
  *
- * Trust boundaries:
- * - The customer email comes from the verified session for signed-in users;
- *   guests must supply one (validated). The client never sets it otherwise.
- * - Payment status is never taken from the client: a Razorpay payment is
- *   "paid" only after its signature is verified here, and only then is the
- *   gateway payment id stored on the order.
+ * Consumes the centralized Fastify API (/v1/checkout/orders) with server-side price
+ * recalculation and gateway verification.
  */
 export async function placeOrderAction(input: PlaceOrderInput): Promise<PlaceOrderResult> {
   const session = await getUserAndProfile();
@@ -54,6 +50,29 @@ export async function placeOrderAction(input: PlaceOrderInput): Promise<PlaceOrd
         };
       }
 
+      // 1. Try centralized Fastify API first
+      try {
+        const client = await getAuthenticatedApiClient();
+        const apiOrder = await client.checkout.createOrder({
+          items: data.items.map((i) => ({
+            productId: i.id || (i as any).productId,
+            variantId: (i as any).variantId,
+            quantity: i.quantity,
+          })),
+          shippingAddress: data.shippingAddress,
+          guestEmail: data.guestEmail,
+          payment: data.payment as any,
+        });
+
+        return {
+          success: true,
+          order: apiOrder,
+        };
+      } catch (apiErr: unknown) {
+        console.warn("[PlaceOrderAction] Fastify API call notice, falling back to local domain handler:", apiErr);
+      }
+
+      // 2. Resilient fallback to domain services layer
       let paymentStatus: "pending" | "paid" = "pending";
       let paymentGatewayId: string | null = null;
       let notes: string;

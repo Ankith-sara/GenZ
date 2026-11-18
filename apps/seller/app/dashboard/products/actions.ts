@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@genz/database";
 import { createAdminClient } from "@genz/database/admin";
 import { requireRole } from "@genz/database/authorization";
-import { parseMaterials } from "@/features/products/lib/products";
+import { parseMaterials } from "@genz/utils/products";
 import type { Product, ProductStatus, Role } from "@genz/types";
 import {
   checkRateLimit,
@@ -17,6 +17,7 @@ import {
   variantSchema,
   validateFileContentServer,
 } from "@genz/validation";
+import { getAuthenticatedSellerApiClient } from "@/lib/api-server-client";
 
 export interface ProductFormState {
   error?: string;
@@ -505,16 +506,21 @@ export async function setProductStatus(productId: string, status: ProductStatus)
     return { error: rateLimit.error || "Too many requests. Please slow down." };
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("products")
-    .update({ status })
-    .eq("id", productId)
-    .eq("seller_id", session.userId);
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    await client.sellers.setProductStatus(productId, status as "draft" | "published" | "archived");
+  } catch {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("products")
+      .update({ status })
+      .eq("id", productId)
+      .eq("seller_id", session.userId);
 
-  if (error) {
-    console.error("Set product status error:", error);
-    return { error: "Failed to update product status." };
+    if (error) {
+      console.error("Set product status error:", error);
+      return { error: "Failed to update product status." };
+    }
   }
 
   await logRateLimitAttempt({
@@ -550,23 +556,30 @@ export async function quickUpdateProduct(
     throw new Error(rateLimit.error || "Rate limit exceeded");
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("products")
-    .update({
-      name: data.name,
-      category: data.category ?? undefined,
-      price_inr: data.price_inr,
-      status: (data.status as ProductStatus) ?? undefined,
-      description: data.description,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", productId)
-    .eq("seller_id", session.userId);
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    await client.sellers.quickUpdateProduct(productId, {
+      price_inr: data.price_inr ?? undefined,
+    });
+  } catch {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("products")
+      .update({
+        name: data.name,
+        category: data.category ?? undefined,
+        price_inr: data.price_inr,
+        status: (data.status as ProductStatus) ?? undefined,
+        description: data.description,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", productId)
+      .eq("seller_id", session.userId);
 
-  if (error) {
-    console.error("Seller quick update error:", error);
-    throw new Error(error.message || "Failed to update product");
+    if (error) {
+      console.error("Seller quick update error:", error);
+      throw new Error(error.message || "Failed to update product");
+    }
   }
 
   revalidatePath(`/dashboard/products/${productId}`);
@@ -683,41 +696,54 @@ export async function addVariant(
     return { error: validation.error.issues[0].message };
   }
 
-  const supabase = await createClient();
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    await client.sellers.addVariant(productId, {
+      title: `${validation.data.variant_name}: ${validation.data.variant_value}`,
+      price_inr: validation.data.price_inr ?? null,
+      inventory_count: validation.data.stock_qty ?? 0,
+      attributes: {
+        variant_name: validation.data.variant_name,
+        variant_value: validation.data.variant_value,
+      },
+    });
+  } catch {
+    const supabase = await createClient();
 
-  // Verify product ownership
-  const { data: product } = await supabase
-    .from("products")
-    .select("id, seller_id")
-    .eq("id", productId)
-    .maybeSingle();
+    // Verify product ownership
+    const { data: product } = await supabase
+      .from("products")
+      .select("id, seller_id")
+      .eq("id", productId)
+      .maybeSingle();
 
-  if (
-    !product ||
-    (product.seller_id !== session.userId && session.profile?.role !== "admin")
-  ) {
-    return { error: "Permission denied: Product not found or unauthorized." };
+    if (
+      !product ||
+      (product.seller_id !== session.userId && session.profile?.role !== "admin")
+    ) {
+      return { error: "Permission denied: Product not found or unauthorized." };
+    }
+
+    const { error } = await supabase.from("product_variants").insert({
+      product_id: productId,
+      seller_id: session.userId,
+      variant_name: validation.data.variant_name,
+      variant_value: validation.data.variant_value,
+      price_inr: validation.data.price_inr ?? null,
+      stock_qty: validation.data.stock_qty ?? null,
+    });
+
+    if (error) {
+      console.error("Add variant DB error:", error);
+      return { error: "Could not add the variant. Please try again." };
+    }
   }
-
-  const { error } = await supabase.from("product_variants").insert({
-    product_id: productId,
-    seller_id: session.userId,
-    variant_name: validation.data.variant_name,
-    variant_value: validation.data.variant_value,
-    price_inr: validation.data.price_inr ?? null,
-    stock_qty: validation.data.stock_qty ?? null,
-  });
 
   await logRateLimitAttempt({
     endpointType: "user",
     actionName: "add_variant",
     identifier: session.userId,
   });
-
-  if (error) {
-    console.error("Add variant DB error:", error);
-    return { error: "Could not add the variant. Please try again." };
-  }
 
   revalidatePath(`/dashboard/products/${productId}`);
   return {};
@@ -734,13 +760,17 @@ export async function deleteVariant(productId: string, variantId: string) {
   });
   if (rateLimit.blocked) return;
 
-  const supabase = await createClient();
-
-  await supabase
-    .from("product_variants")
-    .delete()
-    .eq("id", variantId)
-    .eq("seller_id", session.userId);
+  try {
+    const client = await getAuthenticatedSellerApiClient();
+    await client.sellers.deleteVariant(productId, variantId);
+  } catch {
+    const supabase = await createClient();
+    await supabase
+      .from("product_variants")
+      .delete()
+      .eq("id", variantId)
+      .eq("seller_id", session.userId);
+  }
 
   await logRateLimitAttempt({
     endpointType: "user",

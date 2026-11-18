@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@genz/api-client": "workspace:*",
     "@genz/types": "workspace:*",
     "@genz/validation": "workspace:*",
     "@genz/utils": "workspace:*",

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@genz/ui";
 import { ProductCard } from "@/features/products/components/product-card";
-import { productMediaUrl } from "@/features/products/lib/products";
+import { productMediaUrl } from "@genz/utils/products";
 import type { Product } from "@genz/types";
 
 interface CuratedProduct {

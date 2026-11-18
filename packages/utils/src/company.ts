@@ -4,11 +4,6 @@
  * Used by the storefront legal pages (/terms, /privacy, /refund-policy,
  * /shipping-policy, /grievance), the footer and the seller portal.
  *
- * Values wrapped in square brackets (e.g. "[Registered legal entity name]")
- * are PLACEHOLDERS that the business owner must fill in before launch — they
- * are required disclosures under the Consumer Protection (E-Commerce) Rules,
- * 2020. Every placeholder field is listed in `COMPANY_DETAILS_PENDING` so it
- * can be tracked; do not replace them with guessed values.
  */
 
 export interface PostalAddress {
@@ -29,18 +24,24 @@ export interface GrievanceOfficer {
   workingHours: string;
 }
 
+export interface Director {
+  name: string;
+  din: string;
+}
+
 export interface CompanyDetails {
   brandName: string;
   legalEntityName: string;
-  /** Corporate Identification Number / registration number (MCA, LLP, Udyam, etc.). */
-  registrationNumber: string;
+  cin: string;
   gstin: string;
+  esic?: string;
+  epfo?: string;
+  directors: Director[];
   registeredOffice: PostalAddress;
   domain: string;
   websiteUrl: string;
   supportEmail: string;
   supportPhone: string;
-  /** Phone number in E.164 form for tel: links. */
   supportPhoneHref: string;
   supportHours: string;
   instagramHandle: string;
@@ -55,19 +56,25 @@ const SUPPORT_HOURS =
   "Monday to Saturday, 9:00 AM – 7:00 PM IST (excluding public holidays)";
 
 const REGISTERED_OFFICE: PostalAddress = {
-  line1: "[Registered office address line 1]",
-  line2: "[Registered office address line 2]",
-  city: "[City]",
-  state: "[State]",
-  pincode: "[PIN code]",
+  line1: "H. No : 4-17, Yanampalli",
+  line2: "Armoor",
+  city: "Nizamabad",
+  state: "Telangana",
+  pincode: "503175",
   country: "India",
 };
 
 export const COMPANY: CompanyDetails = {
   brandName: "GenZ Online",
-  legalEntityName: "[Registered legal entity name]",
-  registrationNumber: "[CIN / registration number]",
-  gstin: "[GSTIN]",
+  legalEntityName: "GENZONLINE PRIVATE LIMITED",
+  cin: "U47912TS2026PTC223484",
+  gstin: "36AANCG4552H1ZD",
+  esic: "52002775620000999",
+  epfo: "NZNZB4110223000",
+  directors: [
+    { name: "Appala Sairam", din: "11973168" },
+    { name: "Vishal Alavadutha", din: "11973167" },
+  ],
   registeredOffice: REGISTERED_OFFICE,
   domain: "genzonline.in",
   websiteUrl: "https://genzonline.in",
@@ -78,8 +85,8 @@ export const COMPANY: CompanyDetails = {
   instagramHandle: "@genzonline4u",
   instagramUrl: "https://www.instagram.com/genzonline4u",
   grievanceOfficer: {
-    name: "[Grievance Officer full name]",
-    designation: "Grievance Officer",
+    name: "Vishal Alavadutha",
+    designation: "Grievance Officer & Director",
     // Until a dedicated grievance mailbox/number exists, complaints are routed
     // to the official support channels, which are monitored.
     email: SUPPORT_EMAIL,
@@ -142,22 +149,7 @@ export function formatAddress(address: PostalAddress): string {
  * must supply these real values; the spec fails if a placeholder is added
  * without being listed here (or if a filled field is left in the list).
  */
-export const COMPANY_DETAILS_PENDING: string[] = [
-  "legalEntityName",
-  "registrationNumber",
-  "gstin",
-  "registeredOffice.line1",
-  "registeredOffice.line2",
-  "registeredOffice.city",
-  "registeredOffice.state",
-  "registeredOffice.pincode",
-  "grievanceOfficer.name",
-  "grievanceOfficer.address.line1",
-  "grievanceOfficer.address.line2",
-  "grievanceOfficer.address.city",
-  "grievanceOfficer.address.state",
-  "grievanceOfficer.address.pincode",
-];
+export const COMPANY_DETAILS_PENDING: string[] = [];
 
 /** True while any legally required company detail is still a placeholder. */
 export const HAS_PENDING_COMPANY_DETAILS = COMPANY_DETAILS_PENDING.length > 0;
