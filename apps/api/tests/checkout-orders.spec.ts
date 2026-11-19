@@ -8,6 +8,9 @@ vi.mock("../src/integrations/supabase", () => ({
   getSupabaseClient: () => mockClient,
   getSupabaseAdminClient: () => mockClient,
 }));
+vi.mock("@genz/database/admin", () => ({
+  createAdminClient: () => mockClient,
+}));
 
 import { buildApp } from "../src/app";
 

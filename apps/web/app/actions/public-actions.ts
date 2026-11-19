@@ -1,6 +1,5 @@
 "use server";
 
-import { createClient } from "@genz/database";
 import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
 import { contactSchema, waitlistSchema, newsletterSchema } from "@genz/validation";
 import { apiClient } from "@genz/api-client";
@@ -10,7 +9,7 @@ export async function submitWaitlist(formData: {
   email: string;
   city?: string;
   phone?: string;
-  role: "Buyer" | "Manufacturer / Artisan" | "Curator" | "Investor / Partner";
+  role: string;
 }) {
   const rateLimit = await checkRateLimit({
     endpointType: "public",

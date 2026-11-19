@@ -7,6 +7,9 @@ vi.mock("../src/integrations/supabase", () => ({
   getSupabaseClient: () => mockClient,
   getSupabaseAdminClient: () => mockClient,
 }));
+vi.mock("@genz/database/admin", () => ({
+  createAdminClient: () => mockClient,
+}));
 
 import { buildApp } from "../src/app";
 
@@ -102,4 +105,3 @@ describe("Customers Profile & Addresses API", () => {
     expect(json.error.code).toBe("VALIDATION_ERROR");
   });
 });
-
