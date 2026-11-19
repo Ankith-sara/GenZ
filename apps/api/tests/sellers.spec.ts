@@ -7,6 +7,9 @@ vi.mock("../src/integrations/supabase", () => ({
   getSupabaseClient: () => mockClient,
   getSupabaseAdminClient: () => mockClient,
 }));
+vi.mock("@genz/database/admin", () => ({
+  createAdminClient: () => mockClient,
+}));
 
 import { buildApp } from "../src/app";
 
@@ -186,4 +189,3 @@ describe("Sellers Fastify API Endpoints", () => {
     expect(Array.isArray(json.data.orders)).toBe(true);
   });
 });
-

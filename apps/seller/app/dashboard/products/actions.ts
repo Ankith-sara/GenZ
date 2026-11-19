@@ -508,19 +508,18 @@ export async function setProductStatus(productId: string, status: ProductStatus)
 
   try {
     const client = await getAuthenticatedSellerApiClient();
-    await client.sellers.setProductStatus(productId, status as "draft" | "published" | "archived");
-  } catch {
-    const supabase = await createClient();
-    const { error } = await supabase
-      .from("products")
-      .update({ status })
-      .eq("id", productId)
-      .eq("seller_id", session.userId);
-
-    if (error) {
-      console.error("Set product status error:", error);
-      return { error: "Failed to update product status." };
-    }
+    await client.sellers.setProductStatus(
+      productId,
+      status as "draft" | "published" | "archived"
+    );
+  } catch (err: unknown) {
+    console.error("Set product status API error:", err);
+    return {
+      error:
+        err instanceof Error
+          ? err.message
+          : "Failed to update product status via backend API.",
+    };
   }
 
   await logRateLimitAttempt({
@@ -561,25 +560,11 @@ export async function quickUpdateProduct(
     await client.sellers.quickUpdateProduct(productId, {
       price_inr: data.price_inr ?? undefined,
     });
-  } catch {
-    const supabase = await createClient();
-    const { error } = await supabase
-      .from("products")
-      .update({
-        name: data.name,
-        category: data.category ?? undefined,
-        price_inr: data.price_inr,
-        status: (data.status as ProductStatus) ?? undefined,
-        description: data.description,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", productId)
-      .eq("seller_id", session.userId);
-
-    if (error) {
-      console.error("Seller quick update error:", error);
-      throw new Error(error.message || "Failed to update product");
-    }
+  } catch (err: unknown) {
+    console.error("Seller quick update API error:", err);
+    throw new Error(
+      err instanceof Error ? err.message : "Failed to update product via backend API."
+    );
   }
 
   revalidatePath(`/dashboard/products/${productId}`);
@@ -707,36 +692,14 @@ export async function addVariant(
         variant_value: validation.data.variant_value,
       },
     });
-  } catch {
-    const supabase = await createClient();
-
-    // Verify product ownership
-    const { data: product } = await supabase
-      .from("products")
-      .select("id, seller_id")
-      .eq("id", productId)
-      .maybeSingle();
-
-    if (
-      !product ||
-      (product.seller_id !== session.userId && session.profile?.role !== "admin")
-    ) {
-      return { error: "Permission denied: Product not found or unauthorized." };
-    }
-
-    const { error } = await supabase.from("product_variants").insert({
-      product_id: productId,
-      seller_id: session.userId,
-      variant_name: validation.data.variant_name,
-      variant_value: validation.data.variant_value,
-      price_inr: validation.data.price_inr ?? null,
-      stock_qty: validation.data.stock_qty ?? null,
-    });
-
-    if (error) {
-      console.error("Add variant DB error:", error);
-      return { error: "Could not add the variant. Please try again." };
-    }
+  } catch (err: unknown) {
+    console.error("Add variant API error:", err);
+    return {
+      error:
+        err instanceof Error
+          ? err.message
+          : "Could not add the variant via backend API.",
+    };
   }
 
   await logRateLimitAttempt({
@@ -763,13 +726,14 @@ export async function deleteVariant(productId: string, variantId: string) {
   try {
     const client = await getAuthenticatedSellerApiClient();
     await client.sellers.deleteVariant(productId, variantId);
-  } catch {
-    const supabase = await createClient();
-    await supabase
-      .from("product_variants")
-      .delete()
-      .eq("id", variantId)
-      .eq("seller_id", session.userId);
+  } catch (err: unknown) {
+    console.error("Delete variant API error:", err);
+    return {
+      error:
+        err instanceof Error
+          ? err.message
+          : "Failed to delete variant via backend API.",
+    };
   }
 
   await logRateLimitAttempt({

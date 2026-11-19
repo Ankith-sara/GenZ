@@ -62,8 +62,8 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
           role = profile.role;
         }
       } catch {
-        // Fallback to user_metadata or default buyer
-        role = (user.user_metadata?.role as string) || "buyer";
+        // Safe default: untrusted users always receive buyer role
+        role = "buyer";
       }
 
       const authenticatedUser: AuthenticatedUser = {
@@ -113,7 +113,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
               .maybeSingle();
             if (profile?.role) role = profile.role;
           } catch {
-            role = (user.user_metadata?.role as string) || "buyer";
+            role = "buyer";
           }
 
           request.user = {
@@ -149,4 +149,3 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 export default fp(authPlugin, {
   name: "auth-plugin",
 });
-

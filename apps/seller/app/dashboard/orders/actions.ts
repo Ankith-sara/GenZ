@@ -1,7 +1,6 @@
 "use server";
 
 import { requireRole } from "@genz/database/authorization";
-import { OrdersService } from "@genz/services/orders";
 import { withRateLimit } from "@genz/utils/rate-limiter";
 import type { OrderStatus, OrderRecord } from "@genz/types";
 import { revalidatePath } from "next/cache";
@@ -36,24 +35,15 @@ export async function updateOrderStatusAction(
           revalidatePath("/dashboard");
         }
         return res;
-      } catch {
-        // Robust fallback to domain service
-        const res = await OrdersService.transitionStatus({
-          orderId,
-          newStatus: status,
-          actorUserId: session.userId,
-          actorRole: "seller",
-          carrier,
-          trackingNumber,
-          note,
-        });
-
-        if (res.success) {
-          revalidatePath("/dashboard/orders");
-          revalidatePath("/dashboard");
-        }
-
-        return res;
+      } catch (err: unknown) {
+        console.error("[updateOrderStatusAction] Fastify API error:", err);
+        return {
+          success: false,
+          error:
+            err instanceof Error
+              ? err.message
+              : "Failed to update order status via backend API.",
+        };
       }
     }
   );

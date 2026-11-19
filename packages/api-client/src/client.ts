@@ -48,12 +48,23 @@ export class GenZApiClient {
   private extraHeaders: Record<string, string> = {};
 
   constructor(config: ApiClientConfig = {}) {
-    this.baseUrl = (
-      config.baseUrl ||
-      (typeof process !== "undefined"
-        ? process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || "http://localhost:4000"
-        : "http://localhost:4000")
-    ).replace(/\/+$/, "");
+    const envUrl =
+      typeof process !== "undefined"
+        ? process.env.NEXT_PUBLIC_API_URL ||
+          process.env.API_URL ||
+          process.env.API_INTERNAL_URL
+        : undefined;
+
+    let resolved = config.baseUrl || envUrl;
+    if (!resolved) {
+      if (typeof process !== "undefined" && process.env.NODE_ENV === "production") {
+        throw new Error(
+          "[GenZApiClient] NEXT_PUBLIC_API_URL or API_URL must be configured in production."
+        );
+      }
+      resolved = "http://localhost:4000";
+    }
+    this.baseUrl = resolved.replace(/\/+$/, "");
 
     this.token = config.token || null;
     this.extraHeaders = config.headers || {};
@@ -68,10 +79,7 @@ export class GenZApiClient {
     });
   }
 
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
     const headers = new Headers(options.headers || {});
 
@@ -202,14 +210,23 @@ export class GenZApiClient {
   // -------------------------------------------------------------
   customers = {
     getProfile: async () => {
-      const res = await this.request<{ profile: CustomerProfileData }>("/v1/customers/profile");
+      const res = await this.request<{ profile: CustomerProfileData }>(
+        "/v1/customers/profile"
+      );
       return res.profile;
     },
-    updateProfile: async (updates: { fullName?: string; phone?: string; city?: string }) => {
-      const res = await this.request<{ profile: CustomerProfileData }>("/v1/customers/profile", {
-        method: "PATCH",
-        body: JSON.stringify(updates),
-      });
+    updateProfile: async (updates: {
+      fullName?: string;
+      phone?: string;
+      city?: string;
+    }) => {
+      const res = await this.request<{ profile: CustomerProfileData }>(
+        "/v1/customers/profile",
+        {
+          method: "PATCH",
+          body: JSON.stringify(updates),
+        }
+      );
       return res.profile;
     },
     uploadAvatar: async (formData: FormData) => {
@@ -219,14 +236,19 @@ export class GenZApiClient {
       });
     },
     listAddresses: async () => {
-      const res = await this.request<{ addresses: ShippingAddress[] }>("/v1/customers/addresses");
+      const res = await this.request<{ addresses: ShippingAddress[] }>(
+        "/v1/customers/addresses"
+      );
       return res.addresses;
     },
     addAddress: async (address: Omit<ShippingAddress, "id"> & { id?: string }) => {
-      const res = await this.request<{ addresses: ShippingAddress[] }>("/v1/customers/addresses", {
-        method: "POST",
-        body: JSON.stringify(address),
-      });
+      const res = await this.request<{ addresses: ShippingAddress[] }>(
+        "/v1/customers/addresses",
+        {
+          method: "POST",
+          body: JSON.stringify(address),
+        }
+      );
       return res.addresses;
     },
     updateAddress: async (addressId: string, updates: Partial<ShippingAddress>) => {
@@ -263,19 +285,23 @@ export class GenZApiClient {
   // 4. Catalog, Categories & Search
   // -------------------------------------------------------------
   catalog = {
-    listProducts: async (params: {
-      q?: string;
-      category?: string;
-      minPrice?: number;
-      maxPrice?: number;
-      page?: number;
-      limit?: number;
-    } = {}) => {
+    listProducts: async (
+      params: {
+        q?: string;
+        category?: string;
+        minPrice?: number;
+        maxPrice?: number;
+        page?: number;
+        limit?: number;
+      } = {}
+    ) => {
       const searchParams = new URLSearchParams();
       if (params.q) searchParams.set("q", params.q);
       if (params.category) searchParams.set("category", params.category);
-      if (params.minPrice !== undefined) searchParams.set("minPrice", String(params.minPrice));
-      if (params.maxPrice !== undefined) searchParams.set("maxPrice", String(params.maxPrice));
+      if (params.minPrice !== undefined)
+        searchParams.set("minPrice", String(params.minPrice));
+      if (params.maxPrice !== undefined)
+        searchParams.set("maxPrice", String(params.maxPrice));
       if (params.page !== undefined) searchParams.set("page", String(params.page));
       if (params.limit !== undefined) searchParams.set("limit", String(params.limit));
 
@@ -330,7 +356,9 @@ export class GenZApiClient {
   // 5. Cart & Validation
   // -------------------------------------------------------------
   cart = {
-    validate: async (items: Array<{ productId: string; variantId?: string; quantity: number }>) => {
+    validate: async (
+      items: Array<{ productId: string; variantId?: string; quantity: number }>
+    ) => {
       return this.request<CartValidationResult>("/v1/cart/validate", {
         method: "POST",
         body: JSON.stringify({ items }),
@@ -357,10 +385,13 @@ export class GenZApiClient {
       razorpayPaymentId: string;
       razorpaySignature: string;
     }) => {
-      return this.request<{ verified: boolean; reason?: string }>("/v1/payments/razorpay/verify", {
-        method: "POST",
-        body: JSON.stringify(params),
-      });
+      return this.request<{ verified: boolean; reason?: string }>(
+        "/v1/payments/razorpay/verify",
+        {
+          method: "POST",
+          body: JSON.stringify(params),
+        }
+      );
     },
   };
 
@@ -373,7 +404,12 @@ export class GenZApiClient {
       shippingAddress: ShippingAddress;
       guestEmail?: string;
       payment:
-        | { method: "razorpay"; razorpayOrderId: string; razorpayPaymentId: string; razorpaySignature: string }
+        | {
+            method: "razorpay";
+            razorpayOrderId: string;
+            razorpayPaymentId: string;
+            razorpaySignature: string;
+          }
         | { method: "upi_qr"; utr: string; payerAccount?: string }
         | { method: "cod" };
       notes?: string;
@@ -395,7 +431,9 @@ export class GenZApiClient {
       return res.orders;
     },
     getDetails: async (orderId: string) => {
-      return this.request<CustomerOrderView>(`/v1/orders/${encodeURIComponent(orderId)}`);
+      return this.request<CustomerOrderView>(
+        `/v1/orders/${encodeURIComponent(orderId)}`
+      );
     },
     cancel: async (orderId: string, reason?: string) => {
       return this.request<{ message: string; order: OrderRecord; refund?: any }>(
@@ -419,7 +457,9 @@ export class GenZApiClient {
 
   shipping = {
     getCarriers: async () => {
-      const res = await this.request<{ carriers: CarrierInfo[] }>("/v1/shipping/carriers");
+      const res = await this.request<{ carriers: CarrierInfo[] }>(
+        "/v1/shipping/carriers"
+      );
       return res.carriers;
     },
     track: async (carrier: string, trackingNumber: string) => {
@@ -432,7 +472,12 @@ export class GenZApiClient {
   // 9. Support & Engagement
   // -------------------------------------------------------------
   support = {
-    contact: async (input: { name: string; email: string; reason: string; message: string }) => {
+    contact: async (input: {
+      name: string;
+      email: string;
+      reason: string;
+      message: string;
+    }) => {
       return this.request<{ message: string }>("/v1/support/contact", {
         method: "POST",
         body: JSON.stringify(input),
@@ -444,13 +489,23 @@ export class GenZApiClient {
         body: JSON.stringify({ email }),
       });
     },
-    waitlist: async (input: { name: string; email: string; role: string; city?: string; phone?: string }) => {
+    waitlist: async (input: {
+      name: string;
+      email: string;
+      role: string;
+      city?: string;
+      phone?: string;
+    }) => {
       return this.request<{ message: string }>("/v1/support/waitlist", {
         method: "POST",
         body: JSON.stringify(input),
       });
     },
-    trackPageView: async (input: { path: string; referrer?: string; user_agent?: string }) => {
+    trackPageView: async (input: {
+      path: string;
+      referrer?: string;
+      user_agent?: string;
+    }) => {
       return this.request<{ ok: boolean }>("/v1/support/analytics/track", {
         method: "POST",
         body: JSON.stringify(input),
@@ -476,15 +531,21 @@ export class GenZApiClient {
       return this.request<SellerProfileResponse>("/v1/sellers/me/profile");
     },
     updateProfile: async (payload: UpdateSellerProfilePayload) => {
-      return this.request<{ success: boolean; message: string }>("/v1/sellers/me/profile", {
-        method: "PUT",
-        body: JSON.stringify(payload),
-      });
+      return this.request<{ success: boolean; message: string }>(
+        "/v1/sellers/me/profile",
+        {
+          method: "PUT",
+          body: JSON.stringify(payload),
+        }
+      );
     },
     submitForVerification: async () => {
-      return this.request<{ success: boolean; status: string }>("/v1/sellers/me/verify", {
-        method: "POST",
-      });
+      return this.request<{ success: boolean; status: string }>(
+        "/v1/sellers/me/verify",
+        {
+          method: "POST",
+        }
+      );
     },
     updateStudio: async (payload: UpdateStudioPayload) => {
       return this.request<{ success: boolean; studio: Record<string, unknown> }>(
@@ -529,13 +590,15 @@ export class GenZApiClient {
         { method: "DELETE" }
       );
     },
-    listProducts: async (params: {
-      status?: "draft" | "published" | "archived" | "all";
-      search?: string;
-      category?: string;
-      limit?: number;
-      offset?: number;
-    } = {}) => {
+    listProducts: async (
+      params: {
+        status?: "draft" | "published" | "archived" | "all";
+        search?: string;
+        category?: string;
+        limit?: number;
+        offset?: number;
+      } = {}
+    ) => {
       const query = new URLSearchParams();
       if (params.status) query.set("status", params.status);
       if (params.search) query.set("search", params.search);
@@ -543,7 +606,9 @@ export class GenZApiClient {
       if (params.limit !== undefined) query.set("limit", String(params.limit));
       if (params.offset !== undefined) query.set("offset", String(params.offset));
       const qs = query.toString();
-      return this.request<SellerProductsResponse>(`/v1/sellers/me/products${qs ? `?${qs}` : ""}`);
+      return this.request<SellerProductsResponse>(
+        `/v1/sellers/me/products${qs ? `?${qs}` : ""}`
+      );
     },
     getProduct: async (productId: string) => {
       const res = await this.request<{ product: Product }>(
@@ -580,7 +645,10 @@ export class GenZApiClient {
         }
       );
     },
-    quickUpdateProduct: async (productId: string, payload: QuickUpdateProductPayload) => {
+    quickUpdateProduct: async (
+      productId: string,
+      payload: QuickUpdateProductPayload
+    ) => {
       const res = await this.request<{ product: Product }>(
         `/v1/sellers/me/products/${encodeURIComponent(productId)}/quick-update`,
         {
@@ -612,19 +680,24 @@ export class GenZApiClient {
         { method: "DELETE" }
       );
     },
-    listOrders: async (params: {
-      status?: "placed" | "processing" | "shipped" | "delivered" | "cancelled" | "all";
-      search?: string;
-      limit?: number;
-      offset?: number;
-    } = {}) => {
+    listOrders: async (
+      params: {
+        status?:
+          "placed" | "processing" | "shipped" | "delivered" | "cancelled" | "all";
+        search?: string;
+        limit?: number;
+        offset?: number;
+      } = {}
+    ) => {
       const query = new URLSearchParams();
       if (params.status) query.set("status", params.status);
       if (params.search) query.set("search", params.search);
       if (params.limit !== undefined) query.set("limit", String(params.limit));
       if (params.offset !== undefined) query.set("offset", String(params.offset));
       const qs = query.toString();
-      return this.request<SellerOrdersResponse>(`/v1/sellers/me/orders${qs ? `?${qs}` : ""}`);
+      return this.request<SellerOrdersResponse>(
+        `/v1/sellers/me/orders${qs ? `?${qs}` : ""}`
+      );
     },
     getOrder: async (orderId: string) => {
       const res = await this.request<{ order: OrderRecord }>(
@@ -633,13 +706,14 @@ export class GenZApiClient {
       return res.order;
     },
     updateOrderStatus: async (orderId: string, payload: UpdateOrderStatusPayload) => {
-      return this.request<{ success: boolean; error?: string; order?: OrderRecord | null }>(
-        `/v1/sellers/me/orders/${encodeURIComponent(orderId)}/status`,
-        {
-          method: "PATCH",
-          body: JSON.stringify(payload),
-        }
-      );
+      return this.request<{
+        success: boolean;
+        error?: string;
+        order?: OrderRecord | null;
+      }>(`/v1/sellers/me/orders/${encodeURIComponent(orderId)}/status`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      });
     },
     listReels: async (productId?: string) => {
       const qs = productId ? `?product_id=${encodeURIComponent(productId)}` : "";
@@ -657,4 +731,3 @@ export class GenZApiClient {
 }
 
 export const apiClient = new GenZApiClient();
-

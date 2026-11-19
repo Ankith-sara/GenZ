@@ -43,7 +43,7 @@ export async function uploadAvatarAction(
         return { error: validation.error || "Invalid image file." };
       }
 
-      // 2. Try centralized Fastify API first
+      // 2. Centralized Fastify API
       try {
         const client = await getAuthenticatedApiClient();
         const apiRes = await client.customers.uploadAvatar(formData);
@@ -51,54 +51,14 @@ export async function uploadAvatarAction(
         revalidatePath("/seller/dashboard");
         return { success: true, url: apiRes.avatarUrl };
       } catch (apiErr: unknown) {
-        console.warn("[UploadAvatarAction] Fastify API notice, using local storage fallback:", apiErr);
-      }
-
-      // 3. Resilient storage fallback
-      let supabase;
-      try {
-        supabase = createAdminClient();
-      } catch (err: unknown) {
-        console.error(
-          "[CONFIG_ERROR] [uploadAvatarAction] Admin client init failed:",
-          err
-        );
+        console.error("[UploadAvatarAction] Fastify API error:", apiErr);
         return {
           error:
-            "Server misconfiguration: admin credentials are not set up. Contact an engineer.",
+            apiErr instanceof Error
+              ? apiErr.message
+              : "Failed to upload avatar via backend API.",
         };
       }
-
-      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      const path = `${user.id}/avatar-${Date.now()}-${safeName}`;
-
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(path, buffer, { contentType: file.type, upsert: false });
-
-      if (uploadError) {
-        console.error("[uploadAvatarAction] Storage upload error:", uploadError);
-        return { error: uploadError.message || "Failed to upload avatar." };
-      }
-
-      const publicUrl = supabase.storage.from("avatars").getPublicUrl(path)
-        .data.publicUrl;
-
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ avatar_url: publicUrl })
-        .eq("id", user.id);
-
-      if (updateError) {
-        console.error("[uploadAvatarAction] DB update error:", updateError);
-        await supabase.storage.from("avatars").remove([path]);
-        return { error: "Failed to update profile avatar URL." };
-      }
-
-      revalidatePath("/profile");
-      revalidatePath("/seller/dashboard");
-      return { success: true, url: publicUrl };
     }
   );
 }

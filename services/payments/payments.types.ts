@@ -14,6 +14,7 @@ export interface CreatePaymentOrderResult {
   amountInPaise: number;
   currency: string;
   isSimulated?: boolean;
+  error?: string;
 }
 
 export interface VerifySignatureInput {

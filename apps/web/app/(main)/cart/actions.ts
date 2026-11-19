@@ -2,8 +2,6 @@
 
 import { getUserAndProfile } from "@genz/database/auth";
 import { withRateLimit } from "@genz/utils/rate-limiter";
-import { CheckoutService } from "@genz/services/checkout";
-import { PaymentsService } from "@genz/services/payments";
 import { placeOrderSchema, type PlaceOrderInput } from "@genz/validation";
 import type { OrderRecord } from "@genz/types";
 import { getAuthenticatedApiClient } from "@/lib/api-server-client";
@@ -19,9 +17,11 @@ export interface PlaceOrderResult {
  * signed-in buyers are rate limited per user, guests per IP.
  *
  * Consumes the centralized Fastify API (/v1/checkout/orders) with server-side price
- * recalculation and gateway verification.
+ * recalculation and gateway verification. No local fallback.
  */
-export async function placeOrderAction(input: PlaceOrderInput): Promise<PlaceOrderResult> {
+export async function placeOrderAction(
+  input: PlaceOrderInput
+): Promise<PlaceOrderResult> {
   const session = await getUserAndProfile();
 
   const result = await withRateLimit(
@@ -50,7 +50,6 @@ export async function placeOrderAction(input: PlaceOrderInput): Promise<PlaceOrd
         };
       }
 
-      // 1. Try centralized Fastify API first
       try {
         const client = await getAuthenticatedApiClient();
         const apiOrder = await client.checkout.createOrder({
@@ -69,58 +68,13 @@ export async function placeOrderAction(input: PlaceOrderInput): Promise<PlaceOrd
           order: apiOrder,
         };
       } catch (apiErr: unknown) {
-        console.warn("[PlaceOrderAction] Fastify API call notice, falling back to local domain handler:", apiErr);
-      }
-
-      // 2. Resilient fallback to domain services layer
-      let paymentStatus: "pending" | "paid" = "pending";
-      let paymentGatewayId: string | null = null;
-      let notes: string;
-
-      if (data.payment.method === "razorpay") {
-        const verification = PaymentsService.verifyRazorpaySignature({
-          orderId: data.payment.razorpayOrderId,
-          paymentId: data.payment.razorpayPaymentId,
-          signature: data.payment.razorpaySignature,
-        });
-        if (!verification.verified) {
-          console.error(
-            "[PlaceOrder] Razorpay signature verification failed:",
-            verification.reason
-          );
-          return {
-            success: false,
-            error:
-              "We could not verify your payment. If money was debited, contact support with your Razorpay payment id.",
-          };
-        }
-        paymentStatus = "paid";
-        paymentGatewayId = data.payment.razorpayPaymentId;
-        notes = `Razorpay Payment ID: ${data.payment.razorpayPaymentId} | Gateway Order: ${data.payment.razorpayOrderId}`;
-      } else {
-        notes = `PhonePe UPI QR | UTR: ${data.payment.utr}${
-          data.payment.payerAccount ? ` | Payer: ${data.payment.payerAccount}` : ""
-        }`;
-      }
-
-      try {
-        return await CheckoutService.processCheckout({
-          customerId: session?.userId ?? null,
-          customerName: data.shippingAddress.recipientName,
-          customerEmail,
-          customerPhone: data.shippingAddress.phone,
-          shippingAddress: data.shippingAddress,
-          paymentMethod: data.payment.method,
-          paymentStatus,
-          paymentGatewayId,
-          items: data.items,
-          notes,
-        });
-      } catch (err: unknown) {
-        console.error("[PlaceOrder] Error:", err);
+        console.error("[PlaceOrderAction] Fastify API error:", apiErr);
         return {
           success: false,
-          error: err instanceof Error ? err.message : "Failed to place order",
+          error:
+            apiErr instanceof Error
+              ? apiErr.message
+              : "Failed to place order through backend API.",
         };
       }
     }

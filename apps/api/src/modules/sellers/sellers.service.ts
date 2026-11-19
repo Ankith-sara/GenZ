@@ -1,7 +1,7 @@
 import { getSupabaseAdminClient } from "../../integrations/supabase";
 import { NotFoundError, ForbiddenError, ValidationError } from "../../common/errors";
 import { OrdersService } from "@genz/services/orders";
-import type { OrderStatus } from "@genz/types";
+import type { OrderStatus, OrderItem } from "@genz/types";
 import type {
   UpdateSellerProfileInput,
   UpdateStudioInput,
@@ -15,14 +15,6 @@ import type {
   SellerProductsQuery,
   SellerOrdersQuery,
 } from "./sellers.schemas";
-
-interface OrderLineItemLike {
-  sellerId?: string;
-  seller_id?: string;
-  price?: number;
-  quantity?: number;
-  [key: string]: unknown;
-}
 
 // Curated artisan profiles for master craft clusters
 const POLUMURI_NAGESWARA_RAO_PROFILE = {
@@ -216,10 +208,10 @@ export class SellersService {
     const rawList = Array.isArray(sellerOrdersRaw) ? sellerOrdersRaw : [];
     const scopedOrders = rawList.map((order) => {
       const sellerItems = (order.items || []).filter(
-        (item: OrderLineItemLike) => (item.sellerId || item.seller_id) === sellerId
+        (item: OrderItem) => (item.sellerId || item.seller_id) === sellerId
       );
       const sellerSubtotal = sellerItems.reduce(
-        (sum: number, item: OrderLineItemLike) =>
+        (sum: number, item: OrderItem) =>
           sum + (Number(item.price) || 0) * (Number(item.quantity) || 1),
         0
       );
@@ -842,10 +834,10 @@ export class SellersService {
     // Filter and scope line items
     let scoped = rawOrders.map((order) => {
       const sellerItems = (order.items || []).filter(
-        (item: OrderLineItemLike) => (item.sellerId || item.seller_id) === sellerId
+        (item: OrderItem) => (item.sellerId || item.seller_id) === sellerId
       );
       const sellerSubtotal = sellerItems.reduce(
-        (sum: number, item: OrderLineItemLike) =>
+        (sum: number, item: OrderItem) =>
           sum + (Number(item.price) || 0) * (Number(item.quantity) || 1),
         0
       );
@@ -900,7 +892,7 @@ export class SellersService {
     }
 
     const sellerItems = (order.items || []).filter(
-      (item: OrderLineItemLike) => (item.sellerId || item.seller_id) === sellerId
+      (item: OrderItem) => (item.sellerId || item.seller_id) === sellerId
     );
 
     if (userRole !== "admin" && sellerItems.length === 0) {
@@ -908,7 +900,7 @@ export class SellersService {
     }
 
     const sellerSubtotal = sellerItems.reduce(
-      (sum: number, item: OrderLineItemLike) =>
+      (sum: number, item: OrderItem) =>
         sum + (Number(item.price) || 0) * (Number(item.quantity) || 1),
       0
     );
