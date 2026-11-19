@@ -40,6 +40,19 @@ This file records decisions that materially affect architecture or product behav
 
 **Consequences:** Low-risk, zero-regression deployment path for mobile readiness. Existing plugin ecosystem remains fully tested and functional.
 
+## ADR-007 — Single Fastify Backend, Postgres Exclusivity, and Mobile Security (Phase 1)
+
+**Context:** Next.js Server Actions previously implemented resilient local database and JSON store fallback patterns when the Fastify API was unreachable. Checkout was prone to client price tampering, duplicate payment replay, and variant mismatch attacks. Local JSON files (`orders-store.json`) were tracking real order state.
+
+**Decision:**
+
+1. **Centralized Backend:** Direct database fallback calls in `apps/web` and `apps/seller` were eliminated; all client flows communicate exclusively with `@genz/api`.
+2. **Postgres Exclusivity:** Deleted `orders-store.json` and removed all filesystem fallback reads/writes. Orders and payments reside solely in PostgreSQL backed by migrations `0027_orders_uuid_and_sequence.sql` and `0028_payments_table.sql`.
+3. **Mobile-Ready Checkout Security:** The Fastify API performs authoritative database price recalculations on every checkout and order creation. The gateway payment amount is validated against authoritative cart totals before order placement. Payment rows are claimed once to prevent reuse. Webhook handlers for `payment.captured` and `order.paid` are fully idempotent.
+4. **Authoritative Roles:** Authentication plugins resolve user roles directly from the PostgreSQL `profiles` table; client-modifiable `user_metadata` is never used for role authorization.
+
+**Consequences:** The Fastify API is now a hardened, standalone, mobile-ready backend capable of serving web, seller, and future iOS/Android native clients with unified consistency.
+
 ## How to add a decision
 
 Use:
