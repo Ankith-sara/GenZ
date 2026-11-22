@@ -102,11 +102,28 @@ export class CartService {
         continue;
       }
 
-      // Check for variant price override
+      // Check for variant price override and cross-product variant binding attack
       let authoritativePrice = dbProduct.price_inr;
       if (item.variantId) {
         const variant = variantMap.get(item.variantId);
-        if (variant && variant.price_inr && variant.price_inr > 0) {
+        if (!variant || variant.product_id !== dbProduct.id) {
+          allValid = false;
+          validatedItems.push({
+            productId: dbProduct.id,
+            variantId: item.variantId,
+            name: dbProduct.name,
+            category: dbProduct.category,
+            sellerId: dbProduct.seller_id,
+            price: dbProduct.price_inr,
+            quantity: item.quantity,
+            lineTotal: 0,
+            available: false,
+            unavailabilityReason: "Requested variant does not belong to this product",
+          });
+          continue;
+        }
+
+        if (variant.price_inr && variant.price_inr > 0) {
           authoritativePrice = variant.price_inr;
         }
       }

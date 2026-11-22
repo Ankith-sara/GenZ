@@ -1,8 +1,7 @@
 "use server";
 
-import { createClient } from "@genz/database/server";
 import { checkRateLimit, logRateLimitAttempt } from "@genz/utils/rate-limiter";
-import { waitlistSchema, contactSchema, newsletterSchema } from "@genz/validation";
+import { contactSchema, waitlistSchema, newsletterSchema } from "@genz/validation";
 import { apiClient } from "@genz/api-client";
 
 export async function submitWaitlist(formData: {
@@ -27,7 +26,7 @@ export async function submitWaitlist(formData: {
 
   const { name, email, city, phone, role } = validation.data;
 
-  // 1. Try centralized Fastify API
+  // Centralized Fastify API
   try {
     await apiClient.support.waitlist({
       name,
@@ -44,30 +43,14 @@ export async function submitWaitlist(formData: {
 
     return { success: true };
   } catch (apiErr: unknown) {
-    console.warn("[SubmitWaitlist] Fastify API notice, using local DB fallback:", apiErr);
+    console.error("[SubmitWaitlist] Fastify API error:", apiErr);
+    return {
+      error:
+        apiErr instanceof Error
+          ? apiErr.message
+          : "Failed to reserve your spot via backend API.",
+    };
   }
-
-  // 2. Resilient local DB fallback
-  const supabase = await createClient();
-  const { error } = await supabase.from("waitlist").insert({
-    name,
-    email,
-    city: city || null,
-    phone: phone || null,
-    role,
-  });
-
-  await logRateLimitAttempt({
-    endpointType: "public",
-    actionName: "submit_waitlist",
-  });
-
-  if (error) {
-    console.error("Waitlist DB insertion error:", error);
-    return { error: "Failed to reserve your spot. Please try again." };
-  }
-
-  return { success: true };
 }
 
 export async function submitContactMessage(formData: {
@@ -91,7 +74,7 @@ export async function submitContactMessage(formData: {
 
   const { name, email, reason, message } = validation.data;
 
-  // 1. Try centralized Fastify API
+  // Centralized Fastify API
   try {
     await apiClient.support.contact({
       name,
@@ -107,29 +90,14 @@ export async function submitContactMessage(formData: {
 
     return { success: true };
   } catch (apiErr: unknown) {
-    console.warn("[SubmitContactMessage] Fastify API notice, using local DB fallback:", apiErr);
+    console.error("[SubmitContactMessage] Fastify API error:", apiErr);
+    return {
+      error:
+        apiErr instanceof Error
+          ? apiErr.message
+          : "Failed to send your message via backend API.",
+    };
   }
-
-  // 2. Resilient local DB fallback
-  const supabase = await createClient();
-  const { error } = await supabase.from("contact_messages").insert({
-    name,
-    email,
-    reason,
-    message,
-  });
-
-  await logRateLimitAttempt({
-    endpointType: "public",
-    actionName: "submit_contact",
-  });
-
-  if (error) {
-    console.error("Contact message DB insertion error:", error);
-    return { error: "Failed to send your message. Please try again." };
-  }
-
-  return { success: true };
 }
 
 export async function subscribeNewsletter(email: string) {
@@ -148,7 +116,7 @@ export async function subscribeNewsletter(email: string) {
 
   const trimmedEmail = validation.data.email;
 
-  // 1. Try centralized Fastify API
+  // Centralized Fastify API
   try {
     await apiClient.support.newsletter(trimmedEmail);
 
@@ -159,38 +127,12 @@ export async function subscribeNewsletter(email: string) {
 
     return { success: true };
   } catch (apiErr: unknown) {
-    console.warn("[SubscribeNewsletter] Fastify API notice, using local DB fallback:", apiErr);
+    console.error("[SubscribeNewsletter] Fastify API error:", apiErr);
+    return {
+      error:
+        apiErr instanceof Error
+          ? apiErr.message
+          : "Failed to subscribe to newsletter via backend API.",
+    };
   }
-
-  // 2. Resilient local DB fallback
-  const supabase = await createClient();
-
-  let { error } = await supabase.from("newsletter_subscribers").insert({
-    email: trimmedEmail,
-  });
-
-  if (error && (error.code === "42P01" || error.code === "PGRST205")) {
-    const { error: fallbackError } = await supabase.from("waitlist").insert({
-      name: "Newsletter Subscriber",
-      email: trimmedEmail,
-      city: null,
-      phone: null,
-      role: "newsletter",
-    });
-    error = fallbackError;
-  }
-
-  await logRateLimitAttempt({
-    endpointType: "public",
-    actionName: "subscribe_newsletter",
-  });
-
-  if (error) {
-    if (error.code === "23505" || error.code === "PGRST205" || error.code === "42P01") {
-      return { success: true };
-    }
-    return { error: "Something went wrong. Please try again later." };
-  }
-
-  return { success: true };
 }

@@ -49,9 +49,17 @@ export class RateLimitError extends AppError {
   }
 }
 
+export class PricingMismatchError extends AppError {
+  constructor(
+    message = "Pricing mismatch between client and server",
+    details?: unknown
+  ) {
+    super(400, "PRICING_MISMATCH", message, details);
+  }
+}
+
 export class InternalServerError extends AppError {
   constructor(message = "An unexpected server error occurred") {
     super(500, "INTERNAL_SERVER_ERROR", message);
   }
 }
-

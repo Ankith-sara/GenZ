@@ -33,7 +33,7 @@ export async function updateProfile(formData: {
     return { error: validation.error.issues[0].message };
   }
 
-  // 3. Try centralized Fastify API first
+  // 3. Centralized Fastify API
   try {
     const client = await getAuthenticatedApiClient();
     await client.customers.updateProfile({
@@ -41,36 +41,24 @@ export async function updateProfile(formData: {
       phone: validation.data.phone,
       city: validation.data.city,
     });
+
+    await logRateLimitAttempt({
+      endpointType: "user",
+      actionName: "update_profile",
+      identifier: user.id,
+    });
+
     revalidatePath("/profile");
     return { success: true };
   } catch (apiErr: unknown) {
-    console.warn("[UpdateProfile] Fastify API notice, using local database fallback:", apiErr);
+    console.error("[UpdateProfile] Fastify API error:", apiErr);
+    return {
+      error:
+        apiErr instanceof Error
+          ? apiErr.message
+          : "Failed to update profile via backend API.",
+    };
   }
-
-  // 4. Local fallback
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      full_name: validation.data.fullName,
-      phone: validation.data.phone,
-      city: validation.data.city,
-    })
-    .eq("id", user.id);
-
-  // Log rate attempt
-  await logRateLimitAttempt({
-    endpointType: "user",
-    actionName: "update_profile",
-    identifier: user.id,
-  });
-
-  if (error) {
-    console.error("Update profile DB error:", error);
-    return { error: "Failed to update profile. Please try again." };
-  }
-
-  revalidatePath("/profile");
-  return { success: true };
 }
 
 interface Address {

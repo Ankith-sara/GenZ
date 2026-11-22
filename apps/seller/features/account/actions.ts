@@ -64,53 +64,17 @@ export async function saveSellerProfile(
   }
 
   try {
-    try {
-      const client = await getAuthenticatedSellerApiClient();
-      await client.sellers.updateProfile({
-        business_name: validation.data.business_name,
-        gst_number: validation.data.gst_number || "PENDING",
-        factory_address: validation.data.factory_address || null,
-        city: validation.data.city || null,
-        state: validation.data.state || null,
-        pincode: validation.data.pincode || null,
-        description: validation.data.description || null,
-        established_year: validation.data.established_year ?? null,
-      });
-    } catch {
-      // Direct database fallback
-      const adminSupabase = createAdminClient();
-      const { error: dbError } = await adminSupabase.from("seller_profiles").upsert(
-        {
-          id: session.userId,
-          business_name: validation.data.business_name,
-          gst_number: validation.data.gst_number || "PENDING",
-          factory_address: validation.data.factory_address || null,
-          city: validation.data.city || null,
-          state: validation.data.state || null,
-          pincode: validation.data.pincode || null,
-          description: validation.data.description || null,
-          established_year: validation.data.established_year ?? null,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "id" }
-      );
-
-      if (dbError) {
-        console.error("[saveSellerProfile] Database upsert error:", dbError);
-        return {
-          error: dbError.message || "Could not save your profile. Please try again.",
-        };
-      }
-
-      if (validation.data.business_name) {
-        await adminSupabase
-          .from("profiles")
-          .update({
-            full_name: validation.data.business_name,
-          })
-          .eq("id", session.userId);
-      }
-    }
+    const client = await getAuthenticatedSellerApiClient();
+    await client.sellers.updateProfile({
+      business_name: validation.data.business_name,
+      gst_number: validation.data.gst_number || "PENDING",
+      factory_address: validation.data.factory_address || null,
+      city: validation.data.city || null,
+      state: validation.data.state || null,
+      pincode: validation.data.pincode || null,
+      description: validation.data.description || null,
+      established_year: validation.data.established_year ?? null,
+    });
 
     await logRateLimitAttempt({
       endpointType: "user",
@@ -125,13 +89,13 @@ export async function saveSellerProfile(
     revalidatePath("/dashboard/onboarding");
 
     return { success: true };
-  } catch (err) {
-    console.error("[saveSellerProfile] Unexpected exception:", err);
+  } catch (err: unknown) {
+    console.error("[saveSellerProfile] API error:", err);
     return {
       error:
         err instanceof Error
           ? err.message
-          : "An unexpected error occurred while saving profile.",
+          : "An unexpected error occurred while saving profile via backend API.",
     };
   }
 }
@@ -150,21 +114,9 @@ export async function submitForVerification() {
   try {
     const client = await getAuthenticatedSellerApiClient();
     await client.sellers.submitForVerification();
-  } catch {
-    const adminSupabase = createAdminClient();
-    const { error } = await adminSupabase
-      .from("seller_profiles")
-      .update({
-        status: "pending",
-        submitted_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", session.userId);
-
-    if (error) {
-      console.error("Submit for verification DB error:", error);
-      return;
-    }
+  } catch (err: unknown) {
+    console.error("Submit for verification API error:", err);
+    return;
   }
 
   await logRateLimitAttempt({

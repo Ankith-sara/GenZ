@@ -77,25 +77,16 @@ export async function uploadDocumentAction(
           file_name: file.name,
           file_size: file.size,
         });
-        documentId = (docRes as any)?.id;
-      } catch {
-        const { data, error: insertError } = await supabase
-          .from("seller_documents")
-          .insert({
-            seller_id: session.userId,
-            doc_type: docType,
-            file_path: path,
-            file_name: file.name,
-          })
-          .select("id")
-          .single();
-
-        if (insertError) {
-          console.error("[uploadDocumentAction] DB insert error:", insertError);
-          await supabase.storage.from("seller-documents").remove([path]);
-          return { error: "Failed to record seller document in database." };
-        }
-        documentId = data.id;
+        documentId = (docRes as any)?.id || (docRes as any)?.document?.id;
+      } catch (err: unknown) {
+        console.error("[uploadDocumentAction] API error:", err);
+        await supabase.storage.from("seller-documents").remove([path]);
+        return {
+          error:
+            err instanceof Error
+              ? err.message
+              : "Failed to record seller document in database via backend API.",
+        };
       }
 
       revalidatePath("/seller/dashboard/documents");
@@ -137,16 +128,14 @@ export async function deleteDocumentAction(
       try {
         const client = await getAuthenticatedSellerApiClient();
         await client.sellers.deleteDocument(docId);
-      } catch {
-        const { error: deleteError } = await supabase
-          .from("seller_documents")
-          .delete()
-          .eq("id", docId)
-          .eq("seller_id", session.userId);
-
-        if (deleteError) {
-          return { error: "Failed to delete document from database." };
-        }
+      } catch (err: unknown) {
+        console.error("[deleteDocumentAction] API error:", err);
+        return {
+          error:
+            err instanceof Error
+              ? err.message
+              : "Failed to delete document from database via backend API.",
+        };
       }
 
       revalidatePath("/seller/dashboard/documents");
@@ -161,19 +150,14 @@ export async function submitForVerification() {
   try {
     const client = await getAuthenticatedSellerApiClient();
     await client.sellers.submitForVerification();
-  } catch {
-    let supabase;
-    try {
-      supabase = createAdminClient();
-    } catch (err: unknown) {
-      console.error("[submitForVerification] Admin client init error:", err);
-      return { error: "Server misconfiguration." };
-    }
-
-    await supabase
-      .from("seller_profiles")
-      .update({ status: "pending" })
-      .eq("id", session.userId);
+  } catch (err: unknown) {
+    console.error("[submitForVerification] API error:", err);
+    return {
+      error:
+        err instanceof Error
+          ? err.message
+          : "Failed to submit for verification via backend API.",
+    };
   }
 
   revalidatePath("/seller/dashboard/onboarding");

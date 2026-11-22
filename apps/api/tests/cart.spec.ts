@@ -7,6 +7,9 @@ vi.mock("../src/integrations/supabase", () => ({
   getSupabaseClient: () => mockClient,
   getSupabaseAdminClient: () => mockClient,
 }));
+vi.mock("@genz/database/admin", () => ({
+  createAdminClient: () => mockClient,
+}));
 
 import { buildApp } from "../src/app";
 
@@ -91,4 +94,3 @@ describe("Cart Validation & Calculation API", () => {
     expect(json.data.pricing.total).toBeGreaterThan(900);
   });
 });
-

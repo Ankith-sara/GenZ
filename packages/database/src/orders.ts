@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import type {
   OrderRecord,
   OrderStatus,
@@ -13,6 +11,7 @@ import { createAdminClient } from "./admin";
 import { postJournalEntry, recordOrderCommission } from "./accounting";
 
 export interface CreateOrderInput {
+  id?: string;
   customerId?: string | null;
   customerName: string;
   customerEmail: string;
@@ -30,68 +29,45 @@ export interface CreateOrderInput {
   notes?: string;
 }
 
-// Persistent storage path shared across all apps in the monorepo
-function getStoragePath(): string {
-  // Isolate tests so vitest runs never pollute production/real orders-store.json
-  const filename =
-    process.env.NODE_ENV === "test" || process.env.VITEST
-      ? "test-orders-store.json"
-      : "orders-store.json";
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-  const primaryDir = path.resolve(process.cwd(), "packages/database/src/storage");
-  if (fs.existsSync(primaryDir)) {
-    return path.join(primaryDir, filename);
-  }
-
-  // When running inside an app directory like apps/web, apps/seller, apps/admin
-  const altDir = path.resolve(process.cwd(), "../../packages/database/src/storage");
-  if (fs.existsSync(altDir)) {
-    return path.join(altDir, filename);
-  }
-
-  const __dirnameDir = path.resolve(__dirname, "storage");
-  if (fs.existsSync(__dirnameDir)) {
-    return path.join(__dirnameDir, filename);
-  }
-
-  try {
-    fs.mkdirSync(primaryDir, { recursive: true });
-    return path.join(primaryDir, filename);
-  } catch {
-    return path.resolve(process.cwd(), filename);
-  }
-}
-
-function readLocalOrders(): OrderRecord[] {
-  try {
-    const filePath = getStoragePath();
-    if (fs.existsSync(filePath)) {
-      const data = fs.readFileSync(filePath, "utf8");
-      return JSON.parse(data) as OrderRecord[];
-    }
-  } catch (err) {
-    console.warn("[OrdersService] Local store read error:", err);
-  }
-  return [];
-}
-
-function writeLocalOrders(orders: OrderRecord[]): void {
-  try {
-    const filePath = getStoragePath();
-    const dir = path.dirname(filePath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(filePath, JSON.stringify(orders, null, 2), "utf8");
-  } catch (err) {
-    console.error("[OrdersService] Local store write error:", err);
-  }
+function mapOrderDbRowToRecord(row: Record<string, unknown> | OrderDbRow): OrderRecord {
+  const d = row as Record<string, unknown>;
+  const idStr = String(d.id);
+  const orderNum = d.order_number ? String(d.order_number) : undefined;
+  return {
+    id: idStr,
+    orderId: idStr,
+    orderNumber: orderNum,
+    createdAt: String(d.created_at),
+    updatedAt: String(d.updated_at),
+    customerId: d.customer_id ? String(d.customer_id) : undefined,
+    customerName: String(d.customer_name || ""),
+    customerEmail: String(d.customer_email || ""),
+    customerPhone: d.customer_phone ? String(d.customer_phone) : undefined,
+    shippingAddress: d.shipping_address as ShippingAddress,
+    paymentMethod: String(d.payment_method || "cod"),
+    paymentStatus: (d.payment_status as OrderRecord["paymentStatus"]) || "pending",
+    paymentGatewayId: d.payment_gateway_id ? String(d.payment_gateway_id) : null,
+    refundedAmount: Number(d.refunded_amount || 0),
+    status: (d.status as OrderStatus) || "pending",
+    subtotal: Number(d.subtotal || 0),
+    tax: Number(d.tax || 0),
+    shippingFee: Number(d.shipping_fee || 0),
+    totalAmount: Number(d.total_amount || 0),
+    items: (d.items as OrderItem[]) || [],
+    sellerIds: (d.seller_ids as string[]) || [],
+    carrier: d.carrier ? String(d.carrier) : undefined,
+    trackingNumber: d.tracking_number ? String(d.tracking_number) : undefined,
+    trackingEvents: (d.tracking_events as OrderTrackingEvent[]) || [],
+    notes: d.notes ? String(d.notes) : undefined,
+  };
 }
 
 export async function createOrderRecord(input: CreateOrderInput): Promise<OrderRecord> {
   const timestamp = new Date().toISOString();
   const randomSuffix = Math.floor(100000 + Math.random() * 900000);
-  const orderId = `GZ-ORD-${randomSuffix}`;
+  const orderId = input.id || `GZ-ORD-${randomSuffix}`;
 
   // Collect distinct seller IDs
   const sellerIdSet = new Set<string>();
@@ -105,7 +81,10 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<OrderR
     status: "placed",
     timestamp,
     title: "Order Placed",
-    description: "Customer successfully placed the order via Cash on Delivery.",
+    description:
+      input.paymentMethod === "cod"
+        ? "Customer successfully placed the order via Cash on Delivery."
+        : `Customer successfully placed the order via ${input.paymentMethod.toUpperCase()}.`,
   };
 
   const newOrder: OrderRecord = {
@@ -134,65 +113,68 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<OrderR
     notes: input.notes,
   };
 
-  // Try saving to Supabase
-  try {
-    const supabase = createAdminClient();
-    const row = {
-      id: newOrder.id,
-      customer_id: newOrder.customerId,
-      customer_name: newOrder.customerName,
-      customer_email: newOrder.customerEmail,
-      customer_phone: newOrder.customerPhone,
-      shipping_address: newOrder.shippingAddress,
-      payment_method: newOrder.paymentMethod,
-      payment_status: newOrder.paymentStatus,
-      status: newOrder.status,
-      subtotal: newOrder.subtotal,
-      tax: newOrder.tax,
-      shipping_fee: newOrder.shippingFee,
-      total_amount: newOrder.totalAmount,
-      items: newOrder.items,
-      seller_ids: newOrder.sellerIds,
-      tracking_events: newOrder.trackingEvents,
-      notes: newOrder.notes,
-      created_at: newOrder.createdAt,
-      updated_at: newOrder.updatedAt,
-    };
-    const rowWithGateway: Partial<OrderDbRow> & typeof row = newOrder.paymentGatewayId
-      ? { ...row, payment_gateway_id: newOrder.paymentGatewayId }
-      : row;
-    let { error } = await supabase.from("orders").insert(rowWithGateway);
+  const supabase = createAdminClient();
+  const validCustomerId =
+    newOrder.customerId && UUID_REGEX.test(newOrder.customerId)
+      ? newOrder.customerId
+      : null;
 
-    // Databases without migration 0026 have no payment_gateway_id column yet.
-    // Keep the order (the payment id is still recorded in notes) instead of losing it.
-    if (error && newOrder.paymentGatewayId && /payment_gateway_id/i.test(error.message)) {
-      console.warn(
-        "[OrdersService] orders.payment_gateway_id missing; apply migration 0026. Retrying without it."
-      );
-      ({ error } = await supabase.from("orders").insert(row));
-    }
+  const row = {
+    id: newOrder.id,
+    customer_id: validCustomerId,
+    customer_name: newOrder.customerName,
+    customer_email: newOrder.customerEmail,
+    customer_phone: newOrder.customerPhone,
+    shipping_address: newOrder.shippingAddress,
+    payment_method: newOrder.paymentMethod,
+    payment_status: newOrder.paymentStatus,
+    status: newOrder.status,
+    subtotal: newOrder.subtotal,
+    tax: newOrder.tax,
+    shipping_fee: newOrder.shippingFee,
+    total_amount: newOrder.totalAmount,
+    items: newOrder.items,
+    seller_ids: newOrder.sellerIds,
+    tracking_events: newOrder.trackingEvents,
+    notes: newOrder.notes,
+    created_at: newOrder.createdAt,
+    updated_at: newOrder.updatedAt,
+  };
 
-    if (error) {
-      console.warn("[OrdersService] Supabase insert notice:", error.message);
-    }
-  } catch (err) {
-    console.warn("[OrdersService] Supabase insert fallback notice:", err);
+  const rowWithGateway: Partial<OrderDbRow> & typeof row = newOrder.paymentGatewayId
+    ? { ...row, payment_gateway_id: newOrder.paymentGatewayId }
+    : row;
+
+  let { data, error } = await supabase
+    .from("orders")
+    .insert(rowWithGateway)
+    .select()
+    .maybeSingle();
+
+  // Handle environments where payment_gateway_id might not exist
+  if (error && newOrder.paymentGatewayId && /payment_gateway_id/i.test(error.message)) {
+    console.warn(
+      "[OrdersService] orders.payment_gateway_id column missing; retrying without it."
+    );
+    ({ data, error } = await supabase
+      .from("orders")
+      .insert(row)
+      .select()
+      .maybeSingle());
   }
 
-  // Always write to local resilient store for real-time monorepo sync
-  const currentOrders = readLocalOrders();
-  const updatedOrders = [
-    newOrder,
-    ...currentOrders.filter((o) => o.id !== newOrder.id),
-  ];
-  writeLocalOrders(updatedOrders);
+  if (error) {
+    throw new Error(`Failed to create order record: ${error.message}`);
+  }
+
+  if (data) {
+    const insertedRecord = mapOrderDbRowToRecord(data as unknown as OrderDbRow);
+    newOrder.orderNumber = insertedRecord.orderNumber;
+  }
 
   // Trigger Native ECO Accounting Integrations
   if (newOrder.paymentStatus === "paid" && newOrder.totalAmount > 0) {
     try {
-      // 1. Post double-entry journal for gateway collection:
-      // Debit:  1020 Razorpay Gateway Clearing Account
-      // Credit: 2020 Customer Advances Account
       await postJournalEntry({
         referenceId: newOrder.id,
         eventType: "order_paid",
@@ -215,7 +197,6 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<OrderR
         ],
       });
 
-      // 2. Record commission accrual for each order item
       for (const item of newOrder.items) {
         const itemGross = Number(item.price || 0) * Number(item.quantity || 1);
         if (itemGross > 0) {
@@ -243,85 +224,76 @@ export async function getOrders(filter?: {
   sellerId?: string;
   customerId?: string;
   status?: OrderStatus;
+  limit?: number;
+  offset?: number;
 }): Promise<OrderRecord[]> {
-  let orders: OrderRecord[] = [];
+  const supabase = createAdminClient();
+  let query = supabase
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-  let querySucceeded = false;
-
-  // Try Supabase first (primary source of truth)
-  try {
-    const supabase = createAdminClient();
-    let query = supabase
-      .from("orders")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (filter?.status) {
-      query = query.eq("status", filter.status);
-    }
-    if (filter?.customerId) {
-      query = query.eq("customer_id", filter.customerId);
-    }
-
-    const { data, error } = await query;
-    if (!error && Array.isArray(data)) {
-      querySucceeded = true;
-      orders = (data as unknown as Record<string, unknown>[]).map((d) => ({
-        id: String(d.id),
-        orderId: String(d.id),
-        createdAt: String(d.created_at),
-        updatedAt: String(d.updated_at),
-        customerId: d.customer_id ? String(d.customer_id) : undefined,
-        customerName: String(d.customer_name || ""),
-        customerEmail: String(d.customer_email || ""),
-        customerPhone: d.customer_phone ? String(d.customer_phone) : undefined,
-        shippingAddress: d.shipping_address as ShippingAddress,
-        paymentMethod: String(d.payment_method || "cod"),
-        paymentStatus: (d.payment_status as OrderRecord["paymentStatus"]) || "pending",
-        paymentGatewayId: d.payment_gateway_id ? String(d.payment_gateway_id) : null,
-        refundedAmount: Number(d.refunded_amount || 0),
-        status: (d.status as OrderStatus) || "pending",
-        subtotal: Number(d.subtotal),
-        tax: Number(d.tax),
-        shippingFee: Number(d.shipping_fee),
-        totalAmount: Number(d.total_amount),
-        items: (d.items as OrderItem[]) || [],
-        sellerIds: (d.seller_ids as string[]) || [],
-        carrier: d.carrier ? String(d.carrier) : undefined,
-        trackingNumber: d.tracking_number ? String(d.tracking_number) : undefined,
-        trackingEvents: (d.tracking_events as OrderTrackingEvent[]) || [],
-        notes: d.notes ? String(d.notes) : undefined,
-      }));
-    }
-  } catch {
-    // Supabase unavailable or network error
-  }
-
-  // Only fall back to local store if Supabase query failed (e.g. offline, mock test runner)
-  if (!querySucceeded || (process.env.VITEST && orders.length === 0)) {
-    orders = readLocalOrders();
-  }
-
-  // Apply filters
-  if (filter?.sellerId) {
-    orders = orders.filter(
-      (o) => o.sellerIds && o.sellerIds.includes(filter.sellerId!)
-    );
+  if (filter?.status) {
+    query = query.eq("status", filter.status);
   }
   if (filter?.customerId) {
-    orders = orders.filter((o) => o.customerId === filter.customerId);
+    if (!UUID_REGEX.test(filter.customerId)) {
+      return [];
+    }
+    query = query.eq("customer_id", filter.customerId);
   }
-  if (filter?.status) {
-    orders = orders.filter((o) => o.status === filter.status);
+  if (filter?.sellerId) {
+    query = query.contains("seller_ids", [filter.sellerId]);
+  }
+  if (typeof filter?.limit === "number") {
+    const offset = filter.offset || 0;
+    query = query.range(offset, offset + filter.limit - 1);
   }
 
-  return orders;
+  const { data, error } = await query;
+  if (error) {
+    throw new Error(`Failed to retrieve orders: ${error.message}`);
+  }
+
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  return (data as unknown as Record<string, unknown>[]).map(mapOrderDbRowToRecord);
 }
 
 export async function getOrderById(orderId: string): Promise<OrderRecord | null> {
-  const all = await getOrders();
-  const match = all.find((o) => o.id === orderId || o.orderId === orderId);
-  return match || null;
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("id", orderId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to retrieve order ${orderId}: ${error.message}`);
+  }
+
+  if (data) {
+    return mapOrderDbRowToRecord(data as unknown as OrderDbRow);
+  }
+
+  // Fallback check by order_number
+  try {
+    const { data: numData, error: numError } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("order_number", orderId)
+      .maybeSingle();
+
+    if (!numError && numData) {
+      return mapOrderDbRowToRecord(numData as unknown as OrderDbRow);
+    }
+  } catch {
+    // Ignore if column is not yet present
+  }
+
+  return null;
 }
 
 export async function updateOrderStatus(
@@ -333,12 +305,10 @@ export async function updateOrderStatus(
     note?: string;
   }
 ): Promise<OrderRecord | null> {
-  const allOrders = readLocalOrders();
-  // The local store only holds orders created on this machine; fall back to the
-  // primary store so production updates keep the real customer, items and history.
-  const existing =
-    allOrders.find((o) => o.id === orderId || o.orderId === orderId) ||
-    (await getOrderById(orderId));
+  const existing = await getOrderById(orderId);
+  if (!existing) {
+    return null;
+  }
 
   const timestamp = new Date().toISOString();
   let eventTitle = `Order Status: ${update.status.toUpperCase()}`;
@@ -368,75 +338,35 @@ export async function updateOrderStatus(
     description: eventDesc,
   };
 
-  const updatedOrder: OrderRecord = existing
-    ? {
-        ...existing,
-        status: update.status,
-        carrier: update.carrier !== undefined ? update.carrier : existing.carrier,
-        trackingNumber:
-          update.trackingNumber !== undefined
-            ? update.trackingNumber
-            : existing.trackingNumber,
-        updatedAt: timestamp,
-        trackingEvents: [...(existing.trackingEvents || []), newEvent],
-      }
-    : {
-        id: orderId,
-        orderId,
-        createdAt: timestamp,
-        updatedAt: timestamp,
-        customerName: "Customer",
-        customerEmail: "",
-        shippingAddress: {
-          recipientName: "Customer",
-          phone: "",
-          addressLine: "",
-          city: "",
-          state: "",
-          pincode: "",
-        },
-        paymentMethod: "cod",
-        paymentStatus: update.status === "delivered" ? "paid" : "pending",
-        status: update.status,
-        subtotal: 0,
-        tax: 0,
-        shippingFee: 0,
-        totalAmount: 0,
-        items: [],
-        sellerIds: [],
-        carrier: update.carrier,
-        trackingNumber: update.trackingNumber,
-        trackingEvents: [newEvent],
-      };
+  const updatedOrder: OrderRecord = {
+    ...existing,
+    status: update.status,
+    carrier: update.carrier !== undefined ? update.carrier : existing.carrier,
+    trackingNumber:
+      update.trackingNumber !== undefined
+        ? update.trackingNumber
+        : existing.trackingNumber,
+    paymentStatus: update.status === "delivered" ? "paid" : existing.paymentStatus,
+    updatedAt: timestamp,
+    trackingEvents: [...(existing.trackingEvents || []), newEvent],
+  };
 
-  if (update.status === "delivered") {
-    updatedOrder.paymentStatus = "paid";
-  }
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("orders")
+    .update({
+      status: updatedOrder.status,
+      carrier: updatedOrder.carrier,
+      tracking_number: updatedOrder.trackingNumber,
+      payment_status: updatedOrder.paymentStatus,
+      tracking_events: updatedOrder.trackingEvents,
+      updated_at: updatedOrder.updatedAt,
+    })
+    .eq("id", existing.id);
 
-  // Update Supabase
-  try {
-    const supabase = createAdminClient();
-    await supabase
-      .from("orders")
-      .update({
-        status: updatedOrder.status,
-        carrier: updatedOrder.carrier,
-        tracking_number: updatedOrder.trackingNumber,
-        payment_status: updatedOrder.paymentStatus,
-        tracking_events: updatedOrder.trackingEvents,
-        updated_at: updatedOrder.updatedAt,
-      })
-      .eq("id", orderId);
-  } catch (err) {
-    console.warn("[OrdersService] Supabase update notice:", err);
+  if (error) {
+    throw new Error(`Failed to update order ${orderId}: ${error.message}`);
   }
-
-  // Update local resilient store
-  const updatedList = allOrders.map((o) => (o.id === orderId ? updatedOrder : o));
-  if (!allOrders.some((o) => o.id === orderId)) {
-    updatedList.unshift(updatedOrder);
-  }
-  writeLocalOrders(updatedList);
 
   // Revenue recognition journal on delivery
   if (update.status === "delivered" && updatedOrder.totalAmount > 0) {
@@ -505,10 +435,6 @@ export async function updateOrderStatus(
   return updatedOrder;
 }
 
-/**
- * Derives the order payment status from the processed refund total.
- * Mirrors the `sync_order_refund_totals` trigger in migration 0026.
- */
 export function paymentStatusAfterRefunds(
   current: PaymentStatus,
   totalAmount: number,
@@ -519,11 +445,6 @@ export function paymentStatusAfterRefunds(
   return "partially_refunded";
 }
 
-/**
- * Records the processed refund total on an order (Supabase + local store).
- * The database trigger performs the same roll-up; writing it here as well keeps
- * the local fallback store consistent.
- */
 export async function applyOrderRefundTotals(
   orderId: string,
   refundedAmount: number
@@ -539,32 +460,26 @@ export async function applyOrderRefundTotals(
   );
   const updatedAt = new Date().toISOString();
 
-  try {
-    const supabase = createAdminClient();
-    const { error } = await supabase
-      .from("orders")
-      .update({
-        refunded_amount: rounded,
-        payment_status: paymentStatus,
-        updated_at: updatedAt,
-      })
-      .eq("id", orderId);
-    if (error) {
-      console.warn("[OrdersService] Refund totals update notice:", error.message);
-    }
-  } catch (err) {
-    console.warn("[OrdersService] Refund totals update fallback notice:", err);
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("orders")
+    .update({
+      refunded_amount: rounded,
+      payment_status: paymentStatus,
+      updated_at: updatedAt,
+    })
+    .eq("id", order.id);
+
+  if (error) {
+    throw new Error(
+      `Failed to apply refund totals to order ${orderId}: ${error.message}`
+    );
   }
 
-  const updated: OrderRecord = {
+  return {
     ...order,
     refundedAmount: rounded,
     paymentStatus,
     updatedAt,
   };
-  const local = readLocalOrders();
-  if (local.some((o) => o.id === orderId)) {
-    writeLocalOrders(local.map((o) => (o.id === orderId ? updated : o)));
-  }
-  return updated;
 }

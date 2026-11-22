@@ -10,6 +10,14 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$"]
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "inputs": ["$TURBO_DEFAULT$"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

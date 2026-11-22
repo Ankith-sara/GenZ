@@ -13,6 +13,7 @@
     "build:api": "pnpm --filter=@genz/api build",
     "start": "next start",
     "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
     "test": "vitest run",
     "test:changed": "vitest related --run --passWithNoTests",
     "test:watch": "vitest",

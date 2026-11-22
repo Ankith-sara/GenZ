@@ -4,6 +4,7 @@ export * from "./cookie-consent";
 export * from "./dashboard-page-header";
 export * from "./dashboard-panel";
 export * from "./dashboard-stat";
+export * from "./google-auth-button";
 export * from "./location-select";
 export * from "./metric-card";
 export * from "./page-header";
