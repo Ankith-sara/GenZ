@@ -10,13 +10,13 @@ const siteUrl = SITE_URL || "https://admin.genz-platform.com";
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-graphik",
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const grenette = Fraunces({
   subsets: ["latin"],
   variable: "--font-grenette",
-  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

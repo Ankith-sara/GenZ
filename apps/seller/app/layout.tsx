@@ -10,13 +10,14 @@ const siteUrl = SITE_URL || "https://seller.genz-platform.com";
 const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const fontRoboto = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
   weight: ["400", "500", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

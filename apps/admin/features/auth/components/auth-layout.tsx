@@ -1,14 +1,115 @@
-import { AuthLogo } from "./logo";
-import { SupportLink } from "./support-link";
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { HelpCircle, Shield, ShieldAlert } from "lucide-react";
+import { GoogleAuthButton } from "@genz/ui";
+import { createClient } from "@genz/database";
 import { LoginForm } from "./login-form";
-import { SocialLogin } from "./google-button";
-import { FooterLinks } from "./footer-links";
 import { AuthHero } from "./auth-hero";
-import { ShieldAlert } from "lucide-react";
 
 interface AuthLayoutProps {
   redirectTo: string;
   error?: string;
+}
+
+function AuthLogo() {
+  return (
+    <Link
+      href="/dashboard"
+      className="group inline-flex items-center gap-3 transition-opacity hover:opacity-90"
+    >
+      <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-[#E5E5E0] bg-white p-1.5 shadow-2xs">
+        <Image
+          src="/logo.png"
+          alt="GenZ Logo"
+          width={28}
+          height={28}
+          className="object-contain"
+        />
+      </div>
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2">
+          <span className="font-graphik text-ink-black text-lg font-bold tracking-tight uppercase">
+            Gen<span className="text-[#C89D32]">Z</span>
+          </span>
+          <span className="rounded-md border border-[#E5E5E0] bg-[#F4F4F0] px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-[#52524E] uppercase">
+            Admin
+          </span>
+        </div>
+        <span className="font-graphik text-[10px] font-medium text-[#73736E]">
+          Command Console
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function SupportLink() {
+  return (
+    <div className="flex items-center text-xs text-[#73736E]">
+      <a
+        href="mailto:support@genz.in?subject=Admin%20Console%20Access%20Assistance"
+        className="inline-flex items-center gap-1.5 font-medium text-[#52524E] transition-colors hover:text-black hover:underline"
+      >
+        <HelpCircle className="h-4 w-4 text-[#73736E]" />
+        <span>Operations Helpdesk</span>
+      </a>
+    </div>
+  );
+}
+
+function FooterLinks() {
+  return (
+    <footer className="font-graphik flex flex-col gap-2 border-t border-[#E5E5E0]/70 pt-6 text-[11px] text-[#73736E] sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-2">
+        <Shield className="h-3.5 w-3.5 text-[#8C8C85]" />
+        <span>Confidential & Proprietary · GenZ Platform Ops</span>
+      </div>
+      <span className="text-[#8C8C85]">Restricted to Authorized Personnel</span>
+    </footer>
+  );
+}
+
+function SocialLogin({ redirectTo = "" }: { redirectTo?: string }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleGoogleLogin() {
+    setLoading(true);
+    setError(null);
+
+    const supabase = createClient();
+    const nextQuery = redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : "";
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback${nextQuery}`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="w-full">
+      <GoogleAuthButton
+        onClick={handleGoogleLogin}
+        loading={loading}
+        loadingText="Connecting to Google Workspace..."
+        text="Sign in with Google Workspace"
+      />
+      {error && (
+        <p role="alert" className="mt-2 text-center text-xs font-semibold text-red-600">
+          {error}
+        </p>
+      )}
+    </div>
+  );
 }
 
 export function AuthLayout({ redirectTo, error }: AuthLayoutProps) {
@@ -78,7 +179,7 @@ export function AuthLayout({ redirectTo, error }: AuthLayoutProps) {
             {/* Google OAuth Button */}
             <SocialLogin redirectTo={redirectTo} />
 
-            {/* Internal Access Notice (Replaces Bogus Consumer Signup Link) */}
+            {/* Internal Access Notice */}
             <div className="mt-6 rounded-xl border border-[#EBEBE6] bg-[#FAF8F4] p-3.5 text-center">
               <p className="font-graphik text-xs text-[#73736E]">
                 Restricted System · Need admin credentials?{" "}
